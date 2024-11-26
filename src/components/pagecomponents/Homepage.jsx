@@ -1,4 +1,3 @@
-"use client"
 import React, { useEffect } from 'react'
 import Home from '@/components/homepage/Home'
 import * as api from "@/api/apiRoutes"

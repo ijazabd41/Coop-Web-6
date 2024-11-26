@@ -97,6 +97,9 @@
     color: var(--font-color);
   }
 
+  .breadCrumbBg {
+    background-color: var(--swiper-background-color);
+  }
 }
 
 
@@ -112,7 +115,128 @@
   border-radius: 10px !important;
 }
 
+.category-node svg {
+  margin-left: 10px;
+}
 
+.ant-collapse {
+  border: none !important;
+  border-radius: 0px !important;
+}
+
+.ant-collapse .ant-collapse-item {
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bs-body-bg) !important;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-header {
+  /* border: none !important;
+  background-color: var(--body-background) !important;
+  border-radius: 0px !important; */
+  font-size: 16px;
+  color: var(--font-color);
+  background-color: white;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-header .ant-collapse-expand-icon {
+  order: 1;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content {
+  border-top: none;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box {
+  background-color: var(--bs-body-bg);
+  padding: 0px 16px 8px 16px;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .filter-row {
+  padding: 0px !important;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .filter-row .ant-tree {
+  background-color: var(--bs-body-bg);
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .filter-row .ant-tree .ant-tree-node-selected {
+  background-color: transparent;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .ant-slider {
+  display: flex;
+  align-items: center;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .ant-slider .ant-slider-rail {
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  height: 10px;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .ant-slider .ant-slider-track {
+  background-color: var(--secondary-color);
+  height: 10px;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .range-prices {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--font-color);
+}
+
+.price-filter-apply-btn {
+  background-color: var(--button-background-color);
+  margin-top: 16px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 20px;
+  font-weight: 400;
+  width: 100%;
+  color: var(--font-color);
+}
+
+.ant-tree-checkbox-checked .ant-tree-checkbox-inner {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-tree-checkbox-indeterminate {
+  background-color: var(--primary-color) !important;
+
+}
+
+.ant-tree-switcher {
+  display: none !important;
+}
+
+.ant-tree .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner:after {
+  background-color: var(--primary-color) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .range-prices {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--font-color);
+}
+
+.ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .ant-slider .ant-slider-track {
+  background-color: var(--primary-color);
+  height: 10px;
+}
+
+.ant-slider .ant-slider-handle:focus::after {
+  box-shadow: 0 0 0 2.5px var(--primary-color);
+}
 
 @layer base {
   :root {
@@ -172,7 +296,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .swiper-pagination{
+  .swiper-pagination {
     display: none
   }
 }

@@ -1,0 +1,267 @@
+import { useState, useEffect } from "react"
+import { Collapse, Slider, Checkbox, Tree } from "antd/lib";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterCategory, clearAllFilter, setFilterBrands } from "@/redux/slices/productFilterSlice";
+import * as api from "@/api/apiRoutes";
+import { t } from "@/utils/translation"
+import { FiPlus, FiMinus } from "react-icons/fi";
+
+const Filter = ({ setProductResult, setOffset }) => {
+    const filter = useSelector(state => state.ProductFilter)
+    const dispatch = useDispatch();
+    const [categories, setCategories] = useState([])
+    const [treeData, setTreeData] = useState([]);
+    const [expandedKeys, setExpandedKeys] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([])
+    const [brands, setbrands] = useState([])
+    const [totalBrands, setTotalBrands] = useState()
+    const [brandOffset, setBrandOffset] = useState(0);
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(1000);
+    const [tempMinPrice, setTempMinPrice] = useState(null)
+    const [tempMaxPrice, setTempMaxPrice] = useState(null)
+    const [values, setValues] = useState([]);
+    const brandLimit = 10;
+    useEffect(() => {
+        fetchCategories()
+        fetchBrands(0)
+    }, [])
+
+    useEffect(() => {
+        if (categories?.length > 0) {
+            const cat = transformCategoryData(categories);
+            setTreeData(cat);
+        }
+    }, [categories]);
+
+
+
+    const fetchCategories = async () => {
+        try {
+            const categories = await api.getCategories()
+            setCategories(categories.data)
+        } catch (error) {
+            console.log("erorr", error)
+        }
+    }
+
+    const transformCategoryData = (categories) => {
+        return categories?.map(category => ({
+            title: category.name,
+            key: category.id,
+            children: category.cat_active_childs.length > 0
+                ? transformCategoryData(category.cat_active_childs)
+                : []
+        }));
+    };
+
+    const onExpand = (expandedKeysValue) => {
+        setExpandedKeys(expandedKeysValue);
+    };
+
+    const handleExpandCollapse = (node) => {
+        const newExpandedKeys = expandedKeys.includes(node.key)
+            ? expandedKeys.filter(key => key !== node.key)
+            : [...expandedKeys, node.key];
+        setExpandedKeys(newExpandedKeys);
+    };
+
+    const renderTitle = (node) => {
+        const isExpanded = expandedKeys.includes(node.key);
+        const hasChildren = node.children && node.children.length > 0;
+
+        return (
+            <div className='flex  items-center gap-2'>
+                <div className="text-sm font-normal">{node.title}{' '}</div>
+                {hasChildren && (
+                    isExpanded
+                        ? <FiMinus size={18} onClick={() => handleExpandCollapse(node)} />
+                        : <FiPlus size={18} onClick={() => handleExpandCollapse(node)} />
+                )}
+            </div>
+        );
+    };
+
+    const renderTreeNodes = (data) =>
+        data?.map((item) => ({
+            ...item,
+            title: renderTitle(item),
+            children: item.children.length > 0 ? renderTreeNodes(item.children) : [],
+        }));
+
+    const onCheck = (catIds) => {
+        setProductResult([])
+        setOffset(0)
+        setSelectedCategories(catIds)
+        dispatch(setFilterCategory({ data: catIds.join(",") }));
+    }
+
+
+    const fetchBrands = async (bOffset) => {
+        try {
+            const result = await api.getBrands({ limit: brandLimit, offset: bOffset });
+            if (result.status === 1) {
+                if (brands == null) {
+                    setbrands(result?.data)
+                } else {
+                    setbrands(prevBrands => [...prevBrands, ...result?.data]);
+                }
+                setTotalBrands(result?.total)
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    };
+
+    const filterbyBrands = (brand) => {
+        // setcurrPage(1);
+        // setoffset(0);
+        var brand_ids = [...filter.brand_ids];
+        if (brand_ids.includes(brand.id)) {
+            brand_ids.splice(brand_ids.indexOf(brand.id), 1);
+        }
+        else {
+            brand_ids.push(parseInt(brand.id));
+        }
+        const sorted_brand_ids = sort_unique_brand_ids(brand_ids);
+        dispatch(setFilterBrands({ data: sorted_brand_ids }));
+    };
+
+    const sort_unique_brand_ids = (int_brand_ids) => {
+        if (int_brand_ids.length === 0) return int_brand_ids;
+        int_brand_ids = int_brand_ids.sort(function (a, b) { return a * 1 - b * 1; });
+        var ret = [int_brand_ids[0]];
+        for (var i = 1; i < int_brand_ids.length; i++) { //Start loop at 1: arr[0] can never be a duplicate
+            if (int_brand_ids[i - 1] !== int_brand_ids[i]) {
+                ret.push(int_brand_ids[i]);
+            }
+        }
+        return ret;
+    };
+
+    const loadMoreBrands = () => {
+        setBrandOffset(prevOffset => prevOffset + brandLimit);
+        fetchBrands(brandOffset + brandLimit) // Increase offset to fetch next set of brands
+    };
+
+
+    const handlePrices = async (result) => {
+        if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
+            setMinPrice(parseInt(result.total_min_price));
+            if (result.total_min_price === result.total_max_price) {
+                setMaxPrice(parseInt(result.total_max_price) + 100);
+                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price) + 100]);
+            } else {
+                setMaxPrice(parseInt(result.total_max_price));
+                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price)]);
+            }
+        }
+    }
+
+    return (
+        <>
+            <div className=''>
+                <div className='p-4 border-b-[1px]'>
+                    <div className='flex justify-between items-center'>
+                        <h5 className="text-xl font-bold">{t("filters")}</h5>
+                        <p className='m-0 text-sm font-normal text-[#DB3D26]'
+                            onClick={() => {
+                                setSelectedCategories([]);
+                                // setMinPrice(null);
+                                // setMaxPrice(null);
+                                // dispatch(clearAllFilter());
+                                // setoffset(0)
+                                // setproductresult([])
+                            }}
+                        >
+                            {t("clearAll")}
+                        </p>
+                    </div>
+                </div>
+                <Collapse defaultActiveKey={["1", "2", "3"]}>
+                    <Collapse.Panel header={t("product_category")} key="1" className="text-base font-semibold bg-white">
+                        <div className='filter-row'>
+                            <Tree
+                                checkable
+                                treeData={renderTreeNodes(treeData)}
+                                expandedKeys={expandedKeys}
+                                onExpand={onExpand}
+                                defaultExpandAll={false}
+                                onCheck={onCheck}
+                                checkedKeys={selectedCategories}
+                                showLine={false}
+                                switcherIcon={null}
+                            />
+                            {/* <CategoryComponent data={category} selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} setproductresult={setproductresult} setoffset={setoffset} /> */}
+                        </div>
+                    </Collapse.Panel>
+
+                    {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold bg-white">
+                        <div className='filter-row'>
+                            {
+                                brands == null ? (<Loader />) :
+                                    brands?.map((brand, index) => {
+                                        const isChecked = filter.brand_ids.includes(brand.id);
+                                        return (
+                                            <div key={brand.id}>
+                                                <Checkbox
+                                                    checked={isChecked}
+                                                    onChange={() => {
+                                                        setProductResult([])
+                                                        filterbyBrands(brand)
+                                                    }}
+
+                                                >
+                                                    <Checkbox.Group>
+                                                    </Checkbox.Group>
+                                                </Checkbox>
+                                                <span className="text-sm font-normal">{brand.name}</span>
+                                            </div>
+                                        );
+                                    })
+                            }
+                            {brands?.length < totalBrands ? <a className='brand-view-more' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+
+                        </div>
+                    </Collapse.Panel>
+
+                    }
+
+                    <Collapse.Panel header={t("priceRange")} key="3">
+                        <div>
+                            <Slider range min={minPrice}
+                                max={maxPrice} step={0.01} onChange={(newValues) => {
+                                    setValues(newValues);
+                                }}
+                                value={values}
+                                onChangeComplete={
+                                    (newValues) => {
+                                        setTempMinPrice(newValues[0])
+                                        setTempMaxPrice(newValues[1])
+                                    }
+                                }
+                            />
+                            <div className='range-prices'>
+                                <p>${values[0]}</p>
+                                <p>${values[1]}</p>
+                                {/* <p>{setting?.setting?.currency}{values[0]}</p> */}
+                                {/* <p>{setting?.setting?.currency}{values[1]}</p> */}
+                            </div>
+                            <button className="price-filter-apply-btn" onClick={(newValues) => {
+                                setOffset(0)
+                                setProductResult([])
+                                // dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
+                            }}>
+                                Apply
+                            </button>
+                        </div>
+                    </Collapse.Panel>
+                </Collapse>
+
+            </div >
+
+        </>
+    );
+};
+
+export default Filter;
