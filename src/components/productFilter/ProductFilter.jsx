@@ -199,26 +199,26 @@ const Filter = ({ setProductResult, setOffset }) => {
                     {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold bg-white">
                         <div className='filter-row'>
                             {
-                                brands == null ? (<Loader />) :
-                                    brands?.map((brand, index) => {
-                                        const isChecked = filter.brand_ids.includes(brand.id);
-                                        return (
-                                            <div key={brand.id}>
-                                                <Checkbox
-                                                    checked={isChecked}
-                                                    onChange={() => {
-                                                        setProductResult([])
-                                                        filterbyBrands(brand)
-                                                    }}
+                                // brands == null ? (<Loader />) :
+                                brands?.map((brand, index) => {
+                                    const isChecked = filter.brand_ids.includes(brand.id);
+                                    return (
+                                        <div key={brand.id}>
+                                            <Checkbox
+                                                checked={isChecked}
+                                                onChange={() => {
+                                                    setProductResult([])
+                                                    filterbyBrands(brand)
+                                                }}
 
-                                                >
-                                                    <Checkbox.Group>
-                                                    </Checkbox.Group>
-                                                </Checkbox>
-                                                <span className="text-sm font-normal">{brand.name}</span>
-                                            </div>
-                                        );
-                                    })
+                                            >
+                                                <Checkbox.Group>
+                                                </Checkbox.Group>
+                                            </Checkbox>
+                                            <span className="text-sm font-normal">{brand.name}</span>
+                                        </div>
+                                    );
+                                })
                             }
                             {brands?.length < totalBrands ? <a className='brand-view-more' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
 
