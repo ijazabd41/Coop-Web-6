@@ -1,30 +1,33 @@
 import { useState, useEffect } from "react"
 import { Collapse, Slider, Checkbox, Tree } from "antd/lib";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilterCategory, clearAllFilter, setFilterBrands } from "@/redux/slices/productFilterSlice";
+import { setFilterCategory, clearAllFilter, setFilterBrands, setFilterMinMaxPrice } from "@/redux/slices/productFilterSlice";
 import * as api from "@/api/apiRoutes";
 import { t } from "@/utils/translation"
 import { FiPlus, FiMinus } from "react-icons/fi";
 
-const Filter = ({ setProductResult, setOffset }) => {
+const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice }) => {
     const filter = useSelector(state => state.ProductFilter)
     const dispatch = useDispatch();
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState(null)
     const [treeData, setTreeData] = useState([]);
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([])
-    const [brands, setbrands] = useState([])
+    const [brands, setbrands] = useState(null)
     const [totalBrands, setTotalBrands] = useState()
     const [brandOffset, setBrandOffset] = useState(0);
-    const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(1000);
     const [tempMinPrice, setTempMinPrice] = useState(null)
     const [tempMaxPrice, setTempMaxPrice] = useState(null)
-    const [values, setValues] = useState([]);
     const brandLimit = 10;
+
+
     useEffect(() => {
-        fetchCategories()
-        fetchBrands(0)
+        if (brands == null) {
+            fetchBrands(0)
+        }
+        if (categories == null) {
+            fetchCategories()
+        }
     }, [])
 
     useEffect(() => {
@@ -114,8 +117,6 @@ const Filter = ({ setProductResult, setOffset }) => {
     };
 
     const filterbyBrands = (brand) => {
-        // setcurrPage(1);
-        // setoffset(0);
         var brand_ids = [...filter.brand_ids];
         if (brand_ids.includes(brand.id)) {
             brand_ids.splice(brand_ids.indexOf(brand.id), 1);
@@ -145,33 +146,22 @@ const Filter = ({ setProductResult, setOffset }) => {
     };
 
 
-    const handlePrices = async (result) => {
-        if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
-            setMinPrice(parseInt(result.total_min_price));
-            if (result.total_min_price === result.total_max_price) {
-                setMaxPrice(parseInt(result.total_max_price) + 100);
-                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price) + 100]);
-            } else {
-                setMaxPrice(parseInt(result.total_max_price));
-                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price)]);
-            }
-        }
-    }
+
 
     return (
         <>
-            <div className=''>
+            <div className="cardBorder rounded-md">
                 <div className='p-4 border-b-[1px]'>
-                    <div className='flex justify-between items-center'>
+                    <div className='flex justify-between items-center  '>
                         <h5 className="text-xl font-bold">{t("filters")}</h5>
-                        <p className='m-0 text-sm font-normal text-[#DB3D26]'
+                        <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'
                             onClick={() => {
                                 setSelectedCategories([]);
-                                // setMinPrice(null);
-                                // setMaxPrice(null);
-                                // dispatch(clearAllFilter());
-                                // setoffset(0)
-                                // setproductresult([])
+                                setMinPrice(null);
+                                setMaxPrice(null);
+                                dispatch(clearAllFilter());
+                                setOffset(0)
+                                setProductResult([])
                             }}
                         >
                             {t("clearAll")}
@@ -250,7 +240,7 @@ const Filter = ({ setProductResult, setOffset }) => {
                             <button className="price-filter-apply-btn" onClick={(newValues) => {
                                 setOffset(0)
                                 setProductResult([])
-                                // dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
+                                dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
                             }}>
                                 Apply
                             </button>

@@ -1,0 +1,179 @@
+import React, { useEffect, useState } from 'react'
+import BreadCrumb from '../breadcrumb/BreadCrumb'
+import { t } from "@/utils/translation"
+import Filter from '../productFilter/ProductFilter'
+import * as api from "@/api/apiRoutes"
+import { useSelector } from 'react-redux'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { BsFillGrid3X3GapFill } from "react-icons/bs";
+import { FaThList } from "react-icons/fa";
+import ListViewProductCard from '../productcards/ListViewProductCard'
+import VerticleProductCard from '../productcards/VerticleProductCard'
+
+const Products = () => {
+    const filter = useSelector(state => state.ProductFilter)
+    const [productResult, setProductResult] = useState([])
+    const [offset, setOffset] = useState(0)
+    const [minPrice, setMinPrice] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+    const [values, setValues] = useState([]);
+    const [isLoader, setisLoader] = useState(false);
+    const [totalProducts, settotalProducts] = useState(null)
+    const [isGridView, setIsGridView] = useState(true)
+    // const []
+
+    const total_products_per_page = 12;
+
+    useEffect(() => {
+        filterProductsFromApi({
+            min_price: filter.price_filter?.min_price,
+            max_price: filter.price_filter?.max_price,
+            category_ids: filter?.category_id,
+            brand_ids: filter?.brand_ids.toString(),
+            sort: filter?.sort_filter,
+            search: filter?.search,
+            limit: total_products_per_page,
+            sizes: filter?.search_sizes?.filter(obj => obj.checked).map(obj => obj["size"]).join(","),
+            offset: offset,
+            unit_ids: filter?.search_sizes?.filter(obj => obj.checked).map(obj => obj["unit_id"]).join(","),
+            seller_id: filter?.seller_id,
+            country_id: filter?.country_id,
+            section_id: filter?.section_id
+        });
+    }, [filter.search, filter.category_id, filter.brand_ids, filter.sort_filter, filter?.search_sizes, filter?.price_filter, offset])
+    const filterProductsFromApi = async (filter) => {
+        try {
+            setisLoader(true);
+            const result = await api.getProductByFilter({ latitude: 23.022505, longitude: 72.5713621, filters: filter })
+            if (result.status === 1) {
+                if (filter?.search) {
+                    setOffset(0);
+                }
+                handlePrices(result)
+                if ((filter.category_ids || filter.brand_ids || filter.price_filter?.min_price || filter.price_filter?.max_price || filter?.search) && (offset == 0)) {
+                    setProductResult(result.data);
+                } else {
+                    if (offset === 0) {
+                        setProductResult(result.data);
+                    } else {
+                        setProductResult((prevProduct) => [...prevProduct, ...result.data]);
+                    }
+                }
+                // setSizes(result.sizes);
+                settotalProducts(result.total);
+                // setShowPriceFilter(true);÷
+            } else {
+                setProductResult([]);
+                settotalProducts(0);
+                setSizes([]);
+                // setShowPriceFilter(false);
+            }
+            setisLoader(false);
+        } catch (error) {
+            const regex = /Failed to fetch/g;
+            if (regex.test(error.message)) {
+                console.log("Network Error");
+                setNetworkError(true);
+            }
+            console.log(error.message);
+        }
+
+    };
+    const handlePrices = async (result) => {
+        if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
+            setMinPrice(parseInt(result.total_min_price));
+            if (result.total_min_price === result.total_max_price) {
+                setMaxPrice(parseInt(result.total_max_price) + 100);
+                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price) + 100]);
+            } else {
+                setMaxPrice(parseInt(result.total_max_price));
+                setValues([parseInt(result.total_min_price), parseInt(result.total_max_price)]);
+            }
+        }
+    }
+    const handleGridViewChange = () => {
+        setIsGridView(true)
+    }
+    const handleListViewChange = () => {
+        setIsGridView(false)
+    }
+
+    const handleFetchMore = async () => {
+        setOffset(offSet => offSet + total_products_per_page)
+    }
+
+    return (
+        <section>
+            <div >
+                <div><BreadCrumb /></div>
+                <div className='container'>
+                    <div className='my-8 grid grid-cols-12 gap-6'>
+                        <div className=' col-span-3 rounded-sm hidden md:block '>
+                            <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
+                        </div>
+                        <div className='col-span-12 md:col-span-9'>
+                            <div className='flex flex-col gap-6'>
+                                <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
+                                    <p className='text-dm font-normal order-2 md:order-1'>{totalProducts} {t("products_found")}</p>
+                                    <div className='flex gap-4 order-1 md:order-2'>
+                                        <div className='flex gap-2 items-center'>
+                                            <p className='text-sm font-normal'>{t("sortBy")}</p>
+                                            <Select>
+                                                <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
+                                                    <SelectValue placeholder={t("default")} />
+                                                </SelectTrigger>
+                                                <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10 bg-white hidden md:block lg:block">
+                                                    <SelectItem value="default">{t("default")}</SelectItem>
+                                                    <SelectItem value="new">{t("newest_first")}</SelectItem>
+                                                    <SelectItem value="old">{t("oldest_first")}</SelectItem>
+                                                    <SelectItem value="high">{t("high_to_low")}</SelectItem>
+                                                    <SelectItem value="low">{t("low_to_high")}</SelectItem>
+                                                    <SelectItem value="discount">{t("discount_high_to_low")}</SelectItem>
+                                                    <SelectItem value="popular">{t("popularity")}</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className='flex gap-4 items-center'>
+                                            <span
+                                                className={isGridView ? 'primaryBackColor rounded-md text-white p-1.5' : ''}
+                                            ><BsFillGrid3X3GapFill size={23} onClick={handleGridViewChange} /></span>
+                                            <span
+                                                className={!isGridView ? 'primaryBackColor rounded-md text-white  p-1.5' : ''}
+                                            ><FaThList size={23} onClick={handleListViewChange} /></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='grid grid-cols-12 gap-2 h-full'>
+                                    {productResult?.map((product) => {
+                                        return (
+                                            isGridView ?
+                                                <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'>
+                                                    <VerticleProductCard product={product} />
+                                                </div>
+                                                :
+                                                <div className='col-span-12'><ListViewProductCard product={product} /></div>
+                                        )
+                                    })}
+                                    <div className='col-span-12 mt-6 w-full flex justify-center mx-auto'>
+                                        {(totalProducts > productResult?.length) ?
+                                            <button className='bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3' onClick={handleFetchMore}>{t("load_more")}</button>
+                                            : null
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default Products

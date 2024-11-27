@@ -9,8 +9,8 @@ import VerticleCardContainer from '../homepagefaturesection/VerticleCardContaine
 import HorizontalCardContainer from '../homepagefaturesection/HorizontalCardContainer'
 import HorizontalProductSwiper from '../homepagefaturesection/HorizontalProductSwiper'
 import ProductSwiperWithImage from '../homepagefaturesection/ProductSwiperWithImage'
-const HomePage = () => {
-    const shopData = useSelector((state) => state.Shop.shop)
+const HomePage = ({ shopData }) => {
+
     return (
         <>
             <div>

@@ -69,7 +69,7 @@
     "editProfile": "Edit Profile",
     "see_all": "View all",
     "shop_by": "Shop by",
-    "welcome": "Welcome!",
+    "welcome": "Welcome",
     "Settings": "Settings",
     "ShowFile": "Show File",
     "about_us": "About Us",
@@ -408,5 +408,7 @@
     "quick_links": "Quick link",
     "company_policy": "Company policy",
     "we_accept": "We Accept",
-    "off": "OFF"
+    "off": "OFF",
+    "shoppingCart": "Shopping Cart",
+    "continue": "continue"
 }

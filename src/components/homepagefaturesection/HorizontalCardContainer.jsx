@@ -14,8 +14,8 @@ const HorizontalCardContainer = ({ products }) => {
                         <span>View all</span>
                     </div>
                 </div>
-                <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 my-4'>
-                    {products?.sections?.[2]?.products?.map((product, index) => {
+                <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 my-2'>
+                    {products?.sections?.[2]?.products?.slice(0, 6)?.map((product, index) => {
                         return (
                             <div key={index} className='col-span-4 '>
                                 <HorizontalProductCard product={product} />

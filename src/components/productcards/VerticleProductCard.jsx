@@ -20,11 +20,11 @@ const VerticleProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='flex flex-col p-2 border-[1px] group'>
+            <div className='flex flex-col p-2 border-[1px] group rounded-md'>
                 <div className='flex relative'>
                     <div className='relative aspect-square w-full '>
                         <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />
-                        {selectedVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+                        {selectedVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(0)}% {t("off")}
                         </span> : null}
                         <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
@@ -35,7 +35,7 @@ const VerticleProductCard = ({ product }) => {
                 </div>
                 <div className='h-[100px] flex flex-col justify-between'>
 
-                    <h3 className="flex text-[#2a3640] text-[16px] font-semibold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full">{product?.name}</h3>
+                    <h3 className="flex text-[#2a3640] text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
                     {product?.average_rating > 0 ?
                         <div className="rating">
                             <div className="flex">

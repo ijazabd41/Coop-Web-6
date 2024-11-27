@@ -20,7 +20,7 @@ const HorizontalProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='grid grid-cols-12 p-3 border-2 m-2  gap-1 group'>
+            <div className='grid grid-cols-12 p-3 border-2 m-2  gap-2 group rounded-sm'>
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
                         <Image className=' object-cover aspect-square' fill alt={product.name} src={product.image_url} />
@@ -36,7 +36,7 @@ const HorizontalProductCard = ({ product }) => {
                 <div className='col-span-6'>
                     <div className='flex flex-col  justify-between'>
                         <div className='flex flex-col h-[100px] justify-between'>
-                            <h3 className="flex text-[#2a3640] text-[16px] font-semibold leading-[1.2]  max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full">{product?.name}</h3>
+                            <h3 className="flex text-[#2a3640] text-[16px] font-bold leading-[1.2]  max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
                             {product?.average_rating > 0 ?
                                 <div className="rating">
                                     <div className="flex">

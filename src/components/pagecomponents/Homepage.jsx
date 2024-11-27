@@ -8,6 +8,7 @@ import Categories from '../categories/Categories'
 const Homepage = () => {
 
     const dispatch = useDispatch()
+    const shopData = useSelector((state) => state.Shop.shop)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -23,7 +24,7 @@ const Homepage = () => {
 
     return (
         <div>
-            <Home />
+            <Home shopData={shopData} />
 
         </div>
     )

@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Select,
     SelectContent,
@@ -14,12 +14,27 @@ import Logo from "/public/egrocerLogo.png"
 import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoSunnyOutline } from 'react-icons/io5';
 import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { Button } from "@/components/ui/button"
+import CartDrawer from '../cart/CartDrawer';
+import Login from '../login/Login';
 
 import { t } from "@/utils/translation"
 
 
 const Header = () => {
+
+    const [showCart, setShowCart] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const [showRegister, setShowRegister] = useState(false)
+    const [showNewUser, setShowNewUser] = useState(false)
+
+    const handleCartOpen = () => {
+        setShowCart(true)
+    }
+
+    const handleLoginOpen = () => {
+        setShowLogin(true)
+    }
+
     return (
         <section className='border-b-2 pb-3'>
             <div className="w-full primaryBackColor top-header text-white lg:block md:block hidden">
@@ -79,15 +94,15 @@ const Header = () => {
                     <div className='flex sm:order-1 md:order-1 lg:hidden'>
                         <RxHamburgerMenu size={21} />
                     </div>
-                    <div className=' gap-4 order-3 hidden md:flex lg:flex'>
-                        <div className='flex items-center gap-2'>
+                    <div className=' gap-4 order-3 hidden md:flex lg:flex '>
+                        <div className='flex items-center gap-2 cursor-pointer' onClick={handleCartOpen}>
                             <span className='p-3 iconBackgroundColor rounded-full'><IoCartOutline size={24} className='iconsColor' /></span>
                             <div className='flex flex-col '>
                                 <span className='text-sm'>{t("your_cart")}</span>
                                 <span className='text-base font-bold'>$ 3800.00</span>
                             </div>
                         </div>
-                        <div className='flex gap-2 items-center'>
+                        <div className='flex gap-2 items-center cursor-pointer' onClick={handleLoginOpen}>
                             <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
                             <div className='flex '>
                                 <span className='text-base font-bold'>{t("profile")}</span>
@@ -95,8 +110,8 @@ const Header = () => {
                         </div>
                     </div>
                     <div className='flex lg:hidden md:hidden gap-2 order-3'>
-                        <div><IoSunnyOutline size={20} /></div>
-                        <div><IoCartOutline size={20} /></div>
+                        <div ><IoSunnyOutline size={20} /></div>
+                        <div onClick={handleCartOpen}><IoCartOutline size={20} /></div>
                     </div>
                 </div>
 
@@ -147,7 +162,8 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-
+            <CartDrawer setShowCart={setShowCart} showCart={showCart} />
+            <Login showLogin={showLogin} setShowLogin={setShowLogin} />
         </section>
     )
 }
