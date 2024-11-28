@@ -238,6 +238,25 @@
   box-shadow: 0 0 0 2.5px var(--primary-color);
 }
 
+.react-tel-input .form-control {
+  position: relative;
+  font-size: 16px;
+  letter-spacing: .01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 48px;
+  margin-left: 0;
+  background: #FFFFFF;
+  border: 1px solid #CACACA;
+  border-radius: 5px;
+  line-height: 25px;
+  height: 44px !important;
+  width: 100% !important;
+  outline: none;
+}
+
+
+
 
 @layer base {
   :root {

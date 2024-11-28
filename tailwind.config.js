@@ -21,6 +21,19 @@ export default {
 			padding: `10px`
 		},
 		extend: {
+			keyframes: {
+				rotation: {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				},
+			},
+			animation: {
+				rotation: 'rotation 1s linear infinite',
+				reverseRotation: 'rotation 0.5s linear infinite reverse',
+			},
+			colors: {
+				secondary: '#FF3D00', // Adjust this to your desired secondary color
+			},
 			colors: {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',

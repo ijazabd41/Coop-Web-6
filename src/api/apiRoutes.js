@@ -45,3 +45,11 @@ export const getBrands = async ({ limit, offset }) => {
     const response = await api.get(apiEndPoints.getBrands, { params })
     return response.data
 }
+
+export const getSetting = async () => {
+    const params = {
+        is_web_setting: 1
+    }
+    const response = await api.get(apiEndPoints.getSettings, { params })
+    return response.data
+}

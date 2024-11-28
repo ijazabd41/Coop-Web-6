@@ -16,12 +16,14 @@ import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from '../cart/CartDrawer';
 import Login from '../login/Login';
-
+import Register from '../register/Register';
 import { t } from "@/utils/translation"
+import NewUserModal from '../newusermodal/NewUserModal';
+import { useSelector } from 'react-redux';
 
 
 const Header = () => {
-
+    const setting = useSelector(state => state.Setting)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false)
@@ -34,6 +36,9 @@ const Header = () => {
     const handleLoginOpen = () => {
         setShowLogin(true)
     }
+
+
+
 
     return (
         <section className='border-b-2 pb-3'>
@@ -80,8 +85,8 @@ const Header = () => {
 
             <div className='center-header '>
                 <div className='container flex justify-between items-center pb-[8px] md:py-[12px] lg:py-[12px] columns-3 border-b-2 lg:border-none md:border-none my-2'>
-                    <div className='order-2 lg:order-1 '>
-                        <Image src={Logo} alt='Logo' className='h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]' />
+                    <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
+                        <Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' fill className='h-full lg:full w-full lg:w-full object-contain' />
                     </div>
                     <div className='hidden lg:flex order-2'>
                         <ul className='flex gap-6'>
@@ -163,7 +168,9 @@ const Header = () => {
                 </div>
             </div>
             <CartDrawer setShowCart={setShowCart} showCart={showCart} />
-            <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+            <Login showLogin={showLogin} setShowLogin={setShowLogin} setShowRegister={setShowRegister} />
+            <Register setShowRegister={setShowRegister} showRegister={showRegister} />
+            <NewUserModal showNewUser={showNewUser} setShowNewUser={setShowNewUser} />
         </section>
     )
 }

@@ -1,10 +1,17 @@
 import "@/styles/globals.css";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/redux/store"
 import Head from "next/head";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 
 export default function App({ Component, pageProps }) {
+
+
+
+
   return (
     <div>
       <Head>
@@ -15,6 +22,7 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} />
         </PersistGate>
       </Provider>
+      <ToastContainer theme={"light"} key="toastContainer" bodyClassName={"toast-body"} className={"toastContainer"} toastClassName='toast-container-class' />
     </div>
 
   );
