@@ -18,13 +18,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAuthType } from "@/redux/slices/userSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
-import { signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier } from "firebase/auth";
 import FirebaseData from '@/utils/firebase';
 
 
 export function Login({ showLogin, setShowLogin, setShowRegister }) {
     const setting = useSelector(state => state.Setting)
-    const { auth, firebase, messaging } = FirebaseData();
+    const { auth, app, messaging } = FirebaseData();
     const defaultCountryCode = "in"
 
     const dispatch = useDispatch()
@@ -54,19 +54,45 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
 
     useEffect(() => {
         const recaptchaContainer = document.getElementById('recaptcha-container');
-        firebase && auth && !(window.recaptchaVerifier) && (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
-            size: "invisible",
-        }));
+
+        if (app && auth && !window.recaptchaVerifier) {
+            try {
+                window.recaptchaVerifier = new RecaptchaVerifier(
+                    auth,
+                    recaptchaContainer,
+                    {
+                        size: "invisible",
+                        callback: (response) => {
+                            // reCAPTCHA solved, allow signInWithPhoneNumber
+                            console.log("reCAPTCHA solved");
+                        },
+                        'expired-callback': () => {
+                            // Response expired. Ask user to solve reCAPTCHA again.
+                            console.log("reCAPTCHA expired");
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("RecaptchaVerifier initialization error:", error);
+            }
+        }
+
         return () => {
-            if (window?.recaptchaVerifier && setting.setting.firebase) {
+            if (window?.recaptchaVerifier) {
                 try {
-                    window?.recaptchaVerifier?.clear();
+                    window.recaptchaVerifier.clear();
                 } catch (err) {
-                    console.log(err?.message);
+                    console.log("Error clearing reCAPTCHA:", err?.message);
                 }
             }
         };
-    }, [firebase, auth]);
+    }, [app, auth, showLogin]);
+
+    // const handleGenerateRecaptcha = () => {
+
+    // }
+
+
     const handleShowRegister = () => {
         setShowRegister(true)
 
@@ -102,7 +128,6 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
     const handleSendOTP = async (e) => {
         // setDisabled(true);
         setLoading(true);
-        console.log("hello world", setting)
         e.preventDefault();
         if (phoneNumber?.length < countryCode.length || phoneNumber?.slice(1) === countryCode) {
             setError("Please enter phone number!");
@@ -113,10 +138,11 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
             const phoneNumberWithoutSpaces = `${phoneNumber}`.replace(/\s+/g, "");
             if (setting?.setting?.firebase_authentication == 1) {
                 let appVerifier = window?.recaptchaVerifier;
-
+                console.log("auth", auth)
+                console.log("verifier", window?.recaptchaVerifier)
+                console.log("phone number", phoneNumberWithoutSpaces)
                 try {
                     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithoutSpaces, appVerifier)
-
                     window.confirmationResult = confirmationResult;
                     setTimer(90)
                     setIsOTP(true)
@@ -125,6 +151,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                     setPhoneNumber();
                     setError(error.message);
                     setLoading(false);
+                    console.log("firebase error", error)
                 }
             } else if (setting?.setting?.custom_sms_gateway_otp_based == 1) {
                 try {
@@ -187,6 +214,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                             {isOTP ?
                                 <form>
                                     <div className="overflow-auto p-0 flex items-center justify-center">
+                                        {error ? <p>{error}</p> : <></>}
                                         <OtpInput
                                             className=" mx-auto items-center flex flex-wrap justify-center p-0"
                                             value={otp}
@@ -214,6 +242,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                                 <> <form className="my-4 flex flex-col gap-2 " onSubmit={handleSendOTP}>
                                     {inputType == "number" ?
                                         <>
+                                            {error ? <p>{error}</p> : <></>}
                                             <>
                                                 <PhoneInput
                                                     country={defaultCountryCode}

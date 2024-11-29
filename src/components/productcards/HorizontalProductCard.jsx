@@ -3,10 +3,13 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { FaRegEye, FaRegHeart, FaShoppingBasket, FaStar } from 'react-icons/fa'
 import { t } from "@/utils/translation"
+import VariantsModal from '../variantsmodal/VariantsModal'
+import { MdArrowDropDown } from "react-icons/md";
 
 const HorizontalProductCard = ({ product }) => {
 
     const [selectedVariant, setSelectedVariant] = useState([])
+    const [showVariants, setShowVariants] = useState(false)
 
     useEffect(() => {
         setSelectedVariant(product?.variants?.[0])
@@ -61,13 +64,14 @@ const HorizontalProductCard = ({ product }) => {
                             </div>
                         </div>
                         <div className='flex gap-3  w-full flex-col '>
-                            <button className=' w-full flex items-center justify-center rounded-[4px] p-2 buttonBackground '>{`${product?.variants?.[0]?.measurement} ${product?.variants?.[0]?.stock_unit_name}`}</button>
+                            <button className=' w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground '>{`${product?.variants?.[0]?.measurement} ${product?.variants?.[0]?.stock_unit_name}`}<MdArrowDropDown /></button>
                             <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white bg-[#55ae7b26] primaryColor'><FaShoppingBasket size={20} /><span>Add</span></button>
                         </div>
                     </div>
 
                 </div>
             </div>
+            {/* <VariantsModal showVariants={showVariants} setShowVariants={setShowVariants} /> */}
         </div>
     )
 }

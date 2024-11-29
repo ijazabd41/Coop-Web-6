@@ -3,10 +3,15 @@ import Image from 'next/image'
 import { FaRegHeart, FaRegEye, FaRegStar, FaStar, FaShoppingBasket } from "react-icons/fa";
 import Link from 'next/link';
 import { t } from "@/utils/translation"
+import { MdArrowDropDown } from "react-icons/md";
+import VariantsModal from '../variantsmodal/VariantsModal'
+import ProductDetailModal from '../productdetailmodal/ProductDetailModal';
 
 const VerticleProductCard = ({ product }) => {
 
     const [selectedVariant, setSelectedVariant] = useState([])
+    const [showVariants, setShowVariants] = useState(false)
+    const [showProductDetail, setShowProductDetail] = useState(false)
 
     useEffect(() => {
         setSelectedVariant(product?.variants?.[0])
@@ -17,6 +22,20 @@ const VerticleProductCard = ({ product }) => {
         const actualDiscountPrice = (difference / actualPrice)
         return actualDiscountPrice * 100;
     }
+
+    const handleShowVariantModal = (product) => {
+        if (product.variants.length > 1) {
+            setShowVariants(true)
+        } else {
+            return
+        }
+    }
+
+    const handleShowDetailModal = () => {
+        setShowProductDetail(true)
+    }
+
+    const productsVariants = product.variants
 
     return (
         <div>
@@ -29,7 +48,7 @@ const VerticleProductCard = ({ product }) => {
                         </span> : null}
                         <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
                             <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><Link href={"/"}><FaRegHeart size={18} className='fontColor' /></Link></li>
-                            <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><Link href={"/"}><FaRegEye size={18} className='fontColor' /></Link></li>
+                            <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><div onClick={handleShowDetailModal} ><FaRegEye size={18} className='fontColor' /></div></li>
                         </ul>
                     </div>
                 </div>
@@ -55,16 +74,17 @@ const VerticleProductCard = ({ product }) => {
                         </div>
                         : null}
                     <div className='flex'>
-                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
-                            <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
-
+                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='text-black text-base font-bold'>₹{productsVariants?.[0]?.discounted_price}</p>
+                            <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{productsVariants[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{productsVariants?.[0]?.price}</p>}
                     </div>
                 </div>
                 <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>
-                    <button className='md:w-1/2 w-full flex items-center my-[5px] justify-center rounded-[4px] p-[5px] buttonBackground '>{`${product?.variants?.[0]?.measurement} ${product?.variants?.[0]?.stock_unit_name}`}</button>
+                    <button onClick={() => handleShowVariantModal(product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${productsVariants?.[0]?.measurement} ${productsVariants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
                     <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor'><FaShoppingBasket size={20} /><span>Add</span></button>
                 </div>
             </div >
+            <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
+            <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
         </div >
     )
 }

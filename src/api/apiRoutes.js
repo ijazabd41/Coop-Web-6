@@ -53,3 +53,15 @@ export const getSetting = async () => {
     const response = await api.get(apiEndPoints.getSettings, { params })
     return response.data
 }
+
+export const getProductById = async ({ latitude, longitude, id, slug }) => {
+    const formData = new FormData();
+    formData.append("latitude", latitude)
+    formData.append("longitude", longitude)
+    if (id !== -1) {
+        formData.append("id", id);
+    }
+    if (slug) { formData.append("slug", slug) }
+    const response = await api.post(apiEndPoints.getProductById, formData)
+    return response.data
+}

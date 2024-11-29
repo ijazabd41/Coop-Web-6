@@ -1,5 +1,5 @@
 
 
-const handlePlaceHolderImage = (e) => {
-    e.target.src = WebLogo;
-};
+// const handlePlaceHolderImage = (e) => {
+//     e.target.src = WebLogo;
+// };

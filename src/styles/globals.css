@@ -13,6 +13,7 @@
   --font-family: "Nunito", sans-serif;
   --swiper-background-color: #F2F5F7;
   --button-border-color: #8ba2b3;
+  --cart-button-bg:#55ae7b26;
 }
 
 * {
@@ -29,6 +30,10 @@
 
   .primaryBackColor {
     background-color: var(--primary-color);
+  }
+
+  .cartButtonBackground{
+    background-color: var(--cart-button-bg);
   }
 
   .primaryColor {

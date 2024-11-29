@@ -1,57 +1,61 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/messaging";
 import { useSelector } from "react-redux";
 import Loader from "@/components/loader/Loader";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getMessaging, onMessage } from "firebase/messaging";
 
 const FirebaseData = () => {
+    const setting = useSelector(state => state.Setting);
 
-    const setting = useSelector(state => state.Setting)
-
+    // Wait for settings to load
     if (setting.setting === null) {
-        return <Loader screen='full' />;
+        return <Loader screen="full" />;
     }
 
-    const apiKey = setting?.setting && setting?.setting?.firebase?.apiKey;
-    const authDomain = setting?.setting && setting?.setting?.firebase?.authDomain;
-    const projectId = setting?.setting && setting?.setting?.firebase?.projectId;
-    const storageBucket = setting?.setting && setting?.setting?.firebase.storageBucket;
-    const messagingSenderId = setting?.setting && setting.setting?.firebase?.messagingSenderId;
-    const appId = setting?.setting && setting?.setting?.firebase?.appId;
-    const measurementId = setting?.setting && setting?.setting?.firebase?.measurementId;
-
+    // Extract Firebase config from Redux state
+    const {
+        apiKey,
+        authDomain,
+        projectId,
+        storageBucket,
+        messagingSenderId,
+        appId,
+        measurementId,
+    } = setting.setting?.firebase || {};
 
     const firebaseConfig = {
-        apiKey: apiKey,
-        authDomain: authDomain,
-        projectId: projectId,
-        storageBucket: storageBucket,
-        messagingSenderId: messagingSenderId,
-        appId: appId,
-        measurementId: measurementId,
+        apiKey,
+        authDomain,
+        projectId,
+        storageBucket,
+        messagingSenderId,
+        appId,
+        measurementId,
     };
 
+    // Initialize Firebase App (check if already initialized)
+    const app = initializeApp(firebaseConfig);
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    } else {
-        firebase.app();
-    }
+    // Get Firebase Auth instance
+    const auth = getAuth(app);
 
-    const auth = firebase.auth();
+    // Get Firebase Messaging instance
+    const messaging = getMessaging(app);
 
-    const messaging = firebase.messaging();
+    // Listen for incoming messages
     try {
-        messaging.onMessage(function (payload) {
-            // console.log("Message ->", payload);
-            let data = payload?.data;
-            // console.log(data);
-            new Notification(data?.title, { body: data?.message, icon: data?.image || setting?.setting?.web_settings?.web_logo });
+        onMessage(messaging, (payload) => {
+            const data = payload?.data;
+            new Notification(data?.title, {
+                body: data?.message,
+                icon: data?.image || setting?.setting?.web_settings?.web_logo,
+            });
         });
     } catch (err) {
-        console.log(err?.message);
+        console.log("Messaging Error:", err?.message);
     }
-    return { auth, firebase, messaging };
+
+    return { auth, app, messaging };
 };
 
 export default FirebaseData;

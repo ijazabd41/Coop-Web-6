@@ -410,5 +410,7 @@
     "we_accept": "We Accept",
     "off": "OFF",
     "shoppingCart": "Shopping Cart",
-    "continue": "continue"
+    "continue": "continue",
+    "chooseVariant": "Choose Variants",
+    "addToWishlist":"Add to Wishlist"
 }
