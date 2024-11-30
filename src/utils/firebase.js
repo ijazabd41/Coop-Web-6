@@ -6,13 +6,10 @@ import { getMessaging, onMessage } from "firebase/messaging";
 
 const FirebaseData = () => {
     const setting = useSelector(state => state.Setting);
-
-    // Wait for settings to load
     if (setting.setting === null) {
         return <Loader screen="full" />;
     }
 
-    // Extract Firebase config from Redux state
     const {
         apiKey,
         authDomain,
@@ -33,16 +30,12 @@ const FirebaseData = () => {
         measurementId,
     };
 
-    // Initialize Firebase App (check if already initialized)
     const app = initializeApp(firebaseConfig);
 
-    // Get Firebase Auth instance
     const auth = getAuth(app);
 
-    // Get Firebase Messaging instance
     const messaging = getMessaging(app);
 
-    // Listen for incoming messages
     try {
         onMessage(messaging, (payload) => {
             const data = payload?.data;

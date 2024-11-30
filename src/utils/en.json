@@ -412,5 +412,6 @@
     "shoppingCart": "Shopping Cart",
     "continue": "continue",
     "chooseVariant": "Choose Variants",
-    "addToWishlist":"Add to Wishlist"
+    "addToWishlist": "Add to Wishlist",
+    "otp_required": "OTP required"
 }

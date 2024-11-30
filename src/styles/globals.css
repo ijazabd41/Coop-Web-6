@@ -261,7 +261,10 @@
 }
 
 
-
+#recaptcha-container {
+  position: absolute !important;
+  z-index: 9999 !important;
+}
 
 @layer base {
   :root {

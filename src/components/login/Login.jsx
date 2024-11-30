@@ -43,61 +43,57 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
     const [loading, setLoading] = useState(false)
     const [timer, setTimer] = useState(0)
     const [error, setError] = useState("")
-
-
-
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
     }, [inputType]);
-
     useEffect(() => {
-        const recaptchaContainer = document.getElementById('recaptcha-container');
-
-        if (app && auth && !window.recaptchaVerifier) {
-            try {
-                window.recaptchaVerifier = new RecaptchaVerifier(
-                    auth,
-                    recaptchaContainer,
-                    {
-                        size: "invisible",
-                        callback: (response) => {
-                            // reCAPTCHA solved, allow signInWithPhoneNumber
-                            console.log("reCAPTCHA solved");
-                        },
-                        'expired-callback': () => {
-                            // Response expired. Ask user to solve reCAPTCHA again.
-                            console.log("reCAPTCHA expired");
-                        }
-                    }
-                );
-            } catch (error) {
-                console.error("RecaptchaVerifier initialization error:", error);
-            }
-        }
-
+        generateRecaptcha();
         return () => {
-            if (window?.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier.clear();
-                } catch (err) {
-                    console.log("Error clearing reCAPTCHA:", err?.message);
-                }
+            const recaptchaContainer = document.getElementById("recaptcha-container");
+            if (recaptchaContainer) {
+                recaptchaContainer.innerHTML = "";
+            }
+            if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.clear();
+                window.recaptchaVerifier = null;
             }
         };
-    }, [app, auth, showLogin]);
+    }, []);
+    const recaptchaClear = async () => {
+        const recaptchaContainer = document.getElementById('recaptcha-container')
+        if (recaptchaContainer) {
+            recaptchaContainer.innerHTML = ''
+        }
+        if (window.recaptchaVerifier) {
+            window?.recaptchaVerifier?.recaptcha?.reset()
+        }
+    }
+    const generateRecaptcha = () => {
+        if (!window.recaptchaVerifier) {
 
-    // const handleGenerateRecaptcha = () => {
-
-    // }
-
-
+            const recaptchaContainer = document.getElementById("recaptcha-container");
+            if (!recaptchaContainer) {
+                console.error("Container element 'recaptcha-container' not found.");
+                return null;
+            }
+            try {
+                recaptchaContainer.innerHTML = '';
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                    size: "invisible",
+                });
+                return window.recaptchaVerifier;
+            } catch (error) {
+                console.error("Error initializing RecaptchaVerifier:", error.message);
+                return null;
+            }
+        }
+        return window.recaptchaVerifier;
+    };
     const handleShowRegister = () => {
         setShowRegister(true)
-
     }
-
     const handleInputChange = (value, data) => {
         const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const containsOnlyDigits = /^\d+$/.test(value);
@@ -124,9 +120,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
             setInputType("");
         }
     };
-
     const handleSendOTP = async (e) => {
-        // setDisabled(true);
         setLoading(true);
         e.preventDefault();
         if (phoneNumber?.length < countryCode.length || phoneNumber?.slice(1) === countryCode) {
@@ -134,13 +128,9 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
             setLoading(false);
         }
         else {
-
             const phoneNumberWithoutSpaces = `${phoneNumber}`.replace(/\s+/g, "");
             if (setting?.setting?.firebase_authentication == 1) {
-                let appVerifier = window?.recaptchaVerifier;
-                console.log("auth", auth)
-                console.log("verifier", window?.recaptchaVerifier)
-                console.log("phone number", phoneNumberWithoutSpaces)
+                const appVerifier = generateRecaptcha();
                 try {
                     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithoutSpaces, appVerifier)
                     window.confirmationResult = confirmationResult;
@@ -176,14 +166,31 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
 
         }
     };
-
+    const handleOtpVerification = async (e) => {
+        e.preventDefault();
+        if (otp == "") {
+            toast.error(t("otp_required"))
+        }
+        try {
+            setLoading(true)
+            const user = await window.confirmationResult.confirm(otp)
+            console.log(user)
+        } catch (error) {
+            console.log("error", error)
+            setError(error)
+        }
+    }
     const handlePasswordShow = () => {
         setShowPassword(!showPassword)
+    }
+    const handleHideLogin = async () => {
+        await recaptchaClear()
+        setShowLogin(false)
     }
 
     return (
         <>
-            <Dialog open={showLogin} onOpenChange={setShowLogin} >
+            <Dialog open={showLogin} onOpenChange={handleHideLogin} >
                 <DialogContent className="">
                     <DialogHeader className="flex justify-center">
                         <div className="relative aspect-square object-cover h-[68px] w-[72px]">
@@ -212,7 +219,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                         </div>
                         <div>
                             {isOTP ?
-                                <form>
+                                <form onSubmit={handleOtpVerification}>
                                     <div className="overflow-auto p-0 flex items-center justify-center">
                                         {error ? <p>{error}</p> : <></>}
                                         <OtpInput
@@ -232,7 +239,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
 
                                     </div>
                                     <div className="mt-8 flex justify-center ">
-                                        <button className="w-full bg-[#29363F] text-xl" type="submit">{t("login")}</button>
+                                        <button className="w-full bg-[#29363F] text-white text-xl py-2 rounded-sm" type="submit">{t("login")}</button>
                                     </div>
                                     <div className="mt-2 text-center">
                                         <span className="text-base font-medium">Resend OTP in : 01:22</span>
@@ -298,7 +305,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
 
                 </DialogContent>
             </Dialog>
-            <div id="recaptcha-container" style={{ display: "none" }}></div>
+            <div id="recaptcha-container" style={{ zIndex: 9999 }}></div>
         </>
     )
 }
