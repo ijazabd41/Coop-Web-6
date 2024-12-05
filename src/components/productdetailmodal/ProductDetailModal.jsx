@@ -67,10 +67,11 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             <div className='border-r-2 px-2'>
                                                 <div className="flex">
                                                     <div className="flex">
-                                                        {[1, 2, 3, 4, 5].map((star) => (
+                                                        {[1, 2, 3, 4, 5].map((star, index) => (
                                                             <FaStar
                                                                 key={star}
                                                                 size={15}
+
                                                                 className={`${star <= rating
                                                                     ? 'fill-yellow-400 text-yellow-400'
                                                                     : 'fill-gray-200 text-gray-200'
@@ -118,7 +119,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                         >
                                             {productDetails?.images?.map((image, index) => (
                                                 <SwiperSlide key={productDetails.id} >
-                                                    <div className='h-auto relative w-full aspect-square'>
+                                                    <div className='h-auto relative w-full aspect-square' key={index}>
                                                         <Image src={image} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
                                                     </div>
                                                 </SwiperSlide>
@@ -139,7 +140,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
-                                                        <div className='flex flex-col col-span-4 mr-2 my-1 text-center rounded-sm  border-2 justify-center items-center'>
+                                                        <div className='flex flex-col col-span-4 mr-2 my-1 text-center rounded-sm  border-2 justify-center items-center' key={variant.id}>
                                                             <p className='font-bold text-base'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
                                                             <span className='flex gap-1'><p>{currency}{discountPrice != 0 ? discountPrice : price}</p>{discountPrice != 0 ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
