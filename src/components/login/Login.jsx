@@ -15,11 +15,13 @@ import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg"
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthType } from "@/redux/slices/userSlice";
+import { setAuthId, setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier } from "firebase/auth";
 import FirebaseData from '@/utils/firebase';
+import * as api from "@/api/apiRoutes"
+import { setTokenThunk } from "@/redux/thunk/loginthunk";
 
 
 export function Login({ showLogin, setShowLogin, setShowRegister }) {
@@ -40,9 +42,11 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState("")
     const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] = useState("")
+    const [Uid, setUid] = useState("");
     const [loading, setLoading] = useState(false)
     const [timer, setTimer] = useState(0)
     const [error, setError] = useState("")
+    const [userAuthType, setUserAuthType] = useState("")
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
@@ -174,12 +178,71 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
         try {
             setLoading(true)
             const user = await window.confirmationResult.confirm(otp)
-            console.log(user)
+            dispatch(setAuthId({ data: user.user.id }))
+            setUid(user.user.id)
+            const loginResponse = await loginApiCall(user.user, phoneNumberWithoutCountryCode, "", "phone")
         } catch (error) {
             console.log("error", error)
-            setError(error)
+            // setError(error)
         }
     }
+
+    const loginApiCall = async (user, id, fcm, type) => {
+        let latitude;
+        let longitude;
+        try {
+            // await app.auth().setPersistence(app.auth.Auth.Persistence.NONE);
+            // await app.auth().currentUser?.getIdToken(true);
+            dispatch(setAuthId({ data: Uid, type }))
+            const res = await api.login({ id: id, fcm, type })
+
+            if (res.status === 1) {
+                console.log("token", res?.data?.access_token)
+                const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
+                await getCurrentUser()
+                dispatch(setAuthType({ data: type }))
+                // if (res?.data?.user?.status == 1) {
+                //     dispatch(setIsGuest({ data: false }));
+                // }
+                // await handleFetchSetting();
+                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
+                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                //     await AddtoCartBulk(res?.data.access_token);
+                // }
+                // await fetchCart(latitude, longitude);
+                setError("");
+                setOtp("");
+                setPhoneNumber("");
+                setLoading(false);
+                setIsOTP(false);
+                setShowLogin(false);
+                setShowRegister(false)
+            } else {
+                setUserAuthType(type)
+                setEmail(user?.providerData?.[0]?.email)
+                // setUserName(user?.providerData?.[0]?.displayName)
+                setPhoneNumber(user?.providerData?.[0]?.phoneNumber)
+                // setRegisterModalShow(true)
+                showLogin(false);
+            }
+            setLoading(false)
+        } catch (error) {
+            console.error("error", error)
+            setLoading(false)
+        }
+    }
+
+    const getCurrentUser = async () => {
+        try {
+            const response = await api.getUser()
+            dispatch(setCurrentUser({ data: response.user }));
+            toast.success("You're successfully Logged In");
+        } catch (error) {
+            console.log("error", error)
+        }
+    };
+
     const handlePasswordShow = () => {
         setShowPassword(!showPassword)
     }
@@ -305,7 +368,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
 
                 </DialogContent>
             </Dialog>
-            <div id="recaptcha-container" style={{ zIndex: 9999 }}></div>
+            <div id="recaptcha-container" style={{ display: "none" }}></div>
         </>
     )
 }

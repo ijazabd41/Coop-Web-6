@@ -36,6 +36,10 @@
     background-color: var(--cart-button-bg);
   }
 
+  .primaryBorder{
+    border: 1px solid var(--primary-color);
+  }
+
   .primaryColor {
     color: var(--primary-color);
   }

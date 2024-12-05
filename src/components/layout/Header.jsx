@@ -20,14 +20,19 @@ import Register from '../register/Register';
 import { t } from "@/utils/translation"
 import NewUserModal from '../newusermodal/NewUserModal';
 import { useSelector } from 'react-redux';
+import Location from "@/components/locationmodal/Location"
+import { BiBell, BiBookmarkHeart, BiCartAlt, BiMoneyWithdraw, BiUserCircle, BiWallet } from 'react-icons/bi';
+import { RiLogoutCircleRLine } from 'react-icons/ri';
 
 
 const Header = () => {
-    const setting = useSelector(state => state.Setting)
+    const setting = useSelector(state => state.Setting);
+    const user = useSelector(state => state.User)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false)
     const [showNewUser, setShowNewUser] = useState(false)
+    const [showLocation, setShowLocation] = useState(false)
 
     const handleCartOpen = () => {
         setShowCart(true)
@@ -37,7 +42,9 @@ const Header = () => {
         setShowLogin(true)
     }
 
-
+    const handleOpenLocation = () => {
+        setShowLocation(true)
+    }
 
 
     return (
@@ -107,12 +114,74 @@ const Header = () => {
                                 <span className='text-base font-bold'>$ 3800.00</span>
                             </div>
                         </div>
-                        <div className='flex gap-2 items-center cursor-pointer' onClick={handleLoginOpen}>
+                        {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
                             <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
                             <div className='flex '>
-                                <span className='text-base font-bold'>{t("profile")}</span>
+                                {/* <span className='text-base font-bold'>{t("profile")}</span> */}
+                                <Select>
+                                    <SelectTrigger className="border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
+                                        {t("profile")}
+                                        {/* <SelectValue placeholder="Theme" /> */}
+                                    </SelectTrigger>
+                                    <SelectContent className="items-center flex justify-center h-full">
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiUserCircle size={22} />
+                                                {t("editProfile")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiCartAlt size={22} />
+                                                {t("orders")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiBookmarkHeart size={22} />
+                                                {t("wishlist")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiBell size={22} />
+                                                {t("notification")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <IoLocationOutline size={22} />
+                                                {t("myAddress")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiWallet size={22} />
+                                                {t("walletBalance")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiMoneyWithdraw size={22} />
+                                                {t("myTransaction")}
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem >
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <RiLogoutCircleRLine size={20} />
+                                                {t("logout")}
+                                            </span>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
-                        </div>
+                        </div> : <div className='flex gap-2 items-center cursor-pointer' onClick={handleLoginOpen}>
+                            <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
+                            <div className='flex '>
+                                <span className='text-base font-bold'>{t("login")}</span>
+                            </div>
+                        </div>}
+
                     </div>
                     <div className='flex lg:hidden md:hidden gap-2 order-3'>
                         <div ><IoSunnyOutline size={20} /></div>
@@ -124,7 +193,7 @@ const Header = () => {
             <div className="bottom-header ">
                 <div className="container mx-auto grid grid-cols-12 items-center justify-between">
                     {/* First column: col-3 equivalent */}
-                    <div className="col-span-4 lg:col-span-3 flex gap-2 items-center">
+                    <div className="col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer" onClick={handleOpenLocation}>
                         <span className="p-3 iconBackgroundColor  rounded-full">
                             <IoLocationOutline size={24} className='iconsColor' />
                         </span>
@@ -171,6 +240,7 @@ const Header = () => {
             <Login showLogin={showLogin} setShowLogin={setShowLogin} setShowRegister={setShowRegister} />
             <Register setShowRegister={setShowRegister} showRegister={showRegister} />
             <NewUserModal showNewUser={showNewUser} setShowNewUser={setShowNewUser} />
+            <Location showLocation={showLocation} setShowLocation={setShowLocation} />
         </section>
     )
 }

@@ -15,6 +15,8 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
 import ListViewProductCard from '../productcards/ListViewProductCard'
 import VerticleProductCard from '../productcards/VerticleProductCard'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const Products = () => {
     const filter = useSelector(state => state.ProductFilter)
@@ -26,6 +28,7 @@ const Products = () => {
     const [isLoader, setisLoader] = useState(false);
     const [totalProducts, settotalProducts] = useState(null)
     const [isGridView, setIsGridView] = useState(true)
+    const [loading, setLoading] = useState(false)
     // const []
 
     const total_products_per_page = 12;
@@ -49,7 +52,7 @@ const Products = () => {
     }, [filter.search, filter.category_id, filter.brand_ids, filter.sort_filter, filter?.search_sizes, filter?.price_filter, offset])
     const filterProductsFromApi = async (filter) => {
         try {
-            setisLoader(true);
+            setLoading(true);
             const result = await api.getProductByFilter({ latitude: 23.022505, longitude: 72.5713621, filters: filter })
             if (result.status === 1) {
                 if (filter?.search) {
@@ -68,13 +71,14 @@ const Products = () => {
                 // setSizes(result.sizes);
                 settotalProducts(result.total);
                 // setShowPriceFilter(true);÷
+                setLoading(false);
             } else {
                 setProductResult([]);
                 settotalProducts(0);
                 setSizes([]);
                 // setShowPriceFilter(false);
+                setLoading(false);
             }
-            setisLoader(false);
         } catch (error) {
             const regex = /Failed to fetch/g;
             if (regex.test(error.message)) {
@@ -107,6 +111,8 @@ const Products = () => {
     const handleFetchMore = async () => {
         setOffset(offSet => offSet + total_products_per_page)
     }
+
+    const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
     return (
         <section>
@@ -150,16 +156,29 @@ const Products = () => {
                                     </div>
                                 </div>
                                 <div className='grid grid-cols-12 gap-2 h-full'>
-                                    {productResult?.map((product) => {
-                                        return (
-                                            isGridView ?
-                                                <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'>
-                                                    <VerticleProductCard product={product} />
-                                                </div>
-                                                :
-                                                <div className='col-span-12'><ListViewProductCard product={product} /></div>
-                                        )
-                                    })}
+                                    {loading ?
+                                        placeholderItems.map(index => {
+                                            return (
+                                                isGridView ? <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
+                                                    <Skeleton height={300} />
+                                                </div> : <div className='col-span-12'><Skeleton height={300} /></div>
+
+                                            )
+                                        })
+
+                                        : productResult?.map((product) => {
+
+                                            return (
+                                                isGridView ?
+                                                    <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'>
+                                                        <VerticleProductCard product={product} />
+                                                    </div>
+                                                    :
+                                                    <div className='col-span-12'><ListViewProductCard product={product} /></div>
+                                            )
+                                        })}
+
+
                                     <div className='col-span-12 mt-6 w-full flex justify-center mx-auto'>
                                         {(totalProducts > productResult?.length) ?
                                             <button className='bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3' onClick={handleFetchMore}>{t("load_more")}</button>

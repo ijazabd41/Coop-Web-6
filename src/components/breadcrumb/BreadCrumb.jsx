@@ -30,7 +30,6 @@ const BreadCrumb = () => {
                     </Link>
                     {breadcrumbs.map((crumb, index) => (
                         <div key={crumb.href} className="flex items-center gap-1">
-                            {console.log("crumb", crumb)}
                             <FaChevronRight size={14} />
                             {index === breadcrumbs.length - 1 ? (
                                 <span className="text-sm font-bold capitalize cursor-pointer">{crumb.label}</span>

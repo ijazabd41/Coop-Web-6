@@ -5,7 +5,7 @@ const Loader = (props) => {
     <>
       {props.screen !== undefined && props.screen === 'full' ? (
         <div
-          className={`fixed inset-0 flex items-center justify-center z-[999] ${props.background === 'none' ? '' : 'bg-gray-900/50'
+          className={`fixed inset-0 flex items-center justify-center z-[999] ${props.background === 'none' ? '' : ''
             }`}
         >
           <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">
@@ -13,7 +13,7 @@ const Loader = (props) => {
               {/* Outer rotating ring */}
               <span className="absolute inset-0 w-full h-full border-t-4 border-r-4 border-white border-transparent rounded-full animate-rotation"></span>
               {/* Inner counter-rotating ring */}
-              <span className="absolute inset-0 w-full h-full border-l-4 border-b-4  border-transparent rounded-full animate-reverseRotation"></span>
+              <span className="absolute inset-0 w-full h-full border-l-4 border-b-4 border-black  border-transparent rounded-full animate-reverseRotation"></span>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@ const Loader = (props) => {
               {/* Outer rotating ring */}
               <span className="absolute inset-0 w-full h-full border-t-4 border-r-4 border-white border-transparent rounded-full animate-rotation"></span>
               {/* Inner counter-rotating ring */}
-              <span className="absolute inset-0 w-full h-full border-l-4 border-b-4  border-transparent rounded-full animate-reverseRotation"></span>
+              <span className="absolute inset-0 w-full h-full border-l-4 border-b-4  border-transparent rounded-full animate-reverseRotation border-black"></span>
             </div>
           </div>
         </div>

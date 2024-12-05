@@ -59,16 +59,18 @@ const VerticleProductCard = ({ product }) => {
                         <div className="rating">
                             <div className="flex">
                                 <div className="flex">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <FaStar
-                                            key={star}
-                                            size={15}
-                                            className={`${star <= rating
-                                                ? 'fill-yellow-400 text-yellow-400'
-                                                : 'fill-gray-200 text-gray-200'
-                                                }`}
-                                        />
-                                    ))}
+                                    {[1, 2, 3, 4, 5].map((star) => {
+                                        return (
+                                            <FaStar
+                                                key={star}
+                                                size={15}
+                                                className={`${star <= parseInt(product?.average_rating)
+                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                    : 'fill-gray-200 text-gray-200'
+                                                    }`}
+                                            />
+                                        )
+                                    })}
                                 </div>
                             </div>
                         </div>

@@ -48,7 +48,7 @@ const HorizontalProductCard = ({ product }) => {
                                                 <FaStar
                                                     key={star}
                                                     size={15}
-                                                    className={`${star <= rating
+                                                    className={`${star <= product?.average_rating
                                                         ? 'fill-yellow-400 text-yellow-400'
                                                         : 'fill-gray-200 text-gray-200'
                                                         }`}

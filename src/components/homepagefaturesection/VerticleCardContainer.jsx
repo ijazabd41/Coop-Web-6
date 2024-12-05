@@ -16,7 +16,7 @@ const VerticleCardContainer = ({ products }) => {
                     </div>
                 </div>
                 <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4'>
-                    {products?.sections?.[2]?.products?.map((product, index) => {
+                    {products?.sections?.[1]?.products?.map((product, index) => {
                         return (
                             <div className='col-span-3' key={index}>
                                 <VerticleProductCard product={product} />

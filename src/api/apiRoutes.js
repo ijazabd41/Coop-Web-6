@@ -2,6 +2,43 @@
 import api from "./axiosMiddleware"
 import * as apiEndPoints from "./apiEndpoints"
 
+
+export const registerUser = async ({ name, email, mobile, type, fcm, country_code, password }) => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email)
+    formData.append("country_code", country_code)
+    formData.append("mobile", mobile)
+    formData.append("type", type)
+    formData.append("fcm_token", fcm);
+    formData.append("platform", "web");
+    if (type == "email") {
+        formData.append("password", password);
+    }
+    const response = await api.post(apiEndPoints.register, formData)
+    return response.data
+}
+export const login = async ({ id, fcm, type, password }) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("fcm_token", fcm);
+    formData.append("type", type);
+    formData.append("platform", "web");
+    if (type == "email") {
+        formData.append("password", password);
+    }
+    const response = await api.post(apiEndPoints.login, formData)
+    return response.data
+}
+export const getUser = async () => {
+    const response = await api.get(apiEndPoints.getUser)
+    return response.data
+}
+export const getCity = async ({ latitude, longitude }) => {
+    let params = { latitude: latitude, longitude: longitude };
+    const response = await api.get(apiEndPoints.getCity, { params })
+    return response.data;
+}
 export const getShop = async ({ latitude, longitude }) => {
     let params = { latitude: latitude, longitude: longitude };
     const response = await api.get(apiEndPoints.getShop, { params })

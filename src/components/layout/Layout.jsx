@@ -13,27 +13,13 @@ const Layout = ({ children }) => {
 
     const city = useSelector(state => state.City)
 
-    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        fetchSetting()
-    }, [])
 
-    const fetchSetting = async () => {
-        setLoading(true)
-        try {
-            const res = await api.getSetting()
-            dispatch(setSetting({ data: res.data }))
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log("error", error)
-        }
-    }
+
     return (
         <section>
             {
-                loading == true ? <Loader screen='full' /> : <>
+                <>
                     <Header />
                     {children}
                     <Footer />

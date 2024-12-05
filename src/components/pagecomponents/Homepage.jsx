@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import Categories from '../categories/Categories'
 import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
+import { setSetting } from '@/redux/slices/settingSlice'
 
 const Homepage = () => {
 
@@ -13,26 +14,38 @@ const Homepage = () => {
     const shopData = useSelector((state) => state.Shop.shop)
     const [loading, setLoading] = useState(false)
     useEffect(() => {
-        setLoading(true)
-        const fetchData = async () => {
-            try {
-                const response = await api.getShop({ latitude: 23.022505, longitude: 72.5713621 })
-                dispatch(setShop({ data: response.data }))
-                setLoading(false)
-            } catch (error) {
-                console.log("error", error)
-                setLoading(false)
-            }
-        }
+        fetchSetting()
         fetchData();
     }, [])
+
+    const fetchSetting = async () => {
+        setLoading(true)
+        try {
+            const res = await api.getSetting()
+            dispatch(setSetting({ data: res.data }))
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log("error", error)
+        }
+    }
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const response = await api.getShop({ latitude: 23.022505, longitude: 72.5713621 })
+            dispatch(setShop({ data: response.data }))
+            setLoading(false)
+        } catch (error) {
+            console.log("error", error)
+            setLoading(false)
+        }
+    }
 
 
     return (
         <div>
             {loading == true ? <Loader screen='full' /> :
                 <Layout>
-
                     <Home shopData={shopData} />
                 </Layout>
             }
