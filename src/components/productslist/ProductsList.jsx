@@ -171,7 +171,7 @@ const Products = () => {
                                             return (
                                                 isGridView ?
                                                     <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'>
-                                                        <VerticleProductCard product={product} />
+                                                        <VerticleProductCard product={product} key={product?.id} />
                                                     </div>
                                                     :
                                                     <div className='col-span-12'><ListViewProductCard product={product} /></div>

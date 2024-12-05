@@ -32,7 +32,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                         <div>
                             {product?.variants?.map((variant) => {
                                 return (
-                                    <div className='flex justify-between items-center px-4 py-2'>
+                                    <div className='flex justify-between items-center px-4 py-2' key={variant?.id}>
                                         <div className='font-medium text-lg'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</div>
                                         <div className='flex items-center gap-1'>
                                             <div className='flex items-center gap-3 font-bold text-base'>{setting?.setting?.currency}{variant?.discounted_price == 0 ? variant?.price : variant?.discounted_price}
