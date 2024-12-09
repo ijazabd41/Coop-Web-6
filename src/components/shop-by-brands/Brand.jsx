@@ -3,7 +3,7 @@ import React from 'react'
 
 const Brand = ({ brand }) => {
     return (
-        <div className="backgroundColor  rounded-lg text-center flex flex-col items-center px-4 py-6 gap-6">
+        <div className="backgroundColor  rounded-lg text-center flex flex-col items-center px-4 py-6 gap-6 hover:bg-transparent hover:cardBorder">
             <div className='h-[120px] w-[120px] relative'>
                 <Image src={brand.image_url} alt={brand.name} className="mx-auto h-full w-full mb-2" fill />
             </div>

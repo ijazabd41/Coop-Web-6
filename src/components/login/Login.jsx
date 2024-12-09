@@ -22,6 +22,7 @@ import { signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, RecaptchaVe
 import FirebaseData from '@/utils/firebase';
 import * as api from "@/api/apiRoutes"
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
+import Loader from "../loader/Loader";
 
 
 export function Login({ showLogin, setShowLogin, setShowRegister }) {
@@ -313,6 +314,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                                     {inputType == "number" ?
                                         <>
                                             {error ? <p>{error}</p> : <></>}
+                                            {loading ? <Loader /> : <></>}
                                             <>
                                                 <PhoneInput
                                                     country={defaultCountryCode}

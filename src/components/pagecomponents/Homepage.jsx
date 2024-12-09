@@ -13,34 +13,13 @@ const Homepage = () => {
     const dispatch = useDispatch()
     const shopData = useSelector((state) => state.Shop.shop)
     const [loading, setLoading] = useState(false)
-    useEffect(() => {
-        fetchSetting()
-        fetchData();
-    }, [])
+    // useEffect(() => {
 
-    const fetchSetting = async () => {
-        setLoading(true)
-        try {
-            const res = await api.getSetting()
-            dispatch(setSetting({ data: res.data }))
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log("error", error)
-        }
-    }
-    const fetchData = async () => {
-        setLoading(true)
-        try {
-            const response = await api.getShop({ latitude: 23.022505, longitude: 72.5713621 })
-            dispatch(setShop({ data: response.data }))
-            setLoading(false)
-        } catch (error) {
-            console.log("error", error)
-            setLoading(false)
-        }
-    }
+    //     fetchData()
+    // }, [])
 
+
+    
 
     return (
         <div>

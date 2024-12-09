@@ -19,6 +19,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 const Products = () => {
+    const city = useSelector(state => state.City)
     const filter = useSelector(state => state.ProductFilter)
     const [productResult, setProductResult] = useState([])
     const [offset, setOffset] = useState(0)
@@ -53,7 +54,7 @@ const Products = () => {
     const filterProductsFromApi = async (filter) => {
         try {
             setLoading(true);
-            const result = await api.getProductByFilter({ latitude: 23.022505, longitude: 72.5713621, filters: filter })
+            const result = await api.getProductByFilter({ latitude: city.city.latitude, longitude: city.city.longitude, filters: filter })
             if (result.status === 1) {
                 if (filter?.search) {
                     setOffset(0);

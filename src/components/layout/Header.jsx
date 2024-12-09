@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Select,
     SelectContent,
@@ -7,10 +7,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import Image from 'next/image';
-import Logo from "/public/egrocerLogo.png"
-
+import * as api from "@/api/apiRoutes"
+import { setSetting } from '@/redux/slices/settingSlice'
 import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoSunnyOutline } from 'react-icons/io5';
 import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -19,20 +27,52 @@ import Login from '../login/Login';
 import Register from '../register/Register';
 import { t } from "@/utils/translation"
 import NewUserModal from '../newusermodal/NewUserModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Location from "@/components/locationmodal/Location"
 import { BiBell, BiBookmarkHeart, BiCartAlt, BiMoneyWithdraw, BiUserCircle, BiWallet } from 'react-icons/bi';
 import { RiLogoutCircleRLine } from 'react-icons/ri';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { setCity } from '@/redux/slices/citySlice';
 
 
 const Header = () => {
+    const dispatch = useDispatch();
+    const router = useRouter();
     const setting = useSelector(state => state.Setting);
-    const user = useSelector(state => state.User)
+    const user = useSelector(state => state.User);
+    const city = useSelector(state => state.City)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false)
     const [showNewUser, setShowNewUser] = useState(false)
     const [showLocation, setShowLocation] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+
+    useEffect(() => {
+        fetchCity()
+    }, [setting])
+
+
+    const fetchCity = async () => {
+        try {
+            if (setting?.setting?.default_city && city?.city == null) {
+                const latitude = parseFloat(setting.setting.default_city?.latitude)
+                const longitude = parseFloat(setting.setting.default_city?.longitude)
+                const response = await api.getCity({ latitude: latitude, longitude: longitude })
+                if (response.status === 1) {
+                    dispatch(setCity({ data: response.data }));
+                } else {
+                    setLocModal(true);
+                }
+            } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
+                setLocModal(true);
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
 
     const handleCartOpen = () => {
         setShowCart(true)
@@ -45,6 +85,11 @@ const Header = () => {
     const handleOpenLocation = () => {
         setShowLocation(true)
     }
+
+
+
+
+
 
 
     return (
@@ -93,7 +138,7 @@ const Header = () => {
             <div className='center-header '>
                 <div className='container flex justify-between items-center pb-[8px] md:py-[12px] lg:py-[12px] columns-3 border-b-2 lg:border-none md:border-none my-2'>
                     <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
-                        <Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' fill className='h-full lg:full w-full lg:w-full object-contain' />
+                        <Link href={"/"}><Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' fill className='h-full lg:full w-full lg:w-full object-contain' /></Link>
                     </div>
                     <div className='hidden lg:flex order-2'>
                         <ul className='flex gap-6'>
@@ -117,25 +162,45 @@ const Header = () => {
                         {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
                             <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
                             <div className='flex '>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="border-none outline-none gap-2 p-0 shadow-none font-bold text-base "> {t("profile")}</DropdownMenuTrigger>
+                                    <DropdownMenuContent >
+                                        <DropdownMenuLabel className="items-center flex justify-start h-full">  <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                            <BiUserCircle size={22} />
+                                            {t("editProfile")}
+                                        </span></DropdownMenuLabel>
+                                        <DropdownMenuLabel className="items-center flex justify-start h-full"> <span className="flex p-2  text-base font-semibold bg-transparent">
+                                            <BiCartAlt size={22} />
+                                            {t("orders")}
+                                        </span></DropdownMenuLabel>
+                                        <DropdownMenuItem className="items-center flex justify-center h-full">Billing</DropdownMenuItem>
+                                        <DropdownMenuItem className="items-center flex justify-center h-full">Team</DropdownMenuItem>
+                                        <DropdownMenuItem className="items-center flex justify-center h-full">Subscription</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                                 {/* <span className='text-base font-bold'>{t("profile")}</span> */}
-                                <Select>
+                                {/* <Select>
                                     <SelectTrigger className="border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
                                         {t("profile")}
-                                        {/* <SelectValue placeholder="Theme" /> */}
+
                                     </SelectTrigger>
                                     <SelectContent className="items-center flex justify-center h-full">
-                                        <SelectItem >
-                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                                <BiUserCircle size={22} />
-                                                {t("editProfile")}
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem >
-                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                                <BiCartAlt size={22} />
-                                                {t("orders")}
-                                            </span>
-                                        </SelectItem>
+                                        <Link href={"/profile"} passHref>
+                                            <SelectItem >
+                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                    <BiUserCircle size={22} />
+                                                    {t("editProfile")}
+                                                </span>
+                                            </SelectItem>
+                                        </Link>
+                                        <Link href={"/profile"}>
+                                            <SelectItem >
+                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                    <BiCartAlt size={22} />
+                                                    {t("orders")}
+                                                </span>
+                                            </SelectItem>
+                                        </Link>
                                         <SelectItem >
                                             <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
                                                 <BiBookmarkHeart size={22} />
@@ -173,7 +238,7 @@ const Header = () => {
                                             </span>
                                         </SelectItem>
                                     </SelectContent>
-                                </Select>
+                                </Select> */}
                             </div>
                         </div> : <div className='flex gap-2 items-center cursor-pointer' onClick={handleLoginOpen}>
                             <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
@@ -200,7 +265,18 @@ const Header = () => {
                         <div className="flex flex-col">
                             <span className="text-sm ">{t("deliver_to")}</span>
                             <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap w-40">
-                                Bhuj, Gujarat, India
+                                <>
+                                    {city.status === 'fulfill'
+                                        ? city?.city?.formatted_address
+                                        : (
+                                            <div className="d-flex justify-content-center">
+                                                <div className="spinner-border" role="status">
+                                                    <span className="visually-hidden">{t("loading")}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                </>
+
                             </span>
 
                         </div>

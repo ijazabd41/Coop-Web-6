@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -17,9 +17,13 @@ import { setSetting } from '@/redux/slices/settingSlice'
 import { setCity } from '@/redux/slices/citySlice'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
+import { setShop } from '@/redux/slices/shopSlice'
+import Loader from '../loader/Loader'
+
 
 const Location = ({ showLocation, setShowLocation }) => {
     const setting = useSelector(state => state.Setting)
+    const inputRef = useRef();
     const dispatch = useDispatch()
     const [mapView, setMapView] = useState(false)
     const [address, setAddress] = useState("")
@@ -27,22 +31,35 @@ const Location = ({ showLocation, setShowLocation }) => {
     const [isInputFields, setisInputFields] = useState(false);
     const [addressLoading, setAddressLoading] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [errorMessage, seterrorMsg] = useState("")
+    const [center, setCenter] = useState()
+
 
     const [localLocation, setlocalLocation] = useState({
         city: "",
         formatted_address: "",
-        lat: parseFloat(23.022505),
-        lng: parseFloat(72.5713621),
+        lat: parseFloat(0),
+        lng: parseFloat(0),
     });
 
-    const inputRef = useRef();
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            setlocalLocation({ lat: lat, lng: lng })
+        });
+    }, [showLocation])
 
-    const center = {
-        lat: localLocation.lat,
-        lng: localLocation.lng,
-        streetViewControl: false
-    }
 
+
+    useEffect(() => {
+        const center = {
+            lat: localLocation.lat,
+            lng: localLocation.lng,
+            streetViewControl: false
+        }
+        setCenter(center)
+    }, [localLocation.lat, localLocation.lng])
 
     const handleCloseLocation = () => {
         setShowLocation(false)
@@ -52,6 +69,54 @@ const Location = ({ showLocation, setShowLocation }) => {
     const handleViewMap = () => {
         setMapView(true)
     }
+
+    const handleConfirmLocation = async () => {
+
+        try {
+            if (errorMessage !== "") {
+                toast.error("We are not deliver on this city")
+                return;
+            }
+            const result = await api.getCity({ latitude: localLocation.lat, longitude: localLocation.lng })
+            dispatch(setCity({
+                data: {
+                    id: result.data.id,
+                    name: localLocation.city,
+                    state: result.data.state,
+                    formatted_address: localLocation.formatted_address,
+                    latitude: result.data.latitude,
+                    longitude: result.data.longitude,
+                    min_amount_for_free_delivery: result.data.min_amount_for_free_delivery,
+                    delivery_charge_method: result.data.delivery_charge_method,
+                    fixed_charge: result.data.fixed_charge,
+                    per_km_charge: result.data.per_km_charge,
+                    time_to_travel: result.data.time_to_travel,
+                    max_deliverable_distance: result.data.max_deliverable_distance,
+                    distance: result.data.distance
+                }
+            }))
+            fetchShop(result.data.latitude, result.data.longitude)
+            setShowLocation(false)
+            seterrorMsg("")
+            setMapView(false)
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+
+    const fetchShop = async (lat, lng) => {
+        setLoading(true)
+        try {
+            const response = await api.getShop({ latitude: lat, longitude: lng })
+            dispatch(setShop({ data: response.data }))
+            setLoading(false)
+        } catch (error) {
+            console.log("error", error)
+            setLoading(false)
+        }
+    }
+
 
     const getAvailableCity = async (response) => {
         var results = response.results;
@@ -100,23 +165,39 @@ const Location = ({ showLocation, setShowLocation }) => {
                 lng: e.latLng.lng(),
             }
         }).then(async (res) => {
+
             if (res.results[0]) {
                 const result = await getAvailableCity(res)
-                if(result.status == 1){
-
-                }else{
-                    
+                if (result.status == 1) {
+                    setlocalLocation({
+                        formatted_address: result?.data?.formatted_address,
+                        city: result?.data?.name,
+                        lat: res.results[0].geometry.location.lat(),
+                        lng: res.results[0].geometry.location.lng()
+                    })
+                    setAddressLoading(false);
+                    seterrorMsg("");
+                } else {
+                    setlocalLocation({
+                        city: null,
+                        formatted_address: res.results[0].formatted_address,
+                        lat: (res.results[0].geometry.location.lat()),
+                        lng: (res.results[0].geometry.location.lng()),
+                    });
+                    setAddressLoading(false);
+                    // setisloading(false);
+                    seterrorMsg(res.message);
                 }
             } else {
+                toast.error("City not found")
             }
         }).catch((error) => {
             console.log("err", error)
         })
-
-
     }
 
     const handlePlaceChanged = async (e) => {
+        setLoading(true)
         const [place] = inputRef.current.getPlaces();
         try {
             if (place) {
@@ -157,22 +238,16 @@ const Location = ({ showLocation, setShowLocation }) => {
                     dispatch(setSetting({ data: updatedSetting }));
                     setLoading(false);
                     setShowLocation(false);
-                    // props.bodyScroll(false);
-                    // props.setisLocationPresent(true);
-                    setShowLocation(false);
                 } else if (response.status == 0) {
                     setLoading(false);
-                    toast.error(t("We doesn't deliver at selected city"));
-                    // props.setisLocationPresent(false);
+                    toast.error(t("We_doesn't_deliver_at_selected_city"));
                     setShowLocation(true);
                 } else {
                     setLoading(false);
                     seterrorMsg(res.message);
                 }
-                // props.setisLocationPresent(true);
-                // closeModalRef.current.click();
             } else {
-                // toast.error("Location not found !");
+                toast.error("Location not found !");
                 setShowLocation(true);
                 setLoading(false);
             }
@@ -185,7 +260,7 @@ const Location = ({ showLocation, setShowLocation }) => {
 
     return (
         <>
-            <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
+            {loading ? <Loader /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
                 <DialogContent>
                     <DialogHeader className="text-lg font-extrabold">{t("select_location")}</DialogHeader>
                     <div className='flex'>
@@ -202,19 +277,17 @@ const Location = ({ showLocation, setShowLocation }) => {
                                         <span class=" text-[#4B6272] font-bold text-base">OR</span>
                                         <hr class="flex-grow border-t-2 border-solid border-gray-300" />
                                     </div>
-                                    <form >
-                                        <StandaloneSearchBox
-                                            onLoad={ref => inputRef.current = ref}
-                                            onPlacesChanged={handlePlaceChanged}
-                                        >
-                                            <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center'
-                                                onFocus={() => {
-                                                    setcurrLocationClick(false);
-                                                    setisInputFields(true);
-                                                }} onBlur={() => { setisInputFields(false); }}
-                                            />
-                                        </StandaloneSearchBox>
-                                    </form>
+                                    <StandaloneSearchBox
+                                        onLoad={ref => inputRef.current = ref}
+                                        onPlacesChanged={handlePlaceChanged}
+                                    >
+                                        <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center'
+                                            onFocus={() => {
+                                                setcurrLocationClick(false);
+                                                setisInputFields(true);
+                                            }} onBlur={() => { setisInputFields(false); }}
+                                        />
+                                    </StandaloneSearchBox>
                                 </div>
                                 :
                                 <div className='flex flex-col gap-3 w-full'>
@@ -226,16 +299,16 @@ const Location = ({ showLocation, setShowLocation }) => {
                                         </GoogleMap>
                                     </div>
                                     <div className='flex flex-col gap-1'>
-                                        <h2 className='text-center font-bold text-base'>address:</h2>
-                                        <h2 className=''>Bhuj,Gujarat,India</h2>
+                                        {/* <h2 className='text-center font-bold text-base'>address:</h2> */}
+                                        <p className='text-center font-semibold text-base'><b>{t("address")} : </b>{addressLoading ? "...." : localLocation.formatted_address}</p>
                                     </div>
-                                    <button className='w-full primaryBorder p-1 rounded-lg'>{t("confirm")}</button>
+                                    <button onClick={handleConfirmLocation} className='w-full primaryBorder p-1 rounded-lg' >{t("confirm")}</button>
                                 </div>
-
                         }
                     </div>
                 </DialogContent>
-            </Dialog>
+            </Dialog>}
+
         </>
     )
 }
