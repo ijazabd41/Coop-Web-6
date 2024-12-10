@@ -11,21 +11,17 @@ import { setSetting } from '@/redux/slices/settingSlice'
 const Homepage = () => {
 
     const dispatch = useDispatch()
-    const shopData = useSelector((state) => state.Shop.shop)
+
     const [loading, setLoading] = useState(false)
-    // useEffect(() => {
-
-    //     fetchData()
-    // }, [])
 
 
-    
+
 
     return (
         <div>
             {loading == true ? <Loader screen='full' /> :
                 <Layout>
-                    <Home shopData={shopData} />
+                    <Home />
                 </Layout>
             }
 

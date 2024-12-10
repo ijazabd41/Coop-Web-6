@@ -34,11 +34,13 @@ import { RiLogoutCircleRLine } from 'react-icons/ri';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { setCity } from '@/redux/slices/citySlice';
+import { setTheme } from '@/redux/slices/themeSlice';
 
 
 const Header = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+
     const setting = useSelector(state => state.Setting);
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
@@ -54,6 +56,9 @@ const Header = () => {
         fetchCity()
     }, [setting])
 
+    const handleChangeTheme = (e) => {
+        setTheme(e.target.value)
+    }
 
     const fetchCity = async () => {
         try {
@@ -86,12 +91,6 @@ const Header = () => {
         setShowLocation(true)
     }
 
-
-
-
-
-
-
     return (
         <section className='border-b-2 pb-3'>
             <div className="w-full primaryBackColor top-header text-white lg:block md:block hidden">
@@ -117,8 +116,8 @@ const Header = () => {
                             <SelectTrigger className="w-[100px] border-none">
                                 <SelectValue placeholder="Theme" />
                             </SelectTrigger>
-                            <SelectContent className="w-[100px] bg-white">
-                                <SelectItem value="light">{t("light")}</SelectItem>
+                            <SelectContent className="w-[100px] bg-white" onChange={handleChangeTheme}>
+                                <SelectItem value="light" >{t("light")}</SelectItem>
                                 <SelectItem value="dark">{t("dark")}</SelectItem>
                             </SelectContent>
                         </Select>
@@ -162,20 +161,59 @@ const Header = () => {
                         {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
                             <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
                             <div className='flex '>
-                                <DropdownMenu>
+                                <DropdownMenu >
                                     <DropdownMenuTrigger className="border-none outline-none gap-2 p-0 shadow-none font-bold text-base "> {t("profile")}</DropdownMenuTrigger>
                                     <DropdownMenuContent >
-                                        <DropdownMenuLabel className="items-center flex justify-start h-full">  <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                            <BiUserCircle size={22} />
-                                            {t("editProfile")}
-                                        </span></DropdownMenuLabel>
-                                        <DropdownMenuLabel className="items-center flex justify-start h-full"> <span className="flex p-2  text-base font-semibold bg-transparent">
-                                            <BiCartAlt size={22} />
-                                            {t("orders")}
-                                        </span></DropdownMenuLabel>
-                                        <DropdownMenuItem className="items-center flex justify-center h-full">Billing</DropdownMenuItem>
-                                        <DropdownMenuItem className="items-center flex justify-center h-full">Team</DropdownMenuItem>
-                                        <DropdownMenuItem className="items-center flex justify-center h-full">Subscription</DropdownMenuItem>
+                                        <Link href={"/profile"}>
+                                            <DropdownMenuItem className="items-center flex justify-start h-full">
+                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                    <BiUserCircle size={22} />
+                                                    {t("editProfile")}
+                                                </span>
+                                            </DropdownMenuItem>
+                                        </Link>
+                                        <Link href={"/profile/activeorders"}>
+                                            <DropdownMenuItem className="items-center flex justify-start h-full">
+                                                <span className="flex p-2 gap-2  text-base font-semibold bg-transparent">
+                                                    <BiCartAlt size={22} />
+                                                    {t("orders")}
+                                                </span>
+                                            </DropdownMenuItem>
+                                        </Link>
+
+                                        <DropdownMenuItem className="items-center flex justify-start h-full">
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiBookmarkHeart size={22} />
+                                                {t("wishlist")}
+                                            </span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="items-center flex justify-start h-full">
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiBell size={22} />
+                                                {t("notification")}
+                                            </span>
+                                        </DropdownMenuItem>
+                                        <Link href={"/profile/address"}>
+                                            <DropdownMenuItem className="items-center flex justify-start h-full">
+                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                    <IoLocationOutline size={22} />
+                                                    {t("myAddress")}
+                                                </span>
+                                            </DropdownMenuItem>
+                                        </Link>
+                                        <DropdownMenuItem className="items-center flex justify-start h-full">
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <BiWallet size={22} />
+                                                {t("walletBalance")}
+                                            </span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="items-center flex justify-start h-full">
+                                            <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                <RiLogoutCircleRLine size={20} />
+                                                {t("logout")}
+                                            </span>
+                                        </DropdownMenuItem>
+
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 {/* <span className='text-base font-bold'>{t("profile")}</span> */}

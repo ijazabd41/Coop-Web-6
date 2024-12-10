@@ -8,7 +8,8 @@ const nextConfig = {
         port: '',
         pathname: '/storage/**',
       },
-    ]
+    ],
+    unoptimized: true
 
   },
   reactStrictMode: false,

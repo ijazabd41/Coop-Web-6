@@ -32,13 +32,13 @@ const Layout = ({ children }) => {
             console.log("error", error)
         }
     }
+
     const fetchShop = async () => {
         setLoading(true)
         try {
-            const latitude = parseFloat(setting.setting.default_city?.latitude)
-            const longitude = parseFloat(setting.setting.default_city?.longitude)
+            const latitude = parseFloat(city?.city?.latitude)
+            const longitude = parseFloat(city?.city?.longitude)
             const response = await api.getShop({ latitude: latitude, longitude: longitude })
-            console.log("res", response)
             dispatch(setShop({ data: response.data }))
             setLoading(false)
         } catch (error) {

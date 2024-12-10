@@ -16,12 +16,25 @@
   --cart-button-bg:#55ae7b26;
 }
 
+.dark{
+  --body-background-color: #141414;
+  --button-background-color:#141414;
+  --primary-color: #55AE7B;
+  --sub-text-color: #8b8b8b;
+  --second-cards-color: #202934;
+  --text-field-color: white;
+  --gray-hover-color: #dcdcdc;
+  --container-bg: #f2f3f9;
+  --font-color: white;
+  --button-border-color: #8ba2b3;
+}
+
 * {
   font-family: var(--font-family);
 }
 
 @layer utilities {
-
+  
 
 
   .bodyBackgroundColor {

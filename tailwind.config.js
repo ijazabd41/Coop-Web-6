@@ -18,7 +18,6 @@ export default {
 				xl: '1140px',
 				'2xl': '1320px',
 			},
-			padding: `10px`
 		},
 		extend: {
 			keyframes: {
