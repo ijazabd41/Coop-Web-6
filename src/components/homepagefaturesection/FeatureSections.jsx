@@ -36,7 +36,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {aboveHomeSlider && aboveHomeSlider?.map((offer) => {
                         return (
-                            <div className='py-6  relative'>
+                            <div className='py-6  relative' key={offer?.id}>
                                 <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                             </div>
                         )
@@ -44,13 +44,13 @@ const FeatureSections = () => {
                 </div>
                 {aboveHomeSection && aboveHomeSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
 
                 })}
@@ -58,7 +58,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
-                            <div className='py-6  relative'>
+                            <div className='py-6  relative' key={offer?.id}>
                                 <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                             </div>
                         )
@@ -66,13 +66,13 @@ const FeatureSections = () => {
                 </div>
                 {belowHomeSliderSection && belowHomeSliderSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
 
                 })}
@@ -80,7 +80,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowCategory && BelowCategory?.map((offer) => {
                         return (
-                            <div className='py-6  relative'>
+                            <div className='py-6  relative' key={offer?.id}>
                                 <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                             </div>
                         )
@@ -88,26 +88,26 @@ const FeatureSections = () => {
                 </div>
                 {belowCategorySection && belowCategorySection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
 
                 })}
                 <BrandSlider brands={shop} />
                 {belowBrandsSection && belowBrandsSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
 
                 })}
@@ -115,26 +115,26 @@ const FeatureSections = () => {
                 <SellerSlider sellers={shop} />
                 {belowShopSellerSection && belowShopSellerSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
 
                 })}
                 <CountrySlider countries={shop} />
                 {belowCoutrySection && belowCoutrySection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} />)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id}/>)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} />)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id}/>)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} />)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id}/>)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} />)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id}/>)
                     }
 
                 })}
