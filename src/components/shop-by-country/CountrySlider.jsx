@@ -17,8 +17,8 @@ const CountrySlider = ({ countries }) => {
                         <div className='flex gap-4 items-center flex-col md:flex-row'>
                             <Link href={"/"} >View all</Link>
                             <div className=' flex gap-2'>
-                                <button className='buttonBorder rounded-full p-2 country-prev'><IoMdArrowBack fill="black" size={20} /></button>
-                                <button className='buttonBorder rounded-full p-2 country-next'><IoMdArrowForward fill="black" size={20} /></button>
+                                <button className='buttonBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                                <button className='buttonBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
                             </div>
                         </div>
                     </div>

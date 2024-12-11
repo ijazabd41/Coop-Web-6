@@ -39,7 +39,7 @@ const Profile = () => {
                         <div className="mb-4">
                             <label
                                 htmlFor="name"
-                                className="block text-sm font-medium text-gray-700"
+                                className="block text-sm font-medium "
                             >
                                 Name <span className="text-red-500">*</span>
                             </label>
@@ -57,7 +57,7 @@ const Profile = () => {
                         <div className="mb-4">
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700"
+                                className="block text-sm font-medium "
                             >
                                 Email <span className="text-red-500">*</span>
                             </label>
@@ -75,7 +75,7 @@ const Profile = () => {
                         <div className="mb-4">
                             <label
                                 htmlFor="mobile"
-                                className="block text-sm font-medium text-gray-700"
+                                className="block text-sm font-medium "
                             >
                                 Mobile Number <span className="text-red-500">*</span>
                             </label>
@@ -93,7 +93,7 @@ const Profile = () => {
                         <div className="mt-6 flex justify-end w-full">
                             <button
                                 type="submit"
-                                className="w-40 bg-[#141A1F]  text-white py-2 px-4 rounded-md  "
+                                className="w-40 bg-[#29363f]  text-white py-2 px-4 rounded-md  "
                             >
                                 Update Profile
                             </button>

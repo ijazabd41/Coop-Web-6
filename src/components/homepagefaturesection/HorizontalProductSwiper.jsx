@@ -36,8 +36,8 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                         <Link href={"/"} >View all</Link>
                                         <div className=' flex gap-2'>
-                                            <button className={`buttonBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack fill="black" size={20} /></button>
-                                            <button className={`buttonBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward fill="black" size={20} /></button>
+                                            <button className={`textColor buttonBorder rounded-full p-2 prev-btn-${section?.id} `}><IoMdArrowBack className='textColor' size={20} /></button>
+                                            <button className={`textColor buttonBorder rounded-full p-2 next-btn-${section?.id} `}><IoMdArrowForward className='textColor' size={20} /></button>
                                         </div>
                                     </div>
                                 </div>

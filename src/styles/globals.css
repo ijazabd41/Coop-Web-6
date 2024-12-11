@@ -13,12 +13,14 @@
   --font-family: "Nunito", sans-serif;
   --swiper-background-color: #F2F5F7;
   --button-border-color: #8ba2b3;
-  --cart-button-bg:#55ae7b26;
+  --cart-button-bg: #55ae7b26;
+  --bs-body-bg: #fff;
 }
 
-.dark{
+
+.dark {
   --body-background-color: #141414;
-  --button-background-color:#141414;
+  --button-background-color: #141414;
   --primary-color: #55AE7B;
   --sub-text-color: #8b8b8b;
   --second-cards-color: #202934;
@@ -27,6 +29,9 @@
   --container-bg: #f2f3f9;
   --font-color: white;
   --button-border-color: #8ba2b3;
+  --bs-body-bg: #212529;
+  --swiper-background-color: #202934;
+  --border-color:#4A4949;
 }
 
 * {
@@ -34,8 +39,12 @@
 }
 
 @layer utilities {
+
   
 
+  .headerBackgroundColor {
+    background-color: var(--bs-body-bg)
+  }
 
   .bodyBackgroundColor {
     background-color: var(--body-background-color);
@@ -45,11 +54,11 @@
     background-color: var(--primary-color);
   }
 
-  .cartButtonBackground{
+  .cartButtonBackground {
     background-color: var(--cart-button-bg);
   }
 
-  .primaryBorder{
+  .primaryBorder {
     border: 1px solid var(--primary-color);
   }
 
@@ -93,6 +102,10 @@
 
   .buttonBorder {
     border: 1px solid var(--button-border-color);
+  }
+
+  .bottomBorder{
+    border-bottom: 1px solid var(--border-color);
   }
 
   .textPrimaryColor {
@@ -157,7 +170,8 @@
   border-radius: 0px !important; */
   font-size: 16px;
   color: var(--font-color);
-  background-color: white;
+
+
 }
 
 .ant-collapse .ant-collapse-item .ant-collapse-header .ant-collapse-expand-icon {
@@ -277,10 +291,30 @@
   outline: none;
 }
 
+.react-loading-skeleton{
+  --base-color:var(--swiper-background-color) !important;
+}
+
 
 #recaptcha-container {
   position: absolute !important;
   z-index: 9999 !important;
+}
+
+.react-tel-input .flag-dropdown {
+  background-color: var(--body-background-color) !important;
+}
+
+.react-tel-input .form-control {
+  background-color: var(--body-background-color) !important;
+}
+
+.otp-container>input {
+  background-color: var(--body-background-color) !important;
+}
+
+.toastContainer {
+  background-color: var(--body-background-color) !important;
 }
 
 @layer base {

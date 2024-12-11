@@ -23,7 +23,7 @@ const ActiveOrders = () => {
                         </div>
                         <div className='col-span-2 flex flex-col  items-center'>
                             <p className='font-normal text-sm'>Order Status</p>
-                            <span className='bg-[#F1FFFC] p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]'>Received</span>
+                            <span className='p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]'>Received</span>
                         </div>
                     </div>
                     <div className='p-4'>

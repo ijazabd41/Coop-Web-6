@@ -128,15 +128,14 @@ const FeatureSections = () => {
                 <CountrySlider countries={shop} />
                 {belowCoutrySection && belowCoutrySection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id}/>)
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} key={section?.id}/>)
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} key={section?.id}/>)
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id}/>)
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
-
                 })}
             </div>
         </section>

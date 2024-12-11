@@ -126,7 +126,7 @@ const Products = () => {
                         </div>
                         <div className='col-span-12 md:col-span-9'>
                             <div className='flex flex-col gap-6'>
-                                <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
+                                {loading ? <Skeleton height={70} /> : <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
                                     <p className='text-dm font-normal order-2 md:order-1'>{totalProducts} {t("products_found")}</p>
                                     <div className='flex gap-4 order-1 md:order-2'>
                                         <div className='flex gap-2 items-center'>
@@ -135,7 +135,7 @@ const Products = () => {
                                                 <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
                                                     <SelectValue placeholder={t("default")} />
                                                 </SelectTrigger>
-                                                <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10 bg-white hidden md:block lg:block">
+                                                <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
                                                     <SelectItem value="default">{t("default")}</SelectItem>
                                                     <SelectItem value="new">{t("newest_first")}</SelectItem>
                                                     <SelectItem value="old">{t("oldest_first")}</SelectItem>
@@ -155,7 +155,8 @@ const Products = () => {
                                             ><FaThList size={23} onClick={handleListViewChange} /></span>
                                         </div>
                                     </div>
-                                </div>
+                                </div>}
+
                                 <div className='grid grid-cols-12 gap-2 h-full'>
                                     {loading ?
                                         placeholderItems.map(index => {

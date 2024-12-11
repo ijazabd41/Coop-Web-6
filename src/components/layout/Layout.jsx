@@ -5,12 +5,15 @@ import { setSetting } from "@/redux/slices/settingSlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "@/api/apiRoutes"
-import Loader from "@/components/loader/Loader";
+import { ToastContainer } from 'react-toastify';
 import { setShop } from '@/redux/slices/shopSlice';
+
+
 
 const Layout = ({ children }) => {
 
     const dispatch = useDispatch();
+    const theme = useSelector(state => state.Theme.theme)
     const setting = useSelector(state => state.Setting)
     const city = useSelector(state => state.City)
     const shopData = useSelector((state) => state.Shop.shop)
@@ -20,6 +23,8 @@ const Layout = ({ children }) => {
         fetchSetting()
         fetchShop();
     }, [city])
+
+
 
     const fetchSetting = async () => {
         setLoading(true)
@@ -55,9 +60,9 @@ const Layout = ({ children }) => {
                     <Header />
                     {children}
                     <Footer />
+                    <ToastContainer theme={theme} key="toastContainer" bodyClassName={"toast-body"} toastClassName='toast-container-class' />
                 </>
             }
-
         </section>
     )
 }

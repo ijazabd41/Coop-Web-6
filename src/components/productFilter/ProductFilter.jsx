@@ -150,8 +150,8 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
     return (
         <>
-            <div className="cardBorder rounded-md">
-                <div className='p-4 border-b-[1px]'>
+            <div className="cardBorder rounded-md headerBackgroundColor">
+                <div className='p-4 bottomBorder '>
                     <div className='flex justify-between items-center  '>
                         <h5 className="text-xl font-bold">{t("filters")}</h5>
                         <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'
@@ -168,9 +168,9 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                         </p>
                     </div>
                 </div>
-                <Collapse defaultActiveKey={["1", "2", "3"]}>
-                    <Collapse.Panel header={t("product_category")} key="1" className="text-base font-semibold bg-white">
-                        <div className='filter-row'>
+                <Collapse defaultActiveKey={["1", "2", "3"]} className="">
+                    <Collapse.Panel header={t("product_category")} key="1" className="text-base font-semibold  textColor">
+                        <div className='filter-row '>
                             <Tree
                                 checkable
                                 treeData={renderTreeNodes(treeData)}
@@ -181,12 +181,13 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                                 checkedKeys={selectedCategories}
                                 showLine={false}
                                 switcherIcon={null}
+                                className="textColor"
                             />
                             {/* <CategoryComponent data={category} selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} setproductresult={setproductresult} setoffset={setoffset} /> */}
                         </div>
                     </Collapse.Panel>
 
-                    {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold bg-white">
+                    {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold ">
                         <div className='filter-row'>
                             {
                                 // brands == null ? (<Loader />) :
@@ -205,12 +206,12 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                                                 <Checkbox.Group>
                                                 </Checkbox.Group>
                                             </Checkbox>
-                                            <span className="text-sm font-normal">{brand.name}</span>
+                                            <span className="text-sm font-normal textColor">{brand.name}</span>
                                         </div>
                                     );
                                 })
                             }
-                            {brands?.length < totalBrands ? <a className='brand-view-more' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+                            {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
 
                         </div>
                     </Collapse.Panel>

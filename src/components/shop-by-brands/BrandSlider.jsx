@@ -15,8 +15,8 @@ const BrandSlider = ({ brands }) => {
                     <div className='flex gap-4 items-center flex-col md:flex-row'>
                         <Link href={"/products"} >View all</Link>
                         <div className=' flex gap-2'>
-                            <button className='buttonBorder rounded-full p-2 seller-prev'><IoMdArrowBack fill="black" size={20} /></button>
-                            <button className='buttonBorder rounded-full p-2 seller-next'><IoMdArrowForward fill="black" size={20} /></button>
+                            <button className='buttonBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                            <button className='buttonBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
                         </div>
                     </div>
                 </div>

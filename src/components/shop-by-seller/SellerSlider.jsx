@@ -9,7 +9,7 @@ import { Navigation } from "swiper/modules";
 
 const SellerSlider = ({ sellers }) => {
     return (
-        <section className='backgroundColor my-6'>
+        <section className=' my-6'>
             <div className='container py-12 '>
                 <div className='flex flex-col gap-6'>
                     <div className='flex justify-between'>

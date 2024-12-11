@@ -25,10 +25,10 @@ const Categories = ({ categories }) => {
                             <div className='flex gap-2 '>
                                 <button className="category-button-next cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 "
                                 >
-                                    <IoMdArrowBack fill="black" size={20} />
+                                    <IoMdArrowBack className='textColor' size={20} />
                                 </button>
                                 <button className=" category-button-prev cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
-                                    <IoMdArrowForward fill="black" size={20} />
+                                    <IoMdArrowForward className='textColor' size={20} />
                                 </button>
                             </div>
 

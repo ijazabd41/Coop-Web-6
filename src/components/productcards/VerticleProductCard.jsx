@@ -39,8 +39,8 @@ const VerticleProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='flex flex-col p-2 border-[1px] group rounded-md'>
-                <div className='flex relative'>
+            <div className='flex flex-col p-2 border-[1px] group rounded-md headerBackgroundColor textColor'>
+                <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
                         <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
@@ -52,9 +52,9 @@ const VerticleProductCard = ({ product }) => {
                         </ul>
                     </div>
                 </div>
-                <div className='h-[100px] flex flex-col justify-between'>
+                <div className='h-[100px] flex flex-col justify-between '>
 
-                    <h3 className="flex text-[#2a3640] text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
+                    <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
                     {product?.average_rating > 0 ?
                         <div className="rating">
                             <div className="flex">
@@ -76,8 +76,8 @@ const VerticleProductCard = ({ product }) => {
                         </div>
                         : null}
                     <div className='flex'>
-                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='text-black text-base font-bold'>₹{productsVariants?.[0]?.discounted_price}</p>
-                            <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{productsVariants[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{productsVariants?.[0]?.price}</p>}
+                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='textColortext-base font-bold'>₹{productsVariants?.[0]?.discounted_price}</p>
+                            <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>₹{productsVariants[0]?.price}</p></> : <p className='textColor text-base font-bold'>₹{productsVariants?.[0]?.price}</p>}
                     </div>
                 </div>
                 <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>

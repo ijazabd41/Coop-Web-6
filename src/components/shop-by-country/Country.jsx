@@ -3,7 +3,7 @@ import React from 'react'
 
 const Country = ({ country }) => {
     return (
-        <div className='flex flex-col items-center hover:countryHover p-3 sm:p-4 md:p-6 rounded-lg transition-all duration-300'>
+        <div className='flex flex-col items-center hover:countryHover p-3 sm:p-4 md:p-6 rounded-lg transition-all duration-300 headerBackgroundColor'>
             <div className='relative aspect-square w-full max-w-[12rem]'>
                 <Image
                     src={`${process.env.NEXT_PUBLIC_APP_API_URL}/storage/${country.logo}`}

@@ -4,6 +4,7 @@ import SettingReducer from "@/redux/slices/settingSlice"
 import UserReducer from "@/redux/slices/userSlice"
 import ProductFilterReducer from "@/redux/slices/productFilterSlice"
 import CityReducer from "@/redux/slices/citySlice"
+import ThemeReducer from "@/redux/slices/themeSlice"
 
 export const rootReducer = combineReducers({
     City: CityReducer,
@@ -11,5 +12,6 @@ export const rootReducer = combineReducers({
     Setting: SettingReducer,
     User: UserReducer,
     ProductFilter: ProductFilterReducer,
+    Theme: ThemeReducer
 })
 

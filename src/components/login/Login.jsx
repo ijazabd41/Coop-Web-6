@@ -361,16 +361,14 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                                     <div className="py-6 flex items-center justify-center">
                                         <p className=" text-center ">By creating account you agree to eGrocer
                                             Terms of Service and Privacy Policy.</p>
-                                    </div></>
+                                    </div>
+                                </>
                             }
-
                         </div>
-
                     </div>
-
                 </DialogContent>
             </Dialog>
-            <div id="recaptcha-container" style={{ display: "none" }}></div>
+            <div id="recaptcha-container" ></div>
         </>
     )
 }

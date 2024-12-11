@@ -274,14 +274,15 @@ const Location = ({ showLocation, setShowLocation }) => {
                                     <button className='w-full m-auto rounded-lg primaryBorder p-1 font-medium flex items-center justify-center gap-1 mt-7' onClick={handleViewMap}><FaLocationCrosshairs /> {t("use_my_current_location")}</button>
                                     <div class="flex items-center justify-between my-4 gap-2">
                                         <hr class="flex-grow border-t-2 border-solid border-gray-300" />
-                                        <span class=" text-[#4B6272] font-bold text-base">OR</span>
+                                        <span class="  font-bold text-base">OR</span>
                                         <hr class="flex-grow border-t-2 border-solid border-gray-300" />
                                     </div>
                                     <StandaloneSearchBox
                                         onLoad={ref => inputRef.current = ref}
                                         onPlacesChanged={handlePlaceChanged}
+
                                     >
-                                        <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center'
+                                        <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor'
                                             onFocus={() => {
                                                 setcurrLocationClick(false);
                                                 setisInputFields(true);

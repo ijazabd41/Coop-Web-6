@@ -3,7 +3,7 @@ import React from 'react';
 
 const Seller = ({ seller }) => {
     return (
-        <div className='group relative flex items-center bg-white p-4 rounded-md flex-col md:flex-row overflow-hidden hover:text-white'>
+        <div className='group relative flex items-center bg-white p-4 rounded-md flex-col md:flex-row overflow-hidden hover:text-white backgroundColor '>
             {/* Hover overlay with transition */}
             <div className='absolute inset-0  bg-[#55AE7B] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out' />
 

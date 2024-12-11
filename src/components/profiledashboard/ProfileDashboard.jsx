@@ -5,6 +5,7 @@ import Profile from './Profile'
 import Address from './Address'
 import ActiveOrders from './ActiveOrders'
 import OrderHistory from './OrderHistory'
+import Wishlist from './Wishlist'
 import { useRouter } from 'next/router'
 
 const ProfileDashboard = () => {
@@ -36,7 +37,7 @@ const ProfileDashboard = () => {
                             {selectedTab == "address" && <Address />}
                             {selectedTab == "activeorders" && <ActiveOrders />}
                             {selectedTab == "orderhistory" && <OrderHistory />}
-
+                            {selectedTab == "wishlist" && <Wishlist />}
                         </>}
 
                     </div>
