@@ -265,6 +265,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                     <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
                 </DialogContent>

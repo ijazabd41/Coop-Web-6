@@ -31,7 +31,7 @@
   --button-border-color: #8ba2b3;
   --bs-body-bg: #212529;
   --swiper-background-color: #202934;
-  --border-color:#4A4949;
+  --border-color: #4A4949;
 }
 
 * {
@@ -40,7 +40,7 @@
 
 @layer utilities {
 
-  
+
 
   .headerBackgroundColor {
     background-color: var(--bs-body-bg)
@@ -104,7 +104,7 @@
     border: 1px solid var(--button-border-color);
   }
 
-  .bottomBorder{
+  .bottomBorder {
     border-bottom: 1px solid var(--border-color);
   }
 
@@ -291,8 +291,8 @@
   outline: none;
 }
 
-.react-loading-skeleton{
-  --base-color:var(--swiper-background-color) !important;
+.react-loading-skeleton {
+  --base-color: var(--swiper-background-color) !important;
 }
 
 
@@ -317,10 +317,12 @@
   background-color: var(--body-background-color) !important;
 }
 
-.react-tel-input .flag-dropdown.open .selected-flag{
+.react-tel-input .flag-dropdown.open .selected-flag {
   background: var(--body-background-color) !important;
 }
-.react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus{
+
+.react-tel-input .selected-flag:hover,
+.react-tel-input .selected-flag:focus {
   background: var(--body-background-color) !important;
 }
 
@@ -332,7 +334,7 @@
   background: var(--swiper-background-color) !important;
 }
 
-.react-tel-input .country-list .country.highlight{
+.react-tel-input .country-list .country.highlight {
   background-color: var(--bs-body-bg) !important;
 }
 

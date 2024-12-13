@@ -102,3 +102,14 @@ export const getProductById = async ({ latitude, longitude, slug, id }) => {
     const response = await api.post(apiEndPoints.getProductById, formData)
     return response.data
 }
+
+export const getProductRatings = async ({ id, limit, offset }) => {
+    const params = {
+        product_id: id,
+        limit: limit,
+        offset: offset
+    }
+    const response = await api.get(`${apiEndPoints.getProducts}/${apiEndPoints.getProductRatings}`, { params });
+
+    return response.data;
+}

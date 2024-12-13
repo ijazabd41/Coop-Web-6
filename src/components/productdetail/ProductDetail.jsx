@@ -16,9 +16,10 @@ import NonCancelable from "@/assets/NotCancelable.svg";
 import Cancelable from "@/assets/Cancelable.svg";
 import Returnable from "@/assets/Returnable.svg";
 import NotReturnable from "@/assets/NotReturnable.svg";
-import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share"
+import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share";
+import ProductDescription from './ProductDescription';
 
-const ProductDescription = () => {
+const ProductDetail = () => {
     const router = useRouter();
     const { slug } = router.query;
 
@@ -53,6 +54,8 @@ const ProductDescription = () => {
         const actualDiscountPrice = (difference / actualPrice)
         return actualDiscountPrice * 100;
     }
+
+
 
     return (
         <section>
@@ -277,10 +280,12 @@ const ProductDescription = () => {
                         </div>
                     </div>
                 </div>
+
                 <div></div>
+                <ProductDescription product={product} />
             </div>
         </section >
     )
 }
 
-export default ProductDescription
+export default ProductDetail
