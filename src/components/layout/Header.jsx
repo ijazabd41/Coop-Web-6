@@ -103,13 +103,13 @@ const Header = () => {
                         <p>{t("follow_us")}</p>
                         <div className="flex">
                             <ul className="flex gap-2 px-[16px] py-[8px]">
-                                <li className="border-r-[2px] p-2">
+                                <li className="border-r-[2px] border-white p-2">
                                     <FaFacebookF size={20} />
                                 </li>
-                                <li className="border-r-[2px] p-2">
+                                <li className="border-r-[2px] p-2 border-white">
                                     <FaInstagram size={20} />
                                 </li>
-                                <li className="border-r-[2px] p-2">
+                                <li className="border-r-[2px] p-2 border-white">
                                     <FaYoutube size={20} />
                                 </li>
                             </ul>

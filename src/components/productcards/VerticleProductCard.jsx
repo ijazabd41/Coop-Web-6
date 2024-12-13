@@ -7,6 +7,7 @@ import { MdArrowDropDown } from "react-icons/md";
 import VariantsModal from '../variantsmodal/VariantsModal'
 import ProductDetailModal from '../productdetailmodal/ProductDetailModal';
 
+
 const VerticleProductCard = ({ product }) => {
 
     const [selectedVariant, setSelectedVariant] = useState([])
@@ -23,7 +24,9 @@ const VerticleProductCard = ({ product }) => {
         return actualDiscountPrice * 100;
     }
 
-    const handleShowVariantModal = (product) => {
+    const handleShowVariantModal = (e, product) => {
+        e.preventDefault()
+        e.stopPropagation()
         if (product.variants.length > 1) {
             setShowVariants(true)
         } else {
@@ -31,7 +34,9 @@ const VerticleProductCard = ({ product }) => {
         }
     }
 
-    const handleShowDetailModal = () => {
+    const handleShowDetailModal = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
         setShowProductDetail(true)
     }
 
@@ -39,7 +44,7 @@ const VerticleProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='flex flex-col p-2 border-[1px] group rounded-md headerBackgroundColor textColor'>
+            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 border-[1px] group rounded-md headerBackgroundColor textColor'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
                         <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />
@@ -81,10 +86,10 @@ const VerticleProductCard = ({ product }) => {
                     </div>
                 </div>
                 <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>
-                    <button onClick={() => handleShowVariantModal(product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${productsVariants?.[0]?.measurement} ${productsVariants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+                    <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${productsVariants?.[0]?.measurement} ${productsVariants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
                     <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor'><FaShoppingBasket size={20} /><span>Add</span></button>
                 </div>
-            </div >
+            </Link >
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
             <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
         </div >

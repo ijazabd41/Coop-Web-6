@@ -23,7 +23,7 @@ const Wishlist = () => {
                                         <p className='font-normal text-sm'>500 GM</p>
                                     </div>
                                 </div>
-                                <div className='col-span-2 '>
+                                <div className='col-span-2'>
                                     <button className=' flex gap-2  primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]'><FaShoppingBasket size={22} />Add</button>
                                 </div>
                                 <div className='col-span-3 font-bold text-base'> $500</div>

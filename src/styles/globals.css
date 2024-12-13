@@ -317,6 +317,25 @@
   background-color: var(--body-background-color) !important;
 }
 
+.react-tel-input .flag-dropdown.open .selected-flag{
+  background: var(--body-background-color) !important;
+}
+.react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus{
+  background: var(--body-background-color) !important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag {
+  background: var(--body-background-color) !important;
+}
+
+.react-tel-input .country-list .country:hover {
+  background: var(--swiper-background-color) !important;
+}
+
+.react-tel-input .country-list .country.highlight{
+  background-color: var(--bs-body-bg) !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

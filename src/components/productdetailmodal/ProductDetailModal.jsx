@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogHeader,
 } from "@/components/ui/dialog"
-import { FaRegHeart, FaShoppingBasket, FaStar } from 'react-icons/fa'
+import { FaRegHeart, FaShoppingBasket, FaStar, FaLink } from 'react-icons/fa'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -21,13 +21,13 @@ import NonCancelable from "@/assets/NotCancelable.svg";
 import Cancelable from "@/assets/Cancelable.svg";
 import Returnable from "@/assets/Returnable.svg";
 import NotReturnable from "@/assets/NotReturnable.svg";
+import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share"
 
 
 const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) => {
 
     const setting = useSelector(state => state.Setting)
     const [productDetails, setProductDetails] = useState([])
-
     useEffect(() => {
 
         if (showDetailModal) {
@@ -39,7 +39,6 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                         id: product.id,
                         slug: product.slug
                     })
-                    console.log("res", res)
                     setProductDetails(res.data)
                 } catch (error) {
                     console.log("error", error)
@@ -90,7 +89,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                 </div>
                             </div>
                             <div className='grid  grid-cols-1 md:grid-cols-12  mx-auto mt-6 gap-3  justify-center'>
-                                <div className='col-span-4'>
+                                <div className='md:col-span-4 col-span-12'>
                                     <div className='relative aspect-square h-auto w-full'>
                                         <Image src={productDetails?.image_url} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
                                     </div>
@@ -101,19 +100,19 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             className="brand-swiper"
                                             breakpoints={{
                                                 1200: {
-                                                    slidesPerView: 3,
+                                                    slidesPerView: 3.5,
                                                 },
                                                 1024: {
                                                     slidesPerView: 3,
                                                 },
                                                 768: {
-                                                    slidesPerView: 1.5,
+                                                    slidesPerView: 3,
                                                 },
-                                                500: {
-                                                    slidesPerView: 1.5,
+                                                375: {
+                                                    slidesPerView: 3,
                                                 },
-                                                300: {
-                                                    slidesPerView: 1.5,
+                                                0: {
+                                                    slidesPerView: 2.5,
                                                 },
                                             }}
                                         >
@@ -127,7 +126,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                         </Swiper>
                                     </div>
                                 </div>
-                                <div className='col-span-8 flex flex-col gap-6'>
+                                <div className=' col-span-12 md:col-span-8 flex flex-col gap-6'>
                                     <div className='flex items-center gap-1'><h2 className='font-bold text-3xl primaryColor'>{currency}60.00</h2><h3 className='line-through font-bold text-base text-[#141A1F]'>{currency}85.00</h3></div>
                                     {/* <div dangerouslySetInnerHTML={{ __html: productDetails?.description }}>
 
@@ -140,7 +139,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
-                                                        <div className='flex flex-col col-span-4 mr-2 my-1 text-center rounded-sm  border-2 justify-center items-center' key={variant.id}>
+                                                        <div className='flex flex-col col-span-6 md:col-span-4 mr-2 my-1 text-center rounded-sm  border-2 justify-center items-center' key={variant.id}>
                                                             <p className='font-bold text-base'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
                                                             <span className='flex gap-1'><p>{currency}{discountPrice != 0 ? discountPrice : price}</p>{discountPrice != 0 ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
@@ -149,18 +148,20 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             }
                                         </div>
                                     </div>
-                                    <div className='flex gap-4'>
-                                        <div className='grid grid-cols-6 border-2 rounded-sm p-1 items-center'>
-                                            <span className='col-span-1 font-bold text-xl'><FiMinus /></span>
-                                            <span className='col-span-4 text-center font-medium text-base '>1</span>
-                                            <span className='col-span-1 font-bold text-xl'><FiPlus /></span>
+                                    <div className='flex gap-4 flex-col lg:flex-row'>
+                                        <div className='flex gap-4 items-center'>
+                                            <div className='grid grid-cols-6 border-2 rounded-sm p-1 lg:py-[10px] items-center'>
+                                                <span className='col-span-1 font-bold text-xl'><FiMinus /></span>
+                                                <span className='col-span-4 text-center font-medium text-base '>1</span>
+                                                <span className='col-span-1 font-bold text-xl'><FiPlus /></span>
+                                            </div>
+                                            <div>
+                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-2 lg:py-3 rounded-sm text-base font-semibold'><FaShoppingBasket size={22} />Add to Cart</button>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <button className='primaryBackColor flex gap-2 text-white py-3 px-12 rounded-sm text-base font-semibold'><FaShoppingBasket size={22} />Add to Cart</button>
-                                        </div>
+
                                         <div className='flex gap-2 items-center'>
                                             <span className='rounded-full border-2 p-2'>
-
                                                 <FaRegHeart size={18} />
                                             </span>
                                             <span>{t("addToWishlist")}</span>
@@ -244,6 +245,24 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
 
                                     </div>
+                                </div>
+                            </div>
+                            <div className='flex justify-between items-center my-2 md:my-0'>
+                                <span className='text-sm font-normal'>{t("shareProduct")}:</span>
+                                <div className='flex gap-3'>
+                                    <WhatsappShareButton url='google.com'>
+                                        <WhatsappIcon className='h-10 w-10 rounded-full' />
+                                    </WhatsappShareButton>
+                                    <TwitterShareButton>
+                                        <TwitterIcon className='h-10 w-10 rounded-full' />
+                                    </TwitterShareButton>
+                                    <FacebookShareButton>
+                                        <FacebookIcon className='h-10 w-10 rounded-full' />
+                                    </FacebookShareButton>
+                                    {/* <InstapaperShareButton>
+                                            <InstapaperIcon className='h-10 w-10 rounded-full' />
+                                        </InstapaperShareButton> */}
+                                    <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
                                 </div>
                             </div>
                         </div>

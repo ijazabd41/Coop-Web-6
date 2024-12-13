@@ -91,7 +91,7 @@ export const getSetting = async () => {
     return response.data
 }
 
-export const getProductById = async ({ latitude, longitude, id, slug }) => {
+export const getProductById = async ({ latitude, longitude, slug, id }) => {
     const formData = new FormData();
     formData.append("latitude", latitude)
     formData.append("longitude", longitude)
