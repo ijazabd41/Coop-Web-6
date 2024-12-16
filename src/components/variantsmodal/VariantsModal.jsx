@@ -23,7 +23,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                 <DialogContent className="max-w-xl ">
                     <DialogHeader className="font-bold text-2xl text-start">Choose Variants</DialogHeader>
                     <div className='p-2 md:p-6'>
-                        <div className='buttonBackground rounded-md flex gap-2 p-4 items-center'>
+                        <div className='backgroundColor rounded-md flex gap-2 p-4 items-center'>
                             <div className='h-[54px] w-[54px] relative rounded-md '>
                                 <Image src={product?.image_url} fill alt={product?.name} className='h-full w-full' />
                             </div>

@@ -54,7 +54,8 @@ const FeatureSections = () => {
                     }
 
                 })}
-                <HomePageSlider slider={shop} />
+                {shop?.sliders && <HomePageSlider slider={shop} />}
+
                 <div className='container'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
@@ -76,7 +77,8 @@ const FeatureSections = () => {
                     }
 
                 })}
-                <Categories categories={shop} />
+                {shop?.categories && <Categories categories={shop} />}
+
                 <div className='container'>
                     {BelowCategory && BelowCategory?.map((offer) => {
                         return (
@@ -98,7 +100,8 @@ const FeatureSections = () => {
                     }
 
                 })}
-                <BrandSlider brands={shop} />
+                {shop?.brands && <BrandSlider brands={shop} />}
+
                 {belowBrandsSection && belowBrandsSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
                         return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
@@ -111,8 +114,8 @@ const FeatureSections = () => {
                     }
 
                 })}
+                {shop?.sellers && <SellerSlider sellers={shop} />}
 
-                <SellerSlider sellers={shop} />
                 {belowShopSellerSection && belowShopSellerSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
                         return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
@@ -125,7 +128,8 @@ const FeatureSections = () => {
                     }
 
                 })}
-                <CountrySlider countries={shop} />
+                {shop?.countries && <CountrySlider countries={shop} />}
+
                 {belowCoutrySection && belowCoutrySection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
                         return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)

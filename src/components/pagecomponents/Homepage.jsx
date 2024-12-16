@@ -10,7 +10,7 @@ import { setSetting } from '@/redux/slices/settingSlice'
 
 const Homepage = () => {
 
-    const dispatch = useDispatch()
+    
 
     const [loading, setLoading] = useState(false)
 

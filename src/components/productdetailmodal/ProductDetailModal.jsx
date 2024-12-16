@@ -57,7 +57,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
             <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
                 <DialogContent className="max-w-4xl lg:max-w-screen-lg overflow-y-scroll max-h-screen">
                     <div className='mt-12 '>
-                        <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start'>
+                        <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto'>
                             <div className='pb-6 border-b-2'>
                                 <h2 className='font-bold text-2xl break-all'>{productDetails?.name}</h2>
                                 <div className='flex'>
@@ -245,27 +245,30 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
 
                                     </div>
-                                </div>
-                            </div>
-                            <div className='flex justify-between items-center my-2 md:my-0'>
-                                <span className='text-sm font-normal'>{t("shareProduct")}:</span>
-                                <div className='flex gap-3'>
-                                    <WhatsappShareButton url='google.com'>
-                                        <WhatsappIcon className='h-10 w-10 rounded-full' />
-                                    </WhatsappShareButton>
-                                    <TwitterShareButton>
-                                        <TwitterIcon className='h-10 w-10 rounded-full' />
-                                    </TwitterShareButton>
-                                    <FacebookShareButton>
-                                        <FacebookIcon className='h-10 w-10 rounded-full' />
-                                    </FacebookShareButton>
-                                    {/* <InstapaperShareButton>
+                                    <div className='flex justify-between items-center my-2 md:my-0 '>
+
+                                        <span className='text-sm font-normal'>{t("shareProduct")}:</span>
+                                        <div className='flex gap-3'>
+                                            <WhatsappShareButton url='google.com'>
+                                                <WhatsappIcon className='h-10 w-10 rounded-full' />
+                                            </WhatsappShareButton>
+                                            <TwitterShareButton>
+                                                <TwitterIcon className='h-10 w-10 rounded-full' />
+                                            </TwitterShareButton>
+                                            <FacebookShareButton>
+                                                <FacebookIcon className='h-10 w-10 rounded-full' />
+                                            </FacebookShareButton>
+                                            {/* <InstapaperShareButton>
                                             <InstapaperIcon className='h-10 w-10 rounded-full' />
                                         </InstapaperShareButton> */}
-                                    <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
+                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
-                           
+
+
                         </div>
                     </div>
                 </DialogContent>

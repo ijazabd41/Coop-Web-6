@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react'
 import Header from './Header'
 import Footer from './Footer'
-import { setSetting } from "@/redux/slices/settingSlice";
+import { setPaymentSetting, setSetting } from "@/redux/slices/settingSlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "@/api/apiRoutes"
@@ -22,6 +22,7 @@ const Layout = ({ children }) => {
     useEffect(() => {
         fetchSetting()
         fetchShop();
+        fetchPaymentSetting()
     }, [city])
 
 
@@ -34,6 +35,17 @@ const Layout = ({ children }) => {
             setLoading(false)
         } catch (error) {
             setLoading(false)
+            console.log("error", error)
+        }
+    }
+
+    const fetchPaymentSetting = async () => {
+        setLoading(true);
+        try {
+            const res = await api.getPaymentSetting();
+            dispatch(setPaymentSetting({ data: JSON.parse(atob(res.data)) }))
+        } catch (error) {
+            setLoading(false);
             console.log("error", error)
         }
     }

@@ -1,11 +1,18 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { FaUserCircle, FaShoppingCart, FaWallet, FaCog } from "react-icons/fa";
 import { useRouter } from 'next/router';
+import WalletBalanceModal from './WalletBalanceModal';
+
 const Sidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
+    const [addWalletModal, setAddWalletModal] = useState(false)
     const handleTabChange = (tabName) => {
         setSelectedTab(tabName)
+    }
+
+    const handleWalletBalanceModal = () => {
+        setAddWalletModal(true)
     }
 
     return (
@@ -74,16 +81,19 @@ const Sidebar = ({ setSelectedTab, selectedTab }) => {
                             <FaWallet className="mr-2 textColor" size={20} /> Payment Manage
                         </h3>
                         <ul>
-                            <li className="flex justify-between items-center p-4 rounded hover:bg-gray-100 textColor" >
+                            <li className="flex justify-between items-center p-4 rounded  textColor" >
                                 <span>eGrocer Wallet</span>
-                                <span className="text-base text-orange-600 font-medium">$2630.00</span>
+                                <span className="text-base text-orange-600 font-medium bg-[#EB9C001F] p-1 rounded-sm">$2630.00</span>
                             </li>
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "add-balance" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("add-balance")}>
+                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "add-balance" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={handleWalletBalanceModal}>
                                 Add Wallet Balance
                             </li>
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wallet-history" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wallet-history")}>
-                                Wallet History
-                            </li>
+                            <Link href={`/profile/wallethistory`}>
+                                <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wallethistory" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wallethistory")}>
+                                    Wallet History
+                                </li>
+                            </Link>
+
                             <li className={`p-4  cursor-pointer  textColor ${selectedTab == "transactions" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("transactions")}>
                                 Transaction History
                             </li>
@@ -108,7 +118,7 @@ const Sidebar = ({ setSelectedTab, selectedTab }) => {
                         </ul>
                     </div>
                 </div>
-
+                <WalletBalanceModal addWalletModal={addWalletModal} setAddWalletModal={setAddWalletModal} />
             </div>
         </div>
     )

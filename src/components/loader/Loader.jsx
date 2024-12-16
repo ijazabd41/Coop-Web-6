@@ -5,7 +5,7 @@ const Loader = (props) => {
     <>
       {props.screen !== undefined && props.screen === 'full' ? (
         <div
-          className={`fixed inset-0 flex items-center justify-center z-[999] ${props.background === 'none' ? '' : ''
+          className={`  fixed inset-0 flex items-center justify-center z-[999] ${props.background === 'none' ? '' : ''
             }`}
         >
           <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">

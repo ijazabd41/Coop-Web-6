@@ -6,8 +6,9 @@ import Link from 'next/link';
 const BreadCrumb = () => {
     const router = useRouter();
     const [breadcrumbs, setBreadcrumbs] = useState([]);
-
+    const { slug } = router.query;
     useEffect(() => {
+
         if (router.pathname) {
             const pathArray = router.asPath.split('?')[0].split('/').filter((path) => path);
             const formattedBreadcrumbs = pathArray.map((path, index) => {
@@ -22,7 +23,7 @@ const BreadCrumb = () => {
         <section className="p-6 breadCrumbBg">
             <div className="flex justify-between container">
                 <p className="text-xl font-bold capitalize">
-                    {breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1]?.label : 'Home'}
+                    {breadcrumbs.length ? slug ? breadcrumbs[breadcrumbs.length - 2]?.label : breadcrumbs[breadcrumbs.length - 1]?.label : 'Home'}
                 </p>
                 <div className="flex gap-1 items-center">
                     <Link href="/" className="text-sm font-bold capitalize">
@@ -34,7 +35,7 @@ const BreadCrumb = () => {
                             {index === breadcrumbs.length - 1 ? (
                                 <span className="text-sm font-bold capitalize cursor-pointer">{crumb.label}</span>
                             ) : (
-                                <Link href={crumb.href} className="text-sm font-normal capitalize">
+                                <Link href={crumb?.href == "/product" ? "/products" : crumb.href} className="text-sm font-bold capitalize">
                                     {crumb.label}
                                 </Link>
                             )}

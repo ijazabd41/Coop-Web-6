@@ -7,6 +7,7 @@ import ActiveOrders from './ActiveOrders'
 import OrderHistory from './OrderHistory'
 import Wishlist from './Wishlist'
 import { useRouter } from 'next/router'
+import WalletHistory from './WalletHistory'
 
 const ProfileDashboard = () => {
 
@@ -16,9 +17,8 @@ const ProfileDashboard = () => {
 
     useEffect(() => {
         setLoading(true)
-        // Extract the last segment of the URL to determine the active tab
         const currentTab = router.pathname.split('/').pop();
-        setSelectedTab(currentTab || 'profile'); // Default to 'profile' if no tab is specified
+        setSelectedTab(currentTab || 'profile');
         setLoading(false)
     }, [router.pathname]);
 
@@ -38,6 +38,7 @@ const ProfileDashboard = () => {
                             {selectedTab == "activeorders" && <ActiveOrders />}
                             {selectedTab == "orderhistory" && <OrderHistory />}
                             {selectedTab == "wishlist" && <Wishlist />}
+                            {selectedTab == "wallethistory" && <WalletHistory />}
                         </>}
 
                     </div>

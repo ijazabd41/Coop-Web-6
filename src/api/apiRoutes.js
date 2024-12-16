@@ -113,3 +113,17 @@ export const getProductRatings = async ({ id, limit, offset }) => {
 
     return response.data;
 }
+
+export const getProductImages = async ({ id, limit, offset }) => {
+    const formData = new FormData();
+    formData.append("product_id", id)
+    formData.append("limit", limit)
+    formData.append("offset", offset)
+    const response = await api.post(`${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.imageList}`, formData)
+    return response.data;
+}
+
+export const getPaymentSetting = async () => {
+    const response = await api.get(`${apiEndPoints.getSettings}/${apiEndPoints.getPaymentMethods}`)
+    return response.data;
+}
