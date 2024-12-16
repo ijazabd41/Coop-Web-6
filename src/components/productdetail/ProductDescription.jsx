@@ -143,9 +143,9 @@ const ProductDescription = ({ product, ratingData }) => {
                                             <div className='col-span-12 md:col-span-8 gap-1 flex flex-col border-none :border-l-2 '>
                                                 <div className='md:ml-4 ml-0'>
                                                     <h1 className='text-base font-bold'>{t("customer_feedbacks")}</h1>
-                                                    {ratingData?.rating_list?.map((review) => {
+                                                    {ratingData?.rating_list?.map((review, index) => {
                                                         return (
-                                                            <div className=''>
+                                                            <div className='' key={index}>
                                                                 <ProductReviewCard review={review} />
                                                             </div>
                                                         )
