@@ -1,8 +1,9 @@
 import React from 'react'
+import TransactionHistory from '@/components/profiledashboard/TransactionHistory'
 
 const Transaction = () => {
   return (
-    <div>Transaction</div>
+    <div><TransactionHistory /></div>
   )
 }
 

@@ -8,6 +8,7 @@ import OrderHistory from './OrderHistory'
 import Wishlist from './Wishlist'
 import { useRouter } from 'next/router'
 import WalletHistory from './WalletHistory'
+import TransactionHistory from './TransactionHistory'
 
 const ProfileDashboard = () => {
 
@@ -39,6 +40,7 @@ const ProfileDashboard = () => {
                             {selectedTab == "orderhistory" && <OrderHistory />}
                             {selectedTab == "wishlist" && <Wishlist />}
                             {selectedTab == "wallethistory" && <WalletHistory />}
+                            {selectedTab == "transactions" && <TransactionHistory />}
                         </>}
 
                     </div>
