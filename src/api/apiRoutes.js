@@ -30,6 +30,15 @@ export const login = async ({ id, fcm, type, password }) => {
     const response = await api.post(apiEndPoints.login, formData)
     return response.data
 }
+
+export const verifyEmail = async ({ email, code }) => {
+    const params = {
+        email: email,
+        code: code
+    }
+    const response = await api.post(apiEndPoints.verifyEmail, params)
+    return response.data;
+}
 export const getUser = async () => {
     const response = await api.get(apiEndPoints.getUser)
     return response.data

@@ -47,8 +47,7 @@ const Header = () => {
     const city = useSelector(state => state.City)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
-    const [showRegister, setShowRegister] = useState(false)
-    const [showNewUser, setShowNewUser] = useState(false)
+
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
 
@@ -309,9 +308,7 @@ const Header = () => {
             </div>
 
             <CartDrawer setShowCart={setShowCart} showCart={showCart} />
-            <Login showLogin={showLogin} setShowLogin={setShowLogin} setShowRegister={setShowRegister} />
-            <Register setShowRegister={setShowRegister} showRegister={showRegister} />
-            <NewUserModal showNewUser={showNewUser} setShowNewUser={setShowNewUser} />
+            <Login showLogin={showLogin} setShowLogin={setShowLogin} />
             <Location showLocation={showLocation} setShowLocation={setShowLocation} />
         </section>
     )

@@ -23,16 +23,23 @@ import FirebaseData from '@/utils/firebase';
 import * as api from "@/api/apiRoutes"
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
 import Loader from "../loader/Loader";
+import NewUserModal from "../newusermodal/NewUserModal";
+import { IoIosCloseCircle } from "react-icons/io";
+import Register from "../register/Register";
 
 
-export function Login({ showLogin, setShowLogin, setShowRegister }) {
+export function Login({ showLogin, setShowLogin, }) {
+
+    const authType = useSelector(state => state.User.authType)
     const setting = useSelector(state => state.Setting)
     const { auth, app, messaging } = FirebaseData();
-    const defaultCountryCode = "in"
+
 
     const dispatch = useDispatch()
     const inputRef = useRef(null);
 
+    const [userName, setUserName] = useState("")
+    const [showNewUser, setShowNewUser] = useState(false)
     const [isOTP, setIsOTP] = useState(false)
     const [phoneNumber, setPhoneNumber] = useState(null)
     const [otp, setOtp] = useState(null);
@@ -48,11 +55,18 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
     const [timer, setTimer] = useState(0)
     const [error, setError] = useState("")
     const [userAuthType, setUserAuthType] = useState("")
+    const [showRegister, setShowRegister] = useState(false)
+
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
     }, [inputType]);
+
+    useEffect(() => {
+        setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE)
+    }, [])
+
     useEffect(() => {
         generateRecaptcha();
         return () => {
@@ -65,7 +79,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                 window.recaptchaVerifier = null;
             }
         };
-    }, []);
+    }, [showLogin]);
     const recaptchaClear = async () => {
         const recaptchaContainer = document.getElementById('recaptcha-container')
         if (recaptchaContainer) {
@@ -183,8 +197,9 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
             setUid(user.user.id)
             const loginResponse = await loginApiCall(user.user, phoneNumberWithoutCountryCode, "", "phone")
         } catch (error) {
-            console.log("error", error)
-            // setError(error)
+            console.log("error", error.message)
+            toast.error(t("invalid_otp"))
+
         }
     }
 
@@ -192,13 +207,10 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
         let latitude;
         let longitude;
         try {
-            // await app.auth().setPersistence(app.auth.Auth.Persistence.NONE);
-            // await app.auth().currentUser?.getIdToken(true);
             dispatch(setAuthId({ data: Uid, type }))
             const res = await api.login({ id: id, fcm, type })
-
+            console.log(res?.data)
             if (res.status === 1) {
-                console.log("token", res?.data?.access_token)
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                 await getCurrentUser()
                 dispatch(setAuthType({ data: type }))
@@ -222,10 +234,10 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
             } else {
                 setUserAuthType(type)
                 setEmail(user?.providerData?.[0]?.email)
-                // setUserName(user?.providerData?.[0]?.displayName)
+                setUserName(user?.providerData?.[0]?.displayName)
                 setPhoneNumber(user?.providerData?.[0]?.phoneNumber)
-                // setRegisterModalShow(true)
-                showLogin(false);
+                setShowNewUser(true)
+                setShowLogin(false);
             }
             setLoading(false)
         } catch (error) {
@@ -249,16 +261,118 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
     }
     const handleHideLogin = async () => {
         await recaptchaClear()
+        setIsOTP(false)
         setShowLogin(false)
+        setError("")
+    }
+
+    const handleGoogleLogin = async () => {
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider)
+            const credentials = GoogleAuthProvider.credentialFromResult(result)
+            const user = result?.user
+            dispatch(setAuthType({ data: "google" }))
+            await loginApiCall(user, user?.providerData[0].email, "", "google")
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    const handleEmailLogin = async (e) => {
+        let latitude;
+        let longitude;
+        setLoading(true)
+        if (e != undefined) {
+            e.preventDefault();
+        }
+        try {
+            dispatch(setAuthType({ data: "email" }))
+            const res = await api.login({ id: email, type: "email", password: password })
+            if (res.status === 1) {
+                const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
+                await getCurrentUser()
+                dispatch(setAuthType({ data: "email" }))
+                // if (res?.data?.user?.status == 1) {
+                //     dispatch(setIsGuest({ data: false }));
+                // }
+                // await handleFetchSetting();
+                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
+                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                //     await AddtoCartBulk(res?.data.access_token);
+                // }
+                // await fetchCart(latitude, longitude);
+                setError("");
+                setOtp("");
+                setPhoneNumber("");
+                setLoading(false);
+                setIsOTP(false);
+                setShowRegister(false);
+                setShowLogin(false)
+            } else {
+                setLoading(false);
+                if (res.message == "email_not_verified") {
+                    setIsOTP(true);
+                    toast.error(t("email_not_verified"))
+                } else if (res.message == "user_does_not_exist") {
+                    setError(t("user_does_not_exist"))
+                    // setInputValue("")
+                    setPassword("")
+                }
+                else {
+                    setError(t("password_not_valid"))
+                    // setInputValue("")
+                    setPassword("")
+                }
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    const handleEmailVerify = async (e) => {
+        let latitude;
+        let longitude;
+        e.preventDefault();
+        try {
+            const res = await api.verifyEmail({ email: email, code: otp })
+            if (res.status == 1) {
+                const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
+                await getCurrentUser()
+                dispatch(setAuthType({ data: "email" }))
+                // if (res?.data?.user?.status == 1) {
+                //     dispatch(setIsGuest({ data: false }));
+                // }
+                // await handleFetchSetting();
+                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
+                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                //     await AddtoCartBulk(res?.data?.access_token);
+                // }
+                // await fetchCart(latitude, longitude);
+                // props.setShow(false)
+                setIsOTP(false)
+                setShowLogin(false)
+            } else {
+                setError(res.message)
+                toast.error(res.message)
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
     }
 
     return (
         <>
-            <Dialog open={showLogin} onOpenChange={handleHideLogin} >
+            <Dialog open={showLogin}  >
                 <DialogContent className="">
-                    <DialogHeader className="flex justify-center">
+                    <DialogHeader className="flex justify-between items-center flex-row">
                         <div className="relative aspect-square object-cover h-[68px] w-[72px]">
                             <Image src={Logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
+                        </div>
+                        <div>
+                            <IoIosCloseCircle size={32} onClick={() => handleHideLogin()} />
                         </div>
                     </DialogHeader>
                     <div className="">
@@ -283,7 +397,7 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                         </div>
                         <div>
                             {isOTP ?
-                                <form onSubmit={handleOtpVerification}>
+                                <form onSubmit={authType == "email" ? handleEmailVerify : handleOtpVerification}>
                                     <div className="overflow-auto p-0 flex items-center justify-center">
                                         {error ? <p>{error}</p> : <></>}
                                         <OtpInput
@@ -310,14 +424,13 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                                     </div>
                                 </form>
                                 :
-                                <> <form className="my-4 flex flex-col gap-2 " onSubmit={handleSendOTP}>
+                                <> <form className="my-4 flex flex-col gap-2 " onSubmit={inputType == "email" ? handleEmailLogin : handleSendOTP}>
                                     {inputType == "number" ?
                                         <>
                                             {error ? <p>{error}</p> : <></>}
-                                            {loading ? <Loader /> : <></>}
                                             <>
                                                 <PhoneInput
-                                                    country={defaultCountryCode}
+                                                    country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
                                                     value={phoneNumber}
                                                     onChange={(phone, data) => handleInputChange(phone, data)}
                                                     onCountryChange={(code) => setCountryCode(code)}
@@ -347,16 +460,16 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                                             : <>   <label htmlFor="email" className="text-base font-bold">{t("loginBoxMessage")}</label>
                                                 <input type="text" value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} placeholder={t("loginBoxMessage")} className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm" /></>}
 
-                                    <button type="submit" className="bg-[#29363F] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{t("continue")}</button>
+                                    <button disabled={loading} type="submit" className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{loading ? t("loading") : t("continue")}</button>
                                 </form>
-                                    <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">{t("registerMsg")}<p onClick={handleShowRegister} className="primaryColor text-base font-medium underline ml-[2px]">{t("registerNow")}</p></h2>
+                                    <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">{t("registerMsg")}<p onClick={handleShowRegister} className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer">{t("registerNow")}</p></h2>
                                     <div class="flex items-center justify-between my-4 gap-2">
                                         <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
                                         <span class=" text-[#4B6272] font-bold text-base">OR</span>
                                         <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
                                     </div>
                                     <div className="my-4">
-                                        <button className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>
+                                        <button onClick={handleGoogleLogin} className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>
                                     </div>
                                     <div className="py-6 flex items-center justify-center">
                                         <p className=" text-center ">By creating account you agree to eGrocer
@@ -369,6 +482,18 @@ export function Login({ showLogin, setShowLogin, setShowRegister }) {
                 </DialogContent>
             </Dialog>
             <div id="recaptcha-container" ></div>
+            <NewUserModal
+                showNewUser={showNewUser}
+                setShowNewUser={setShowNewUser}
+                setPhoneNumberWithoutCountryCode={setPhoneNumberWithoutCountryCode}
+                setEmail={setEmail}
+                setUserName={setUserName}
+                userName={userName}
+                email={email}
+                phoneNumberWithoutCountryCode={phoneNumberWithoutCountryCode}
+                countryCode={countryCode}
+            />
+            <Register setShowRegister={setShowRegister} showRegister={showRegister} setIsOTP={setIsOTP} email={email} setEmail={setEmail} />
         </>
     )
 }

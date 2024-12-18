@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -14,23 +14,137 @@ import { t } from "@/utils/translation"
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import GoogleLogo from "@/assets/googleLogin.svg"
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IoIosCloseCircle } from 'react-icons/io';
+import * as api from "@/api/apiRoutes"
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setAuthType } from '@/redux/slices/userSlice';
 
 
-const Register = ({ showRegister, setShowRegister }) => {
+const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) => {
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE)
+    }, [])
     const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
+    const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] = useState(null)
     const [password, setPassword] = useState("")
     const [countryCode, setCountryCode] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPass, setShowConfirmPass] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
+    const [errorType, setErrorType] = useState("")
+
+
+
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
+
+    const handleShowConfirmPassword = () => {
+        setShowConfirmPass(!showConfirmPass)
+    }
+
+    const handleUsernameChange = (e) => {
+        setName(e.target.value)
+    }
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value)
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value)
+    }
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value)
+    }
+
+    const handlePhoneNumberChange = (value, data) => {
+        const phoneWithoutDialCode = value.startsWith(data?.dialCode)
+            ? value.slice(data.dialCode.length)
+            : value;
+        setPhoneNumber(`${value}`);
+        setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
+        setCountryCode("+" + (data?.dialCode || ""));
+    }
+
+    const handleUserRegister = async (e) => {
+        const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        e.preventDefault();
+        try {
+            if (!name) {
+                setError(t("please_enter_name"))
+                setErrorType("name")
+                return;
+            }
+            else if (!emailRegexPattern.test(email)) {
+                setError(t("please_enter_email"))
+                setErrorType("email")
+                return;
+            }
+            else if (password.length < 6) {
+                setError(t("please_enter_password"))
+                setErrorType("password")
+                return;
+            } else if (!confirmPassword) {
+                setError(t("please_enter_confirm_password"))
+                setErrorType("confirmpassword")
+                return;
+            } else if (confirmPassword !== password) {
+                setError(t("confirm_password_message"))
+                setErrorType("confirmpassword")
+                return;
+            } else {
+                setIsLoading(true);
+                const res = await api.registerUser({ id: email, name: name, email: email, mobile: phoneNumberWithoutCountryCode, type: 'email', country_code: countryCode, password: password })
+
+                if (res.status == 1) {
+                    setIsLoading(false)
+                    dispatch(setAuthType({ data: "email" }))
+                    setShowRegister(false);
+                    toast.success(t(res?.message));
+                    setIsOTP(true);
+                    // setTimer(90)
+                    setPassword("")
+                    setEmail("")
+                    setName("")
+                    setPhoneNumberWithoutCountryCode("")
+                    setConfirmPassword("")
+                    setPhoneNumber("")
+                } else {
+                    setIsLoading(false)
+                    toast.error(t(res.message))
+                    setShowRegister(false);
+                    setPassword("")
+                    setEmail("")
+                    setName("")
+                    setConfirmPassword("")
+                    setPhoneNumber("")
+                    setPhoneNumberWithoutCountryCode("")
+                }
+            }
+
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
 
     return (
-        <Dialog open={showRegister} onOpenChange={setShowRegister} >
+        <Dialog open={showRegister} >
             <DialogContent className="">
-                <DialogHeader className="flex justify-center">
+                <DialogHeader className="flex justify-between flex-row items-center">
                     <div className="relative aspect-square object-cover h-[68px] w-[72px]">
                         <Image src={Logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
+                    </div>
+                    <div>
+                        <IoIosCloseCircle size={32} onClick={() => setShowRegister(false)} />
                     </div>
                 </DialogHeader>
                 <div>
@@ -41,32 +155,45 @@ const Register = ({ showRegister, setShowRegister }) => {
                     <div className='mt-8 flex flex-col gap-2'>
                         <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("name")}<span className='text-red-500'>*</span></span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_name")} />
+                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_name")} value={name} onChange={handleUsernameChange} />
+                            {error && errorType == "name" && <span className='text-xs text-red-500'>{error}</span>}
                         </div>
                         <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("email")}<span className='text-red-500'>*</span></span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_email")} />
+                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_email")} value={email} onChange={handleEmailChange} />
+                            {error && errorType == "email" && <span className='text-xs text-red-500'>{error}</span>}
                         </div>
                         <div className='flex flex-col gap-1 pl-0'>
                             <span className='font-bold text-base'>{t("mobileNumber")}<span className='text-red-500'>*</span></span>
                             <PhoneInput
-                                country={'us'}
+                                country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
                                 value={phoneNumber}
-                                onChange={phone => setPhoneNumber({ phone })}
+                                onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
+                                onCountryChange={(code) => setCountryCode(code)}
                                 className='w-full '
                             />
                         </div>
                         <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("password")}<span className='text-red-500'>*</span></span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_password")} />
+                            <div className='relative w-full '>
+                                <input type={showPassword ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_password")} value={password} onChange={handlePasswordChange} />
+                                <span className='absolute right-3 top-3' onClick={handleShowPassword}>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                                {error && errorType == "password" && <span className='text-xs text-red-500'>{error}</span>}
+                            </div>
+
                         </div>
                         <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("confirmPassword")}<span className='text-red-500'>*</span></span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_confirm_password")} />
+                            <div className='relative w-full '>
+                                <input type={showConfirmPass ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_confirm_password")} value={confirmPassword} onChange={handleConfirmPasswordChange} />
+                                <span className='absolute right-3 top-3' onClick={handleShowConfirmPassword}>{showConfirmPass ? <FaEyeSlash /> : <FaEye />}</span>
+                                {error && errorType == "confirmpassword" && <span className='text-xs text-red-500'>{error}</span>}
+                            </div>
+
                         </div>
                     </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
-                        <buttton className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal">{t("register")}</buttton>
+                        <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal">{t("register")}</button>
                         <span className='text-base font-medium'>Already have an account? Sign in</span>
                     </div>
                     <div class="flex items-center justify-between my-4 gap-2">
@@ -83,7 +210,7 @@ const Register = ({ showRegister, setShowRegister }) => {
                     </div>
                 </div>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }
 

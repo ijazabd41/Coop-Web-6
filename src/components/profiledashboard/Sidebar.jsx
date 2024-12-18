@@ -3,9 +3,14 @@ import React, { useState } from 'react';
 import { FaUserCircle, FaShoppingCart, FaWallet, FaCog } from "react-icons/fa";
 import { useRouter } from 'next/router';
 import WalletBalanceModal from './WalletBalanceModal';
+import { useSelector } from 'react-redux';
+import { t } from '@/utils/translation';
+import Image from 'next/image';
 
 const Sidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
+    const user = useSelector(state => state.User.user)
+
     const [addWalletModal, setAddWalletModal] = useState(false)
     const handleTabChange = (tabName) => {
         setSelectedTab(tabName)
@@ -21,12 +26,10 @@ const Sidebar = ({ setSelectedTab, selectedTab }) => {
                 {/* Header Section */}
                 <div className='buttonBackground'>
                     <div className="flex items-center p-4">
-                        <div className="w-12 h-12 bg-[#D9D9D9]  rounded-sm flex items-center justify-center textColor text-xl">
-                            <FaUserCircle size={30} />
-                        </div>
+                        <Image src={user?.profile} alt='Profile' height={0} width={0} className='w-12 h-12 rounded-sm' />
                         <div className="ml-3">
-                            <p className="text-base textColor">Hello,</p>
-                            <p className="text-xl  font-semibold textColor">Divy Jani</p>
+                            <p className="text-base textColor">{t("hello")},</p>
+                            <p className="text-xl  font-semibold textColor">{user?.name}</p>
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,17 @@
+import { t } from '@/utils/translation';
+import Image from 'next/image';
 import React from 'react'
 import { FiEdit } from "react-icons/fi";
+import { useSelector } from 'react-redux';
 const Profile = () => {
+
+    const user = useSelector(state => state.User.user)
     return (
         <div className="w-full mx-auto h-fit border-2   rounded-lg   ">
             {/* Header */}
             <div className='w-full buttonBackground'>
 
-                <h2 className="text-2xl font-semibold  p-4">Edit Profile</h2>
+                <h2 className="text-2xl font-semibold  p-4">{t("editProfile")}</h2>
             </div>
 
             <div className='  items-center flex  flex-col py-12'>
@@ -15,12 +20,12 @@ const Profile = () => {
                         <div className="relative">
                             <div className="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center overflow-hidden">
                                 {/* Placeholder for Profile Image */}
-                                <span className="text-gray-400 text-sm">Profile</span>
+                                <Image src={user?.profile} alt='profile image' height={0} width={0} className='h-full w-full' />
                             </div>
                             {/* Edit Icon */}
                             <label
                                 htmlFor="profileImage"
-                                className="absolute bottom-0 right-0 bg-green-500 p-2 rounded-full cursor-pointer text-white"
+                                className="absolute bottom-0 right-0 backPrimary primaryBackColor p-2 rounded-full cursor-pointer text-white"
                             >
                                 <FiEdit className="text-lg" />
                             </label>
@@ -49,7 +54,7 @@ const Profile = () => {
                                 name="name"
                                 placeholder="Enter your name"
                                 className="mt-1 block w-full rounded-md cardBorder py-2 px-4"
-                                defaultValue="Divy Jani"
+                                defaultValue={user?.name}
                             />
                         </div>
 
@@ -67,7 +72,7 @@ const Profile = () => {
                                 name="email"
                                 placeholder="Enter your email"
                                 className="mt-1 block w-full rounded-md cardBorder py-2 px-4"
-                                defaultValue="eGrocerSeller@gmail.com"
+                                defaultValue={user?.email}
                             />
                         </div>
 
@@ -85,7 +90,7 @@ const Profile = () => {
                                 name="mobile"
                                 placeholder="Enter your mobile number"
                                 className="mt-1 block w-full rounded-md cardBorder py-2 px-4"
-                                defaultValue="0987654321"
+                                defaultValue={user?.mobile}
                             />
                         </div>
 

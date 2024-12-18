@@ -1,5 +1,5 @@
 import React from 'react'
-import ActiceOrdersPage from '@/components/pagecomponents/ActiceOrdersPage'
+import ActiceOrdersPage from '@/components/pagecomponents/ActiveOrdersPage'
 const OrderDetail = () => {
     return (
         <div><ActiceOrdersPage /></div>
