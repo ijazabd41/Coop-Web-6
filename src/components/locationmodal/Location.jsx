@@ -19,6 +19,7 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { setShop } from '@/redux/slices/shopSlice'
 import Loader from '../loader/Loader'
+import { IoIosCloseCircle } from 'react-icons/io'
 
 
 const Location = ({ showLocation, setShowLocation }) => {
@@ -258,11 +259,28 @@ const Location = ({ showLocation, setShowLocation }) => {
         setLoading(false);
     }
 
+    const handleShowModal = () => {
+        setShowLocation(false)
+    }
+
     return (
         <>
             {loading ? <Loader /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
-                <DialogContent>
-                    <DialogHeader className="text-lg font-extrabold">{t("select_location")}</DialogHeader>
+                <DialogContent
+                    onEscapeKeyDown={(e) => e.preventDefault()}
+                    onPointerDown={(e) => e.preventDefault()}
+                    onInteractOutside={(e) => e.preventDefault()}
+                >
+                    <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
+                        <div>
+                            {t("select_location")}
+                        </div>
+                        {setting.setting?.default_city == null ? <></> : <div>
+                            <IoIosCloseCircle size={32} onClick={() => handleShowModal()} />
+                        </div>}
+
+
+                    </DialogHeader>
                     <div className='flex'>
                         {
                             !mapView ?

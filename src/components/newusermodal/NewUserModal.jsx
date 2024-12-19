@@ -34,7 +34,6 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
     try {
       const result = await api.registerUser({ name: userName, email: email, mobile: phoneNumberWithoutCountryCode, country_code: countryCode, type: authType })
       if (result?.status == 1) {
-        console.log("result", result)
       } else {
         toast.error(t(result?.message))
       }

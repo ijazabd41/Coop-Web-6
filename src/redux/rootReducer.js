@@ -5,8 +5,10 @@ import UserReducer from "@/redux/slices/userSlice"
 import ProductFilterReducer from "@/redux/slices/productFilterSlice"
 import CityReducer from "@/redux/slices/citySlice"
 import ThemeReducer from "@/redux/slices/themeSlice"
+import CartReducer from "@/redux/slices/cartSlice"
 
 export const rootReducer = combineReducers({
+    Cart: CartReducer,
     City: CityReducer,
     Shop: ShopReducer,
     Setting: SettingReducer,

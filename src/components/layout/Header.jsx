@@ -53,7 +53,7 @@ const Header = () => {
 
 
     useEffect(() => {
-        fetchCity()
+        fetchCity();
     }, [setting])
 
     const handleChangeTheme = (theme) => {
@@ -73,7 +73,7 @@ const Header = () => {
                     setLocModal(true);
                 }
             } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
-                setLocModal(true);
+                setShowLocation(true);
             }
         } catch (error) {
             console.log("error", error)

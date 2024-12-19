@@ -18,6 +18,7 @@ export const registerUser = async ({ name, email, mobile, type, fcm, country_cod
     const response = await api.post(apiEndPoints.register, formData)
     return response.data
 }
+
 export const login = async ({ id, fcm, type, password }) => {
     const formData = new FormData();
     formData.append("id", id);
@@ -31,6 +32,15 @@ export const login = async ({ id, fcm, type, password }) => {
     return response.data
 }
 
+export const verifyOTP = async ({ mobile, otp, country_code }) => {
+    const formData = new FormData();
+    formData.append("phone", mobile)
+    formData.append("otp", otp)
+    formData.append("country_code", country_code)
+    const response = await api.post(apiEndPoints.verifyContact, formData);
+    return response.data
+}
+
 export const verifyEmail = async ({ email, code }) => {
     const params = {
         email: email,
@@ -39,15 +49,34 @@ export const verifyEmail = async ({ email, code }) => {
     const response = await api.post(apiEndPoints.verifyEmail, params)
     return response.data;
 }
+
+export const forgotPasswordOTP = async ({ email }) => {
+    const formData = new FormData();
+    formData.append("email", email)
+    const response = await api.post(apiEndPoints.forgotPasswordOtp, formData)
+    return response.data;
+}
+export const forgotPassword = async ({ otp, email, password, confirmPassword }) => {
+    const formData = new FormData();
+    formData.append("otp", otp)
+    formData.append("email", email)
+    formData.append("password", password)
+    formData.append("password_confirmation", confirmPassword)
+    const response = await api.post(apiEndPoints.forgotPassword, formData)
+    return response.data
+}
+
 export const getUser = async () => {
     const response = await api.get(apiEndPoints.getUser)
     return response.data
 }
+
 export const getCity = async ({ latitude, longitude }) => {
     let params = { latitude: latitude, longitude: longitude };
     const response = await api.get(apiEndPoints.getCity, { params })
     return response.data;
 }
+
 export const getShop = async ({ latitude, longitude }) => {
     let params = { latitude: latitude, longitude: longitude };
     const response = await api.get(apiEndPoints.getShop, { params })
@@ -135,4 +164,10 @@ export const getProductImages = async ({ id, limit, offset }) => {
 export const getPaymentSetting = async () => {
     const response = await api.get(`${apiEndPoints.getSettings}/${apiEndPoints.getPaymentMethods}`)
     return response.data;
+}
+
+export const getCart = async ({ latitude, longitude, checkout = 0 }) => {
+    const params = { latitude: latitude, longitude: longitude, is_checkout: checkout };
+    const response = await api.get(apiEndPoints.getCart, { params })
+    return response.data
 }

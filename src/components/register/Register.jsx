@@ -104,7 +104,6 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
             } else {
                 setIsLoading(true);
                 const res = await api.registerUser({ id: email, name: name, email: email, mobile: phoneNumberWithoutCountryCode, type: 'email', country_code: countryCode, password: password })
-
                 if (res.status == 1) {
                     setIsLoading(false)
                     dispatch(setAuthType({ data: "email" }))
@@ -113,7 +112,6 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     setIsOTP(true);
                     // setTimer(90)
                     setPassword("")
-                    setEmail("")
                     setName("")
                     setPhoneNumberWithoutCountryCode("")
                     setConfirmPassword("")
@@ -123,7 +121,6 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     toast.error(t(res.message))
                     setShowRegister(false);
                     setPassword("")
-                    setEmail("")
                     setName("")
                     setConfirmPassword("")
                     setPhoneNumber("")
@@ -189,11 +186,10 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                                 <span className='absolute right-3 top-3' onClick={handleShowConfirmPassword}>{showConfirmPass ? <FaEyeSlash /> : <FaEye />}</span>
                                 {error && errorType == "confirmpassword" && <span className='text-xs text-red-500'>{error}</span>}
                             </div>
-
                         </div>
                     </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
-                        <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal">{t("register")}</button>
+                        <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button>
                         <span className='text-base font-medium'>Already have an account? Sign in</span>
                     </div>
                     <div class="flex items-center justify-between my-4 gap-2">

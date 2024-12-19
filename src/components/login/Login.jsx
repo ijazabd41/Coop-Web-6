@@ -15,6 +15,7 @@ import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg"
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from "react-redux";
+import { setCart, setCartProducts } from "@/redux/slices/cartSlice";
 import { setAuthId, setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -26,14 +27,18 @@ import Loader from "../loader/Loader";
 import NewUserModal from "../newusermodal/NewUserModal";
 import { IoIosCloseCircle } from "react-icons/io";
 import Register from "../register/Register";
+import { setSetting } from "@/redux/slices/settingSlice";
+import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
+
 
 
 export function Login({ showLogin, setShowLogin, }) {
 
     const authType = useSelector(state => state.User.authType)
-    const setting = useSelector(state => state.Setting)
-    const { auth, app, messaging } = FirebaseData();
+    const city = useSelector(state => state.City.city)
 
+    const setting = useSelector(state => state.Setting.setting)
+    const { auth, app, messaging } = FirebaseData();
 
     const dispatch = useDispatch()
     const inputRef = useRef(null);
@@ -43,7 +48,7 @@ export function Login({ showLogin, setShowLogin, }) {
     const [isOTP, setIsOTP] = useState(false)
     const [phoneNumber, setPhoneNumber] = useState(null)
     const [otp, setOtp] = useState(null);
-    const [email, setEmail] = useState(null)
+    const [email, setEmail] = useState("")
     const [countryCode, setCountryCode] = useState(null)
     const [inputValue, setInputValue] = useState(null);
     const [inputType, setInputType] = useState("")
@@ -52,10 +57,14 @@ export function Login({ showLogin, setShowLogin, }) {
     const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] = useState("")
     const [Uid, setUid] = useState("");
     const [loading, setLoading] = useState(false)
-    const [timer, setTimer] = useState(0)
+    const [timer, setTimer] = useState(90);
+    const [otpDisabled, setOtpDisabled] = useState(true)
     const [error, setError] = useState("")
     const [userAuthType, setUserAuthType] = useState("")
-    const [showRegister, setShowRegister] = useState(false)
+    const [showRegister, setShowRegister] = useState(false);
+    const [showForgetPassword, setShowForgetPassword] = useState(false)
+
+
 
     useEffect(() => {
         if (inputRef.current) {
@@ -68,30 +77,43 @@ export function Login({ showLogin, setShowLogin, }) {
     }, [])
 
     useEffect(() => {
+        let interval;
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+        } else if (timer === 0) {
+            setOtpDisabled(false);
+        }
+
+        return () => clearInterval(interval);
+
+    }, [timer]);
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+    useEffect(() => {
         generateRecaptcha();
         return () => {
-            const recaptchaContainer = document.getElementById("recaptcha-container");
-            if (recaptchaContainer) {
-                recaptchaContainer.innerHTML = "";
-            }
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.clear();
-                window.recaptchaVerifier = null;
-            }
+            recaptchaClear()
         };
-    }, [showLogin]);
+    }, [showLogin, app, auth]);
+
     const recaptchaClear = async () => {
         const recaptchaContainer = document.getElementById('recaptcha-container')
         if (recaptchaContainer) {
             recaptchaContainer.innerHTML = ''
         }
         if (window.recaptchaVerifier) {
-            window?.recaptchaVerifier?.recaptcha?.reset()
+            window.recaptchaVerifier.clear();
+            window.recaptchaVerifier = null;
         }
     }
+
     const generateRecaptcha = () => {
         if (!window.recaptchaVerifier) {
-
             const recaptchaContainer = document.getElementById("recaptcha-container");
             if (!recaptchaContainer) {
                 console.error("Container element 'recaptcha-container' not found.");
@@ -110,6 +132,7 @@ export function Login({ showLogin, setShowLogin, }) {
         }
         return window.recaptchaVerifier;
     };
+
     const handleShowRegister = () => {
         setShowRegister(true)
     }
@@ -139,8 +162,10 @@ export function Login({ showLogin, setShowLogin, }) {
             setInputType("");
         }
     };
+
     const handleSendOTP = async (e) => {
         setLoading(true);
+        setOtpDisabled(true)
         e.preventDefault();
         if (phoneNumber?.length < countryCode.length || phoneNumber?.slice(1) === countryCode) {
             setError("Please enter phone number!");
@@ -148,10 +173,10 @@ export function Login({ showLogin, setShowLogin, }) {
         }
         else {
             const phoneNumberWithoutSpaces = `${phoneNumber}`.replace(/\s+/g, "");
-            if (setting?.setting?.firebase_authentication == 1) {
-                const appVerifier = generateRecaptcha();
+            if (setting?.firebase_authentication == 1) {
+                // const appVerifier = generateRecaptcha();
                 try {
-                    const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithoutSpaces, appVerifier)
+                    const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithoutSpaces, window.recaptchaVerifier)
                     window.confirmationResult = confirmationResult;
                     setTimer(90)
                     setIsOTP(true)
@@ -160,9 +185,8 @@ export function Login({ showLogin, setShowLogin, }) {
                     setPhoneNumber();
                     setError(error.message);
                     setLoading(false);
-                    console.log("firebase error", error)
                 }
-            } else if (setting?.setting?.custom_sms_gateway_otp_based == 1) {
+            } else if (setting?.custom_sms_gateway_otp_based == 1) {
                 try {
                     const res = await newApi.sendSms({ mobile: phoneNumberWithoutSpaces })
                     if (res?.status == 1) {
@@ -181,35 +205,112 @@ export function Login({ showLogin, setShowLogin, }) {
                 }
             } else {
                 toast.error(t("Something went wrong"))
+                setLoading(false)
             }
 
         }
     };
+
     const handleOtpVerification = async (e) => {
         e.preventDefault();
         if (otp == "") {
             toast.error(t("otp_required"))
+            return
         }
-        try {
+        if (setting?.firebase_authentication == 1) {
             setLoading(true)
-            const user = await window.confirmationResult.confirm(otp)
-            dispatch(setAuthId({ data: user.user.id }))
-            setUid(user.user.id)
-            const loginResponse = await loginApiCall(user.user, phoneNumberWithoutCountryCode, "", "phone")
-        } catch (error) {
-            console.log("error", error.message)
-            toast.error(t("invalid_otp"))
+            try {
+                const user = await window.confirmationResult.confirm(otp)
+                dispatch(setAuthId({ data: user.user.id }))
+                setUid(user.user.id)
+                const loginResponse = await loginApiCall(user.user, phoneNumberWithoutCountryCode, "", "phone")
 
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                toast.error(t("invalid_otp"))
+            }
+        } else if (setting?.custom_sms_gateway_otp_based == 1) {
+            const mobileNo = phoneNumber?.split(" ")?.[1]
+            try {
+                const response = await api.verifyOTP({ mobile: phoneNumberWithoutCountryCode, country_code: `+${countryCode}`, otp: otp })
+                if (response?.status == 1 && res?.message == "OTP is valid, but no user found with this phone number.") {
+                    setShowNewUser(true);
+                    setShowLogin(false);
+                    setIsOTP(false)
+                    dispatch(setAuthType({ data: "phone" }))
+                    setPhoneNumber(mobileNo)
+                    setUserName("")
+                    setEmail("")
+                } else if (response?.status == 1) {
+                    const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
+                    await getCurrentUser()
+                    dispatch(setAuthType({ data: "phone" }))
+                    // if (res?.data?.user?.status == 1) {
+                    //     dispatch(setIsGuest({ data: false }));
+                    //     dispatch(setGuestCartTotal({ data: 0 }));
+                    //     dispatch(addtoGuestCart({ data: [] }))
+                    // }
+                    await handleFetchSetting();
+                    // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                    //     await AddtoCartBulk(res?.data.access_token);
+                    // }
+                    await fetchCart();
+                    setError("");
+                    setOtp("");
+                    setPhoneNumber("");
+                    setLoading(false);
+                    setIsOTP(false);
+                    setShowLogin(false);
+                }
+            } catch (error) {
+                console.log("error", error)
+            }
+        }
+    }
+
+    const handleFetchSetting = async () => {
+        try {
+            const setting = await api.getSetting();
+            dispatch(setSetting({ data: setting?.data }))
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    const getProductData = (cartData) => {
+        const cartProducts = cartData?.cart?.map((product) => {
+            return {
+                product_id: product?.product_id,
+                product_variant_id: product?.product_variant_id,
+                qty: product?.qty
+            }
+        })
+        return cartProducts;
+    }
+
+    const fetchCart = async () => {
+        const latitude = city?.latitude || setting?.default_city?.latitude
+        const longitude = city?.longitude || setting?.default_city?.longitude
+        try {
+            const response = await api.getCart({ latitude: latitude, longitude: longitude })
+            if (response.status === 1) {
+                dispatch(setCart({ data: response.data }))
+                const productsData = getProductData(response.data)
+                dispatch(setCartProducts({ data: productsData }));
+                // dispatch(setCartSubTotal({ data: response?.data?.sub_total }))
+            } else {
+                dispatch(setCart({ data: null }));
+            }
+        } catch (error) {
+            console.log("error", error)
         }
     }
 
     const loginApiCall = async (user, id, fcm, type) => {
-        let latitude;
-        let longitude;
         try {
             dispatch(setAuthId({ data: Uid, type }))
             const res = await api.login({ id: id, fcm, type })
-            console.log(res?.data)
             if (res.status === 1) {
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                 await getCurrentUser()
@@ -217,13 +318,11 @@ export function Login({ showLogin, setShowLogin, }) {
                 // if (res?.data?.user?.status == 1) {
                 //     dispatch(setIsGuest({ data: false }));
                 // }
-                // await handleFetchSetting();
-                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
-                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                await handleFetchSetting();
                 // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                 //     await AddtoCartBulk(res?.data.access_token);
                 // }
-                // await fetchCart(latitude, longitude);
+                await fetchCart();
                 setError("");
                 setOtp("");
                 setPhoneNumber("");
@@ -259,11 +358,20 @@ export function Login({ showLogin, setShowLogin, }) {
     const handlePasswordShow = () => {
         setShowPassword(!showPassword)
     }
+
+    const handleShowForgotPassword = () => {
+        setShowLogin(false)
+        setShowForgetPassword(true)
+    }
+
     const handleHideLogin = async () => {
         await recaptchaClear()
         setIsOTP(false)
         setShowLogin(false)
         setError("")
+        setInputValue("")
+        setInputType("")
+        setLoading(false);
     }
 
     const handleGoogleLogin = async () => {
@@ -280,14 +388,11 @@ export function Login({ showLogin, setShowLogin, }) {
     }
 
     const handleEmailLogin = async (e) => {
-        let latitude;
-        let longitude;
         setLoading(true)
         if (e != undefined) {
             e.preventDefault();
         }
         try {
-            dispatch(setAuthType({ data: "email" }))
             const res = await api.login({ id: email, type: "email", password: password })
             if (res.status === 1) {
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
@@ -296,13 +401,11 @@ export function Login({ showLogin, setShowLogin, }) {
                 // if (res?.data?.user?.status == 1) {
                 //     dispatch(setIsGuest({ data: false }));
                 // }
-                // await handleFetchSetting();
-                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
-                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                await handleFetchSetting();
                 // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                 //     await AddtoCartBulk(res?.data.access_token);
                 // }
-                // await fetchCart(latitude, longitude);
+                await fetchCart();
                 setError("");
                 setOtp("");
                 setPhoneNumber("");
@@ -332,8 +435,6 @@ export function Login({ showLogin, setShowLogin, }) {
     }
 
     const handleEmailVerify = async (e) => {
-        let latitude;
-        let longitude;
         e.preventDefault();
         try {
             const res = await api.verifyEmail({ email: email, code: otp })
@@ -344,13 +445,11 @@ export function Login({ showLogin, setShowLogin, }) {
                 // if (res?.data?.user?.status == 1) {
                 //     dispatch(setIsGuest({ data: false }));
                 // }
-                // await handleFetchSetting();
-                // latitude = city?.city?.latitude || setting?.setting?.default_city?.latitude
-                // longitude = city?.city?.longitude || setting?.setting?.default_city?.longitude
+                await handleFetchSetting();
                 // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                 //     await AddtoCartBulk(res?.data?.access_token);
                 // }
-                // await fetchCart(latitude, longitude);
+                await fetchCart();
                 // props.setShow(false)
                 setIsOTP(false)
                 setShowLogin(false)
@@ -383,7 +482,7 @@ export function Login({ showLogin, setShowLogin, }) {
                                         <div className="flex flex-col ">
                                             <h5 className="text-[22px] text-wrap font-bold textColor">{t("enter_verification_code")}</h5>
                                             <span className='flex flex-col text-start item-start '>{t("otp_send_message")}
-                                                <p className='font-weight-bold py-2'>email</p></span>
+                                                <p className='font-weight-bold py-2'>{authType == "email" ? <div className="flex gap-2">email: {email}</div> : <div className="flex gap-2">phone: {phoneNumber}</div>}</p></span>
                                         </div>
 
                                     </>
@@ -391,14 +490,14 @@ export function Login({ showLogin, setShowLogin, }) {
                                 : (
                                     <div className="flex flex-col ">
                                         <h5 className="text-[40px] font-bold textColor">{t("welcome")}</h5>
-                                        <span className="textColor text-xs">{t("login_message")}</span>
+                                        {(setting?.email_login == 1 || setting?.phone_login == 1) && <span className="textColor text-xs">{t("login_message")}</span>}
                                     </div>
                                 )}
                         </div>
                         <div>
                             {isOTP ?
                                 <form onSubmit={authType == "email" ? handleEmailVerify : handleOtpVerification}>
-                                    <div className="overflow-auto p-0 flex items-center justify-center">
+                                    <div className="overflow-auto p-0 flex items-center justify-center flex-col ">
                                         {error ? <p>{error}</p> : <></>}
                                         <OtpInput
                                             className=" mx-auto items-center flex flex-wrap justify-center p-0"
@@ -406,7 +505,7 @@ export function Login({ showLogin, setShowLogin, }) {
                                             onChange={setOtp}
                                             numInputs={6}
                                             renderInput={(props) => <input {...props} className="border border-gray-300 mx-1 md:mx-2 rounded-sm text-black bg text-center 
-                                      p-2 w-10 md:w-[62px] "
+                                      p-2 w-10 md:w-[62px] mt-6"
                                                 style={{
                                                     color: 'black',
                                                     backgroundColor: 'white',
@@ -417,60 +516,125 @@ export function Login({ showLogin, setShowLogin, }) {
 
                                     </div>
                                     <div className="mt-8 flex justify-center ">
-                                        <button className="w-full bg-[#29363F] text-white text-xl py-2 rounded-sm" type="submit">{t("login")}</button>
+                                        <button className="w-full bg-[#29363F] text-white text-xl py-2 rounded-sm" type="submit">{loading == true ? t("loading") : t("login")}</button>
                                     </div>
                                     <div className="mt-2 text-center">
-                                        <span className="text-base font-medium">Resend OTP in : 01:22</span>
+
+                                        <div className="text-base font-medium flex gap-1 justify-center my-2"><button onClick={handleSendOTP} disabled={otpDisabled}>
+                                            {timer === 0 ?
+                                                `Resend OTP` : <>Resend OTP in <strong> {formatTime(timer)} </strong> </>}
+                                        </button>
+                                        </div>
+
                                     </div>
                                 </form>
                                 :
-                                <> <form className="my-4 flex flex-col gap-2 " onSubmit={inputType == "email" ? handleEmailLogin : handleSendOTP}>
-                                    {inputType == "number" ?
+                                <> <div className="my-4 flex flex-col gap-2 " onSubmit={inputType == "email" ? handleEmailLogin : handleSendOTP}>
+                                    {setting?.email_login == 1 && setting?.phone_login == 1 ?
+                                        <form>
+                                            {inputType == "number" ?
+                                                <>
+                                                    {error ? <p className="text-center text-xs text-red-">{error}</p> : <></>}
+                                                    <>
+                                                        <PhoneInput
+                                                            country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
+                                                            value={phoneNumber}
+                                                            onChange={(phone, data) => handleInputChange(phone, data)}
+                                                            onCountryChange={(code) => setCountryCode(code)}
+                                                            inputProps={{
+                                                                name: "phone",
+                                                                required: true,
+                                                                autoFocus: true,
+                                                            }}
+                                                        />
+
+                                                    </>
+                                                </> :
+                                                inputType == "email" ?
+                                                    <>
+                                                        {error ? <p className="text-center text-xs text-red-500 my-2 font-semibold">{error}</p> : <></>}
+                                                        <div className='relative'>
+                                                            <input value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} className='border-black border-[1px] py-2 px-4 rounded-sm w-full ' placeholder={t("loginBoxMessage")} ref={inputRef} />
+
+                                                            <input type={showPassword ? "text" : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className='border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4' placeholder={t("passwordMessage")} />
+                                                            <div className='absolute right-[10px] top-[72px]' onClick={handlePasswordShow}>
+                                                                {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                                                            </div>
+                                                            <div className='text-base font-medium leading-6 mt-2 text-right' >
+                                                                <p className="cursor-pointer" onClick={handleShowForgotPassword}>{t("forget_password_?")}</p>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                    : <>   <label htmlFor="email" className="text-base font-bold">{t("loginBoxMessage")}</label>
+                                                        <input type="text" value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} placeholder={t("loginBoxMessage")} className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm" />
+
+                                                    </>}
+
+                                            <button disabled={loading} type="submit" className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{loading ? t("loading") : t("continue")}</button>
+                                            <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">{t("registerMsg")}<p onClick={handleShowRegister} className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer">{t("registerNow")}</p></h2>
+                                        </form>
+
+                                        : setting?.phone_login == 1 ?
+                                            <>
+                                                {error ? <p>{error}</p> : <></>}
+                                                <form onSubmit={handleSendOTP}>
+                                                    <PhoneInput
+                                                        country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
+                                                        value={phoneNumber}
+                                                        onChange={(phone, data) => handleInputChange(phone, data)}
+                                                        onCountryChange={(code) => setCountryCode(code)}
+                                                        inputProps={{
+                                                            name: "phone",
+                                                            required: true,
+                                                            autoFocus: true,
+                                                        }}
+                                                    />
+                                                    <button disabled={loading} type="submit" className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{loading ? t("loading") : t("continue")}</button>
+                                                </form>
+
+
+                                            </>
+                                            : setting?.email_login == 1 ?
+                                                <>
+                                                    {error ? <p>{error}</p> : <></>}
+
+                                                    <form className='relative' onSubmit={handleEmailLogin}>
+                                                        <input value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} className='border-black border-[1px] py-2 px-4 rounded-sm w-full ' placeholder={t("loginBoxMessage")} ref={inputRef} />
+
+                                                        <input type={showPassword ? "text" : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className='border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4' placeholder={t("passwordMessage")} />
+                                                        <div className='absolute right-[10px] top-[72px]' onClick={handlePasswordShow}>
+                                                            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                                                        </div>
+                                                        <div className='text-base font-medium leading-6 mt-2 text-right'>
+                                                            <p className="cursor-pointer" onClick={handleShowForgotPassword}>{t("forget_password_?")}</p>
+                                                        </div>
+                                                        <button disabled={loading} type="submit" className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{loading ? t("loading") : t("continue")}</button>
+                                                        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">{t("registerMsg")}<p onClick={handleShowRegister} className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer">{t("registerNow")}</p></h2>
+                                                    </form>
+                                                </>
+
+                                                : <></>}
+
+
+
+                                </div>
+                                    {(setting?.google_login == 1 && (setting?.email_login == 1 || setting?.phone_login == 1)) ?
+                                        <div class="flex items-center justify-between my-4 gap-2">
+                                            <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
+                                            <span class=" text-[#4B6272] font-bold text-base">OR</span>
+                                            <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
+                                        </div> : <></>
+                                    }
+
+                                    {setting?.google_login == 1 &&
                                         <>
-                                            {error ? <p>{error}</p> : <></>}
-                                            <>
-                                                <PhoneInput
-                                                    country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
-                                                    value={phoneNumber}
-                                                    onChange={(phone, data) => handleInputChange(phone, data)}
-                                                    onCountryChange={(code) => setCountryCode(code)}
-                                                    inputProps={{
-                                                        name: "phone",
-                                                        required: true,
-                                                        autoFocus: true,
-                                                    }}
-                                                />
 
-                                            </>
-                                        </> :
-                                        inputType == "email" ?
-                                            <>
-                                                <div className='relative'>
-                                                    <input value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} className='border-black border-[1px] py-2 px-4 rounded-sm w-full ' placeholder={t("loginBoxMessage")} ref={inputRef} />
+                                            <div className="my-4">
+                                                <button onClick={handleGoogleLogin} className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>
+                                            </div>
+                                        </>
+                                    }
 
-                                                    <input type={showPassword ? "text" : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className='border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4' placeholder={t("passwordMessage")} />
-                                                    <div className='absolute right-[10px] top-[72px]' onClick={handlePasswordShow}>
-                                                        {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                                                    </div>
-                                                    <div className='text-base font-medium leading-6 mt-2 text-right' >
-                                                        <p>{t("forget_password_?")}</p>
-                                                    </div>
-                                                </div>
-                                            </>
-                                            : <>   <label htmlFor="email" className="text-base font-bold">{t("loginBoxMessage")}</label>
-                                                <input type="text" value={inputValue} onChange={(e) => handleInputChange(e.target.value, {})} placeholder={t("loginBoxMessage")} className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm" /></>}
-
-                                    <button disabled={loading} type="submit" className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4">{loading ? t("loading") : t("continue")}</button>
-                                </form>
-                                    <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">{t("registerMsg")}<p onClick={handleShowRegister} className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer">{t("registerNow")}</p></h2>
-                                    <div class="flex items-center justify-between my-4 gap-2">
-                                        <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
-                                        <span class=" text-[#4B6272] font-bold text-base">OR</span>
-                                        <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
-                                    </div>
-                                    <div className="my-4">
-                                        <button onClick={handleGoogleLogin} className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>
-                                    </div>
                                     <div className="py-6 flex items-center justify-center">
                                         <p className=" text-center ">By creating account you agree to eGrocer
                                             Terms of Service and Privacy Policy.</p>
@@ -480,7 +644,7 @@ export function Login({ showLogin, setShowLogin, }) {
                         </div>
                     </div>
                 </DialogContent>
-            </Dialog>
+            </Dialog >
             <div id="recaptcha-container" ></div>
             <NewUserModal
                 showNewUser={showNewUser}
@@ -494,6 +658,7 @@ export function Login({ showLogin, setShowLogin, }) {
                 countryCode={countryCode}
             />
             <Register setShowRegister={setShowRegister} showRegister={showRegister} setIsOTP={setIsOTP} email={email} setEmail={setEmail} />
+            <ForgetPasswordModal showForgetPassword={showForgetPassword} setShowForgetPassword={setShowForgetPassword} />
         </>
     )
 }
