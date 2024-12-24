@@ -166,8 +166,36 @@ export const getPaymentSetting = async () => {
     return response.data;
 }
 
+// cart apis
 export const getCart = async ({ latitude, longitude, checkout = 0 }) => {
     const params = { latitude: latitude, longitude: longitude, is_checkout: checkout };
     const response = await api.get(apiEndPoints.getCart, { params })
+    return response.data
+}
+export const addToCart = async ({ product_id, product_variant_id, qty }) => {
+    const formData = new FormData();
+    formData.append("product_id", product_id);
+    formData.append("product_variant_id", product_variant_id);
+    formData.append("qty", qty);
+    const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.add}`, formData)
+    return response.data
+}
+export const removeFromCart = async ({ product_id, product_variant_id }) => {
+    const formData = new FormData()
+    formData.append("product_id", product_id);
+    formData.append("product_variant_id", product_variant_id);
+    formData.append("is_remove_all", 0);
+    const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.remove}`, formData)
+    return response.data;
+}
+export const getGuestCart = async ({ latitude, longitude, variant_ids, quantities }) => {
+    const params = { latitude: latitude, longitude: longitude, variant_ids: variant_ids, quantities: quantities };
+    const response = await api.get(`${apiEndPoints.getCart}/${apiEndPoints.getGuestCart}`, { params })
+    return response.data
+}
+
+
+export const logout = async () => {
+    const response = await api.post(`${apiEndPoints.logout}`)
     return response.data
 }

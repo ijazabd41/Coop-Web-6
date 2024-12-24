@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
-import Sidebar from './Sidebar'
+import ProfileSidebar from './ProfileSidebar'
 import Profile from './Profile'
 import Address from './Address'
 import ActiveOrders from './ActiveOrders'
@@ -29,7 +29,7 @@ const ProfileDashboard = () => {
             <div className='container'>
                 <div className='grid grid-cols-12 gap-6 my-10'>
                     <div className='col-span-3'>
-                        <Sidebar setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
+                        <ProfileSidebar setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
                     </div>
 
                     <div className='col-span-9  '>

@@ -4,7 +4,7 @@ const Cart = () => {
     return (
         <section>
             <div className='container'>
-                
+
             </div>
         </section>
     )

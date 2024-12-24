@@ -23,6 +23,7 @@ import { IoIosCloseCircle } from 'react-icons/io'
 
 
 const Location = ({ showLocation, setShowLocation }) => {
+    const city = useSelector(state => state.City)
     const setting = useSelector(state => state.Setting)
     const inputRef = useRef();
     const dispatch = useDispatch()
@@ -265,21 +266,19 @@ const Location = ({ showLocation, setShowLocation }) => {
 
     return (
         <>
-            {loading ? <Loader /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
+            {loading ? <Loader /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
                 <DialogContent
-                    onEscapeKeyDown={(e) => e.preventDefault()}
-                    onPointerDown={(e) => e.preventDefault()}
+                    // onEscapeKeyDown={(e) => e.preventDefault()}
+                    // onPointerDown={(e) => e.preventDefault()}
                     onInteractOutside={(e) => e.preventDefault()}
                 >
                     <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
                         <div>
                             {t("select_location")}
                         </div>
-                        {setting.setting?.default_city == null ? <></> : <div>
+                        {setting.setting?.default_city == null && city?.city == null ? <></> : <div>
                             <IoIosCloseCircle size={32} onClick={() => handleShowModal()} />
                         </div>}
-
-
                     </DialogHeader>
                     <div className='flex'>
                         {

@@ -15,7 +15,7 @@ import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg"
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from "react-redux";
-import { setCart, setCartProducts } from "@/redux/slices/cartSlice";
+import { setCart, setCartProducts, setIsGuest } from "@/redux/slices/cartSlice";
 import { setAuthId, setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -224,7 +224,6 @@ export function Login({ showLogin, setShowLogin, }) {
                 dispatch(setAuthId({ data: user.user.id }))
                 setUid(user.user.id)
                 const loginResponse = await loginApiCall(user.user, phoneNumberWithoutCountryCode, "", "phone")
-
                 setLoading(false)
             } catch (error) {
                 setLoading(false)
@@ -246,11 +245,11 @@ export function Login({ showLogin, setShowLogin, }) {
                     const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                     await getCurrentUser()
                     dispatch(setAuthType({ data: "phone" }))
-                    // if (res?.data?.user?.status == 1) {
-                    //     dispatch(setIsGuest({ data: false }));
-                    //     dispatch(setGuestCartTotal({ data: 0 }));
-                    //     dispatch(addtoGuestCart({ data: [] }))
-                    // }
+                    if (res?.data?.user?.status == 1) {
+                        dispatch(setIsGuest({ data: false }));
+                        // dispatch(setGuestCartTotal({ data: 0 }));
+                        // dispatch(addtoGuestCart({ data: [] }))
+                    }
                     await handleFetchSetting();
                     // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                     //     await AddtoCartBulk(res?.data.access_token);
@@ -315,9 +314,9 @@ export function Login({ showLogin, setShowLogin, }) {
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                 await getCurrentUser()
                 dispatch(setAuthType({ data: type }))
-                // if (res?.data?.user?.status == 1) {
-                //     dispatch(setIsGuest({ data: false }));
-                // }
+                if (res?.data?.user?.status == 1) {
+                    dispatch(setIsGuest({ data: false }));
+                }
                 await handleFetchSetting();
                 // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                 //     await AddtoCartBulk(res?.data.access_token);
@@ -398,9 +397,9 @@ export function Login({ showLogin, setShowLogin, }) {
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                 await getCurrentUser()
                 dispatch(setAuthType({ data: "email" }))
-                // if (res?.data?.user?.status == 1) {
-                //     dispatch(setIsGuest({ data: false }));
-                // }
+                if (res?.data?.user?.status == 1) {
+                    dispatch(setIsGuest({ data: false }));
+                }
                 await handleFetchSetting();
                 // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
                 //     await AddtoCartBulk(res?.data.access_token);

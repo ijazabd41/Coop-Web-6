@@ -22,6 +22,7 @@ import Cancelable from "@/assets/Cancelable.svg";
 import Returnable from "@/assets/Returnable.svg";
 import NotReturnable from "@/assets/NotReturnable.svg";
 import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share"
+import { IoIosCloseCircle } from 'react-icons/io'
 
 
 const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) => {
@@ -51,11 +52,19 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const currency = setting?.setting?.currency
 
 
+    const handleHideDetailModal = () => {
+        setShowDetailModal(false)
+    }
 
     return (
         <>
-            <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
+            <Dialog open={showDetailModal} >
+
                 <DialogContent className="max-w-4xl lg:max-w-screen-lg overflow-y-scroll max-h-screen">
+                    <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end"> <div>
+                        <IoIosCloseCircle size={32} onClick={handleHideDetailModal} />
+                    </div>
+                    </DialogHeader>
                     <div className='mt-12 '>
                         <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto'>
                             <div className='pb-6 border-b-2'>

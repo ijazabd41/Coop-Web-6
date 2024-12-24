@@ -6,12 +6,15 @@ import WalletBalanceModal from './WalletBalanceModal';
 import { useSelector } from 'react-redux';
 import { t } from '@/utils/translation';
 import Image from 'next/image';
+import LogoutModal from '../logoutmodal/LogoutModal';
 
-const Sidebar = ({ setSelectedTab, selectedTab }) => {
+const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
     const user = useSelector(state => state.User.user)
 
     const [addWalletModal, setAddWalletModal] = useState(false)
+    const [showLogout, setShowLogout] = useState(false)
+
     const handleTabChange = (tabName) => {
         setSelectedTab(tabName)
     }
@@ -112,7 +115,7 @@ const Sidebar = ({ setSelectedTab, selectedTab }) => {
                             <li className={`p-4  cursor-pointer  textColor ${selectedTab == "notification" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notification")}>
                                 Notification
                             </li>
-                            <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}>
+                            <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`} onClick={() => setShowLogout(true)}>
                                 Logout
                             </li>
                             <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}>
@@ -122,9 +125,10 @@ const Sidebar = ({ setSelectedTab, selectedTab }) => {
                     </div>
                 </div>
                 <WalletBalanceModal addWalletModal={addWalletModal} setAddWalletModal={setAddWalletModal} />
+                <LogoutModal showLogout={showLogout} setShowLogout={setShowLogout} />
             </div>
         </div>
     )
 }
 
-export default Sidebar
+export default ProfileSidebar

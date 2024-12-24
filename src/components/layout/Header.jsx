@@ -42,6 +42,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const themes = useSelector(state => state.Theme)
+    const cart = useSelector(state => state.Cart)
     const setting = useSelector(state => state.Setting);
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
@@ -91,6 +92,8 @@ const Header = () => {
     const handleOpenLocation = () => {
         setShowLocation(true)
     }
+
+
 
 
 
@@ -168,10 +171,23 @@ const Header = () => {
                         </div>
                         <div className=' gap-4 order-3 hidden md:flex lg:flex '>
                             <div className='flex items-center gap-2 cursor-pointer' onClick={handleCartOpen}>
-                                <span className='p-3 iconBackgroundColor rounded-full'><IoCartOutline size={24} className='iconsColor' /></span>
+                                {/* <span className='p-3 iconBackgroundColor rounded-full '><IoCartOutline size={24} className='iconsColor' /></span> */}
+                                <span className='p-3 iconBackgroundColor rounded-full relative' >
+                                    <IoCartOutline size={24} className='iconsColor' />
+                                    {
+                                        cart.isGuest == true ? <p className={cart?.guestCart
+                                            ?.length != 0 ? "flex absolute top-[-7px] right-0  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-bold text-sm" : "none"}> {cart?.guestCart
+                                                ?.length != 0 ? cart?.guestCart
+                                                ?.length : null}</p> :
+                                            <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor top-[-7px] right-0   textBackground rounded-full text-center h-4 w-4 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
+                                    }
+                                </span>
                                 <div className='flex flex-col '>
                                     <span className='text-sm'>{t("your_cart")}</span>
-                                    <span className='text-base font-bold'>$ 3800.00</span>
+                                    <span className='text-base font-bold'>{setting.setting && setting.setting.currency}{
+                                        cart.isGuest == true ? cart?.guestCartTotal?.toFixed(2) :
+                                            cart?.cartSubTotal?.toFixed(2)
+                                    }</span>
                                 </div>
                             </div>
                             {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
@@ -307,7 +323,7 @@ const Header = () => {
                 </div>
             </div>
 
-            <CartDrawer setShowCart={setShowCart} showCart={showCart} />
+            <CartDrawer showCart={showCart} setShowCart={setShowCart} />
             <Login showLogin={showLogin} setShowLogin={setShowLogin} />
             <Location showLocation={showLocation} setShowLocation={setShowLocation} />
         </section>

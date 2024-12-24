@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import * as api from "@/api/apiRoutes"
 import { ToastContainer } from 'react-toastify';
 import { setShop } from '@/redux/slices/shopSlice';
+import Loader from '../loader/Loader';
+import Location from '../locationmodal/Location';
 
 
 
@@ -16,14 +18,20 @@ const Layout = ({ children }) => {
     const theme = useSelector(state => state.Theme.theme)
     const setting = useSelector(state => state.Setting)
     const city = useSelector(state => state.City)
-    const shopData = useSelector((state) => state.Shop.shop)
+
     const [loading, setLoading] = useState(false)
+    // const [showLocation, setShowLocation] = useState(false)
+
+    // useEffect(() => {
+    //     fetchCity();
+    // }, [setting])
 
     useEffect(() => {
         fetchSetting()
-        fetchShop();
         fetchPaymentSetting()
     }, [city])
+
+
 
 
 
@@ -50,24 +58,35 @@ const Layout = ({ children }) => {
         }
     }
 
-    const fetchShop = async () => {
-        setLoading(true)
-        try {
-            const latitude = parseFloat(city?.city?.latitude)
-            const longitude = parseFloat(city?.city?.longitude)
-            const response = await api.getShop({ latitude: latitude, longitude: longitude })
-            dispatch(setShop({ data: response.data }))
-            setLoading(false)
-        } catch (error) {
-            console.log("error", error)
-            setLoading(false)
-        }
-    }
+    // const fetchCity = async () => {
+    //     setLoading(true)
+    //     try {
+    //         if (setting?.setting?.default_city && city?.city == null) {
+    //             const latitude = parseFloat(setting.setting.default_city?.latitude)
+    //             const longitude = parseFloat(setting.setting.default_city?.longitude)
+    //             const response = await api.getCity({ latitude: latitude, longitude: longitude })
+    //             if (response.status === 1) {
+    //                 dispatch(setCity({ data: response.data }));
+    //                 setLoading(false)
+    //             } else {
+    //                 setLocModal(true);
+    //                 setLoading(false)
+    //             }
+    //         } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
+    //             setShowLocation(true);
+    //             setLoading(false)
+    //         }
+    //     } catch (error) {
+    //         setLoading(false)
+    //         console.log("error", error)
+    //     }
+    // }
 
 
     return (
         <section>
             {
+
                 <>
                     <Header />
                     {children}
@@ -75,6 +94,7 @@ const Layout = ({ children }) => {
                     <ToastContainer theme={theme} key="toastContainer" bodyClassName={"toast-body"} toastClassName='toast-container-class' />
                 </>
             }
+            {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}
         </section>
     )
 }

@@ -12,32 +12,73 @@ import * as api from "@/api/apiRoutes"
 import { IoIosCloseCircle } from 'react-icons/io';
 import NoCartData from "@/assets/Empty_Cart.svg"
 import Image from 'next/image';
-
+import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
+import { useDispatch } from 'react-redux';
 
 const CartDrawer = ({ showCart, setShowCart }) => {
+    const dispatch = useDispatch();
     const city = useSelector(state => state.City.city);
+    const cart = useSelector(state => state.Cart)
     const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting.setting)
 
-    const [cartProducts, setCartProducts] = useState([])
+
+    const [cartProductsData, setCartProductsData] = useState([])
     const [cartData, setCartData] = useState([])
     const [loading, setLoading] = useState(false)
+
+
     useEffect(() => {
-        fetchCart()
-    }, [])
+        if (showCart) {
+            if (cart.isGuest) {
+                fetchGuestCart()
+            } else {
+                fetchCart()
+            }
+        }
+    }, [showCart])
 
     const fetchCart = async () => {
         setLoading(true)
         try {
             const cartData = await api.getCart({ latitude: city?.latitude, longitude: city?.longitude })
-            setCartProducts(cartData?.data?.cart)
-            setCartData(cartData?.data)
-            setLoading(false)
+            if (cartData?.status == 1) {
+                setCartProductsData(cartData?.data?.cart)
+                dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
+                setCartData(cartData?.data)
+                setLoading(false)
+            } else {
+                dispatch(setCartProducts({ data: [] }));
+                dispatch(setCartSubTotal({ data: 0 }));
+                setCartProductsData([])
+                // setCartData([])
+                setCartSubTotal(0)
+                setLoading(false)
+            }
+
         } catch (error) {
             setLoading(false)
             console.log("error", error)
         }
     }
+
+    const fetchGuestCart = async () => {
+        try {
+            const variantIds = cart?.guestCart?.map((p) => p.product_variant_id);
+            const quantities = cart?.guestCart?.map((p) => p.qty);
+            const response = await api.getGuestCart({ latitude: city?.latitude, longitude: city?.longitude, variant_ids: variantIds?.join(","), quantities: quantities?.join(",") })
+            if (response.status == 1) {
+                setCartProductsData(response.data.cart);
+                dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
+            }
+        } catch (error) {
+
+        }
+    }
+
+
+
+
 
     return (
         <Sheet open={showCart} >
@@ -51,12 +92,12 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                     </SheetTitle>
                 </SheetHeader>
 
-                {loading ? <p>Loading...</p> : cartProducts?.length !== 0 ? <>
+                {loading ? <p>Loading...</p> : cartProductsData?.length !== 0 ? <>
                     <div className='flex flex-col overflow-y-scroll h-3/4 mt-6 p-2'>
-                        {cartProducts?.map((product) => {
+                        {cartProductsData?.length !== 0 && cartProductsData?.map((product) => {
                             return (
                                 <div key={product?.id}>
-                                    <CartProductsCard product={product} />
+                                    <CartProductsCard product={product} cartProductsData={cartProductsData} setCartProductsData={setCartProductsData} />
                                 </div>
                             )
                         })}
@@ -65,7 +106,7 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                         <div className="space-y-6">
                             <div className="flex justify-between text-sm ">
                                 <span>{t("total")}</span>
-                                <span className="font-bold">{setting?.currency}{cartData?.sub_total}</span>
+                                <span className="font-bold">{setting?.currency}{cart.isGuest ? cart?.guestCartTotal : cart?.cartSubTotal}</span>
                             </div>
                         </div>
 
@@ -80,7 +121,6 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                         </div>
                     </div></> :
                     <div className='flex  items-center h-full justify-center my-auto mx-10 '>
-
                         <div>
                             <Image src={NoCartData} alt='No Cart Data' height={0} width={0} className='h-full w-full' />
                             <h1 className='font-bold text-[22px]  text-center py-2'>{t("empty_cart_list_message")}</h1>

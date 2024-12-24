@@ -3,16 +3,262 @@ import React from 'react'
 import Demo from "/public/demo.png"
 import { IoClose } from 'react-icons/io5'
 import { TiMinus, TiPlus } from "react-icons/ti";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart } from '@/api/apiRoutes';
+import * as api from "@/api/apiRoutes"
+import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { toast } from 'react-toastify';
 
-const CartProductsCard = ({ product }) => {
+
+const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) => {
+    const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting.setting)
+    const cart = useSelector(state => state.Cart)
+
+    const handleRemoveFromCart = async () => {
+        try {
+            const response = await api.removeFromCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id })
+            if (response?.status == 1) {
+                const remainItems = cart?.cartProducts?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
+                const updatedProducts = cartProductsData?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
+                setCartProductsData(updatedProducts)
+                dispatch(setCartProducts({ data: remainItems }))
+                dispatch(setCartSubTotal({ data: response?.sub_total }))
+                // toast.success(response.message)
+            } else {
+                toast.error(response.message)
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    const handleCalculteTotal = (products) => {
+        const total = products?.reduce((prev, curr) => {
+            prev += ((curr.discounted_price != 0) ? curr?.discounted_price * curr.qty : curr?.price * curr.qty)
+            return prev
+        }, 0)
+        if (cart?.isGuest) {
+            dispatch(setGuestCartTotal({ data: total }))
+        } else {
+            dispatch(setCartSubTotal({ data: total }))
+        }
+    }
+
+    const handleGuestCartRemove = () => {
+        const remainItems = cart?.guestCart?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
+        const updatedProducts = cartProductsData?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
+        setCartProductsData(updatedProducts)
+        dispatch(addtoGuestCart({ data: remainItems }))
+        handleCalculteTotal(updatedProducts)
+    }
+
+    const handleRemoveItem = async () => {
+        if (cart.isGuest) {
+            handleGuestCartRemove()
+        } else {
+            await handleRemoveFromCart()
+        }
+    }
+
+    const getProductQuantities = (products) => {
+        return Object.entries(products?.reduce((quantities, product) => {
+            const existingQty = quantities[product.product_id] || 0;
+            return { ...quantities, [product.product_id]: existingQty + product.qty };
+        }, {})).map(([productId, qty]) => ({
+            product_id: parseInt(productId),
+            qty
+        }));
+    }
+
+
+
+    const handleQuantityIncrease = async () => {
+        try {
+            let productQuantity = cart?.isGuest ? getProductQuantities(cart?.guestCart) : getProductQuantities(cart?.cartProducts)
+            const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
+            if (product?.is_unlimited_stock !== 0) {
+                if (productQty >= Number(product?.total_allowed_quantity)) {
+                    toast.error('Apologies, maximum product quantity limit reached');
+                } else {
+                    if (cart.isGuest) {
+                        let updatedProducts = cart?.guestCart?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                            } else {
+                                return cartProduct;
+                            }
+                        });
+                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: Number(productQty + 1) };
+                            } else {
+                                return cartProduct;
+                            }
+                        })
+                        handleCalculteTotal(updatedCartProducts)
+                        dispatch(addtoGuestCart({ data: updatedProducts }))
+                    } else {
+                        try {
+                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty + 1) })
+                            if (response.status == 1) {
+                                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
+                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                        return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                                    } else {
+                                        return cartProduct;
+                                    }
+                                });
+                                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                        return { ...cartProduct, qty: Number(productQty + 1) };
+                                    } else {
+                                        return cartProduct;
+                                    }
+                                })
+                                handleCalculteTotal(updatedCartProducts)
+                                dispatch(setCartProducts({ data: updatedProducts }))
+                            }
+                        } catch (error) {
+                            console.log("Error", error)
+                        }
+                    }
+
+                }
+            }
+            else {
+                if (productQty >= Number(product?.stock)) {
+                    toast.error('Oops, Limited Stock Available');
+                }
+                else if (productQty >= Number(product?.total_allowed_quantity)) {
+                    toast.error('Apologies, maximum cart quantity limit reached');
+                }
+                else {
+                    if (cart.isGuest) {
+                        let updatedProducts = cart?.guestCart?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: Number(cartProduct?.qty + 1) };
+                            } else {
+                                return cartProduct;
+                            }
+                        });
+                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: Number(productQty + 1) };
+                            } else {
+                                return cartProduct;
+                            }
+                        })
+                        handleCalculteTotal(updatedCartProducts)
+                        dispatch(addtoGuestCart({ data: updatedProducts }))
+                    } else {
+                        try {
+                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty + 1) })
+                            if (response.status == 1) {
+                                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
+                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                        return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                                    } else {
+                                        return cartProduct;
+                                    }
+                                });
+                                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                        return { ...cartProduct, qty: Number(productQty + 1) };
+                                    } else {
+                                        return cartProduct;
+                                    }
+                                })
+                                handleCalculteTotal(updatedCartProducts)
+                                dispatch(setCartProducts({ data: updatedProducts }))
+                            }
+                        } catch (error) {
+                            console.log("Error", error)
+                        }
+                    }
+                }
+            }
+
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    const handleQuantityDecrease = async () => {
+        try {
+            let productQuantity;
+            if (cart?.isGuest) {
+                productQuantity = getProductQuantities(cart?.guestCart)
+            } else {
+                productQuantity = getProductQuantities(cart?.cartProducts)
+            }
+            const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
+            if (productQty <= 1) {
+                return
+            }
+            if (cart.isGuest) {
+                let updatedProducts = cart?.guestCart?.map((cartProduct) => {
+                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                        return { ...cartProduct, qty: productQty - 1 };
+                    } else {
+                        return cartProduct
+                    }
+                });
+                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                        return { ...cartProduct, qty: Number(productQty - 1) };
+                    } else {
+                        return cartProduct;
+                    }
+                })
+                handleCalculteTotal(updatedCartProducts)
+                dispatch(addtoGuestCart({ data: updatedProducts }))
+            } else {
+                try {
+                    const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty - 1) })
+                    if (response.status == 1) {
+                        let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: cartProduct?.qty - 1 };
+                            } else {
+                                return cartProduct;
+                            }
+                        });
+                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
+                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                                return { ...cartProduct, qty: Number(productQty - 1) };
+                            } else {
+                                return cartProduct;
+                            }
+                        })
+                        handleCalculteTotal(updatedCartProducts)
+                        dispatch(setCartProducts({ data: updatedProducts }))
+                    }
+                } catch (error) {
+                    console.log("Error", error)
+                }
+            }
+
+
+
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    const addedQuantity = cart.isGuest === false ?
+        cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
+        : cart?.guestCart?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
+
+
+
+
     return (
         <div>
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
                 <div className='col-span-3 '>
                     <div className='h-full w-full object-cover aspect-square relative'>
-                        <Image src={product?.image_url} alt='Image' fill className='h-full w-full object-cover' />
+                        <Image src={product?.image_url} alt='Image' height={0} width={0} className='h-full w-full object-cover' />
                     </div>
                 </div>
                 <div className='col-span-9'>
@@ -21,7 +267,7 @@ const CartProductsCard = ({ product }) => {
                             <h2 className="text-base font-bold text-ellipsis overflow-hidden w-full line-clamp-2">
                                 {product?.name}
                             </h2>
-                            <IoClose size={20} />
+                            <IoClose size={20} onClick={handleRemoveItem} />
                         </div>
 
                         <div>
@@ -29,9 +275,9 @@ const CartProductsCard = ({ product }) => {
                         </div>
                         <div className='flex justify-between items-center'>
                             <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>
-                                <button className='text-2xl font-bold px-1'><TiMinus /></button>
-                                <span className='w-full text-center'>120</span>
-                                <button className='text-2xl font-bold px-1'><TiPlus /></button>
+                                <button className='text-2xl font-bold px-1' onClick={handleQuantityDecrease}><TiMinus /></button>
+                                <span className='w-full text-center'>{addedQuantity}</span>
+                                <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><TiPlus /></button>
                             </div>
                             <div className='flex gap-1 items-center'>
                                 {product?.discounted_price == 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>

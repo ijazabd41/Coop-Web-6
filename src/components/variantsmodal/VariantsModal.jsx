@@ -11,17 +11,28 @@ import { FaShoppingBasket, FaStar } from 'react-icons/fa'
 import Image from 'next/image'
 import * as api from "@/api/apiRoutes"
 import { useSelector } from 'react-redux'
+import { t } from '@/utils/translation'
+import { IoIosCloseCircle } from 'react-icons/io'
 
 
 const VariantsModal = ({ product, showVariants, setShowVariants }) => {
 
     const setting = useSelector(state => state.Setting)
 
+    const handleHideVariantModal = () => {
+        setShowVariants(false)
+    }
+
     return (
         <>
-            <Dialog open={showVariants} onOpenChange={setShowVariants}>
+            <Dialog open={showVariants}>
                 <DialogContent className="max-w-xl ">
-                    <DialogHeader className="font-bold text-2xl text-start">Choose Variants</DialogHeader>
+                    <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
+                        {t("chooseVariant")}
+                        <div>
+                            <IoIosCloseCircle size={32} onClick={handleHideVariantModal} />
+                        </div>
+                    </DialogHeader>
                     <div className='p-2 md:p-6'>
                         <div className='backgroundColor rounded-md flex gap-2 p-4 items-center'>
                             <div className='h-[54px] w-[54px] relative rounded-md '>

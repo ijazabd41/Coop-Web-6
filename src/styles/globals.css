@@ -42,7 +42,9 @@
 @layer utilities {
 
 
-
+.textBackground{
+  background-color: var(--font-color)
+}
   .headerBackgroundColor {
     background-color: var(--bs-body-bg)
   }
@@ -73,6 +75,10 @@
 
   .iconsColor {
     color: var(--primary-color);
+  }
+
+  .bodyTextColor{
+    color: var(--body-background-color);
   }
 
   .headerSearch {
@@ -241,6 +247,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   color: var(--font-color);
 }
+
 
 .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
   background-color: var(--primary-color) !important;

@@ -8,18 +8,39 @@ import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
 import { setSetting } from '@/redux/slices/settingSlice'
 
-const Homepage = () => {
 
-    
+const Homepage = () => {
+    const dispatch = useDispatch();
+    const setting = useSelector(state => state.Setting.setting)
+    const city = useSelector(state => state.City.city)
 
     const [loading, setLoading] = useState(false)
 
+    useEffect(() => {
+        if (city) {
+            fetchShop()
+        }
+    }, [city])
+
+    const fetchShop = async () => {
+        setLoading(true)
+        try {
+            const latitude = parseFloat(city?.latitude)
+            const longitude = parseFloat(city?.longitude)
+            const response = await api.getShop({ latitude: latitude, longitude: longitude })
+            dispatch(setShop({ data: response.data }))
+            setLoading(false)
+        } catch (error) {
+            console.log("error", error)
+            setLoading(false)
+        }
+    }
 
 
 
     return (
         <div>
-            {loading == true ? <Loader screen='full' /> :
+            {
                 <Layout>
                     <Home />
                 </Layout>
