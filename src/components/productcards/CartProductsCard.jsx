@@ -33,7 +33,8 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
         }
     }
 
-    const handleCalculteTotal = (products) => {
+    const handleCalculateTotal = (products) => {
+        console.log("products", products)
         const total = products?.reduce((prev, curr) => {
             prev += ((curr.discounted_price != 0) ? curr?.discounted_price * curr.qty : curr?.price * curr.qty)
             return prev
@@ -50,7 +51,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
         const updatedProducts = cartProductsData?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
         setCartProductsData(updatedProducts)
         dispatch(addtoGuestCart({ data: remainItems }))
-        handleCalculteTotal(updatedProducts)
+        handleCalculateTotal(updatedProducts)
     }
 
     const handleRemoveItem = async () => {
@@ -84,19 +85,19 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                     if (cart.isGuest) {
                         let updatedProducts = cart?.guestCart?.map((cartProduct) => {
                             if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                                return { ...cartProduct, qty: Number(cartProduct?.qty + 1) };
                             } else {
                                 return cartProduct;
                             }
                         });
                         let updatedCartProducts = cartProductsData?.map((cartProduct) => {
                             if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(productQty + 1) };
+                                return { ...cartProduct, qty: Number(productQty) };
                             } else {
                                 return cartProduct;
                             }
                         })
-                        handleCalculteTotal(updatedCartProducts)
+                        handleCalculateTotal(updatedCartProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
                     } else {
                         try {
@@ -116,7 +117,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                         return cartProduct;
                                     }
                                 })
-                                handleCalculteTotal(updatedCartProducts)
+                                handleCalculateTotal(updatedCartProducts)
                                 dispatch(setCartProducts({ data: updatedProducts }))
                             }
                         } catch (error) {
@@ -149,7 +150,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 return cartProduct;
                             }
                         })
-                        handleCalculteTotal(updatedCartProducts)
+                        handleCalculateTotal(updatedCartProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
                     } else {
                         try {
@@ -169,7 +170,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                         return cartProduct;
                                     }
                                 })
-                                handleCalculteTotal(updatedCartProducts)
+                                handleCalculateTotal(updatedCartProducts)
                                 dispatch(setCartProducts({ data: updatedProducts }))
                             }
                         } catch (error) {
@@ -193,25 +194,27 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                 productQuantity = getProductQuantities(cart?.cartProducts)
             }
             const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
-            if (productQty <= 1) {
+            const variantQty = cart?.guestCart?.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)?.qty;
+
+            if (variantQty <= 1) {
                 return
             }
             if (cart.isGuest) {
                 let updatedProducts = cart?.guestCart?.map((cartProduct) => {
                     if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                        return { ...cartProduct, qty: productQty - 1 };
+                        return { ...cartProduct, qty: Number(cartProduct?.qty - 1) };
                     } else {
                         return cartProduct
                     }
                 });
                 let updatedCartProducts = cartProductsData?.map((cartProduct) => {
                     if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                        return { ...cartProduct, qty: Number(productQty - 1) };
+                        return { ...cartProduct, qty: Number(cartProduct?.qty - 1) };
                     } else {
                         return cartProduct;
                     }
                 })
-                handleCalculteTotal(updatedCartProducts)
+                handleCalculateTotal(updatedCartProducts)
                 dispatch(addtoGuestCart({ data: updatedProducts }))
             } else {
                 try {
@@ -231,7 +234,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 return cartProduct;
                             }
                         })
-                        handleCalculteTotal(updatedCartProducts)
+                        handleCalculateTotal(updatedCartProducts)
                         dispatch(setCartProducts({ data: updatedProducts }))
                     }
                 } catch (error) {

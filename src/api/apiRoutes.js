@@ -172,6 +172,11 @@ export const getCart = async ({ latitude, longitude, checkout = 0 }) => {
     const response = await api.get(apiEndPoints.getCart, { params })
     return response.data
 }
+export const addToBulkCart = async ({ variant_ids, quantities }) => {
+    const params = { variant_ids: variant_ids, quantities: quantities }
+    const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.bulkAddToCart}`, null, { params: params })
+    return response.data
+}
 export const addToCart = async ({ product_id, product_variant_id, qty }) => {
     const formData = new FormData();
     formData.append("product_id", product_id);

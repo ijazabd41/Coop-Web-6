@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import * as api from "@/api/apiRoutes"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Image from 'next/image';
 import { FaLink, FaRegHeart, FaShoppingBasket, FaStar } from 'react-icons/fa';
 import { FiMinus, FiPlus } from 'react-icons/fi';
@@ -20,18 +20,24 @@ import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, Fac
 import ProductDescription from './ProductDescription';
 import BreadCrumb from '../breadcrumb/BreadCrumb';
 import Loader from '../loader/Loader';
+import { toast } from 'react-toastify';
+import { addGuestCartTotal, addtoGuestCart, setGuestCartTotal } from '@/redux/slices/cartSlice';
 
 const ProductDetail = () => {
+    const dispatch = useDispatch();
     const router = useRouter();
     const { slug } = router.query;
 
     const city = useSelector(state => state.City.city)
     const setting = useSelector(state => state.Setting)
+    const cart = useSelector(state => state.Cart)
 
     const [product, setProduct] = useState([])
     const [selectVariant, setSelectedVariant] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [ratingData, setRatingData] = useState({})
+    const [quantity, setQuantity] = useState(1)
+
 
     const ratingsCount = 10;
 
@@ -68,6 +74,7 @@ const ProductDetail = () => {
     const currency = setting?.setting?.currency;
 
     const handleChangeVariant = (variant) => {
+        setQuantity(1)
         setSelectedVariant(variant)
     }
     const calculateDiscount = (discountPrice, actualPrice) => {
@@ -76,6 +83,78 @@ const ProductDetail = () => {
         return actualDiscountPrice * 100;
     }
 
+
+
+    const handleDecreaseQuantity = () => {
+        if (quantity <= 1) {
+            return
+        }
+        else {
+            setQuantity(quantity - 1)
+        }
+    }
+    const handleIncreseQuantity = () => {
+        if ((Number(product?.is_unlimited_stock) == 0) && quantity >= selectVariant?.stock) {
+            toast.error(t("out_of_stock"))
+        } else if (quantity >= product?.total_allowed_quantity) {
+            toast.error(t("max_cart_limit_error"))
+        } else {
+            setQuantity(quantity + 1)
+        }
+    }
+
+
+    const handleCalculateTotal = (products) => {
+        const total = products.reduce((prev, curr) => {
+            prev += curr.productPrice * curr.qty
+            return prev
+        }, 0)
+        dispatch(setGuestCartTotal({ data: total }))
+    }
+
+    const getProductQuantities = (products) => {
+        return Object.entries(products?.reduce((quantities, product) => {
+            const existingQty = quantities[product.product_id] || 0;
+            return { ...quantities, [product.product_id]: existingQty + product.qty };
+        }, {})).map(([productId, qty]) => ({
+            product_id: parseInt(productId),
+            qty
+        }));
+    }
+
+    const handleAddToCart = async () => {
+        let productQuantity = cart?.isGuest ? getProductQuantities(cart?.guestCart) : getProductQuantities(cart?.cartProducts)
+        const isExisting = cart.guestCart.find((cartProduct) => cartProduct?.product_id == product?.id && cartProduct?.product_variant_id == selectVariant?.id)
+        const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty;
+        if (cart?.isGuest) {
+            if (isExisting) {
+                if (productQty + quantity > product?.total_allowed_quantity) {
+                    toast.error(t("max_cart_limit_error"))
+                } else {
+                    const updatedProduct = cart.guestCart?.map((cartProduct) => {
+                        if (cartProduct?.product_id == product?.id && cartProduct?.product_variant_id == selectVariant?.id) {
+                            return ({ ...cartProduct, qty: cartProduct.qty + quantity })
+                        } else {
+                            return cartProduct
+                        }
+                    })
+
+                    dispatch(addtoGuestCart({ data: updatedProduct }))
+                    handleCalculateTotal(updatedProduct)
+                }
+
+            } else {
+                const productPrice = selectVariant.discounted_price !== 0 ? selectVariant.discounted_price : selectVariant.price
+                const productData = { product_id: product.id, product_variant_id: selectVariant?.id, qty: quantity, productPrice: productPrice };
+                dispatch(addtoGuestCart({ data: [...cart?.guestCart, productData] }))
+                let products = [...cart.guestCart, productData]
+                handleCalculateTotal(products)
+            }
+
+        } else {
+            console.log("hello world")
+        }
+    }
 
 
     return (
@@ -187,15 +266,15 @@ const ProductDetail = () => {
                                             }
                                         </div>
                                     </div>
-                                    <div className='flex gap-4 flex-col lg:flex-row'>
-                                        <div className='flex gap-4 items-center'>
-                                            <div className='grid grid-cols-6 border-2 rounded-sm p-1 lg:py-[10px] items-center'>
-                                                <span className='col-span-1 font-bold text-xl'><FiMinus /></span>
-                                                <span className='col-span-4 text-center font-medium text-base '>1</span>
-                                                <span className='col-span-1 font-bold text-xl'><FiPlus /></span>
+                                    <div className='flex gap-4 flex-col lg:flex-row '>
+                                        <div className='flex gap-4 items-center '>
+                                            <div className='flex border-2 rounded-sm p-1 lg:py-[10px] items-center w-1/2'>
+                                                <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
+                                                <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
+                                                <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
                                             </div>
                                             <div>
-                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-4 lg:py-3 rounded-sm text-base font-semibold'><FaShoppingBasket size={22} />Add to Cart</button>
+                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-2 md:px-4 lg:py-3 rounded-sm text-base font-semibold' onClick={handleAddToCart}><FaShoppingBasket size={22} />Add to Cart</button>
                                             </div>
                                         </div>
 

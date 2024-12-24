@@ -15,7 +15,7 @@ import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg"
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from "react-redux";
-import { setCart, setCartProducts, setIsGuest } from "@/redux/slices/cartSlice";
+import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal, setIsGuest } from "@/redux/slices/cartSlice";
 import { setAuthId, setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -36,7 +36,7 @@ export function Login({ showLogin, setShowLogin, }) {
 
     const authType = useSelector(state => state.User.authType)
     const city = useSelector(state => state.City.city)
-
+    const cart = useSelector(state => state.Cart)
     const setting = useSelector(state => state.Setting.setting)
     const { auth, app, messaging } = FirebaseData();
 
@@ -64,8 +64,6 @@ export function Login({ showLogin, setShowLogin, }) {
     const [showRegister, setShowRegister] = useState(false);
     const [showForgetPassword, setShowForgetPassword] = useState(false)
 
-
-
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
@@ -89,11 +87,13 @@ export function Login({ showLogin, setShowLogin, }) {
         return () => clearInterval(interval);
 
     }, [timer]);
+
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
+
     useEffect(() => {
         generateRecaptcha();
         return () => {
@@ -247,13 +247,11 @@ export function Login({ showLogin, setShowLogin, }) {
                     dispatch(setAuthType({ data: "phone" }))
                     if (res?.data?.user?.status == 1) {
                         dispatch(setIsGuest({ data: false }));
-                        // dispatch(setGuestCartTotal({ data: 0 }));
-                        // dispatch(addtoGuestCart({ data: [] }))
                     }
                     await handleFetchSetting();
-                    // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
-                    //     await AddtoCartBulk(res?.data.access_token);
-                    // }
+                    if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                        await addToBulkCart(res?.data.access_token);
+                    }
                     await fetchCart();
                     setError("");
                     setOtp("");
@@ -297,7 +295,7 @@ export function Login({ showLogin, setShowLogin, }) {
                 dispatch(setCart({ data: response.data }))
                 const productsData = getProductData(response.data)
                 dispatch(setCartProducts({ data: productsData }));
-                // dispatch(setCartSubTotal({ data: response?.data?.sub_total }))
+                dispatch(setCartSubTotal({ data: response?.data?.sub_total }))
             } else {
                 dispatch(setCart({ data: null }));
             }
@@ -318,9 +316,9 @@ export function Login({ showLogin, setShowLogin, }) {
                     dispatch(setIsGuest({ data: false }));
                 }
                 await handleFetchSetting();
-                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
-                //     await AddtoCartBulk(res?.data.access_token);
-                // }
+                if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                    await addToBulkCart(res?.data.access_token);
+                }
                 await fetchCart();
                 setError("");
                 setOtp("");
@@ -401,9 +399,9 @@ export function Login({ showLogin, setShowLogin, }) {
                     dispatch(setIsGuest({ data: false }));
                 }
                 await handleFetchSetting();
-                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
-                //     await AddtoCartBulk(res?.data.access_token);
-                // }
+                if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                    await addToBulkCart(res?.data.access_token);
+                }
                 await fetchCart();
                 setError("");
                 setOtp("");
@@ -441,13 +439,13 @@ export function Login({ showLogin, setShowLogin, }) {
                 const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token))
                 await getCurrentUser()
                 dispatch(setAuthType({ data: "email" }))
-                // if (res?.data?.user?.status == 1) {
-                //     dispatch(setIsGuest({ data: false }));
-                // }
+                if (res?.data?.user?.status == 1) {
+                    dispatch(setIsGuest({ data: false }));
+                }
                 await handleFetchSetting();
-                // if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
-                //     await AddtoCartBulk(res?.data?.access_token);
-                // }
+                if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && res?.data?.user?.status == 1) {
+                    await addToBulkCart(res?.data?.access_token);
+                }
                 await fetchCart();
                 // props.setShow(false)
                 setIsOTP(false)
@@ -458,6 +456,23 @@ export function Login({ showLogin, setShowLogin, }) {
             }
         } catch (error) {
             console.log("error", error)
+        }
+    }
+
+    const addToBulkCart = async () => {
+        try {
+            const variantIds = cart?.guestCart?.map((p) => p.product_variant_id)
+            const quantities = cart?.guestCart?.map((p) => p.qty)
+            const response = await api.addToBulkCart({ variant_ids: variantIds.join(","), quantities: quantities.join(",") })
+            if (response.status == 1) {
+                dispatch(setGuestCartTotal({ data: 0 }))
+                dispatch(addtoGuestCart({ data: [] }))
+                dispatch(setCartSubTotal({ data: response.sub_total }))
+            } else {
+                console.log("Error while adding bulk products")
+            }
+        } catch (error) {
+            console.log("Error", error)
         }
     }
 

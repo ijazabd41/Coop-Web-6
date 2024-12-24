@@ -36,6 +36,7 @@ import { useRouter } from 'next/router';
 import { setCity } from '@/redux/slices/citySlice';
 import { setLocalTheme } from '@/redux/slices/themeSlice';
 import { useTheme } from 'next-themes'
+import LogoutModal from '../logoutmodal/LogoutModal';
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
@@ -48,6 +49,7 @@ const Header = () => {
     const city = useSelector(state => state.City)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
+    const [showLogout, setShowLogout] = useState(false)
 
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -239,8 +241,8 @@ const Header = () => {
                                                     {t("walletBalance")}
                                                 </span>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="items-center flex justify-start h-full">
-                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                            <DropdownMenuItem className="items-center flex justify-start h-full" >
+                                                <span className="flex p-2 gap-2 text-base font-semibold bg-transparent" onClick={() => setShowLogout(true)}>
                                                     <RiLogoutCircleRLine size={20} />
                                                     {t("logout")}
                                                 </span>
@@ -326,6 +328,7 @@ const Header = () => {
             <CartDrawer showCart={showCart} setShowCart={setShowCart} />
             <Login showLogin={showLogin} setShowLogin={setShowLogin} />
             <Location showLocation={showLocation} setShowLocation={setShowLocation} />
+            <LogoutModal showLogout={showLogout} setShowLogout={setShowLogout} />
         </section>
     )
 }
