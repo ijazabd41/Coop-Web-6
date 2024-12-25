@@ -11,6 +11,7 @@ import Image from 'next/image';
 
 const HorizontalProductSwiper = ({ section, index }) => {
     const shop = useSelector(state => state.Shop.shop);
+    const theme = useSelector(state => state.Theme.theme)
     const [promotionImage, setPromotionImage] = useState(null)
     useEffect(() => {
         const promotionImageBelowSection = shop?.offers?.filter((offer) => offer?.position == "below_section");
@@ -24,7 +25,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
         <div>
             {
                 section?.products?.length > 0 ?
-                    <section className='py-6'>
+                    <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
 
                         <div className='container'>
                             <div>

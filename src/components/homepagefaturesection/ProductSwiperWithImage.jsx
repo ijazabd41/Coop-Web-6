@@ -11,6 +11,7 @@ import VerticleProductCard from '../productcards/VerticleProductCard';
 import { useSelector } from 'react-redux'
 
 const ProductSwiperWithImage = ({ section }) => {
+    const theme = useSelector(state => state.Theme.theme)
     const shop = useSelector(state => state.Shop.shop);
     const [promotionImage, setPromotionImage] = useState(null)
     useEffect(() => {
@@ -23,7 +24,7 @@ const ProductSwiperWithImage = ({ section }) => {
 
     return (
         <div>
-            {section?.products?.length > 0 ? <section className='py-6'>
+            {section?.products?.length > 0 ? <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
                 <div className='container'>
                     <div>
                         <div className='flex justify-between pb-3'>

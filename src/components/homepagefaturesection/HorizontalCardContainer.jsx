@@ -3,6 +3,7 @@ import HorizontalProductCard from '../productcards/HorizontalProductCard'
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 const HorizontalCardContainer = ({ section }) => {
+    const theme = useSelector(state => state.Theme.theme)
     const shop = useSelector(state => state.Shop.shop);
     const [promotionImage, setPromotionImage] = useState(null)
     useEffect(() => {
@@ -13,7 +14,7 @@ const HorizontalCardContainer = ({ section }) => {
         setPromotionImage(image)
     }, [section])
     return (
-        <section >
+        <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
             {section?.products?.length > 0 ? <div className='container'>
                 <div className='flex justify-between items-center pb-3'>
                     <div>

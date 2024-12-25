@@ -34,9 +34,8 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
     }
 
     const handleCalculateTotal = (products) => {
-        console.log("products", products)
         const total = products?.reduce((prev, curr) => {
-            prev += ((curr.discounted_price != 0) ? curr?.discounted_price * curr.qty : curr?.price * curr.qty)
+            prev += (curr?.productPrice * curr.qty)
             return prev
         }, 0)
         if (cart?.isGuest) {
@@ -51,7 +50,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
         const updatedProducts = cartProductsData?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
         setCartProductsData(updatedProducts)
         dispatch(addtoGuestCart({ data: remainItems }))
-        handleCalculateTotal(updatedProducts)
+        handleCalculateTotal(remainItems)
     }
 
     const handleRemoveItem = async () => {
@@ -78,6 +77,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
         try {
             let productQuantity = cart?.isGuest ? getProductQuantities(cart?.guestCart) : getProductQuantities(cart?.cartProducts)
             const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
+            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)
             if (product?.is_unlimited_stock !== 0) {
                 if (productQty >= Number(product?.total_allowed_quantity)) {
                     toast.error('Apologies, maximum product quantity limit reached');
@@ -90,34 +90,23 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 return cartProduct;
                             }
                         });
-                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(productQty) };
-                            } else {
-                                return cartProduct;
-                            }
-                        })
-                        handleCalculateTotal(updatedCartProducts)
+
+
+                        handleCalculateTotal(updatedProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
                     } else {
                         try {
-                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty + 1) })
+                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
                             if (response.status == 1) {
                                 let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
                                     if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                                        return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                                     } else {
                                         return cartProduct;
                                     }
                                 });
-                                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: Number(productQty + 1) };
-                                    } else {
-                                        return cartProduct;
-                                    }
-                                })
-                                handleCalculateTotal(updatedCartProducts)
+
+                                dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
                             }
                         } catch (error) {
@@ -143,34 +132,20 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 return cartProduct;
                             }
                         });
-                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(productQty + 1) };
-                            } else {
-                                return cartProduct;
-                            }
-                        })
-                        handleCalculateTotal(updatedCartProducts)
+                        handleCalculateTotal(updatedProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
                     } else {
                         try {
-                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty + 1) })
+                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
                             if (response.status == 1) {
                                 let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
                                     if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: cartProduct?.qty + 1 };
+                                        return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                                     } else {
                                         return cartProduct;
                                     }
                                 });
-                                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: Number(productQty + 1) };
-                                    } else {
-                                        return cartProduct;
-                                    }
-                                })
-                                handleCalculateTotal(updatedCartProducts)
+                                dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
                             }
                         } catch (error) {
@@ -195,11 +170,11 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
             }
             const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
             const variantQty = cart?.guestCart?.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)?.qty;
-
-            if (variantQty <= 1) {
-                return
-            }
+            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)
             if (cart.isGuest) {
+                if (variantQty <= 1) {
+                    return;
+                }
                 let updatedProducts = cart?.guestCart?.map((cartProduct) => {
                     if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
                         return { ...cartProduct, qty: Number(cartProduct?.qty - 1) };
@@ -207,43 +182,29 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                         return cartProduct
                     }
                 });
-                let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                        return { ...cartProduct, qty: Number(cartProduct?.qty - 1) };
-                    } else {
-                        return cartProduct;
-                    }
-                })
-                handleCalculateTotal(updatedCartProducts)
+                handleCalculateTotal(updatedProducts)
                 dispatch(addtoGuestCart({ data: updatedProducts }))
             } else {
+                if (cartProductQty.qty <= 1) {
+                    return;
+                }
                 try {
-                    const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(productQty - 1) })
+                    const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty - 1) })
                     if (response.status == 1) {
                         let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
                             if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: cartProduct?.qty - 1 };
+                                return { ...cartProduct, qty: cartProductQty?.qty - 1 };
                             } else {
                                 return cartProduct;
                             }
                         });
-                        let updatedCartProducts = cartProductsData?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(productQty - 1) };
-                            } else {
-                                return cartProduct;
-                            }
-                        })
-                        handleCalculateTotal(updatedCartProducts)
+                        dispatch(setCartSubTotal({ data: response.sub_total }))
                         dispatch(setCartProducts({ data: updatedProducts }))
                     }
                 } catch (error) {
                     console.log("Error", error)
                 }
             }
-
-
-
         } catch (error) {
             console.log("error", error)
         }
@@ -252,9 +213,6 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
     const addedQuantity = cart.isGuest === false ?
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
-
-
-
 
     return (
         <div>

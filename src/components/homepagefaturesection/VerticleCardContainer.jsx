@@ -6,6 +6,7 @@ import Image from 'next/image';
 const VerticleCardContainer = ({ section }) => {
 
     const shop = useSelector(state => state.Shop.shop);
+    const theme = useSelector(state => state.Theme.theme)
     const [promotionImage, setPromotionImage] = useState(null)
     useEffect(() => {
         const promotionImageBelowSection = shop?.offers?.filter((offer) => offer?.position == "below_section");
@@ -17,7 +18,7 @@ const VerticleCardContainer = ({ section }) => {
 
     return (
         <div>
-            {section?.products?.length > 0 ? <section className=''>
+            {section?.products?.length > 0 ? <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
                 <div className='py-6 container'>
                     <div className='flex justify-between items-center pb-3'>
                         <div>
