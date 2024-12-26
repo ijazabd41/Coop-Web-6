@@ -6,14 +6,18 @@ import * as apiEndPoints from "./apiEndpoints"
 export const registerUser = async ({ name, email, mobile, type, fcm, country_code, password }) => {
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("email", email)
     formData.append("country_code", country_code)
-    formData.append("mobile", mobile)
     formData.append("type", type)
     formData.append("fcm_token", fcm);
     formData.append("platform", "web");
     if (type == "email") {
         formData.append("password", password);
+    }
+    if (type === "phone" || (type === "email" && mobile)) {
+        formData.append("mobile", mobile);
+    }
+    if ((type === "email" || type === "google") || (type === "phone" && email)) {
+        formData.append("email", email)
     }
     const response = await api.post(apiEndPoints.register, formData)
     return response.data
@@ -83,10 +87,18 @@ export const getShop = async ({ latitude, longitude }) => {
     return response.data
 }
 
-export const getCategories = async () => {
-    const response = await api.get(apiEndPoints.getCategory)
+export const getCategories = async ({ slug = "", id = "", limit = 10, offset = 0 } = {}) => {
+    const params = {
+        limit,
+        offset,
+        ...(slug && { slug }),
+        ...(id && { id })
+    };
+
+    const response = await api.get(apiEndPoints.getCategory, { params });
     return response.data;
-}
+};
+
 
 export const getProductByFilter = async ({ latitude, longitude, filters = undefined, tag_names = "", slug = "" }) => {
     const formData = new FormData();

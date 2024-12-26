@@ -8,7 +8,7 @@ import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
 import { t } from "@/utils/translation"
 import Link from 'next/link';
 
-const Categories = ({ categories }) => {
+const CategoriesContainer = ({ categories }) => {
     return (
         <section>
             <div className='container py-6'>
@@ -21,7 +21,7 @@ const Categories = ({ categories }) => {
                     <div className="flex items-center ">
                         {/* {categories?.categoriess?.length > 5 ? ( */}
                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
-                            <Link className="" href="/category/all">{t('see_all')}</Link>
+                            <Link className="" href="/categories/all">{t('see_all')}</Link>
                             <div className='flex gap-2 '>
                                 <button className="category-button-next cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 "
                                 >
@@ -67,4 +67,4 @@ const Categories = ({ categories }) => {
     )
 }
 
-export default Categories
+export default CategoriesContainer;

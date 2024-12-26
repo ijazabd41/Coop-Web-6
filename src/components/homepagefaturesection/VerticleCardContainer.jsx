@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react'
 import VerticleProductCard from '../productcards/VerticleProductCard'
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
+import { t } from '@/utils/translation';
+import { useRouter } from 'next/navigation';
+import { setFilterSection, setFilterView } from '@/redux/slices/productFilterSlice';
 
 const VerticleCardContainer = ({ section }) => {
-
+    const router = useRouter();
+    const dispatch = useDispatch();
     const shop = useSelector(state => state.Shop.shop);
     const theme = useSelector(state => state.Theme.theme)
     const [promotionImage, setPromotionImage] = useState(null)
@@ -15,6 +20,12 @@ const VerticleCardContainer = ({ section }) => {
         })
         setPromotionImage(image)
     }, [section])
+
+    const handleViewAll = () => {
+        dispatch(setFilterSection({ data: section?.id }))
+        router.push('/products')
+    }
+
 
     return (
         <div>
@@ -27,7 +38,7 @@ const VerticleCardContainer = ({ section }) => {
                         </div>
 
                         <div>
-                            <span>View all</span>
+                            <button onClick={handleViewAll}>{t("see_all")}</button>
                         </div>
                     </div>
                     <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4'>

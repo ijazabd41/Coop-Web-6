@@ -15,9 +15,11 @@ import Image from 'next/image';
 import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import Login from '../login/Login';
+import { useRouter } from 'next/router';
 
 const CartDrawer = ({ showCart, setShowCart }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const city = useSelector(state => state.City.city);
     const cart = useSelector(state => state.Cart)
     const user = useSelector(state => state.User)
@@ -75,7 +77,7 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                 dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
             }
         } catch (error) {
-
+            console.log("Error", error)
         }
     }
 
@@ -86,7 +88,7 @@ const CartDrawer = ({ showCart, setShowCart }) => {
             setShowCart(false)
             setShowLogin(true)
         } else {
-            return
+            router.push("checkout")
         }
     }
 

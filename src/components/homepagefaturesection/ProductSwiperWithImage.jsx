@@ -9,8 +9,14 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import VerticleProductCard from '../productcards/VerticleProductCard';
 import { useSelector } from 'react-redux'
+import { t } from '@/utils/translation'
+import { useDispatch } from 'react-redux'
+import { setFilterSection } from '@/redux/slices/productFilterSlice'
+import { useRouter } from 'next/navigation'
 
 const ProductSwiperWithImage = ({ section }) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const theme = useSelector(state => state.Theme.theme)
     const shop = useSelector(state => state.Shop.shop);
     const [promotionImage, setPromotionImage] = useState(null)
@@ -21,6 +27,12 @@ const ProductSwiperWithImage = ({ section }) => {
         })
         setPromotionImage(image)
     }, [section])
+
+
+    const handleViewAll = () => {
+        dispatch(setFilterSection({ data: section?.id }))
+        router.push('/products')
+    }
 
     return (
         <div>
@@ -33,7 +45,7 @@ const ProductSwiperWithImage = ({ section }) => {
                                 <p>{section?.short_description}</p>
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
-                                <Link href={"/"} >View all</Link>
+                                <button onClick={handleViewAll}>{t("see_all")}</button>
                                 <div className=' flex gap-2'>
                                     <button className={`buttonBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
                                     <button className={`buttonBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>

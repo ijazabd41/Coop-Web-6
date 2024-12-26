@@ -429,5 +429,7 @@
     "choose_date": "Choose Date",
     "preferred_delivery_day": "Preferred Delivery Day",
     "your_wallet": "Your Wallet",
-    "hello": "Hello"
+    "hello": "Hello",
+    "username_required": "Username Required",
+    "login_success":"You're successfully Logged In"
 }

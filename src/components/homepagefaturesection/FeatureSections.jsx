@@ -5,7 +5,7 @@ import HorizontalCardContainer from './HorizontalCardContainer';
 import VerticleCardContainer from './VerticleCardContainer';
 import ProductSwiperWithImage from './ProductSwiperWithImage';
 import HorizontalProductSwiper from './HorizontalProductSwiper';
-import Categories from '../categories/Categories';
+import Categories from '../categories/CategoriesContainer';
 import BrandSlider from '../shop-by-brands/BrandSlider';
 import CountrySlider from '../shop-by-country/CountrySlider';
 import SellerSlider from '../shop-by-seller/SellerSlider';

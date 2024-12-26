@@ -95,43 +95,64 @@ export function Login({ showLogin, setShowLogin, }) {
     };
 
     useEffect(() => {
-        generateRecaptcha();
+        if (showLogin) {
+            generateRecaptcha();
+        }
         return () => {
             recaptchaClear()
         };
-    }, [showLogin, app, auth]);
+    }, [showLogin]);
 
     const recaptchaClear = async () => {
-        const recaptchaContainer = document.getElementById('recaptcha-container')
-        if (recaptchaContainer) {
-            recaptchaContainer.innerHTML = ''
-        }
-        if (window.recaptchaVerifier) {
-            window.recaptchaVerifier.clear();
-            window.recaptchaVerifier = null;
-        }
-    }
+        const recaptchaContainer = document.getElementById('recaptcha-container');
 
-    const generateRecaptcha = () => {
-        if (!window.recaptchaVerifier) {
-            const recaptchaContainer = document.getElementById("recaptcha-container");
-            if (!recaptchaContainer) {
-                console.error("Container element 'recaptcha-container' not found.");
-                return null;
-            }
+        if (window.recaptchaVerifier) {
             try {
-                recaptchaContainer.innerHTML = '';
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-                    size: "invisible",
-                });
-                return window.recaptchaVerifier;
+                await window.recaptchaVerifier.clear(); // Clear the widget
+                window.recaptchaVerifier = null; // Reset the verifier
+                console.log("ReCAPTCHA widget cleared");
             } catch (error) {
-                console.error("Error initializing RecaptchaVerifier:", error.message);
-                return null;
+                console.error("Error clearing ReCAPTCHA verifier:", error);
             }
         }
-        return window.recaptchaVerifier;
+
+        if (recaptchaContainer) {
+            recaptchaContainer.innerHTML = ''; // Clear the container
+            console.log("ReCAPTCHA container cleared");
+        }
     };
+
+
+
+    const generateRecaptcha = async () => {
+        const recaptchaContainer = document.getElementById("recaptcha-container");
+        if (!recaptchaContainer) {
+            console.error("Container element 'recaptcha-container' not found.");
+            return null;
+        }
+
+        // Clear the container in case any previous widget exists
+        recaptchaContainer.innerHTML = '';
+
+        // Initialize RecaptchaVerifier
+        try {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                size: "invisible",
+            });
+
+            // Render the widget
+            const widgetId = await window.recaptchaVerifier.render();
+            console.log("ReCAPTCHA rendered with widgetId:", widgetId);
+            return window.recaptchaVerifier;
+        } catch (error) {
+            console.error("Error initializing RecaptchaVerifier:", error.message);
+            return null;
+        }
+    };
+
+
+
+
 
     const handleShowRegister = () => {
         setShowRegister(true)
@@ -174,7 +195,6 @@ export function Login({ showLogin, setShowLogin, }) {
         else {
             const phoneNumberWithoutSpaces = `${phoneNumber}`.replace(/\s+/g, "");
             if (setting?.firebase_authentication == 1) {
-                // const appVerifier = generateRecaptcha();
                 try {
                     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithoutSpaces, window.recaptchaVerifier)
                     window.confirmationResult = confirmationResult;
@@ -182,6 +202,7 @@ export function Login({ showLogin, setShowLogin, }) {
                     setIsOTP(true)
                     setLoading(false)
                 } catch (error) {
+                    console.log("error from send otp", error)
                     setPhoneNumber();
                     setError(error.message);
                     setLoading(false);
@@ -362,13 +383,13 @@ export function Login({ showLogin, setShowLogin, }) {
     }
 
     const handleHideLogin = async () => {
-        await recaptchaClear()
         setIsOTP(false)
         setShowLogin(false)
         setError("")
         setInputValue("")
         setInputType("")
         setLoading(false);
+        await recaptchaClear()
     }
 
     const handleGoogleLogin = async () => {
@@ -518,11 +539,11 @@ export function Login({ showLogin, setShowLogin, }) {
                                             value={otp}
                                             onChange={setOtp}
                                             numInputs={6}
-                                            renderInput={(props) => <input {...props} className="border border-gray-300 mx-1 md:mx-2 rounded-sm text-black bg text-center 
-                                      p-2 w-10 md:w-[62px] mt-6"
+                                            inputType="number"
+                                            renderInput={(props) => <input {...props} className="border border-gray-300 mx-1 md:mx-2 rounded-sm  bg text-center 
+                                      p-2 w-10 md:w-[62px] mt-6 "
                                                 style={{
-                                                    color: 'black',
-                                                    backgroundColor: 'white',
+
                                                     fontSize: '16px'
                                                 }}
                                             />}

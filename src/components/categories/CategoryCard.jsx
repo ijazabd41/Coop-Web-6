@@ -5,7 +5,7 @@ import Image from 'next/image'
 const CategoryCard = ({ category }) => {
 
     return (
-        <div className='flex flex-col category-card p-6 hover:textPrimaryColor hover:cardBorder rounded-md headerBackgroundColor'>
+        <div className='flex flex-col category-card p-6 hover:textPrimaryColor hover:cardBorder rounded-md headerBackgroundColor cursor-pointer'>
             <div className='gap-3 flex flex-col items-center'>
                 <div className='relative h-[122px] w-[122px]'>
                     <Image src={category.image_url} alt='Category Image' fill className='rounded-full object-cover p-2' />

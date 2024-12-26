@@ -3,7 +3,7 @@ import Home from '@/components/homepage/Home'
 import * as api from "@/api/apiRoutes"
 import { setShop } from '@/redux/slices/shopSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import Categories from '../categories/Categories'
+import Categories from '../categories/CategoriesContainer'
 import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
 import { setSetting } from '@/redux/slices/settingSlice'

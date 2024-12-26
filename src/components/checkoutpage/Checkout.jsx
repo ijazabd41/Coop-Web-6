@@ -22,7 +22,7 @@ import CheckoutPayment from './CheckoutPayment'
 import OrderSummaryCard from './OrderSummaryCard'
 
 const Checkout = () => {
-    const [currentStep, setCurrentStep] = useState(3);
+    const [currentStep, setCurrentStep] = useState(1);
     const [selectedAddess, setSelectedAddress] = useState('')
     const [selectedDate, setSelectedDate] = useState("")
     const [selectedTime, setSelectedTime] = useState("")
@@ -31,7 +31,7 @@ const Checkout = () => {
         setSelectedDate(date)
     }
     const formatDate = (date) => {
-        if (!date) return t("choose_date"); // Default placeholder text
+        if (!date) return t("choose_date");
         return new Date(date).toLocaleDateString('en-US', {
             day: '2-digit',
             month: 'long',

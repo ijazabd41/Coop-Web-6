@@ -314,7 +314,7 @@ const HorizontalProductCard = ({ product }) => {
                                 </div>
                                 : null}
                             <div className='flex'>
-                                {selectedVariant?.discounted_price !== 0 ? <>  <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
+                                {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
                                     <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
                             </div>
                         </div>

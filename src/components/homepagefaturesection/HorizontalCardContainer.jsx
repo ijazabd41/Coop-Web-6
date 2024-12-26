@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import HorizontalProductCard from '../productcards/HorizontalProductCard'
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
+import { setFilterSection } from '@/redux/slices/productFilterSlice';
+import { t } from '@/utils/translation';
+import { useRouter } from 'next/navigation';
 const HorizontalCardContainer = ({ section }) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const theme = useSelector(state => state.Theme.theme)
     const shop = useSelector(state => state.Shop.shop);
     const [promotionImage, setPromotionImage] = useState(null)
@@ -13,6 +19,14 @@ const HorizontalCardContainer = ({ section }) => {
         })
         setPromotionImage(image)
     }, [section])
+
+
+
+    const handleViewAll = () => {
+        dispatch(setFilterSection({ data: section?.id }))
+        router.push('/products')
+    }
+
     return (
         <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
             {section?.products?.length > 0 ? <div className='container'>
@@ -23,7 +37,7 @@ const HorizontalCardContainer = ({ section }) => {
                     </div>
 
                     <div>
-                        <span>View all</span>
+                        <button onClick={handleViewAll}>{t("see_all")}</button>
                     </div>
                 </div>
                 <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 my-2'>
