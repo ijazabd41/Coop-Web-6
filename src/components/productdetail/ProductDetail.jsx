@@ -22,6 +22,8 @@ import BreadCrumb from '../breadcrumb/BreadCrumb';
 import Loader from '../loader/Loader';
 import { toast } from 'react-toastify';
 import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
+import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -31,6 +33,8 @@ const ProductDetail = () => {
     const city = useSelector(state => state.City.city)
     const setting = useSelector(state => state.Setting)
     const cart = useSelector(state => state.Cart)
+    const user = useSelector(state => state.User)
+    const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
     const [product, setProduct] = useState([])
     const [selectVariant, setSelectedVariant] = useState([])
@@ -182,6 +186,40 @@ const ProductDetail = () => {
         }
     }
 
+    const handleProductLikes = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isAlreadyLikes = favoriteProducts?.includes(product?.id)
+        try {
+            if (user?.jwtToken) {
+                if (!isAlreadyLikes) {
+                    const response = await api.addToFavorite({ product_id: product?.id })
+                    if (response.status == 1) {
+                        const updatedFavProducts = [...favoriteProducts, product?.id]
+                        dispatch(setFavoriteProductIds({ data: updatedFavProducts }))
+                        toast.success(response.message)
+                    } else {
+                        toast.error(response.message)
+                    }
+                } else {
+                    const response = await api.removeFromFavorite({ product_id: product?.id })
+                    if (response.status == 1) {
+                        const updatedFavProducts = favoriteProducts?.filter((prdctId) => prdctId != product?.id)
+                        dispatch(setFavoriteProductIds({ data: updatedFavProducts }))
+                        toast.success(response.message)
+                    } else {
+                        toast.error(response.message)
+                    }
+                }
+            } else {
+                toast.error(t("required_login_message_for_wishlist"))
+            }
+
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
 
     return (
 
@@ -305,10 +343,12 @@ const ProductDetail = () => {
                                         </div>
 
                                         <div className='flex gap-2 items-center'>
-                                            <span className='rounded-full border-2 p-2'>
-                                                <FaRegHeart size={18} />
+                                            <span className='rounded-full border-2 p-2' onClick={handleProductLikes}>
+                                                {favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}
                                             </span>
-                                            <span>{t("addToWishlist")}</span>
+
+                                            <span> {favoriteProducts && favoriteProducts?.includes(product?.id) ?
+                                                t("removeTowishlist") : t("addToWishlist")}</span>
                                         </div>
                                     </div>
                                     <div className='backgroundColor rounded-sm p-4 flex flex-col gap-4'>

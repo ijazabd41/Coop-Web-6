@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Loader = (props) => {
+const Loader = ({ background, height, width, screen }) => {
   return (
     <>
-      {props.screen !== undefined && props.screen === 'full' ? (
+      {screen !== undefined && screen === 'full' ? (
         <div
-          className={`  fixed inset-0 flex items-center justify-center z-[999] ${props.background === 'none' ? '' : ''
+          className={`  fixed inset-0 flex items-center justify-center z-[999] ${background === 'none' ? '' : ''
             }`}
         >
           <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">
@@ -19,12 +19,12 @@ const Loader = (props) => {
         </div>
       ) : (
         <div
-          className={`flex items-center justify-center ${props.background ? '' : 'bg-gray-100'
+          className={`flex items-center justify-center ${background ? '' : 'bg-gray-100'
             }`}
           style={{
-            width: props.width,
-            height: props.height,
-            background: props.background || 'transparent',
+            width: width,
+            height: height,
+            background: background || 'transparent',
           }}
         >
           <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">

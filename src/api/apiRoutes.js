@@ -3,6 +3,7 @@ import api from "./axiosMiddleware"
 import * as apiEndPoints from "./apiEndpoints"
 
 
+// Authentication API's
 export const registerUser = async ({ name, email, mobile, type, fcm, country_code, password }) => {
     const formData = new FormData();
     formData.append("name", name);
@@ -74,6 +75,12 @@ export const getUser = async () => {
     const response = await api.get(apiEndPoints.getUser)
     return response.data
 }
+
+export const logout = async () => {
+    const response = await api.post(`${apiEndPoints.logout}`)
+    return response.data
+}
+
 
 export const getCity = async ({ latitude, longitude }) => {
     let params = { latitude: latitude, longitude: longitude };
@@ -212,7 +219,75 @@ export const getGuestCart = async ({ latitude, longitude, variant_ids, quantitie
 }
 
 
-export const logout = async () => {
-    const response = await api.post(`${apiEndPoints.logout}`)
+// Address Apis
+export const getAddress = async () => {
+    const response = await api.get(`${apiEndPoints.getAddress}`)
     return response.data
 }
+export const addAddress = async ({ name, mobile, type, address, landmark, area, pincode, city, state, country, latitiude, longitude, is_default = 1, alternate_mobile = "" }) => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("mobile", mobile);
+    formData.append("type", type);
+    formData.append("address", address);
+    formData.append("landmark", landmark);
+    formData.append("area", area);
+    formData.append("pincode", pincode);
+    formData.append("city", city);
+    formData.append("state", state);
+    formData.append("country", country);
+    formData.append("alternate_mobile", alternate_mobile ? alternate_mobile : "");
+    formData.append("latitude", latitiude);
+    formData.append("longitude", longitude);
+    formData.append("is_default", is_default ? 1 : 0);
+    const response = await api.post(`${apiEndPoints.getAddress}/${apiEndPoints.add}`, formData)
+    return response.data;
+}
+export const updateAddress = async ({ id, name, mobile, type, address, landmark, area, pincode, city, state, country, latitiude, longitude, is_default = 1, alternate_mobile = "" }) => {
+    const formData = new FormData();
+    formData.append("id", id)
+    formData.append("name", name);
+    formData.append("mobile", mobile);
+    formData.append("type", type);
+    formData.append("address", address);
+    formData.append("landmark", landmark);
+    formData.append("area", area);
+    formData.append("pincode", pincode);
+    formData.append("city", city);
+    formData.append("state", state);
+    formData.append("country", country);
+    formData.append("alternate_mobile", alternate_mobile ? alternate_mobile : "");
+    formData.append("latitude", latitiude);
+    formData.append("longitude", longitude);
+    formData.append("is_default", is_default ? 1 : 0);
+    const response = await api.post(`${apiEndPoints.getAddress}/${apiEndPoints.update}`, formData)
+    return response.data;
+}
+export const deleteAddress = async ({ id }) => {
+    const formData = new FormData();
+    formData.append("id", id)
+    const response = await api.post(`${apiEndPoints.getAddress}/${apiEndPoints.deleteItem}`, formData)
+    return response.data;
+}
+
+// wishlists api
+export const getFavorite = async ({ latitude, longitude }) => {
+    const params = { latitude: latitude, longitude: longitude };
+    const response = await api.get(apiEndPoints.getFavorite, { params })
+    return response.data
+}
+export const addToFavorite = async ({ product_id }) => {
+    const formData = new FormData()
+    formData.append("product_id", product_id)
+    const response = await api.post(`${apiEndPoints.getFavorite}/${apiEndPoints.add}`, formData)
+    return response.data
+}
+export const removeFromFavorite = async ({ product_id }) => {
+    const formData = new FormData()
+    formData.append("product_id", product_id);
+    const response = await api.post(`${apiEndPoints.getFavorite}/${apiEndPoints.remove}`, formData)
+    return response.data;
+}
+
+
+

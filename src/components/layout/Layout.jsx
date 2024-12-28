@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import { setShop } from '@/redux/slices/shopSlice';
 import Loader from '../loader/Loader';
 import Location from '../locationmodal/Location';
+import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 
 
 
@@ -39,7 +40,8 @@ const Layout = ({ children }) => {
         setLoading(true)
         try {
             const res = await api.getSetting()
-            dispatch(setSetting({ data: res.data }))
+            dispatch(setSetting({ data: res?.data }))
+            dispatch(setFavoriteProductIds({ data: res?.data?.favorite_product_ids }))
             setLoading(false)
         } catch (error) {
             setLoading(false)

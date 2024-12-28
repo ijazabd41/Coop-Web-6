@@ -75,9 +75,12 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                                     Order History
                                 </li>
                             </Link>
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wishlist" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wishlist")}>
-                                My Wishlist
-                            </li>
+                            <Link href={`/profile/wishlist`}>
+                                <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wishlist" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wishlist")}>
+                                    My Wishlist
+                                </li>
+                            </Link>
+
                         </ul>
                     </div>
 

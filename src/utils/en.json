@@ -128,6 +128,7 @@
     "view_coupon": "View Coupons",
     "address_type": "Address Type",
     "edit_profile": "Edit Profile",
+    "edit": "Edit",
     "reset_password": "Reset Password",
     "logout_title": "Logout!",
     "newest_first": "Newest First",
@@ -386,6 +387,7 @@
     "deliveryAddress": "Delivery Location",
     "allProducts": "All Products",
     "loginBoxMessage": "Type Email or Phone",
+    "phone": "Phone",
     "email_placeholder": "Type Email",
     "passwordMessage": "Enter Password",
     "registerMsg": "Don’t have an account?",
@@ -423,6 +425,7 @@
     "continue": "Continue",
     "chooseVariant": "Choose Variants",
     "addToWishlist": "Add to Wishlist",
+    "removeTowishlist": "Remove From Wishlist",
     "otp_required": "OTP required",
     "choose_delivery_address": "Choose Delivery Address",
     "preferred_day_and_time": "Preferred Day & Time",
@@ -431,5 +434,6 @@
     "your_wallet": "Your Wallet",
     "hello": "Hello",
     "username_required": "Username Required",
-    "login_success":"You're successfully Logged In"
+    "login_success": "You're successfully Logged In",
+    "default_address_msg": "This is Default Address"
 }

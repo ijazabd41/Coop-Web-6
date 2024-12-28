@@ -119,7 +119,7 @@ const Products = () => {
         <section>
             <div >
                 <div><BreadCrumb /></div>
-                <div className='container'>
+                <div className='container px-2'>
                     <div className='my-8 grid grid-cols-12 gap-6'>
                         <div className=' col-span-3 rounded-sm hidden md:block '>
                             <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
@@ -161,7 +161,7 @@ const Products = () => {
                                     {loading ?
                                         placeholderItems.map(index => {
                                             return (
-                                                isGridView ? <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
+                                                isGridView ? <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
                                                     <Skeleton height={300} />
                                                 </div> : <div className='col-span-12'><Skeleton height={300} /></div>
 
@@ -172,7 +172,7 @@ const Products = () => {
 
                                             return (
                                                 isGridView ?
-                                                    <div className='col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'>
+                                                    <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3'>
                                                         <VerticleProductCard product={product} key={product?.id} />
                                                     </div>
                                                     :

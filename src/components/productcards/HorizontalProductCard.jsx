@@ -10,7 +10,8 @@ import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSub
 import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
 import { MdArrowDropDown } from "react-icons/md";
-import { BiMinus, BiPlus } from 'react-icons/bi'
+import { BiHeart, BiMinus, BiPlus, BiSolidHeart } from 'react-icons/bi'
+import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 
 const HorizontalProductCard = ({ product }) => {
 
@@ -18,6 +19,8 @@ const HorizontalProductCard = ({ product }) => {
 
     const cart = useSelector(state => state.Cart)
     const setting = useSelector(state => state.Setting.setting)
+    const user = useSelector(state => state.User)
+    const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
     const [selectedVariant, setSelectedVariant] = useState(product?.variants?.[0])
     const [showVariants, setShowVariants] = useState(false)
@@ -264,6 +267,40 @@ const HorizontalProductCard = ({ product }) => {
         setShowProductDetail(true)
     }
 
+    const handleProductLikes = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isAlreadyLikes = favoriteProducts?.includes(product?.id)
+        try {
+            if (user?.jwtToken) {
+                if (!isAlreadyLikes) {
+                    const response = await api.addToFavorite({ product_id: product?.id })
+                    if (response.status == 1) {
+                        const updatedFavProducts = [...favoriteProducts, product?.id]
+                        dispatch(setFavoriteProductIds({ data: updatedFavProducts }))
+                        toast.success(response.message)
+                    } else {
+                        toast.error(response.message)
+                    }
+                } else {
+                    const response = await api.removeFromFavorite({ product_id: product?.id })
+                    if (response.status == 1) {
+                        const updatedFavProducts = favoriteProducts?.filter((prdctId) => prdctId != product?.id)
+                        dispatch(setFavoriteProductIds({ data: updatedFavProducts }))
+                        toast.success(response.message)
+                    } else {
+                        toast.error(response.message)
+                    }
+                }
+            } else {
+                toast.error(t("required_login_message_for_wishlist"))
+            }
+
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
     const productsVariants = product.variants
 
 
@@ -286,7 +323,7 @@ const HorizontalProductCard = ({ product }) => {
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
                         <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                            <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><Link href={"/"}><FaRegHeart size={18} className='fontColor' /></Link></li>
+                            <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
                             <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleShowDetailModal}><FaRegEye size={18} className='fontColor' /></li>
                         </ul>
                     </div>

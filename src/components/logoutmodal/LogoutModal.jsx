@@ -61,7 +61,6 @@ const LogoutModal = ({ showLogout, setShowLogout }) => {
                     </div>
                 </div>
             </DialogContent>
-
         </Dialog>
     )
 }
