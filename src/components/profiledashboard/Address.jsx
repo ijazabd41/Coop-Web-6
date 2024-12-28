@@ -46,13 +46,15 @@ const Address = () => {
             <div className=''>
                 {addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
                     return (
-                        <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress}/>
+                        <div key={address?.id}>
+                            <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} />
+                        </div>
                     )
                 })}
 
 
             </div>
-            <NewAddressModal showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected}  fetchAddress={fetchAddress}/>
+            <NewAddressModal showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} fetchAddress={fetchAddress} />
         </div>
     )
 }
