@@ -114,7 +114,7 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
             if (response.status == 1) {
                 fetchAddress()
                 setLoading(false)
-
+                toast.success(t("address_added_success"))
             } else {
                 setLoading(false)
             }
@@ -314,17 +314,17 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
 
     return (
         <Dialog open={showAddAddres} >
-            <DialogContent className="max-w-5xl">
+            <DialogContent className="max-w-5xl overflow-scroll h-full">
                 <DialogHeader>
                     <div className='flex flex-row justify-between items-center'>
                         <h2 className='font-bold text-xl'>{t("new_address")}</h2>
                         <IoIosCloseCircle size={32} onClick={() => handleHideAddressModal()} />
                     </div>
                 </DialogHeader>
-                <div className='p-2'>
+                <div className='p-2 '>
                     <div className='flex gap-5 flex-col md:flex-row'>
                         <div className='w-full md:w-1/2 relative'>
-                            <div className='absolute z-50 top-[10px] right-14 bg-white p-[10px] cursor-pointer' onClick={handleCurrentLocationClick}>
+                            <div className='absolute z-50 top-[10px] right-14 bg-white p-[10px] cursor-pointer text-black' onClick={handleCurrentLocationClick}>
                                 <BiCurrentLocation size={20} className=' ' />
                             </div>
                             <GoogleMap streetViewControl={false} tilt={true} options={{

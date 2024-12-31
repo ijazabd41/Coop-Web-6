@@ -1,19 +1,23 @@
-import Image from 'next/image'
-import React from 'react'
-import Demo from "/public/demo.png"
-import { IoClose } from 'react-icons/io5'
-import { TiMinus, TiPlus } from "react-icons/ti";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart } from '@/api/apiRoutes';
 import * as api from "@/api/apiRoutes"
 import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
+import { RiDeleteBinLine } from 'react-icons/ri';
+import { FaMinus, FaPlus } from 'react-icons/fa';
 
-
-const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) => {
+const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => {
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting.setting)
+
     const cart = useSelector(state => state.Cart)
+
+    const [totalPrice, setTotalPrice] = useState()
+
+
+
+
 
     const handleRemoveFromCart = async () => {
         try {
@@ -90,10 +94,9 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 return cartProduct;
                             }
                         });
-
-
                         handleCalculateTotal(updatedProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
+
                     } else {
                         try {
                             const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
@@ -105,9 +108,9 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                         return cartProduct;
                                     }
                                 });
-
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -134,6 +137,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                         });
                         handleCalculateTotal(updatedProducts)
                         dispatch(addtoGuestCart({ data: updatedProducts }))
+
                     } else {
                         try {
                             const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
@@ -147,6 +151,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                                 });
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -184,6 +189,8 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                 });
                 handleCalculateTotal(updatedProducts)
                 dispatch(addtoGuestCart({ data: updatedProducts }))
+
+
             } else {
                 if (cartProductQty.qty <= 1) {
                     return;
@@ -200,6 +207,7 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
                         });
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         dispatch(setCartProducts({ data: updatedProducts }))
+
                     }
                 } catch (error) {
                     console.log("Error", error)
@@ -210,47 +218,59 @@ const CartProductsCard = ({ product, cartProductsData, setCartProductsData }) =>
         }
     }
 
+
+
     const addedQuantity = cart.isGuest === false ?
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
 
     return (
-        <div>
-            <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
-                <div className='col-span-3 '>
-                    <div className='h-full w-full object-cover aspect-square relative'>
-                        <Image src={product?.image_url} alt='Image' height={0} width={0} className='h-full w-full object-cover' />
-                    </div>
+        <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
+            {/* Product (Image and Details) */}
+            <div className="col-span-4 flex  space-x-4">
+                {/* Image */}
+                <div className="w-16 h-16  rounded">
+                    <Image src={product?.image_url} alt='Image' height={0} width={0} className='h-full w-full object-cover' />
                 </div>
-                <div className='col-span-9'>
-                    <div className='flex flex-col justify-between h-full'>
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-base font-bold text-ellipsis overflow-hidden w-full line-clamp-2">
-                                {product?.name}
-                            </h2>
-                            <IoClose size={20} onClick={handleRemoveItem} />
-                        </div>
-
-                        <div>
-                            <span className='flex items-center gap-1'>{product?.measurement} {product?.unit_code}</span>
-                        </div>
-                        <div className='flex justify-between items-center'>
-                            <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>
-                                <button className='text-2xl font-bold px-1' onClick={handleQuantityDecrease}><TiMinus /></button>
-                                <span className='w-full text-center'>{addedQuantity}</span>
-                                <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><TiPlus /></button>
-                            </div>
-                            <div className='flex gap-1 items-center'>
-                                {product?.discounted_price == 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
-                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.discounted_price}</h2>}
-
-                            </div>
-                        </div>
-                    </div>
+                {/* Product Details */}
+                <div>
+                    <h3 className="text-base font-bold ">{product?.name}</h3>
+                    <p className="text-xs font-normal">{product?.measurement} {product?.unit_code}</p>
                 </div>
             </div>
-        </div>
-    )
-}
 
-export default CartProductsCard
+            {/* Pricing */}
+            <div className="col-span-2 text-center">
+
+                {product?.discounted_price == 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
+                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.discounted_price}</h2>}
+
+
+            </div>
+
+            {/* Quantity Selector */}
+            <div className="col-span-2 flex items-center justify-center rounded cardBorder  ">
+
+                <button className="px-2 py-1" onClick={handleQuantityDecrease}><FaMinus /></button>
+                <input className=" py-1    w-2/3 text-center" value={addedQuantity} disabled />
+                <button className="px-2 py-1" onClick={handleQuantityIncrease}><FaPlus /></button>
+
+
+            </div>
+
+
+            <div className="col-span-2 text-center">
+                <p className="text-sm font-semibold ">1200</p>
+            </div>
+
+
+            <div className="col-span-1 text-center">
+                <button className="text-red-600 hover:text-red-800" onClick={handleRemoveItem}>
+                    <RiDeleteBinLine size={26} />
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default CartProductCard;

@@ -32,7 +32,7 @@ const FeatureSections = () => {
 
     return (
         <section>
-            <div className='mx-2 md:mx-0'>
+            <div className=' md:mx-0'>
                 <div className='container'>
                     {aboveHomeSlider && aboveHomeSlider?.map((offer) => {
                         return (

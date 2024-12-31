@@ -380,6 +380,7 @@
     "productVariants": "Product Variants",
     "OutOfStock": "Out of Stock",
     "myTransaction": "My Transactions",
+    "myCart": "My Cart",
     "default": "Default",
     "showMore": "Show More",
     "goto": "Go to",
@@ -435,5 +436,6 @@
     "hello": "Hello",
     "username_required": "Username Required",
     "login_success": "You're successfully Logged In",
+    "address_added_success": "Address added successfully",
     "default_address_msg": "This is Default Address"
 }

@@ -6,7 +6,7 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
-import CartProductsCard from '../productcards/CartProductsCard';
+import CartProductsCard from './CartDrawerProductsCard';
 import { useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
 import { IoIosCloseCircle } from 'react-icons/io';
@@ -129,7 +129,7 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                                     {user?.jwtToken ? t("checkout") : t("login_to_checkout")}
 
                                 </button>
-                                <button className="w-full py-2 border rounded-md font-medium  cardBorder">
+                                <button className="w-full py-2 border rounded-md font-medium  cardBorder" onClick={() => router.push("/cart")}>
                                     {t("view_cart")}
                                 </button>
                             </div>

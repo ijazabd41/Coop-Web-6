@@ -6,7 +6,7 @@ import * as api from "@/api/apiRoutes";
 import { t } from "@/utils/translation"
 import { FiPlus, FiMinus } from "react-icons/fi";
 
-const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice }) => {
+const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
     const dispatch = useDispatch();
     const [categories, setCategories] = useState(null)
@@ -21,6 +21,8 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     const brandLimit = 10;
 
 
+
+
     useEffect(() => {
         if (brands == null) {
             fetchBrands(0)
@@ -28,6 +30,12 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
         if (categories == null) {
             fetchCategories()
         }
+    }, [])
+
+    useEffect(() => {
+        const categories = filter.category_id.split(",")
+        const catNum = categories?.map((cat) => (parseInt(cat)))
+        setSelectedCategories(catNum)
     }, [])
 
     useEffect(() => {
@@ -150,8 +158,8 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
     return (
         <>
-            <div className="cardBorder rounded-md headerBackgroundColor">
-                <div className='p-4 bottomBorder '>
+            <div className="md:cardBorder rounded-md headerBackgroundColor ">
+                <div className='md:p-4 bottomBorder '>
                     <div className='flex justify-between items-center  '>
                         <h5 className="text-xl font-bold">{t("filters")}</h5>
                         <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'

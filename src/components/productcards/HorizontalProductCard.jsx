@@ -315,7 +315,7 @@ const HorizontalProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='grid grid-cols-12 p-3 border-2 m-2  gap-2 group rounded-sm headerBackgroundColor'>
+            <div className='grid grid-cols-12 p-3 border-2   gap-2 group rounded-sm headerBackgroundColor'>
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
                         <Image className=' object-cover aspect-square' fill alt={product.name} src={product.image_url} />

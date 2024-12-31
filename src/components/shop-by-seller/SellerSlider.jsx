@@ -11,7 +11,7 @@ const SellerSlider = ({ sellers }) => {
     return (
         <section className=' my-6'>
             <div className='container py-12 '>
-                <div className='flex flex-col gap-6'>
+                <div className='flex flex-col gap-6 mx-2'>
                     <div className='flex justify-between'>
                         <h2 className='textColor text-[24px] font-extrabold tracking-[2px] leading-[29px] m-0'>Shop by Seller </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row'>

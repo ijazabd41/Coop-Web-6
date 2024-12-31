@@ -39,11 +39,6 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
         dispatch(setSelectedAddres({ data: address }))
     }
 
-
-
-
-
-    console.log("address", address)
     return (
         <div className=''>
             <div className=" p-4  w-full cardBorder">
@@ -54,18 +49,18 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                         <label for="default-address" className="ml-2 text-sm">{address?.type}</label>
                     </div>
                 </div>
-                {address.is_default == 1 ? <p className="text-sm  mb-2">{t("default_address_msg")}</p> : <></>}
+                {address?.is_default == 1 ? <p className="text-sm  mb-2">{t("default_address_msg")}</p> : <></>}
 
                 <p className="text-sm  mb-4 font-semibold">
                     {formattedAddress}
                 </p>
                 <div className='flex  items-center justify-between p-2   buttonBackground rounded-sm'>
                     <p className="text-base font-medium  ">{t("phone")}: <span className="font-medium">{address?.mobile}</span></p>
-                    <div className="flex space-x-1">
+                    <div className="flex md:space-x-1 flex-col md:flex-row">
                         <button className="flex items-center gap-1 text-base font-medium " onClick={handleEditAddress}>
                             <FaRegEdit size={18} />{t("edit")}
                         </button>
-                        <span className='p-1 border-r-2'></span>
+                        <span className='p-1 border-r-2 hidden md:block'></span>
                         <button className="flex items-center text-base font-medium gap-1  " onClick={() => setShowDeleteModal(true)}>
                             <RiDeleteBinLine size={18} />
                             {t("delete")}

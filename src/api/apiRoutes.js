@@ -70,18 +70,35 @@ export const forgotPassword = async ({ otp, email, password, confirmPassword }) 
     const response = await api.post(apiEndPoints.forgotPassword, formData)
     return response.data
 }
-
+export const updateProfile = async ({ image, name, email, mobileNumber, type }) => {
+    const formData = new FormData();
+    formData.append("profile", image)
+    if (type == "phone") {
+        formData.append("name", name)
+        formData.append("email", email)
+    } else if (type == "google" || type == "email") {
+        formData.append("mobile", mobileNumber)
+    }
+    const response = await api.post(apiEndPoints.editProfile, formData)
+    return response.data
+}
 export const getUser = async () => {
     const response = await api.get(apiEndPoints.getUser)
     return response.data
 }
-
 export const logout = async () => {
     const response = await api.post(`${apiEndPoints.logout}`)
     return response.data
 }
+export const deleteUser = async ({ uid = null }) => {
+    const formData = new FormData();
+    formData.append("auth_uid", uid)
+    const response = await api.post(apiEndPoints.deleteAccount)
+    return response.data;
+}
 
 
+// General Api's
 export const getCity = async ({ latitude, longitude }) => {
     let params = { latitude: latitude, longitude: longitude };
     const response = await api.get(apiEndPoints.getCity, { params })
@@ -289,5 +306,16 @@ export const removeFromFavorite = async ({ product_id }) => {
     return response.data;
 }
 
+// promocode api
+export const getPromo = async ({ amount = 0 }) => {
+    const params = { amount: amount }
+    const response = await api.get(`${apiEndPoints.getPromoCode}`, { params })
+    return response.data
+}
 
+export const setPromoCode = async ({ promoCode, amount = 0 }) => {
+    const params = { promo_code: promoCode, amount: amount }
+    const response = await api.post(`${apiEndPoints.getPromoCode}/${apiEndPoints.setPromoCode}`, { params })
+    return response.data;
+}
 

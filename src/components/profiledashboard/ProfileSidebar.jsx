@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { t } from '@/utils/translation';
 import Image from 'next/image';
 import LogoutModal from '../logoutmodal/LogoutModal';
+import DeleteModal from '../deleteModal/DeleteModal';
+
 
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
@@ -14,6 +16,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
     const [addWalletModal, setAddWalletModal] = useState(false)
     const [showLogout, setShowLogout] = useState(false)
+    const [showDelete, setShowDelete] = useState(false)
+
 
     const handleTabChange = (tabName) => {
         setSelectedTab(tabName)
@@ -22,6 +26,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const handleWalletBalanceModal = () => {
         setAddWalletModal(true)
     }
+
+    const activeTab = router.pathname.split('/').pop();
+
+
 
     return (
         <div>
@@ -43,13 +51,13 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </h3>
                         <ul>
                             <Link href={`/profile`}>
-                                <li className={`p-4  cursor-pointer   ${selectedTab == "profile" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("profile")}>
+                                <li className={`p-4  cursor-pointer   ${activeTab == "profile" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("profile")}>
                                     <span className="font-medium">Edit Profile</span>
                                 </li>
                             </Link>
 
                             <Link href={`/profile/address`}>
-                                <li className={`p-4  cursor-pointer   ${selectedTab == "address" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("address")}>
+                                <li className={`p-4  cursor-pointer   ${activeTab == "address" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("address")}>
                                     Manage Address
                                 </li>
                             </Link>
@@ -65,18 +73,18 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </h3>
                         <ul>
                             <Link href={`/profile/activeorders`}>
-                                <li className={`p-4  cursor-pointer  textColor ${selectedTab == "activeorders" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("activeorders")}>
+                                <li className={`p-4  cursor-pointer  textColor ${activeTab == "activeorders" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("activeorders")}>
                                     Active Orders
                                 </li>
                             </Link>
 
                             <Link href={`/profile/orderhistory`}>
-                                <li className={`p-4  cursor-pointer  ${selectedTab == "orderhistory" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("orderhistory")}>
+                                <li className={`p-4  cursor-pointer  ${activeTab == "orderhistory" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("orderhistory")}>
                                     Order History
                                 </li>
                             </Link>
                             <Link href={`/profile/wishlist`}>
-                                <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wishlist" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wishlist")}>
+                                <li className={`p-4  cursor-pointer  textColor ${activeTab == "wishlist" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wishlist")}>
                                     My Wishlist
                                 </li>
                             </Link>
@@ -94,16 +102,16 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                                 <span>eGrocer Wallet</span>
                                 <span className="text-base text-orange-600 font-medium bg-[#EB9C001F] p-1 rounded-sm">$2630.00</span>
                             </li>
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "add-balance" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={handleWalletBalanceModal}>
+                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "add-balance" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={handleWalletBalanceModal}>
                                 Add Wallet Balance
                             </li>
                             <Link href={`/profile/wallethistory`}>
-                                <li className={`p-4  cursor-pointer  textColor ${selectedTab == "wallethistory" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wallethistory")}>
+                                <li className={`p-4  cursor-pointer  textColor ${activeTab == "wallethistory" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("wallethistory")}>
                                     Wallet History
                                 </li>
                             </Link>
 
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "transactions" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("transactions")}>
+                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "transactions" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("transactions")}>
                                 Transaction History
                             </li>
                         </ul>
@@ -115,13 +123,13 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                             <FaCog className="mr-2 textColor" size={20} /> Other Settings
                         </h3>
                         <ul>
-                            <li className={`p-4  cursor-pointer  textColor ${selectedTab == "notification" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notification")}>
+                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "notification" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notification")}>
                                 Notification
                             </li>
                             <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`} onClick={() => setShowLogout(true)}>
                                 Logout
                             </li>
-                            <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}>
+                            <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`} onClick={() => setShowDelete(true)}>
                                 Delete Account
                             </li>
                         </ul>
@@ -129,6 +137,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </div>
                 <WalletBalanceModal addWalletModal={addWalletModal} setAddWalletModal={setAddWalletModal} />
                 <LogoutModal showLogout={showLogout} setShowLogout={setShowLogout} />
+                <DeleteModal showDelete={showDelete} setShowDelete={setShowDelete} />
             </div>
         </div>
     )

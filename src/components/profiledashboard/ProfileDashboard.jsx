@@ -26,13 +26,13 @@ const ProfileDashboard = () => {
     return (
         <section>
             <BreadCrumb />
-            <div className='container'>
+            <div className='container px-2'>
                 <div className='grid grid-cols-12 gap-6 my-10'>
-                    <div className='col-span-3'>
+                    <div className='md:col-span-3 hidden md:block'>
                         <ProfileSidebar setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
                     </div>
 
-                    <div className='col-span-9  '>
+                    <div className='col-span-12 md:col-span-9  '>
                         {loading ? <p>Loading</p> : <>
                             {selectedTab == "profile" && <Profile />}
                             {selectedTab == "address" && <Address />}

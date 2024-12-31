@@ -142,6 +142,9 @@
   .breadCrumbBg {
     background-color: var(--swiper-background-color);
   }
+
+ 
+  
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -185,7 +188,6 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 16px;
   color: var(--font-color);
 
-
 }
 
 .ant-collapse .ant-collapse-item .ant-collapse-header .ant-collapse-expand-icon {
@@ -200,6 +202,22 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--bs-body-bg);
   padding: 0px 16px 8px 16px;
 }
+
+
+@media screen and (max-width:768px){
+  .ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box {
+    background-color: var(--bs-body-bg);
+    padding: 0px  0px !important;
+    margin-top: 8px;
+  }
+
+  .ant-collapse .ant-collapse-item .ant-collapse-header{
+    padding: 0px 0px;
+    margin-top: 8px;
+  }
+  
+}
+
 
 .ant-collapse .ant-collapse-item .ant-collapse-content .ant-collapse-content-box .filter-row {
   padding: 0px !important;

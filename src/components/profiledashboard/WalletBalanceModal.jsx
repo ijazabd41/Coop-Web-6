@@ -21,6 +21,7 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg"
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg"
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg"
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg"
+import { IoIosCloseCircle } from 'react-icons/io';
 
 
 const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
@@ -42,8 +43,11 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                     <div className="fixed inset-0 bg-black bg-opacity-60 z-40"></div>
                 )}
                 <DialogContent >
-                    <DialogHeader>
+                    <DialogHeader className="flex flex-row justify-between items-center">
                         <h1 className='font-bold text-xl'>{t("add_to_wallet")}</h1>
+                        <div>
+                            <IoIosCloseCircle size={32} onClick={() => setAddWalletModal()} />
+                        </div>
                     </DialogHeader>
                     <div >
                         <div className='flex flex-col gap-8'>

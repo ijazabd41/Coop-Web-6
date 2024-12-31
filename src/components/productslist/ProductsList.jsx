@@ -17,6 +17,8 @@ import ListViewProductCard from '../productcards/ListViewProductCard'
 import VerticleProductCard from '../productcards/VerticleProductCard'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import FilterDrawer from '../productFilter/FilterDrawer'
+import { IoFilter } from 'react-icons/io5'
 
 const Products = () => {
     const city = useSelector(state => state.City)
@@ -30,6 +32,7 @@ const Products = () => {
     const [totalProducts, settotalProducts] = useState(null)
     const [isGridView, setIsGridView] = useState(true)
     const [loading, setLoading] = useState(false)
+    const [showFilter, setShowFilter] = useState(false)
     // const []
 
     const total_products_per_page = 12;
@@ -120,6 +123,7 @@ const Products = () => {
             <div >
                 <div><BreadCrumb /></div>
                 <div className='container px-2'>
+                    <div className='w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold' onClick={() => setShowFilter(true)}><IoFilter />{t("filter")}</div>
                     <div className='my-8 grid grid-cols-12 gap-6'>
                         <div className=' col-span-3 rounded-sm hidden md:block '>
                             <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
@@ -193,6 +197,7 @@ const Products = () => {
                     </div>
                 </div>
             </div>
+            <FilterDrawer showFilter={showFilter} setShowFilter={setShowFilter} setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
         </section>
     )
 }

@@ -32,7 +32,7 @@ import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
 
 
 
-export function Login({ showLogin, setShowLogin, }) {
+export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
     const authType = useSelector(state => state.User.authType)
     const city = useSelector(state => state.City.city)
@@ -122,8 +122,6 @@ export function Login({ showLogin, setShowLogin, }) {
         }
     };
 
-
-
     const generateRecaptcha = async () => {
         const recaptchaContainer = document.getElementById("recaptcha-container");
         if (!recaptchaContainer) {
@@ -149,10 +147,6 @@ export function Login({ showLogin, setShowLogin, }) {
             return null;
         }
     };
-
-
-
-
 
     const handleShowRegister = () => {
         setShowRegister(true)
@@ -389,6 +383,7 @@ export function Login({ showLogin, setShowLogin, }) {
         setInputValue("")
         setInputType("")
         setLoading(false);
+        setMobileActiveKey(1)
         await recaptchaClear()
     }
 
@@ -691,6 +686,7 @@ export function Login({ showLogin, setShowLogin, }) {
                 email={email}
                 phoneNumberWithoutCountryCode={phoneNumberWithoutCountryCode}
                 countryCode={countryCode}
+                setIsOTP={setIsOTP}
             />
             <Register setShowRegister={setShowRegister} showRegister={showRegister} setIsOTP={setIsOTP} email={email} setEmail={setEmail} />
             <ForgetPasswordModal showForgetPassword={showForgetPassword} setShowForgetPassword={setShowForgetPassword} />

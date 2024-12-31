@@ -37,7 +37,7 @@ const ProductSwiperWithImage = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container'>
+                <div className='container  '>
                     <div>
                         <div className='flex justify-between pb-3'>
                             <div>
@@ -46,7 +46,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll}>{t("see_all")}</button>
-                                <div className=' flex gap-2'>
+                                <div className=' md:flex gap-2 hidden'>
                                     <button className={`buttonBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
                                     <button className={`buttonBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
                                 </div>

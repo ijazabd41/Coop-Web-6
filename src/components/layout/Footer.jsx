@@ -8,7 +8,7 @@ import { MdPhoneInTalk } from 'react-icons/md'
 const Footer = () => {
     return (
         <section className='footer'>
-            <div className='container text-white '>
+            <div className='container text-white px-2'>
                 <div className='md:grid lg:grid lg:grid-cols-12 md:grid-cols-12 flex flex-col items-center py-12 border-b-[1px]'>
                     <div className='col-span-6'>
                         <h3>{t("downloadAppsFooter")}</h3>

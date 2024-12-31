@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { t } from "@/utils/translation"
-import DemoImage from "/public/demo.png"
-import Image from 'next/image'
-import { FaShoppingBasket } from 'react-icons/fa'
-import { RiDeleteBin6Line } from 'react-icons/ri'
 import * as api from "@/api/apiRoutes"
 import { useDispatch, useSelector } from 'react-redux'
-import { IoMdArrowDropdown } from 'react-icons/io'
-import VariantsModal from '../variantsmodal/VariantsModal'
 import WishlistCard from '../productcards/WishlistCard'
 
 const Wishlist = () => {
-    const dispatch = useDispatch();
-
     const city = useSelector(state => state.City.city)
-    const setting = useSelector(state => state.Setting.setting)
-
     const [wishlistProducts, setWishlistProducts] = useState([])
 
 
