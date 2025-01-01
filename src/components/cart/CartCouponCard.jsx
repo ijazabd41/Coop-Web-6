@@ -1,13 +1,19 @@
 import { t } from '@/utils/translation'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const CartCouponCard = () => {
+const CartCouponCard = ({ setShowCouponCode }) => {
+
+
+    const cart = useSelector(state => state.Cart);
+    const setting = useSelector(state => state.Setting.setting)
+
     return (
         <div className="max-w-sm p-4  border  rounded-md cardBorder">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-sm font-medium ">{t("have_coupon")}</h3>
-                <button className="px-3 py-1 text-sm font-medium border rounded hover:primaryBackColor hover:text-white">
+                <button className="px-3 py-1 text-sm font-medium border rounded hover:primaryBackColor hover:text-white" onClick={() => setShowCouponCode(true)}>
                     {t("view_coupon")}
                 </button>
             </div>
@@ -34,17 +40,10 @@ const CartCouponCard = () => {
             {/* Pricing Details */}
             <div className="mb-4">
                 <div className="flex justify-between text-sm ">
-                    <p>Subtotal</p>
-                    <p>$5,025.00</p>
+                    <p>{t("sub_total")}</p>
+                    <p>{setting?.currency} {cart?.cartSubTotal}</p>
                 </div>
-                <div className="flex justify-between text-sm ">
-                    <p>Tax</p>
-                    <p>$325.00</p>
-                </div>
-                <div className="flex justify-between text-sm ">
-                    <p>Promo Discount</p>
-                    <p>$40.00</p>
-                </div>
+
             </div>
 
             {/* Divider */}

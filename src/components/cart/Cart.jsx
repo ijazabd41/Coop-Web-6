@@ -6,6 +6,8 @@ import { t } from '@/utils/translation'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice'
 import * as api from "@/api/apiRoutes"
+import CouponCodeDrawer from '@/couponcode/CouponCodeDrawer'
+
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -15,14 +17,11 @@ const Cart = () => {
 
 
     const [cartProductsData, setCartProductsData] = useState([])
+    const [showCouponCode, setShowCouponCode] = useState(false)
     const [cartData, setCartData] = useState([])
     const [loading, setLoading] = useState(false)
     useEffect(() => {
-        if (cart.isGuest == false) {
-            fetchCart()
-        } else if (cart?.guestCart?.length > 0 && cart?.isGuest == true) {
-            fetchGuestCart()
-        }
+        fetchCart()
     }, [])
 
 
@@ -36,6 +35,14 @@ const Cart = () => {
                 dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
                 setCartData(cartData?.data)
                 setLoading(false)
+                const productsData = cartData?.data?.cart?.map((product) => {
+                    return {
+                        product_id: product?.product_id,
+                        product_variant_id: product?.product_variant_id,
+                        qty: product?.qty
+                    };
+                });
+                dispatch(setCartProducts({ data: productsData }));
             } else {
                 dispatch(setCartProducts({ data: [] }));
                 dispatch(setCartSubTotal({ data: 0 }));
@@ -51,30 +58,12 @@ const Cart = () => {
         }
     }
 
-    const fetchGuestCart = async () => {
-        try {
-            const variantIds = cart?.guestCart?.map((p) => p.product_variant_id);
-            const quantities = cart?.guestCart?.map((p) => p.qty);
-            const response = await api.getGuestCart({ latitude: city?.latitude, longitude: city?.longitude, variant_ids: variantIds?.join(","), quantities: quantities?.join(",") })
-            if (response.status == 1) {
-                setCartProductsData(response.data.cart);
-                dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
-            }
-        } catch (error) {
-            console.log("Error", error)
-        }
-    }
-
-
-
     const handleCheckoutbtnClick = () => {
-        if (cart.isGuest) {
-            setShowCart(false)
-            setShowLogin(true)
-        } else {
-            router.push("checkout")
-        }
+        router.push("checkout")
+
     }
+
+    console.log("cart", cart)
 
 
     return (
@@ -89,11 +78,11 @@ const Cart = () => {
                     <div className="grid grid-cols-12 gap-4 mt-6 ">
                         <div className="col-span-9 cardBorder rounded-sm">
                             <div className="grid grid-cols-12 gap-4 p-4  font-medium border-b cardBorder">
-                                <div className="col-span-4">{t("product")}</div>
-                                <div className="col-span-2 text-center">{t("price")}</div>
-                                <div className="col-span-2 text-center">{t("quantity")}</div>
-                                <div className="col-span-2 text-center">{t("total")}</div>
-                                <div className="col-span-1 text-center">{t("action")}</div>
+                                <div className="col-span-4 font-bold">{t("product")}</div>
+                                <div className="col-span-2 text-center font-bold">{t("price")}</div>
+                                <div className="col-span-2 text-center font-bold">{t("quantity")}</div>
+                                <div className="col-span-2 text-center font-bold">{t("total")}</div>
+                                <div className="col-span-1 text-center font-bold">{t("action")}</div>
                             </div>
 
                             {cartProductsData?.map((product) => (
@@ -102,11 +91,12 @@ const Cart = () => {
                         </div>
 
                         <div className="col-span-3">
-                            <CartCouponCard />
+                            <CartCouponCard setShowCouponCode={setShowCouponCode} />
                         </div>
                     </div>
                 </div>
             </div>
+            <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
         </section>
     );
 

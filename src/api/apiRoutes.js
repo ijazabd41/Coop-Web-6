@@ -313,9 +313,9 @@ export const getPromo = async ({ amount = 0 }) => {
     return response.data
 }
 
-export const setPromoCode = async ({ promoCode, amount = 0 }) => {
-    const params = { promo_code: promoCode, amount: amount }
-    const response = await api.post(`${apiEndPoints.getPromoCode}/${apiEndPoints.setPromoCode}`, { params })
+export const setPromoCode = async ({ promoCodeName, amount = 0 }) => {
+    const params = { promo_code: promoCodeName, total: amount }
+    const response = await api.post(`${apiEndPoints.getPromoCode}/${apiEndPoints.setPromoCode}`, {}, { params })
     return response.data;
 }
 

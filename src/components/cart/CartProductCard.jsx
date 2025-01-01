@@ -16,7 +16,10 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
     const [totalPrice, setTotalPrice] = useState()
 
 
-
+    useEffect(() => {
+        const finalPrice = product?.discounted_price == 0 ? product?.price : product?.discounted_price
+        setTotalPrice(finalPrice * product?.qty)
+    }, [])
 
 
     const handleRemoveFromCart = async () => {
@@ -42,27 +45,13 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             prev += (curr?.productPrice * curr.qty)
             return prev
         }, 0)
-        if (cart?.isGuest) {
-            dispatch(setGuestCartTotal({ data: total }))
-        } else {
-            dispatch(setCartSubTotal({ data: total }))
-        }
+        dispatch(setCartSubTotal({ data: total }))
     }
 
-    const handleGuestCartRemove = () => {
-        const remainItems = cart?.guestCart?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
-        const updatedProducts = cartProductsData?.filter((cartProduct) => (cartProduct?.product_variant_id !== product?.product_variant_id))
-        setCartProductsData(updatedProducts)
-        dispatch(addtoGuestCart({ data: remainItems }))
-        handleCalculateTotal(remainItems)
-    }
+
 
     const handleRemoveItem = async () => {
-        if (cart.isGuest) {
-            handleGuestCartRemove()
-        } else {
-            await handleRemoveFromCart()
-        }
+        await handleRemoveFromCart()
     }
 
     const getProductQuantities = (products) => {
@@ -75,48 +64,38 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
         }));
     }
 
+    const addToCart = async (qty) => {
+        try {
+            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(qty) })
+            if (response.status == 1) {
+                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
+                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
+                        const finalPrice = product?.discounted_price == 0 ? product?.price : product?.discounted_price
+                        setTotalPrice(finalPrice * qty)
+                        return { ...cartProduct, qty: qty };
+                    } else {
+                        return cartProduct;
+                    }
+                });
+                dispatch(setCartSubTotal({ data: response.sub_total }))
+                dispatch(setCartProducts({ data: updatedProducts }))
 
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
 
     const handleQuantityIncrease = async () => {
         try {
-            let productQuantity = cart?.isGuest ? getProductQuantities(cart?.guestCart) : getProductQuantities(cart?.cartProducts)
+            let productQuantity = getProductQuantities(cart?.cartProducts)
             const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
-            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)
+            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)?.qty
             if (product?.is_unlimited_stock !== 0) {
                 if (productQty >= Number(product?.total_allowed_quantity)) {
                     toast.error('Apologies, maximum product quantity limit reached');
                 } else {
-                    if (cart.isGuest) {
-                        let updatedProducts = cart?.guestCart?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(cartProduct?.qty + 1) };
-                            } else {
-                                return cartProduct;
-                            }
-                        });
-                        handleCalculateTotal(updatedProducts)
-                        dispatch(addtoGuestCart({ data: updatedProducts }))
-
-                    } else {
-                        try {
-                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
-                            if (response.status == 1) {
-                                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: cartProductQty?.qty + 1 };
-                                    } else {
-                                        return cartProduct;
-                                    }
-                                });
-                                dispatch(setCartSubTotal({ data: response.sub_total }))
-                                dispatch(setCartProducts({ data: updatedProducts }))
-
-                            }
-                        } catch (error) {
-                            console.log("Error", error)
-                        }
-                    }
-
+                    addToCart(cartProductQty + 1)
                 }
             }
             else {
@@ -127,39 +106,9 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
                     toast.error('Apologies, maximum cart quantity limit reached');
                 }
                 else {
-                    if (cart.isGuest) {
-                        let updatedProducts = cart?.guestCart?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: Number(cartProduct?.qty + 1) };
-                            } else {
-                                return cartProduct;
-                            }
-                        });
-                        handleCalculateTotal(updatedProducts)
-                        dispatch(addtoGuestCart({ data: updatedProducts }))
-
-                    } else {
-                        try {
-                            const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty + 1) })
-                            if (response.status == 1) {
-                                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-                                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                        return { ...cartProduct, qty: cartProductQty?.qty + 1 };
-                                    } else {
-                                        return cartProduct;
-                                    }
-                                });
-                                dispatch(setCartSubTotal({ data: response.sub_total }))
-                                dispatch(setCartProducts({ data: updatedProducts }))
-
-                            }
-                        } catch (error) {
-                            console.log("Error", error)
-                        }
-                    }
+                    addToCart(cartProductQty + 1)
                 }
             }
-
         } catch (error) {
             console.log("Error", error)
         }
@@ -168,102 +117,44 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
     const handleQuantityDecrease = async () => {
         try {
             let productQuantity;
-            if (cart?.isGuest) {
-                productQuantity = getProductQuantities(cart?.guestCart)
-            } else {
-                productQuantity = getProductQuantities(cart?.cartProducts)
+            productQuantity = getProductQuantities(cart?.cartProducts)
+            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)?.qty
+            if (cartProductQty <= 1) {
+                return;
             }
-            const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.product_id)?.qty;
-            const variantQty = cart?.guestCart?.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)?.qty;
-            const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)
-            if (cart.isGuest) {
-                if (variantQty <= 1) {
-                    return;
-                }
-                let updatedProducts = cart?.guestCart?.map((cartProduct) => {
-                    if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                        return { ...cartProduct, qty: Number(cartProduct?.qty - 1) };
-                    } else {
-                        return cartProduct
-                    }
-                });
-                handleCalculateTotal(updatedProducts)
-                dispatch(addtoGuestCart({ data: updatedProducts }))
-
-
-            } else {
-                if (cartProductQty.qty <= 1) {
-                    return;
-                }
-                try {
-                    const response = await api.addToCart({ product_id: product?.product_id, product_variant_id: product?.product_variant_id, qty: Number(cartProductQty.qty - 1) })
-                    if (response.status == 1) {
-                        let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-                            if (cartProduct?.product_id == product?.product_id && cartProduct?.product_variant_id == product?.product_variant_id) {
-                                return { ...cartProduct, qty: cartProductQty?.qty - 1 };
-                            } else {
-                                return cartProduct;
-                            }
-                        });
-                        dispatch(setCartSubTotal({ data: response.sub_total }))
-                        dispatch(setCartProducts({ data: updatedProducts }))
-
-                    }
-                } catch (error) {
-                    console.log("Error", error)
-                }
-            }
+            addToCart(cartProductQty - 1)
         } catch (error) {
             console.log("error", error)
         }
     }
 
 
-
-    const addedQuantity = cart.isGuest === false ?
-        cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
-        : cart?.guestCart?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
+    const addedQuantity = cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
 
     return (
         <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
-            {/* Product (Image and Details) */}
             <div className="col-span-4 flex  space-x-4">
-                {/* Image */}
-                <div className="w-16 h-16  rounded">
+                <div className="w-16 h-16  rounded-sm">
                     <Image src={product?.image_url} alt='Image' height={0} width={0} className='h-full w-full object-cover' />
                 </div>
-                {/* Product Details */}
                 <div>
                     <h3 className="text-base font-bold ">{product?.name}</h3>
                     <p className="text-xs font-normal">{product?.measurement} {product?.unit_code}</p>
                 </div>
             </div>
-
-            {/* Pricing */}
             <div className="col-span-2 text-center">
 
-                {product?.discounted_price == 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
-                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.discounted_price}</h2>}
-
-
+                {product?.discounted_price != 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.discounted_price}</h2>
+                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
             </div>
-
-            {/* Quantity Selector */}
             <div className="col-span-2 flex items-center justify-center rounded cardBorder  ">
-
                 <button className="px-2 py-1" onClick={handleQuantityDecrease}><FaMinus /></button>
-                <input className=" py-1    w-2/3 text-center" value={addedQuantity} disabled />
+                <input className=" py-1 text-base  w-2/3 text-center" value={addedQuantity} disabled />
                 <button className="px-2 py-1" onClick={handleQuantityIncrease}><FaPlus /></button>
-
-
             </div>
-
-
             <div className="col-span-2 text-center">
-                <p className="text-sm font-semibold ">1200</p>
+                <p className="text-base font-bold ">{setting?.currency}{totalPrice}</p>
             </div>
-
-
             <div className="col-span-1 text-center">
                 <button className="text-red-600 hover:text-red-800" onClick={handleRemoveItem}>
                     <RiDeleteBinLine size={26} />

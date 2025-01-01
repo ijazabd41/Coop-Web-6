@@ -1,0 +1,60 @@
+import React, { useState, useEffect } from 'react'
+import * as api from '../api/apiRoutes'
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
+import { IoIosCloseCircle } from 'react-icons/io';
+import { t } from '@/utils/translation';
+import CouponCodeCard from './CouponCodeCard';
+import { useSelector } from 'react-redux';
+
+
+const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
+
+    const cart = useSelector(state => state.Cart)
+    const [couponCodes, setCouponCodes] = useState([])
+
+
+    useEffect(() => {
+        if (showCouponCode) {
+            handleFetchCouponCodes()
+        }
+    }, [showCouponCode])
+
+    const handleFetchCouponCodes = async () => {
+        try {
+            const response = await api.getPromo({ amount: cart?.cartSubTotal })
+            setCouponCodes(response.data)
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    const handleHideCouponCode = () => {
+        setShowCouponCode(false)
+    }
+    return (
+        <Sheet open={showCouponCode}>
+            <SheetContent className="p-0 w-full sm:w-[900px] ">
+                <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
+                    <SheetTitle className="text-2xl p-2 font-bold flex flex-row items-center  justify-between">
+                        <p className='text-2xl font-bold'>{t("coupons")}</p>
+                        <div>
+                            <IoIosCloseCircle size={32} onClick={() => handleHideCouponCode(false)} />
+                        </div>
+                    </SheetTitle>
+                </SheetHeader>
+                <div className='mt-4'>
+                    {couponCodes.map((coupon) => {
+                        return <div className='m-2' key={coupon?.id}> <CouponCodeCard coupon={coupon} /></div>
+                    })}
+                </div>
+            </SheetContent>
+        </Sheet >
+    )
+}
+
+export default CouponCodeDrawer

@@ -16,6 +16,8 @@ import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import Login from '../login/Login';
 import { useRouter } from 'next/router';
+import CouponCodeDrawer from '@/couponcode/CouponCodeDrawer';
+import { RiCoupon3Line } from 'react-icons/ri';
 
 const CartDrawer = ({ showCart, setShowCart }) => {
     const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const CartDrawer = ({ showCart, setShowCart }) => {
     const [cartProductsData, setCartProductsData] = useState([])
     const [cartData, setCartData] = useState([])
     const [loading, setLoading] = useState(false)
+    const [showCouponCode, setShowCouponCode] = useState(false)
 
 
     useEffect(() => {
@@ -51,6 +54,14 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                 setCartProductsData(cartData?.data?.cart)
                 dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
                 setCartData(cartData?.data)
+                const productsData = cartData?.data?.cart?.map((product) => {
+                    return {
+                        product_id: product?.product_id,
+                        product_variant_id: product?.product_variant_id,
+                        qty: product?.qty
+                    };
+                });
+                dispatch(setCartProducts({ data: productsData }));
                 setLoading(false)
             } else {
                 dispatch(setCartProducts({ data: [] }));
@@ -92,11 +103,11 @@ const CartDrawer = ({ showCart, setShowCart }) => {
         }
     }
 
-
+    const isCouponApplied = cart?.promo_code != null
     return (
         <>
             <Sheet open={showCart} >
-                <SheetContent className="p-0 w-full sm:w-[900px] ">
+                <SheetContent className="p-0 w-full sm:w-[900px] flex flex-col h-screen">
                     <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
                         <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
                             <p className='text-2xl font-bold'>{t("shoppingCart")}</p>
@@ -106,46 +117,76 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                         </SheetTitle>
                     </SheetHeader>
 
-                    {loading ? <p>Loading...</p> : cartProductsData?.length !== 0 ? <>
-                        <div className='flex flex-col overflow-y-scroll h-3/4 mt-6 p-2'>
-                            {cartProductsData?.length !== 0 && cartProductsData?.map((product) => {
-                                return (
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : cartProductsData?.length !== 0 ? (
+                        <>
+
+                            <div className="flex-grow overflow-y-auto mt-6 p-2">
+                                {cartProductsData?.map((product) => (
                                     <div key={product?.id}>
-                                        <CartProductsCard product={product} cartProductsData={cartProductsData} setCartProductsData={setCartProductsData} />
+                                        <CartProductsCard
+                                            product={product}
+                                            cartProductsData={cartProductsData}
+                                            setCartProductsData={setCartProductsData}
+                                        />
                                     </div>
-                                )
-                            })}
-                        </div>
-                        <div className="w-full justify-end  max-w-sm mx-auto p-4 border rounded-md shadow-sm ">
-                            <div className="space-y-6">
-                                <div className="flex justify-between text-sm ">
-                                    <span>{t("total")}</span>
-                                    <span className="font-bold">{setting?.currency}{cart.isGuest ? cart?.guestCartTotal : cart?.cartSubTotal}</span>
+                                ))}
+                            </div>
+                            <div className="w-full max-w-sm mx-auto p-4 border rounded-md shadow-sm sticky bottom-0 ">
+                                {cart?.isGuest == false && !isCouponApplied ?
+                                    (<div className="mb-2">
+                                        <div className='flex justify-between items-center'>
+                                            <span className="text-sm font-bold">{t("have_coupon")}</span>
+                                            <button className="p-1 border rounded-sm font-medium cardBorder" onClick={() => setShowCouponCode(true)}>
+                                                {t("view_coupon")}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    ) :
+                                    <div>
+                                        <div className='flex p-2 justify-between items-center '>
+                                            <div className='flex border-dashed'>
+                                                <RiCoupon3Line size={32} />
+                                                <div>
+                                                    <p className='font-bold'>{cart?.promo_code?.promo_code}</p>
+                                                    <p>{t("promoCodeSuccess")}</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+
+                                <div className="space-y-6">
+                                    <div className="flex justify-between text-sm">
+                                        <span>{t("total")}</span>
+                                        <span className="font-bold">{setting?.currency}{cart.isGuest ? cart?.guestCartTotal : cart?.cartSubTotal}</span>
+                                    </div>
+                                </div>
+                                <div className="mt-4 space-y-2">
+                                    <button className="w-full py-2  primaryBackColor rounded-md font-medium" onClick={handleCheckoutbtnClick}>
+                                        {user?.jwtToken ? t("checkout") : t("login_to_checkout")}
+                                    </button>
+                                    <button className="w-full py-2 border rounded-md font-medium cardBorder" onClick={() => router.push("/cart")}>
+                                        {t("view_cart")}
+                                    </button>
                                 </div>
                             </div>
-
-                            <div className="mt-4 space-y-2">
-                                <button className="w-full py-2 text-white primaryBackColor rounded-md font-medium " onClick={handleCheckoutbtnClick} >
-                                    {user?.jwtToken ? t("checkout") : t("login_to_checkout")}
-
-                                </button>
-                                <button className="w-full py-2 border rounded-md font-medium  cardBorder" onClick={() => router.push("/cart")}>
-                                    {t("view_cart")}
-                                </button>
-                            </div>
-                        </div></> :
-                        <div className='flex  items-center h-full justify-center my-auto mx-10 '>
+                        </>
+                    ) : (
+                        <div className='flex items-center justify-center h-full my-auto mx-10'>
                             <div>
                                 <Image src={NoCartData} alt='No Cart Data' height={0} width={0} className='h-full w-full' />
-                                <h1 className='font-bold text-[22px]  text-center py-2'>{t("empty_cart_list_message")}</h1>
+                                <h1 className='font-bold text-[22px] text-center py-2'>{t("empty_cart_list_message")}</h1>
                                 <p className='font-bold text-xs text-center'>{t("empty_cart_list_description")}</p>
                             </div>
-
-                        </div>}
-
+                        </div>
+                    )}
                 </SheetContent>
             </Sheet>
             <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+            <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
         </>
     );
 };
