@@ -1,0 +1,34 @@
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"
+);
+
+// Initialize the Firebase app in the service worker by passing in
+// your app's Firebase config object.
+// https://firebase.google.com/docs/web/setup#config-object
+firebase.initializeApp({
+  apiKey: "AIzaSyBT3LL_VaQavGOX8hV8kRSLpWrkbBKX8io",
+  authDomain: "egrocer-457a9.firebaseapp.com",
+  projectId: "egrocer-457a9",
+  storageBucket: "egrocer-457a9.appspot.com",
+  messagingSenderId: "755773183987",
+  appId: "1:755773183987:web:79da7c0c3f815e4793e486",
+  measurementId: "G-CZXY4LTFRH",
+});
+
+// Retrieve an instance of Firebase Messaging so that it can handle background
+// messages.
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log("Received background message:", payload);
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: payload.notification.icon,
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});

@@ -123,9 +123,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                             <FaCog className="mr-2 textColor" size={20} /> Other Settings
                         </h3>
                         <ul>
-                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "notification" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notification")}>
+                            <Link href={`/profile/notifications`}>
+                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "notifications" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notifications")}>
                                 Notification
                             </li>
+                            </Link>
                             <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`} onClick={() => setShowLogout(true)}>
                                 Logout
                             </li>

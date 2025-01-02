@@ -33,7 +33,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     }, [])
 
     useEffect(() => {
-        const categories = filter.category_id.split(",")
+        const categories = filter.category_id?.split(",")
         const catNum = categories?.map((cat) => (parseInt(cat)))
         setSelectedCategories(catNum)
     }, [])

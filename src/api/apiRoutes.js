@@ -319,3 +319,9 @@ export const setPromoCode = async ({ promoCodeName, amount = 0 }) => {
     return response.data;
 }
 
+// Fetch Notifications
+export const getNotifications = async ({ limit = 7, offset = 0 }) => {
+    const params = { limit, offset };
+    const response = await api.get(`${apiEndPoints.getNotification}`, { params });
+    return response.data;
+};
