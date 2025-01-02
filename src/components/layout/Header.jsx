@@ -357,7 +357,7 @@ const Header = () => {
                 </div>
 
 
-                <CartDrawer showCart={showCart} setShowCart={setShowCart} />
+                <CartDrawer showCart={showCart} setShowCart={setShowCart} setMobileActiveKey={setMobileActiveKey} />
                 <Login showLogin={showLogin} setShowLogin={setShowLogin} setMobileActiveKey={setMobileActiveKey} />
                 <Location showLocation={showLocation} setShowLocation={setShowLocation} />
                 <LogoutModal showLogout={showLogout} setShowLogout={setShowLogout} />

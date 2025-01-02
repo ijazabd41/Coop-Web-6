@@ -319,9 +319,49 @@ export const setPromoCode = async ({ promoCodeName, amount = 0 }) => {
     return response.data;
 }
 
+// Checkout api
+export const getTimeSlots = async () => {
+    const response = await api.get(`${apiEndPoints.getSettings}/${apiEndPoints.getTimeSlot}`)
+    return response.data
+}
+
+export const placeOrder = async ({ productVariantId, quantity, total, deliveryCharge, finalTotal, paymentMethod, addressId, deliveryTime, walletBalance, walletUsed, orderNote, promocodeId = 0, }) => {
+    const formData = new FormData();
+    formData.append("product_variant_id", productVariantId);
+    formData.append("quantity", quantity);
+    formData.append("total", total);
+    formData.append("delivery_charge", deliveryCharge);
+    formData.append("final_total", finalTotal);
+    formData.append("payment_method", paymentMethod);
+    formData.append("address_id", addressId);
+
+    formData.append("delivery_time", deliveryTime);
+    if (walletBalance) {
+        formData.append("wallet_balance", walletBalance);
+    }
+    if (walletUsed) {
+        formData.append("wallet_used", walletUsed);
+    }
+    if (orderNote !== "") {
+        formData.append("order_note", orderNote);
+    }
+    if (promocodeId !== 0) {
+        formData.append("promocode_id", promocodeId);
+    }
+}
+
+export const addTransaction = async ({ orderId, transactionId, transactionMethod, type, walletAmount }) => {
+    const formData = new FormData();
+    formData.append("order_id", orderId)
+    formData.append("transaction_id", transactionId)
+    formData.append("transaction_method", transactionMethod)
+    formData.append("type", type)
+}
+
 // Fetch Notifications
 export const getNotifications = async ({ limit = 7, offset = 0 }) => {
     const params = { limit, offset };
     const response = await api.get(`${apiEndPoints.getNotification}`, { params });
     return response.data;
 };
+

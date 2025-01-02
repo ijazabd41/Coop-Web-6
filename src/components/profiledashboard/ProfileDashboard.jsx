@@ -16,13 +16,14 @@ const ProfileDashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    const currentTab = router.pathname.split("/").pop();
-    setSelectedTab(currentTab || "profile");
-    setLoading(false);
-  }, [router.pathname]);
-  console.log("Selected Tab->", selectedTab);
+    useEffect(() => {
+        setLoading(true)
+        const currentTab = router.pathname.split('/').pop();
+        setSelectedTab(currentTab || 'profile');
+        setLoading(false)
+    }, [router.pathname]);
+
+    const activeTab = router.pathname.split('/').pop();
 
   return (
     <section>
@@ -36,31 +37,21 @@ const ProfileDashboard = () => {
             />
           </div>
 
-          <div className="col-span-12 md:col-span-9  ">
-            {loading ? (
-              <p>Loading</p>
-            ) : (
-              <>
-                {selectedTab == "profile" && <Profile />}
-                {selectedTab == "address" && <Address />}
-                {selectedTab == "activeorders" && <ActiveOrders />}
-                {selectedTab == "orderhistory" && <OrderHistory />}
-                {selectedTab == "wishlist" && <Wishlist />}
-                {selectedTab == "wallethistory" && <WalletHistory />}
-                {selectedTab == "transactions" && <TransactionHistory />}
-                {selectedTab == "notifications" && (
-                  <Notifications
-                    selectedTab={selectedTab}
-                    setSelectedTab={setSelectedTab}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+                    <div className='col-span-12 md:col-span-9  '>
+                        {loading ? <p>Loading</p> : <>
+                            {activeTab == "profile" && <Profile />}
+                            {activeTab == "address" && <Address />}
+                            {activeTab == "activeorders" && <ActiveOrders />}
+                            {activeTab == "orderhistory" && <OrderHistory />}
+                            {activeTab == "wishlist" && <Wishlist />}
+                            {activeTab == "wallethistory" && <WalletHistory />}
+                            {activeTab == "transactions" && <TransactionHistory />}
+                        </>}
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
 
 export default ProfileDashboard;

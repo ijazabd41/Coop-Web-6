@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
 import Stepper from './Stepper'
 import AddressCard from '../cards/AddressCard'
@@ -20,12 +20,24 @@ import {
 } from "@/components/ui/select";
 import CheckoutPayment from './CheckoutPayment'
 import OrderSummaryCard from './OrderSummaryCard'
+import { useDispatch, useSelector } from 'react-redux'
+import NewAddressModal from '../newaddressmodal/NewAddressModal'
+import * as api from "@/api/apiRoutes"
+import { setAllAddresses } from '@/redux/slices/addressSlice'
 
 const Checkout = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+
+    const dispatch = useDispatch();
+
+    const address = useSelector((state) => state.Addresses);
+
+    const [currentStep, setCurrentStep] = useState(2);
     const [selectedAddess, setSelectedAddress] = useState('')
     const [selectedDate, setSelectedDate] = useState("")
     const [selectedTime, setSelectedTime] = useState("")
+    const [availabeleTimeSlot, setAvailableTimeSlot] = useState([])
+    const [showAddAddres, setShowAddAddres] = useState(false)
+
 
     const handleSelectedDate = (date) => {
         setSelectedDate(date)
@@ -38,6 +50,31 @@ const Checkout = () => {
             year: 'numeric',
         });
     };
+    useEffect(() => {
+        fetchAddress()
+        handleFetchTimeSlots()
+    }, [])
+
+    const fetchAddress = async () => {
+        try {
+            const response = await api.getAddress();
+            if (response.status == 1) {
+                dispatch(setAllAddresses({ data: response.data }))
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    const handleFetchTimeSlots = async () => {
+        try {
+            const response = await api.getTimeSlots()
+            console.log("Time Slot", response)
+            setAvailableTimeSlot(response.data)
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
 
     return (
         <section>
@@ -55,8 +92,12 @@ const Checkout = () => {
                                     <span className='font-bold text-base md:text-xl'>{t("choose_delivery_address")}</span>
                                     <button className='flex  items-center text-sm'><GoPlus />{t("add_address")}</button>
                                 </div>
-                                <div className='flex flex-col overflow-scroll h-96'>
-                                    <AddressCard />
+                                <div className='flex flex-col overflow-y-scroll h-96'>
+                                    {address?.allAddresses?.map((address) => {
+                                        return (
+                                            <div> <AddressCard address={address} /></div>
+                                        )
+                                    })}
                                 </div>
                                 <div className='flex justify-end m-4'>
                                     <button className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal'>{t("continue")}</button>
@@ -126,6 +167,7 @@ const Checkout = () => {
                     </div>
                 </div>
             </div>
+            <NewAddressModal fetchAddress={fetchAddress} />
         </section>
     )
 }

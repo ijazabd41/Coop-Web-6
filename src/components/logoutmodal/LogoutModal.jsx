@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import * as api from "@/api/apiRoutes"
 import { clearAllFilter } from "@/redux/slices/productFilterSlice";
 import { logoutAuth, setJWTToken, setCurrentUser, setAuthType, } from "@/redux/slices/userSlice"
-import { setCart, setCartProducts, setCartSubTotal, setIsGuest } from "@/redux/slices/cartSlice"
+import { clearCartPromo, setCart, setCartProducts, setCartSubTotal, setIsGuest } from "@/redux/slices/cartSlice"
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
@@ -35,6 +35,7 @@ const LogoutModal = ({ showLogout, setShowLogout }) => {
                 dispatch(setCartProducts({ data: [] }))
                 dispatch(setCartSubTotal({ data: 0 }))
                 dispatch(setCartProducts({ data: [] }))
+                dispatch(clearCartPromo())
                 dispatch(setIsGuest({ data: true }))
                 router.push("/")
                 setShowLogout(false)

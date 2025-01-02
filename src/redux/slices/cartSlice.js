@@ -33,7 +33,7 @@ export const cartReducer = createSlice({
             state.promo_code = action.payload.data;
         },
         clearCartPromo: (state) => {
-            state.cart.promo_code = null;
+            // state.cart.promo_code = [];
             state.promo_code = null;
         },
         setWallet: (state, action) => {

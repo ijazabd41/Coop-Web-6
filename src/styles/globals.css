@@ -64,6 +64,9 @@
   .primaryBorder {
     border: 1px solid var(--primary-color);
   }
+  .primaryDashedBorder {
+    border: 2px dashed var(--primary-color);
+  }
 
   .primaryColor {
     color: var(--primary-color);

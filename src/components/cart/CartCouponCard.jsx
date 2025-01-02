@@ -1,16 +1,33 @@
 import { t } from '@/utils/translation'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { MdOutlineCelebration } from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux'
+import { clearCartPromo } from '@/redux/slices/cartSlice';
+import { useRouter } from 'next/router';
 
 const CartCouponCard = ({ setShowCouponCode }) => {
-
+    const router = useRouter();
+    const dispatch = useDispatch();
 
     const cart = useSelector(state => state.Cart);
     const setting = useSelector(state => state.Setting.setting)
 
+
+    const handleClearPromo = () => {
+        dispatch(clearCartPromo())
+    }
+
+    const handleToCheckOut = () => {
+        router.push('/checkout')
+    }
+
+    const handleToProducts = () => {
+        router.push('/products')
+    }
+
     return (
         <div className="max-w-sm p-4  border  rounded-md cardBorder">
-            {/* Header */}
+
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-sm font-medium ">{t("have_coupon")}</h3>
                 <button className="px-3 py-1 text-sm font-medium border rounded hover:primaryBackColor hover:text-white" onClick={() => setShowCouponCode(true)}>
@@ -18,49 +35,56 @@ const CartCouponCard = ({ setShowCouponCode }) => {
                 </button>
             </div>
 
-            {/* Promo Code Section */}
-            <div className="mb-4">
-                <div className='flex justify-between items-center mb-4'>
-                    <p className="text-sm ">Promo Code Applied</p>
-                    <button className=" text-xs font-medium text-red-500 hover:primaryBackColor hover:text-white p-2 rounded-sm">
-                        Remove
-                    </button>
-                </div>
-
-                <div className="flex items-center justify-between p-1 mt-2 bg-[#55AE7B0A] border  rounded-md">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-green-600">💳</span>
-                        <p className="text-sm font-medium text-green-600">BOGOZILLA</p>
+            {cart?.promo_code && (
+                <div className="mb-4">
+                    <div className='flex justify-between items-center mb-4'>
+                        <p className="text-sm ">{t("promoCodeSuccess")}</p>
+                        <button onClick={handleClearPromo} className=" text-xs font-medium text-red-500 hover:primaryBackColor hover:text-white p-2 rounded-sm">
+                            {t("delete")}
+                        </button>
                     </div>
-                    <p className="text-sm font-medium text-green-600">$40.00</p>
+                    <div className="flex items-center justify-between p-2 mt-2 bg-[#55AE7B0A] primaryBorder  rounded-md">
+                        <div className="flex items-center space-x-2">
+                            <span className="primaryColor"><MdOutlineCelebration className="primaryColor" size={20} /></span>
+                            <p className="text-base font-bold primaryColor">{cart?.promo_code?.promo_code}</p>
+                        </div>
+                        <p className="text-base font-bold primaryColor">{setting?.currency}{cart?.promo_code?.discount}</p>
+                    </div>
                 </div>
+            )}
 
-            </div>
 
             {/* Pricing Details */}
-            <div className="mb-4">
-                <div className="flex justify-between text-sm ">
-                    <p>{t("sub_total")}</p>
-                    <p>{setting?.currency} {cart?.cartSubTotal}</p>
+            <hr className="mb-4 border-gray-300" />
+            <div className="mb-4  ">
+                <div className="flex justify-between  mt-3 font-bold text-base">
+                    <p className=''>{t("sub_total")}</p>
+                    <p>{setting?.currency}{cart?.cartSubTotal}</p>
                 </div>
+                {
+                    cart?.promo_code && (
+                        <div className="flex justify-between  mt-3 font-bold text-base">
+                            <p className=''>{t("promoDiscount")}</p>
+                            <p>{setting?.currency}{cart?.promo_code?.discount}</p>
+                        </div>
+                    )
+                }
+
 
             </div>
 
-            {/* Divider */}
             <hr className="mb-4 border-gray-300" />
 
-            {/* Total */}
-            <div className="flex justify-between items-center mb-4">
-                <p className="text-lg font-semibold ">Total</p>
-                <p className="text-lg font-semibold ">$5,310.00</p>
+            <div className="flex justify-between items-center mb-4 backgroundColor p-3 rounded">
+                <p className="text-lg font-bold ">{t("total")}</p>
+                <p className="text-lg font-bold ">{setting?.currency} {cart?.promo_code ? (cart?.cartSubTotal - cart?.promo_code?.discount) : cart?.cartSubTotal}</p>
             </div>
 
-            {/* Actions */}
-            <button className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded ">
-                Proceed to Checkout
+            <button className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded " onClick={handleToCheckOut}>
+                {t("proceed_to_checkout")}
             </button>
-            <button className="w-full py-2 rounded-sm text-sm font-medium  hover:primaryBackColor">
-                Continue Shopping
+            <button className="w-full py-2 rounded-sm text-sm font-medium  hover:primaryBackColor hover:text-white" onClick={handleToProducts}>
+                {t("continue_shopping")}
             </button>
         </div>
     )

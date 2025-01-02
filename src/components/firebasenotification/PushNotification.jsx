@@ -8,13 +8,31 @@ const PushNotification = ({ children }) => {
   const dispatch = useDispatch();
   const [notification, setNotification] = useState("");
   const [token, setToken] = useState("");
-  const { messaging, app } = FirebaseData();
+  const [isMessagingSupported, setIsMessagingSupported] = useState(true);
+  const [isFirebaseInitialized, setIsFirebaseInitialized] = useState(false); // Track Firebase init status
+  const [isServiceWorkerRegistered, setIsServiceWorkerRegistered] =
+    useState(false);
+  // Initialize Firebase app
+  const initializeFirebase = async () => {
+    try {
+      if (!app) {
+        throw new Error("Firebase app not initialized.");
+      }
+      
+      setIsFirebaseInitialized(true);
+    } catch (err) {
+      console.error("Error initializing Firebase:", err);
+      setIsFirebaseInitialized(false);
+    }
+  };
 
+  // Function to initialize messaging once Firebase is ready
   const messagingInstance = async () => {
     try {
-      const isSupportedBrowser = await isSupported();
-      if (isSupportedBrowser) {
-        return getMessaging(app);
+      const isNotiSupported = await isSupported();
+      if (isNotiSupported && app) {
+        setIsAppInitialized(true);
+        return getMessaging(app); // Return messaging instance if app is initialized
       } else {
         createStickyNote();
         return null;
@@ -26,10 +44,14 @@ const PushNotification = ({ children }) => {
   };
   const fetchToken = async () => {
     try {
-      if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-        const messaging = await messagingInstance();
-        if (!messaging) {
-          console.error("Messaging not supported.");
+      if (
+        typeof window !== "undefined" &&
+        "serviceWorker" in navigator &&
+        isServiceWorkerRegistered
+      ) {
+        let messagingInstanceResult = await messagingInstance();
+        if (!messagingInstanceResult) {
+          console.error("Messaging is not available.");
           return;
         }
         const permission = await Notification.requestPermission();

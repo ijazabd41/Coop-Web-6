@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getMessaging, onMessage } from "firebase/messaging";
 
+
 const FirebaseData = () => {
   const setting = useSelector((state) => state.Setting);
   if (setting.setting === null) {
@@ -36,7 +37,7 @@ const FirebaseData = () => {
 
   const messaging = getMessaging(app);
 
-  //   console.log("messaging: ", messaging);
+
 
   try {
     onMessage(messaging, (payload) => {

@@ -18,7 +18,7 @@ const HomePageSlider = ({ slider }) => {
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 2000, disableOnInteraction: false }}
                 className="homePageSwiper relative "
-                loop={true}
+            // loop={true}
             >
                 {slider?.sliders?.map((slider, index) => {
                     return (

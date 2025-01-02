@@ -12,14 +12,14 @@ import * as api from "@/api/apiRoutes"
 import { IoIosCloseCircle } from 'react-icons/io';
 import NoCartData from "@/assets/Empty_Cart.svg"
 import Image from 'next/image';
-import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
+import { clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import Login from '../login/Login';
 import { useRouter } from 'next/router';
 import CouponCodeDrawer from '@/couponcode/CouponCodeDrawer';
 import { RiCoupon3Line } from 'react-icons/ri';
 
-const CartDrawer = ({ showCart, setShowCart }) => {
+const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const city = useSelector(state => state.City.city);
@@ -36,7 +36,10 @@ const CartDrawer = ({ showCart, setShowCart }) => {
 
     useEffect(() => {
         if (showCart) {
-            if (cart.isGuest == false) {
+            if (cart?.isGuest == true && cart?.guestCart?.length == 0) {
+                setCartProductsData([])
+            }
+            else if (cart.isGuest == false) {
                 fetchCart()
             } else if (cart?.guestCart?.length > 0 && cart?.isGuest == true) {
                 fetchGuestCart()
@@ -103,7 +106,10 @@ const CartDrawer = ({ showCart, setShowCart }) => {
         }
     }
 
-    const isCouponApplied = cart?.promo_code != null
+    const isCouponApplied = cart?.promo_code != null;
+    const handleRemoveCoupon = async () => {
+        dispatch(clearCartPromo())
+    }
     return (
         <>
             <Sheet open={showCart} >
@@ -138,22 +144,25 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                                     (<div className="mb-2">
                                         <div className='flex justify-between items-center'>
                                             <span className="text-sm font-bold">{t("have_coupon")}</span>
-                                            <button className="p-1 border rounded-sm font-medium cardBorder" onClick={() => setShowCouponCode(true)}>
+                                            <button className="p-1 border text-sm hover:primaryBackColor hover:text-white rounded-sm font-medium cardBorder" onClick={() => setShowCouponCode(true)}>
                                                 {t("view_coupon")}
                                             </button>
                                         </div>
                                     </div>
                                     ) :
-                                    <div>
-                                        <div className='flex p-2 justify-between items-center '>
-                                            <div className='flex border-dashed'>
-                                                <RiCoupon3Line size={32} />
-                                                <div>
-                                                    <p className='font-bold'>{cart?.promo_code?.promo_code}</p>
-                                                    <p>{t("promoCodeSuccess")}</p>
+                                    (cart?.isGuest == false && isCouponApplied) && < div >
+                                        <div className='flex  justify-between items-center primaryDashedBorder mb-2'>
+                                            <div className='flex p-2  items-center gap-2'>
+                                                <RiCoupon3Line size={32} className='primaryColor' />
+                                                <div className='w-3/4'>
+                                                    <p className="font-bold text-wrap text-ellipsis overflow-hidden whitespace-nowrap w-1/2">{cart?.promo_code?.promo_code}</p>
+                                                    <p className='text-sm font-bold w-full'>{t("promoCodeSuccess")}</p>
+                                                </div>
+                                                <div className='flex flex-col justify-start'>
+                                                    <p>{setting?.currency}{cart?.promo_code?.discount}</p>
+                                                    <button className='text-red-500' onClick={handleRemoveCoupon}>{t("delete")}</button>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 }
@@ -161,11 +170,11 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                                 <div className="space-y-6">
                                     <div className="flex justify-between text-sm">
                                         <span>{t("total")}</span>
-                                        <span className="font-bold">{setting?.currency}{cart.isGuest ? cart?.guestCartTotal : cart?.cartSubTotal}</span>
+                                        <span className="font-bold">{setting?.currency}{cart.isGuest ? cart?.guestCartTotal : isCouponApplied ? (cart?.cartSubTotal - cart?.promo_code?.discount)?.toFixed(2) : cart?.cartSubTotal.toFixed(2)}</span>
                                     </div>
                                 </div>
                                 <div className="mt-4 space-y-2">
-                                    <button className="w-full py-2  primaryBackColor rounded-md font-medium" onClick={handleCheckoutbtnClick}>
+                                    <button className="w-full py-2  primaryBackColor rounded-md font-bold text-white" onClick={handleCheckoutbtnClick}>
                                         {user?.jwtToken ? t("checkout") : t("login_to_checkout")}
                                     </button>
                                     <button className="w-full py-2 border rounded-md font-medium cardBorder" onClick={() => router.push("/cart")}>
@@ -184,8 +193,8 @@ const CartDrawer = ({ showCart, setShowCart }) => {
                         </div>
                     )}
                 </SheetContent>
-            </Sheet>
-            <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+            </Sheet >
+            <Login showLogin={showLogin} setShowLogin={setShowLogin} setMobileActiveKey={setMobileActiveKey} />
             <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
         </>
     );

@@ -1,23 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    selectedAddress: [],
-    allAddresses: []
+    selectedEditAddress: [],
+    allAddresses: [],
+    selectedAddress: []
 }
 
 export const addressReducer = createSlice({
     name: "address",
     initialState,
     reducers: {
-        setSelectedAddres: (state, action) => {
-            state.selectedAddress = action.payload.data
+        setSelectedAddresForEdit: (state, action) => {
+            state.selectedEditAddress = action.payload.data
         },
         setAllAddresses: (state, action) => {
             state.allAddresses = action.payload.data
+        },
+        setSelectedAddress: (state, action) => {
+            state.selectedAddress = action.payload.data
         }
     }
 })
 
-export const { setAllAddresses, setSelectedAddres } = addressReducer.actions
+export const { setAllAddresses, setSelectedAddresForEdit, setSelectedAddress } = addressReducer.actions
 
 export default addressReducer.reducer

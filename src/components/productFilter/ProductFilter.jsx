@@ -33,7 +33,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     }, [])
 
     useEffect(() => {
-        const categories = filter.category_id?.split(",")
+        const categories = filter?.category_id?.split(",")
         const catNum = categories?.map((cat) => (parseInt(cat)))
         setSelectedCategories(catNum)
     }, [])
@@ -71,15 +71,15 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     };
 
     const handleExpandCollapse = (node) => {
-        const newExpandedKeys = expandedKeys.includes(node.key)
+        const newExpandedKeys = expandedKeys?.includes(node.key)
             ? expandedKeys.filter(key => key !== node.key)
             : [...expandedKeys, node.key];
         setExpandedKeys(newExpandedKeys);
     };
 
     const renderTitle = (node) => {
-        const isExpanded = expandedKeys.includes(node.key);
-        const hasChildren = node.children && node.children.length > 0;
+        const isExpanded = expandedKeys?.includes(node.key);
+        const hasChildren = node?.children && node.children.length > 0;
 
         return (
             <div className='flex  items-center gap-2'>

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as api from '@/api/apiRoutes'
 import { setCartPromo } from '@/redux/slices/cartSlice'
 
-const CouponCodeCard = ({ coupon }) => {
+const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
     const dispatch = useDispatch()
     const cart = useSelector(state => state.Cart)
 
@@ -14,6 +14,7 @@ const CouponCodeCard = ({ coupon }) => {
             const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: cart?.cartSubTotal })
             if (response.status == 1) {
                 dispatch(setCartPromo({ data: response.data }))
+                setShowCouponCode(false)
             }
         } catch (error) {
             console.log("Error", error)

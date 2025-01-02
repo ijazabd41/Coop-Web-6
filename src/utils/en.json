@@ -251,6 +251,7 @@
     "active_orders": "Active Orders",
     "previous_orders": "Previous Orders",
     "previous": "Previous",
+    "promoDiscount": "Promo Discount",
     "promoCodeSuccess": "Promo code applied successfully.",
     "license_no": "License No",
     "items": "Items",
@@ -439,5 +440,6 @@
     "username_required": "Username Required",
     "login_success": "You're successfully Logged In",
     "address_added_success": "Address added successfully",
-    "default_address_msg": "This is Default Address"
+    "default_address_msg": "This is Default Address",
+    "continue_shopping": "Continue Shopping"
 }
