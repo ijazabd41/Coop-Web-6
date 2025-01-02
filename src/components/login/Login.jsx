@@ -47,6 +47,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
+  const fcmToken = useSelector((state)=>state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
 
   const dispatch = useDispatch();
@@ -263,7 +264,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         const loginResponse = await loginApiCall(
           user.user,
           phoneNumberWithoutCountryCode,
-          "",
+          fcmToken,
           "phone"
         );
         setLoading(false);
@@ -442,7 +443,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const credentials = GoogleAuthProvider.credentialFromResult(result);
       const user = result?.user;
       dispatch(setAuthType({ data: "google" }));
-      await loginApiCall(user, user?.providerData[0].email, "", "google");
+      await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
     } catch (error) {
       console.log("error", error);
     }

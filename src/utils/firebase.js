@@ -36,7 +36,7 @@ const FirebaseData = () => {
 
   const messaging = getMessaging(app);
 
-  console.log("messaging: ", messaging);
+  //   console.log("messaging: ", messaging);
 
   try {
     onMessage(messaging, (payload) => {
