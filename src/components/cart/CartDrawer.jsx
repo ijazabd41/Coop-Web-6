@@ -102,7 +102,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
             setShowCart(false)
             setShowLogin(true)
         } else {
-            router.push("checkout")
+            router.push("/checkout")
         }
     }
 

@@ -17,6 +17,7 @@ export const addressReducer = createSlice({
             state.allAddresses = action.payload.data
         },
         setSelectedAddress: (state, action) => {
+
             state.selectedAddress = action.payload.data
         }
     }

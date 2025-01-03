@@ -37,7 +37,6 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
 
     const handleCheckboxChange = () => {
         dispatch(setSelectedAddress({ data: address }))
-
     };
 
     return (
@@ -45,7 +44,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
             <div className="p-4 w-full border-b">
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="font-semibold text-lg">
-                        Delivery to: <span className="font-bold">{address?.name}</span>
+                        {t("delivery_to")}: <span className="font-bold">{address?.name}</span>
                     </h2>
                     <div className="flex items-center">
                         <input

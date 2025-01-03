@@ -203,8 +203,11 @@ export const getPaymentSetting = async () => {
 }
 
 // cart apis
-export const getCart = async ({ latitude, longitude, checkout = 0 }) => {
+export const getCart = async ({ latitude, longitude, checkout = 0, promocode_id = 0 }) => {
     const params = { latitude: latitude, longitude: longitude, is_checkout: checkout };
+    if (promocode_id !== 0) {
+        params.promocode_id = promocode_id
+    }
     const response = await api.get(apiEndPoints.getCart, { params })
     return response.data
 }

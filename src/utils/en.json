@@ -281,6 +281,7 @@
     "delete_address": "Delete Address ?",
     "delete_address_message": "Do you really want to delete address ?",
     "please_select_date": "Please Select Date",
+    "please_select_time_slot": "Please Select Time Slot",
     "order_placed": "Order Placed",
     "order_id": "Order Id",
     "item": "item",
@@ -441,5 +442,6 @@
     "login_success": "You're successfully Logged In",
     "address_added_success": "Address added successfully",
     "default_address_msg": "This is Default Address",
-    "continue_shopping": "Continue Shopping"
+    "continue_shopping": "Continue Shopping",
+    "backToCart": "Back to Cart"
 }

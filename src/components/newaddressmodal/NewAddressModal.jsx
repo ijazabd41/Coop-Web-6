@@ -80,29 +80,29 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
     }, [addressDetails]);
 
     useEffect(() => {
-        if (isAddressSelected && addresses.selectedAddress) {
+        if (isAddressSelected && addresses.selectedEditAddress) {
             setaddressDetails({
-                name: addresses.selectedAddress.name,
-                mobile_num: addresses.selectedAddress.mobile,
-                alternate_mobile_num: addresses.selectedAddress.alternate_mobile,
-                address: addresses.selectedAddress.address,
-                landmark: addresses.selectedAddress.landmark,
-                city: addresses.selectedAddress.city,
-                area: addresses.selectedAddress.area,
-                pincode: addresses.selectedAddress.pincode,
-                state: addresses.selectedAddress.country,
-                country: addresses.selectedAddress.country,
-                address_type: addresses.selectedAddress.type,
-                is_default: addresses.selectedAddress.is_default === 1 ? true : false,
+                name: addresses.selectedEditAddress.name,
+                mobile_num: addresses.selectedEditAddress.mobile,
+                alternate_mobile_num: addresses.selectedEditAddress.alternate_mobile,
+                address: addresses.selectedEditAddress.address,
+                landmark: addresses.selectedEditAddress.landmark,
+                city: addresses.selectedEditAddress.city,
+                area: addresses.selectedEditAddress.area,
+                pincode: addresses.selectedEditAddress.pincode,
+                state: addresses.selectedEditAddress.country,
+                country: addresses.selectedEditAddress.country,
+                address_type: addresses.selectedEditAddress.type,
+                is_default: addresses.selectedEditAddress.is_default === 1 ? true : false,
             });
         }
         if (!isAddressSelected) {
             setlocalLocation({
-                lat: parseFloat(city.city ? city.city.latitude : 0),
-                lng: parseFloat(city.city ? city.city.longitude : 0),
+                lat: parseFloat(city?.city ? city?.city?.latitude : 0),
+                lng: parseFloat(city?.city ? city?.city?.longitude : 0),
             });
         }
-    }, [isAddressSelected, addresses?.selectedAddress]);
+    }, [isAddressSelected, addresses?.selectedEditAddress]);
 
     const handleConfirmAddress = async (e) => {
         e.preventDefault();
@@ -136,7 +136,7 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
         }
         else {
             setLoading(true);
-            const response = await api.updateAddress({ id: addresses.selectedAddress.id, name: addressDetails.name, mobile: addressDetails.mobile_num, type: addressDetails.address_type, address: addressDetails.address, landmark: addressDetails.landmark, area: addressDetails.area, pincode: addressDetails.pincode, city: addressDetails.city, state: addressDetails.state, country: addressDetails.country, alternate_mobile: addressDetails.alternate_mobile_num, latitiude: lat, longitude: lng, is_default: addressDetails.is_default })
+            const response = await api.updateAddress({ id: addresses.selectedEditAddress.id, name: addressDetails.name, mobile: addressDetails.mobile_num, type: addressDetails.address_type, address: addressDetails.address, landmark: addressDetails.landmark, area: addressDetails.area, pincode: addressDetails.pincode, city: addressDetails.city, state: addressDetails.state, country: addressDetails.country, alternate_mobile: addressDetails.alternate_mobile_num, latitiude: lat, longitude: lng, is_default: addressDetails.is_default })
             if (response.status === 1) {
                 toast.success('Succesfully Updated Address!');
                 fetchAddress()
@@ -148,6 +148,20 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
     };
 
     const handleHideAddressModal = () => {
+        setaddressDetails({
+            name: '',
+            mobile_num: '',
+            alternate_mobile_num: '',
+            address: '',
+            landmark: '',
+            city: '',
+            area: '',
+            pincode: '',
+            state: '',
+            country: '',
+            address_type: 'Home',
+            is_default: false,
+        });
         setShowAddAddres(false)
     }
 
@@ -358,7 +372,7 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
                                         <h1>{t("address_type")}</h1>
                                         <div className='flex gap-1'>
                                             <ToggleGroup type="single">
-                                                <ToggleGroupItem value="Home" className={`rounded-sm p-2 ${addressDetails.address_type == "Home" ? "text-white primaryBackColor" : ""}`} onClick={() => handleSetAddressType("Home")}>
+                                                <ToggleGroupItem value="Home" className={`rounded-sm p-2 ${addressDetails.address_type == "Home" ? "text-white primaryBackColor" : ""}`} onClick={() => handleSetAddressType("Home")} >
                                                     <h1>{t("adress_type_home")}</h1>
                                                 </ToggleGroupItem>
                                                 <ToggleGroupItem value="Office" className={`rounded-sm p-2 ${addressDetails.address_type == "Office" ? "text-white primaryBackColor" : ""}`} onClick={() => handleSetAddressType("Office")}>
