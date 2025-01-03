@@ -1,46 +1,66 @@
 import { useSelector } from "react-redux";
 import Loader from "@/components/loader/Loader";
-import { initializeApp } from "firebase/app";
+import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getMessaging, onMessage } from "firebase/messaging";
-
+import firebase from "firebase/compat/app";
 
 const FirebaseData = () => {
   const setting = useSelector((state) => state.Setting);
-  if (setting.setting === null) {
-    return <Loader screen="full" />;
-  }
+  // if (setting.setting === null) {
+  //   return <Loader screen="full" />;
+  // }
 
-  const {
-    apiKey,
-    authDomain,
-    projectId,
-    storageBucket,
-    messagingSenderId,
-    appId,
-    measurementId,
-  } = setting.setting?.firebase || {};
+  // const {
+  //   apiKey,
+  //   authDomain,
+  //   projectId,
+  //   storageBucket,
+  //   messagingSenderId,
+  //   appId,
+  //   measurementId,
+  // } = setting.setting?.firebase || {};
+
+  // const firebaseConfig = {
+  //   apiKey,
+  //   authDomain,
+  //   projectId,
+  //   storageBucket,
+  //   messagingSenderId,
+  //   appId,
+  //   measurementId,
+  // };
 
   const firebaseConfig = {
-    apiKey,
-    authDomain,
-    projectId,
-    storageBucket,
-    messagingSenderId,
-    appId,
-    measurementId,
+    apiKey: process.env.NEXT_PUBLIC_APP_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_APP_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_APP_FIREBASE_MEASUREMENT_ID,
   };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 
   const app = initializeApp(firebaseConfig);
 
   const auth = getAuth(app);
 
-  const messaging = getMessaging(app);
+  const firebaseApp = !getApps().length
+    ? initializeApp(firebaseConfig)
+    : getApp();
 
-
+  let messaging;
+  if (typeof window !== "undefined") {
+    messaging = getMessaging(app);
+  }
 
   try {
     onMessage(messaging, (payload) => {
+      // console.log("Front Notification:", payload);
       const data = payload?.data;
       new Notification(data?.title, {
         body: data?.message,
@@ -51,7 +71,7 @@ const FirebaseData = () => {
     console.log("Messaging Error:", err?.message);
   }
 
-  return { auth, app, messaging };
+  return { auth, app, firebaseApp, messaging };
 };
 
 export default FirebaseData;

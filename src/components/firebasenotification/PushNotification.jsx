@@ -8,31 +8,13 @@ const PushNotification = ({ children }) => {
   const dispatch = useDispatch();
   const [notification, setNotification] = useState("");
   const [token, setToken] = useState("");
-  const [isMessagingSupported, setIsMessagingSupported] = useState(true);
-  const [isFirebaseInitialized, setIsFirebaseInitialized] = useState(false); // Track Firebase init status
-  const [isServiceWorkerRegistered, setIsServiceWorkerRegistered] =
-    useState(false);
-  // Initialize Firebase app
-  const initializeFirebase = async () => {
-    try {
-      if (!app) {
-        throw new Error("Firebase app not initialized.");
-      }
-      
-      setIsFirebaseInitialized(true);
-    } catch (err) {
-      console.error("Error initializing Firebase:", err);
-      setIsFirebaseInitialized(false);
-    }
-  };
+  const { messaging, app, firebaseApp } = FirebaseData();
 
-  // Function to initialize messaging once Firebase is ready
   const messagingInstance = async () => {
     try {
-      const isNotiSupported = await isSupported();
-      if (isNotiSupported && app) {
-        setIsAppInitialized(true);
-        return getMessaging(app); // Return messaging instance if app is initialized
+      const isSupportedBrowser = await isSupported();
+      if (isSupportedBrowser) {
+        return getMessaging(firebaseApp);
       } else {
         createStickyNote();
         return null;
@@ -44,23 +26,21 @@ const PushNotification = ({ children }) => {
   };
   const fetchToken = async () => {
     try {
-      if (
-        typeof window !== "undefined" &&
-        "serviceWorker" in navigator &&
-        isServiceWorkerRegistered
-      ) {
-        let messagingInstanceResult = await messagingInstance();
-        if (!messagingInstanceResult) {
-          console.error("Messaging is not available.");
+      if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+        const messaging = await messagingInstance();
+        // console.log("Messaging:-", messaging);
+        if (!messaging) {
+          console.error("Messaging not supported.");
           return;
         }
         const permission = await Notification.requestPermission();
+        // console.log("Permission:", permission);
         if (permission === "granted") {
           getToken(messaging)
             .then((currentToken) => {
               if (currentToken) {
                 setToken(currentToken);
-                dispatch(setFcmToken({data:currentToken}));
+                dispatch(setFcmToken({ data: currentToken }));
               } else {
                 setTokenFound(false);
                 toast.error(t("permissionRequired"));
@@ -73,6 +53,8 @@ const PushNotification = ({ children }) => {
                 registerServiceWorker();
               }
             });
+        } else if (permission === "default") {
+          // registerServiceWorker();
         } else {
           setTokenFound(false);
           // toast.error('Permission is required for notifications.');
@@ -107,24 +89,6 @@ const PushNotification = ({ children }) => {
   useEffect(() => {
     handleFetchToken();
   }, []);
-
-  useEffect(() => {
-    if (token !== "") {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/firebase-messaging-sw.js")
-          .then((registration) => {
-            console.log(
-              "Service Worker registration successful with scope: ",
-              registration.scope
-            );
-          })
-          .catch((err) => {
-            console.log("Service Worker registration failed: ", err);
-          });
-      }
-    }
-  }, [token]);
 
   return <div>{children}</div>;
 };

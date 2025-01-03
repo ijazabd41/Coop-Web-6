@@ -21,18 +21,6 @@ const Layout = ({ children }) => {
   const [loading, setLoading] = useState(false);
   // const [showLocation, setShowLocation] = useState(false)
 
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then((registration) => {
-          console.log("Service Worker registered:", registration);
-        })
-        .catch((err) => {
-          console.log("Service Worker registration failed:", err);
-        });
-    }
-  }, []);
 
   useEffect(() => {
     fetchSetting();
@@ -91,7 +79,6 @@ const Layout = ({ children }) => {
 
   return (
     <section>
-      {
         <PushNotification>
           <Header />
           {children}
@@ -103,7 +90,6 @@ const Layout = ({ children }) => {
             toastClassName="toast-container-class"
           />
         </PushNotification>
-      }
       {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}
     </section>
   );
