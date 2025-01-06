@@ -21,25 +21,21 @@ const OrderSummaryCard = ({ checkout, handlePlaceOrder }) => {
                     </a>
                     <span className="">- {setting?.currency} {checkout?.promocode_details?.discount}</span>
                 </div>
-
-
             )}
 
             <div className="flex justify-between items-center mb-4">
                 <span className="">{t("delivery_charge")}</span>
                 <span className="">{setting?.currency} {checkout?.delivery_charge?.total_delivery_charge}</span>
             </div>
-
             <hr className="border-gray-300 mb-4" />
-
 
             <div className="flex justify-between items-center mb-6 backgroundColor p-3 rounded-sm">
                 <span className="text-lg font-bold ">{t("total")}</span>
-                <span className="text-lg font-bold ">{setting?.currency} {checkout?.total_amount}</span>
+                <span className="text-lg font-bold ">{setting?.currency} {checkout?.total_amount?.toFixed(2)}</span>
             </div>
 
             <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  " onClick={handlePlaceOrder}>
-                Place Order
+                {t("place_order")}
             </button>
 
             <div className="text-center rounded w-full hover:primaryBackColor hover:text-white p-2 mt-2">

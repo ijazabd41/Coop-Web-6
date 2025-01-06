@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { FaRegCalendarAlt } from 'react-icons/fa'
+import { useRazorpay } from "react-razorpay"
 import {
     Select,
     SelectContent,
@@ -23,60 +24,79 @@ import OrderSummaryCard from './OrderSummaryCard'
 import { useDispatch, useSelector } from 'react-redux'
 import NewAddressModal from '../newaddressmodal/NewAddressModal'
 import * as api from "@/api/apiRoutes"
+import { clearCartPromo, setCart, setCartCheckout, setCartProducts, setCartPromo, setCartSubTotal } from "@/redux/slices/cartSlice"
 import { setAllAddresses, setSelectedAddress } from '@/redux/slices/addressSlice'
 import { toast } from 'react-toastify'
+import { useRouter } from 'next/router'
+import { deductUserBalance } from '@/redux/slices/userSlice'
 
 const Checkout = () => {
-
+    const router = useRouter();
     const dispatch = useDispatch();
+
+    const { Razorpay } = useRazorpay();
     const city = useSelector(state => state.City.city);
     const cart = useSelector(state => state.Cart);
     const address = useSelector((state) => state.Addresses);
+    const user = useSelector((state) => state.User.user)
+    const setting = useSelector((state) => state.Setting.setting)
 
-    const [currentStep, setCurrentStep] = useState(3);
+    const [currentStep, setCurrentStep] = useState(1);
     const [couponseCodeId, setCouponCodeId] = useState(null);
+    const [orderId, setOrderId] = useState("")
     // step 1 variables
     const [isAddressSelected, setIsAddressSelected] = useState(false)
     const [showAddAddres, setShowAddAddres] = useState(false)
+    const [isOrderPlaced, setIsOrderPlaced] = useState(false)
     // step 2 Variables
     const [selectedDate, setSelectedDate] = useState(null)
-    const [timeSlots, setTimeSlots] = useState(null)
+    const [timeSlotsData, setTimeSlotsData] = useState(null)
+    const [timeSlots, setTimeSlots] = useState([])
     const [availabeleTimeSlot, setAvailableTimeSlot] = useState([])
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null)
     const [orderNote, setOrderNote] = useState("");
+
     // step 3 variables
     const [checkoutData, setCheckoutData] = useState(null)
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
     const [isWalletChecked, setIsWalletChecked] = useState(0);
 
-
-
-
     useEffect(() => {
         fetchAddress()
         handleFetchTimeSlots()
-
-        // handleSelectAddress();
     }, [])
 
     useEffect(() => {
         handleFetchCheckout();
     }, [cart?.promo_code])
 
+    useEffect(() => {
+        if (isOrderPlaced) {
+            setTimeout(() => {
+                handlePaymentClose();
+            }, 1000)
+        }
+    }, [isOrderPlaced])
+
+    useEffect(() => {
+        handleFilterTimeSlots();
+    }, [selectedDate])
+
     const handleFetchCheckout = async () => {
         const couponseCodeId = cart?.promo_code?.promo_code_id;
 
         try {
             const response = await api.getCart({ latitude: city?.latitude, longitude: city?.longitude, checkout: 1, promocode_id: couponseCodeId });
-            console.log("response", response?.data)
             if (response?.status == 1) {
+                dispatch(setCartCheckout({ data: response?.data }))
                 setCheckoutData(response?.data)
+            } else {
+                console.log("Error", response)
             }
         } catch (error) {
             console.log("Error", error)
         }
     }
-
 
     const handleSelectedDate = (date) => {
         const currentDate = new Date();
@@ -86,6 +106,7 @@ const Checkout = () => {
         }
         setSelectedDate(date)
     }
+
     const formatDate = (date) => {
         if (!date) return t("choose_date");
         return new Date(date).toLocaleDateString('en-US', {
@@ -94,13 +115,6 @@ const Checkout = () => {
             year: 'numeric',
         });
     };
-
-    // const handleSelectAddress = () => {
-    //     if (address?.selectedAddress.length == 0) {
-    //         const defaultAddress = address?.allAddresses.find((address) => address.is_default == 1)
-    //         dispatch(setSelectedAddress({ data: defaultAddress }))
-    //     }
-    // }
 
     const fetchAddress = async () => {
         try {
@@ -113,26 +127,39 @@ const Checkout = () => {
         }
     }
 
-    const handleFetchTimeSlots = async () => {
+    const handleFilterTimeSlots = () => {
+        const currentDate = new Date(); // Current date and time
+        const userSelectedDate = new Date(selectedDate ? selectedDate : new Date());
+
+        const updatedTimeSlots = timeSlots.map((slot) => {
+            // Create date object for the slot's last order time
+            const lastOrderTime = new Date(selectedDate);
+            const [hours, minutes, seconds] = slot.last_order_time.split(":").map(Number);
+            lastOrderTime.setHours(hours, minutes, seconds);
+
+            // Check if the selected date is today
+            const isToday = userSelectedDate.toDateString() === currentDate.toDateString();
+
+            // Disable slot only if it's today AND the current time is past the last order time
+            const isDisabled = isToday && currentDate >= lastOrderTime;
+
+            return {
+                ...slot,
+                isDisabled,
+            };
+        });
+
+        setAvailableTimeSlot(updatedTimeSlots); // Update the state with filtered slots
+    };
+
+    const handleFetchTimeSlots = async (selectedDate) => {
         try {
             const response = await api.getTimeSlots();
-            setTimeSlots(response?.data);
-            const availableTimeSlots = response?.data?.time_slots || [];
-            const currentUtcTime = new Date();
-            const updatedTimeSlots = availableTimeSlots.map((slot) => {
-                const lastOrderTime = new Date();
-                const [hours, minutes, seconds] = slot.last_order_time.split(":").map(Number);
-                lastOrderTime.setHours(hours, minutes, seconds);
-                const isDisabled = currentUtcTime >= lastOrderTime;
-                return {
-                    ...slot,
-                    isDisabled,
-                };
-            });
-            setAvailableTimeSlot({
-                ...response?.data,
-                time_slots: updatedTimeSlots,
-            });
+            const allTimeSlots = response?.data?.time_slots || [];
+
+            setTimeSlotsData(response?.data); // Store the full response data if needed
+            setTimeSlots(allTimeSlots); // Store the original time slots
+            handleFilterTimeSlots(selectedDate); // Filter the time slots based on the selected date
         } catch (error) {
             console.log("Error", error);
         }
@@ -166,7 +193,7 @@ const Checkout = () => {
         if (selectedDate == null) {
             toast.error(t("please_select_date"))
             return
-        } else if (timeSlots?.time_slots_is_enabled == "true" && selectedTimeSlot == null) {
+        } else if (timeSlotsData?.time_slots_is_enabled == "true" && selectedTimeSlot == null) {
             toast.error(t("please_select_time_slot"))
             return
         }
@@ -187,44 +214,220 @@ const Checkout = () => {
         return timeSlot ? `${formattedDate} ${timeSlot.title}` : formattedDate;
     };
 
+    const handlePaymentClose = async () => {
+        try {
+            const response = await api.deleteCart()
+            if (response.status == 1) {
+                dispatch(setCart({ data: [] }))
+                dispatch(setCartProducts({ data: [] }))
+            } else {
+                console.log("Error", response)
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+
+    const initializeRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            // document.body.appendChild(script);
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleRozarpayPayment = async (order_id, razorpay_transaction_id, amount, name, email, mobile, app_name) => {
+        try {
+            const res = await initializeRazorpay();
+            if (!res) {
+                console.error("RazorPay SDK Load Failed");
+                return;
+            }
+
+            const key = setting?.payment_setting?.razorpay_key;
+            const convertedAmount = Math.floor(amount * 100);
+
+            const options = {
+                key: key,
+                amount: convertedAmount,
+                currency: "INR",
+                name: name,
+                description: setting?.setting?.app_name,
+                image: setting?.setting?.web_settings.web_logo,
+                order_id: razorpay_transaction_id,
+                handler: async (res) => {
+                    if (res.razorpay_payment_id) {
+                        try {
+                            const response = await api.addRazorpayTransaction({
+                                orderId: order_id,
+                                transactionId: res.razorpay_payment_id,
+                            });
+                            const result = await response.json();
+                            if (result.status === 1) {
+                                toast.success(result.message);
+                                setIsOrderPlaced(true);
+                                // setShow(true);
+                                dispatch(setCartProducts({ data: [] }));
+                                dispatch(setCartSubTotal({ data: 0 }));
+                            } else {
+                                toast.error(result.message);
+                            }
+                        } catch (error) {
+                            console.error("Transaction error:", error);
+                        }
+                    }
+                },
+                modal: {
+                    confirm_close: true,
+                    ondismiss: async (reason) => {
+                        if (reason === undefined) {
+                            await handleRazorpayCancel(order_id);
+                            // dispatch(deductUserBalance({ data: walletDeductionAmt || 0 }));
+                        }
+                    },
+                },
+                prefill: {
+                    name: name,
+                    email: email,
+                    contact: mobile,
+                },
+                notes: {
+                    address: "Razorpay Corporate",
+                },
+                theme: {
+                    color: setting.setting?.web_settings.color,
+                },
+            };
+
+            const rzpay = new window.Razorpay(options);
+
+            rzpay.on("payment.cancel", (response) => {
+                alert("Payment Cancelled");
+                handleRazorpayCancel(order_id);
+            });
+
+            rzpay.on("payment.failed", (response) => {
+                api.deleteOrder(user?.jwtToken, order_id);
+            });
+
+            rzpay.open();
+        } catch (error) {
+            console.error("Error initializing Razorpay:", error);
+        }
+    }
+
+    const handleRazorpayCancel = (order_id) => {
+        api.deleteOrder({ orderId: order_id });
+        // setWalletDeductionAmt(walletDeductionAmt);
+        // setWalletAmount(user.user.balance);
+        // setTotalPayment(totalPayment);
+        setIsOrderPlaced(false);
+    };
+
     const handlePlaceOrder = async () => {
         const formatDate = formatDateWithTimeSlot(selectedDate, selectedTimeSlot);
-        console.log("formate date", formatDate)
-        // try {
-        //     if (selectedPaymentMethod == null) {
-        //         toast.error("Please select payment method")
-        //         return
-        //     } else if (selectedDate == null) {
-        //         toast.error("Please select date")
-        //         return
-        //     } else if (address.selectedAddress == null) {
-        //         toast.error("Please select address")
-        //         return
-        //     } else {
-        //         const response = await api.placeOrder({
-        //             productVariantId: cart?.product_variant_id,
-        //             quantity: cart?.quantity,
-        //             total: checkoutData?.sub_total,
-        //             deliveryCharge: checkoutData?.delivery_charge?.total_delivery_charge,
-        //             final_total: checkoutData?.total_amount,
-        //             wallet_used: isWalletChecked,
-        //             address_id: address?.selectedAddress?.id,
+        try {
+            if (selectedPaymentMethod == null) {
+                toast.error("Please select payment method")
+                return
+            } else if (selectedDate == null) {
+                toast.error("Please select date")
+                return
+            } else if (address.selectedAddress == null) {
+                toast.error("Please select address")
+                return
+            } else {
+                const response = await api.placeOrder({
+                    productVariantId: cart?.checkout?.product_variant_id,
+                    quantity: cart?.checkout?.quantity,
+                    total: cart?.checkout?.sub_total,
+                    deliveryCharge: cart?.checkout?.delivery_charge?.total_delivery_charge,
+                    finalTotal: cart?.checkout?.total_amount,
+                    walletUsed: isWalletChecked,
+                    addressId: address?.selectedAddress?.id,
+                    deliveryTime: formatDate,
+                    orderNote: orderNote,
+                    paymentMethod: selectedPaymentMethod,
+                    promocodeId: cart?.promo_code?.promo_code_id,
+                });
+                if (response?.status == 1) {
 
-        //             delivery_date: selectedDate,
-        //             time_slot_id: selectedTimeSlot?.id,
-        //             order_note: orderNote,
-        //             payment_method: selectedPaymentMethod,
-        //             promocode_id: cart?.promo_code?.promo_code_id,
-        //             use_wallet: isWalletChecked ? 1 : 0,
-        //         });
-        //         if (response.status == 1) {
-        //             toast.success(response.message)
-        //         }
-        //     }
+                    setOrderNote("")
+                    if (selectedPaymentMethod !== "COD" || selectedPaymentMethod !== "wallet") {
+                        setOrderId(response?.data?.order_id);
+                        await handleInitiateTransaction(response?.data?.order_id)
+                    } else {
+                        await handleInitiateTransaction()
+                    }
+                }
+            }
 
-        // } catch (error) {
-        //     console.log("Error", error)
-        // }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    const handleInitiateTransaction = async (currentOrderID) => {
+        const capilizePaymeneMethod = String(selectedPaymentMethod).charAt(0).toUpperCase() + String(selectedPaymentMethod).slice(1);
+        try {
+            if (selectedPaymentMethod == "COD") {
+                toast.success(response?.message)
+                dispatch(clearCartPromo())
+                dispatch(setCartCheckout({ data: [] }))
+                dispatch(setCartSubTotal({ data: 0 }));
+                setIsOrderPlaced(true)
+                router.push("/")
+                setCurrentStep(1)
+            } else if (selectedPaymentMethod == "Wallet") {
+
+            }
+            else if (selectedPaymentMethod == "paystack") {
+
+            }
+            else {
+                const response = await api.initiateTrasaction({ orderId: currentOrderID, paymentMethod: capilizePaymeneMethod, type: "order", })
+                if (response.status == 1) {
+                    console.log("response", response)
+                    if (selectedPaymentMethod == "razorpay") {
+
+                        handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, cart?.checkout?.total_amount, user?.user?.name, user?.user?.email, user?.user?.mobile)
+
+                    } else {
+                        dispatch(clearCartPromo())
+                        //  payment methods redirect urls
+                        const paymentUrls = {
+                            cashfree: response?.data?.redirectUrl,
+                            phonepe: response?.data?.redirectUrl,
+                            paytabs: response?.data?.redirectUrl,
+                            paypal: response?.data?.paypal_redirect_url,
+                            midtrans: response?.data?.snapUrl,
+                        };
+                        // Select specific paymentUrls
+                        const redirectUrl = paymentUrls[selectedPaymentMethod];
+                        if (redirectUrl) {
+                            window.open(redirectUrl, '_blank');
+                        } else {
+                            console.error("Unsupported payment method:", selectedPaymentMethod);
+                        }
+                    }
+
+                } else {
+                    setIsOrderPlaced(false)
+                    api.deleteOrder({ orderId: orderId })
+                }
+            }
+        } catch (error) {
+            console.log(("Error", error))
+        }
     }
 
     return (
@@ -280,14 +483,14 @@ const Checkout = () => {
                                                 </PopoverContent>
                                             </Popover>
                                         </div>
-                                        {timeSlots?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
+                                        {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
                                             <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
                                             <Select onValueChange={handleTimeSlotChange}>
                                                 <SelectTrigger className="w-full py-5 cardBorder">
                                                     <SelectValue placeholder="Select a timezone " />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {availabeleTimeSlot?.time_slots?.map((slot) => {
+                                                    {availabeleTimeSlot?.map((slot) => {
                                                         return (
                                                             <div key={slot?.id}>
                                                                 <SelectItem disabled={slot?.isDisabled} value={slot} onClick={() => { selectTimeZone(slot) }}>{slot?.title}
@@ -321,7 +524,7 @@ const Checkout = () => {
                                     <CheckoutPayment checkout={checkoutData} selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} setCurrentStep={setCurrentStep} />
                                 </div>
                                 <div className=' md:col-span-4 lg:col-span-3 col-span-12'>
-                                    <OrderSummaryCard checkout={checkoutData} handlePlaceOrder={handlePlaceOrder}/>
+                                    <OrderSummaryCard checkout={checkoutData} handlePlaceOrder={handlePlaceOrder} />
                                 </div>
 
                             </div>

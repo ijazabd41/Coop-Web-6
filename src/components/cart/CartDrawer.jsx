@@ -16,7 +16,7 @@ import { clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal } from '
 import { useDispatch } from 'react-redux';
 import Login from '../login/Login';
 import { useRouter } from 'next/router';
-import CouponCodeDrawer from '@/couponcode/CouponCodeDrawer';
+import CouponCodeDrawer from '@/components/couponcode/CouponCodeDrawer';
 import { RiCoupon3Line } from 'react-icons/ri';
 
 const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {

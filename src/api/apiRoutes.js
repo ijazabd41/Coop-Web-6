@@ -224,11 +224,17 @@ export const addToCart = async ({ product_id, product_variant_id, qty }) => {
     const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.add}`, formData)
     return response.data
 }
-export const removeFromCart = async ({ product_id, product_variant_id }) => {
+export const removeFromCart = async ({ product_id, product_variant_id, isRemoveAll }) => {
     const formData = new FormData()
     formData.append("product_id", product_id);
     formData.append("product_variant_id", product_variant_id);
     formData.append("is_remove_all", 0);
+    const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.remove}`, formData)
+    return response.data;
+}
+export const deleteCart = async () => {
+    const formData = new FormData()
+    formData.append("is_remove_all", 1);
     const response = await api.post(`${apiEndPoints.getCart}/${apiEndPoints.remove}`, formData)
     return response.data;
 }
@@ -237,6 +243,7 @@ export const getGuestCart = async ({ latitude, longitude, variant_ids, quantitie
     const response = await api.get(`${apiEndPoints.getCart}/${apiEndPoints.getGuestCart}`, { params })
     return response.data
 }
+
 
 
 // Address Apis
@@ -351,14 +358,40 @@ export const placeOrder = async ({ productVariantId, quantity, total, deliveryCh
     if (promocodeId !== 0) {
         formData.append("promocode_id", promocodeId);
     }
+    const response = await api.post(`${apiEndPoints.placeOrder}`, formData)
+    return response.data;
 }
 
-export const addTransaction = async ({ orderId, transactionId, transactionMethod, type, walletAmount }) => {
+export const initiateTrasaction = async ({ orderId, paymentMethod, type, walletAmount = 0 }) => {
+    const formData = new FormData();
+    formData.append("order_id", orderId)
+    formData.append("payment_method", paymentMethod)
+    formData.append("type", type)
+    formData.append("request_from", "website");
+    if (walletAmount != 0) {
+        formData.append("wallet_amount", walletAmount)
+    }
+    const response = await api.post(`${apiEndPoints.initiateTrasaction}`, formData)
+    return response.data;
+}
+
+export const addRazorpayTransaction = async ({ orderId, transactionId }) => {
     const formData = new FormData();
     formData.append("order_id", orderId)
     formData.append("transaction_id", transactionId)
-    formData.append("transaction_method", transactionMethod)
-    formData.append("type", type)
+    formData.append('type', 'order');
+    formData.append('payment_method', 'Razorpay');
+    formData.append("request_from", "website");
+    const response = await api.post(`${apiEndPoints.initiateTrasaction}`, formData)
+    return response.data;
+}
+
+export const deleteOrder = async ({ orderId }) => {
+    const formData = new FormData();
+    formData.append("order_id", orderId);
+    const response = await api.post(`${apiEndPoints.deleteOrder}`, formData)
+    return response.data;
+
 }
 
 // Fetch Notifications

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import * as api from '../api/apiRoutes'
+import * as api from '@/api/apiRoutes'
 import {
     Sheet,
     SheetContent,
@@ -49,7 +49,7 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                 </SheetHeader>
                 <div className='mt-4'>
                     {couponCodes.map((coupon) => {
-                        return <div className='m-2' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode}/></div>
+                        return <div className='m-2' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode} /></div>
                     })}
                 </div>
             </SheetContent>
