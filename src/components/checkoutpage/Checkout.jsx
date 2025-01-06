@@ -450,7 +450,7 @@ const Checkout = () => {
                                 <div className='flex flex-col overflow-y-auto h-96'>
                                     {address?.allAddresses?.map((address) => {
                                         return (
-                                            <div>  <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} /></div>
+                                            <div key={address?.id}>  <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} /></div>
                                         )
                                     })}
                                 </div>
