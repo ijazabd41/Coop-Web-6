@@ -193,10 +193,18 @@ const Header = () => {
                             </div>
                             <div className='hidden lg:flex order-2'>
                                 <ul className='flex gap-6'>
-                                    <li>{t("home")}</li>
-                                    <li>{t("about_us")}</li>
-                                    <li>{t("faq")}</li>
-                                    <li>{t("contact_us")}</li>
+                                    <Link href={"/"} className={router.pathname === '/' ? 'primaryColor' : ''}>
+                                        <li>{t("home")}</li>
+                                    </Link>
+                                    <Link href={"/about-us"} className={router.pathname === '/about-us' ? 'primaryColor' : ''}>
+                                        <li>{t("about_us")}</li>
+                                    </Link>
+                                    <Link href={"/faqs"} className={router.pathname === '/faqs' ? 'primaryColor' : ''}>
+                                        <li> {t("faq")}</li>
+                                    </Link>
+                                    <Link href={"/contact-us"} className={router.pathname === '/contact-us' ? 'primaryColor' : ''}>
+                                        <li>{t("contact_us")}</li>
+                                    </Link>
                                 </ul>
                             </div>
                             <div className='flex sm:order-1 md:order-1 lg:hidden'>

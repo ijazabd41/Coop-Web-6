@@ -368,3 +368,8 @@ export const getNotifications = async ({ limit = 7, offset = 0 }) => {
     return response.data;
 };
 
+export const getFAQs = async ({ limit = 7, offset = 0 }) => {
+    const params = { limit, offset };
+    const response = await api.get(`${apiEndPoints.getFaq}`, { params });
+    return response.data;
+}

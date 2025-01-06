@@ -1,17 +1,21 @@
 import { t } from '@/utils/translation'
+import Link from 'next/link'
 import React from 'react'
 import { BiMessageAltDots } from 'react-icons/bi'
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 import { IoLocationOutline } from 'react-icons/io5'
 import { MdPhoneInTalk } from 'react-icons/md'
+import { useSelector } from 'react-redux'
 
 const Footer = () => {
+    const setting = useSelector((state) => state?.Setting);
+    console.log("Footer:",setting)
     return (
         <section className='footer'>
             <div className='container text-white px-2'>
                 <div className='md:grid lg:grid lg:grid-cols-12 md:grid-cols-12 flex flex-col items-center py-12 border-b-[1px]'>
                     <div className='col-span-6'>
-                        <h3>{t("downloadAppsFooter")}</h3>
+                        <h3 className='font-bold text-2xl'>{t("downloadAppsFooter")}</h3>
                         <p className='w-full'>{t("AppsDowloadMsg")}</p>
                     </div>
                     <div className='col-span-6 w-full flex justify-end'>
@@ -21,12 +25,16 @@ const Footer = () => {
                 </div>
                 <div className='md:grid grid-cols-12 py-12 flex flex-col'>
                     <div className='col-span-4 flex gap-8 flex-col'>
-                        <h3 className=''>{t("quick_links")}</h3>
+                        <h3 className='font-bold text-xl'>{t("quick_links")}</h3>
                         <ul className=' flex flex-col gap-4'>
-                            <li>{t("home")}</li>
-                            <li>{t("about_us")}</li>
-                            <li>{t("contact_us")}</li>
-                            <li>{t("faq")}</li>
+                            <li>
+                                <Link href='/' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>
+                                    {t("home")}
+                                </Link>
+                            </li>
+                            <li><Link href={'/about-us'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">{t("about_us")}</Link></li>
+                            <li><Link href={'/contact-us'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">{t("contact_us")}</Link></li>
+                            <li><Link href={'/faqs'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">{t("faq")}</Link></li>
                         </ul>
                         <div className='flex flex-col'>
                             <p>Follow Us</p>
@@ -38,17 +46,32 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className='col-span-4 flex gap-8 flex-col  mt-12 md:mt-0 '>
-                        <h3>{t("company_policy")}</h3>
+                        <h3 className='font-bold text-xl'>{t("company_policy")}</h3>
                         <ul className='flex flex-col gap-4'>
-                            <li>{t("terms_and_conditions")}</li>
-                            <li>{t("privacy_policy")}</li>
-                            <li>{t("return_and_exchange_policy")}</li>
-                            <li>{t("shipping_policy")}</li>
-                            <li>{t("cancellation_policy")}</li>
+                            <li>
+                                <Link href='/terms-conditions' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>{t("terms_and_conditions")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href='/privacy-policy' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>{t("privacy_policy")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href='/return-and-exchange-policy' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>{t("return_and_exchange_policy")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href='/shipping-policy' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>{t("shipping_policy")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href='/cancellation-policy' className='hover:primaryColor hover:border-b border-b-[var(--primary-color)]'>{t("cancellation_policy")}
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                     <div className='col-span-4 flex gap-8 flex-col mt-12 md:mt-0'>
-                        <h3>{t("store_info")}</h3>
+                        <h3 className='font-bold text-xl'>{t("store_info")}</h3>
                         <div className='flex flex-col gap-6 '>
                             <div className='flex gap-4 items-center'>
                                 <span className="p-3 iconBackgroundColor  rounded-[8px]">
