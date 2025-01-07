@@ -9,10 +9,10 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 const FAQCard = ({ faq }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className='w-full p-2 rounded-sm backgroundColor  mb-2'>
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className='w-full p-2 rounded-sm backgroundColor  mb-2 mx-3'>
             <CollapsibleTrigger className={`w-full flex justify-between gap-3 items-center p-2 font-bold`}>
                 <div>
-                    <h3 className="text-lg font-bold">{faq?.question}</h3>
+                    <h3 className="text-lg font-bold text-left md:text-center">{faq?.question}</h3>
                 </div>
                 <div className='flex items-center'>
                     {isOpen ?

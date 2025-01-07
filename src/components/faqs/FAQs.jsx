@@ -42,11 +42,11 @@ const FAQs = () => {
             <div>
                 <BreadCrumb />
             </div>
-            <div className='p-2 my-2 flex flex-col items-center gap-4 bodyBackgroundColor md:p-10'>
+            <div className='container my-4 flex flex-col items-center gap-4 bodyBackgroundColor px-4 md:px-0'>
                 {faqs?.map((faq, idx) => (
                     <FAQCard key={idx} faq={faq} />
                 ))}
-                {isLoading && Array.from({ length: total_faqs_per_page }).map((_, idx) => (
+                {!isLoading && Array.from({ length: total_faqs_per_page }).map((_, idx) => (
                     <div key={idx} className='w-full'>
                         <Skeleton height={60} />
                     </div>
