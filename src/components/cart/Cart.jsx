@@ -6,7 +6,7 @@ import { t } from '@/utils/translation'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice'
 import * as api from "@/api/apiRoutes"
-import CouponCodeDrawer from '@/componentss/couponcode/CouponCodeDrawer'
+import CouponCodeDrawer from '@/components/couponcode/CouponCodeDrawer'
 
 
 const Cart = () => {
