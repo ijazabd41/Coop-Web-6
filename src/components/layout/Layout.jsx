@@ -79,17 +79,17 @@ const Layout = ({ children }) => {
 
   return (
     <section>
-        <PushNotification>
-          <Header />
-          {children}
-          <Footer />
-          <ToastContainer
-            theme={theme}
-            key="toastContainer"
-            bodyClassName={"toast-body"}
-            toastClassName="toast-container-class"
-          />
-        </PushNotification>
+      <PushNotification>
+        <Header />
+        {children}
+        <Footer />
+        <ToastContainer
+          theme={theme}
+          key="toastContainer"
+          bodyClassName={"toast-body"}
+          toastClassName="toast-container-class"
+        />
+      </PushNotification>
       {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}
     </section>
   );

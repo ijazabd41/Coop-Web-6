@@ -77,20 +77,20 @@ const Footer = () => {
                             </li>
                             {setting?.about_us !== "" &&
                                 <li>
-                                    <Link href={'/about-us'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
+                                    <Link href='/about-us' className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
                                         {t("about_us")}
                                     </Link>
                                 </li>
                             }
                             {setting?.contact_us !== "" &&
                                 <li>
-                                    <Link href={'/contact-us'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
+                                    <Link href='/contact-us' className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
                                         {t("contact_us")}
                                     </Link>
                                 </li>
                             }
                             <li>
-                                <Link href={'/faqs'} className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
+                                <Link href='/faqs' className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]">
                                     {t("faq")}
                                 </Link>
                             </li>

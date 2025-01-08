@@ -224,6 +224,7 @@
     "preferred_delivery_time": "Preferred Delivery Time",
     "use_my_current_location": "Use my current location",
     "order_placed_description": "Your Order has been successfully placed.",
+    "order_failed_description": "Payment Failed",
     "profile_info_description": "This is an initial information of you, don't worry you can change it anytime.",
     "select_delivery_location": "Select Your Delivery Location",
     "enter_wishlist_description": "Explore more and shortlist some items.",

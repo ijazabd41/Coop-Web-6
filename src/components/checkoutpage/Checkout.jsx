@@ -32,7 +32,17 @@ import { useRouter } from 'next/router'
 import { deductUserBalance } from '@/redux/slices/userSlice'
 import StripeModal from './StripeModal'
 // import PaystackPop from '@paystack/inline-js'
-import OrderSuccessModal from '../ordersuccessmodal/OrderSuccessModal'
+// const UsePaystackPayment = dynamic(
+//     () => import('@paystack/inline-js').then(mod=>mod.),
+//     { ssr: false }
+// );
+// const PaystackPop = dynamic(() => import('@paystack/inline-js'), {
+//     ssr: false,
+// });
+
+
+import OrderSuccessModal from '../orderstatusmodals/OrderSuccessModal'
+import dynamic from 'next/dynamic'
 
 
 const Checkout = () => {
@@ -65,6 +75,7 @@ const Checkout = () => {
     // const [selectedDate, setSelectedDate] = useState(null)
     const [timeSlotsData, setTimeSlotsData] = useState(null)
     const [timeSlots, setTimeSlots] = useState([])
+
     const [availabeleTimeSlot, setAvailableTimeSlot] = useState([])
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null)
 
@@ -94,10 +105,6 @@ const Checkout = () => {
     useEffect(() => {
         handleFilterTimeSlots();
     }, [checkout?.selectedDate])
-
-
-
-
 
     const handleFetchCheckout = async () => {
         const couponseCodeId = cart?.promo_code?.promo_code_id;
@@ -175,7 +182,6 @@ const Checkout = () => {
         try {
             const response = await api.getTimeSlots();
             const allTimeSlots = response?.data?.time_slots || [];
-
             setTimeSlotsData(response?.data); // Store the full response data if needed
             setTimeSlots(allTimeSlots); // Store the original time slots
             handleFilterTimeSlots(selectedDate); // Filter the time slots based on the selected date
@@ -185,6 +191,7 @@ const Checkout = () => {
     };
 
     const handleTimeSlotChange = (value) => {
+        setSelectedTimeSlot(value)
         dispatch(setTimeSlot({ data: value }))
     }
 
@@ -211,7 +218,7 @@ const Checkout = () => {
         if (checkout?.selectedDate == null) {
             toast.error(t("please_select_date"))
             return
-        } else if (timeSlotsData?.time_slots_is_enabled == "true" && checkout?.timeSlot == null) {
+        } else if (timeSlotsData?.time_slots_is_enabled == "true" && (checkout?.timeSlot == null || selectedTimeSlot == null)) {
             toast.error(t("please_select_time_slot"))
             return
         }
@@ -395,9 +402,9 @@ const Checkout = () => {
                     }
                 }
             })
-            handler.openIframe();
+            // handler.openIframe();
         } catch (error) {
-            console.log("Error", error)
+            console.log("Paytabs Error", error)
         }
     }
 
@@ -415,7 +422,6 @@ const Checkout = () => {
                 toast.error("Please select address")
                 return
             } else {
-
                 const response = await api.placeOrder({
                     productVariantId: cart?.checkout?.product_variant_id,
                     quantity: cart?.checkout?.quantity,
@@ -477,7 +483,7 @@ const Checkout = () => {
                         // Select specific paymentUrls
                         const redirectUrl = paymentUrls[checkout?.selectedPaymentMethod];
                         if (redirectUrl) {
-                            window.open(redirectUrl, '_blank');
+                            router.push(redirectUrl)
                         } else {
                             console.error("Unsupported payment method:", selectedPaymentMethod);
                         }
@@ -492,6 +498,8 @@ const Checkout = () => {
             console.log(("Error", error))
         }
     }
+
+
 
     return (
         <section>
@@ -553,7 +561,7 @@ const Checkout = () => {
                                         </div>
                                         {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
                                             <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
-                                            <Select onValueChange={handleTimeSlotChange} value={checkout?.timeSlot?.title}>
+                                            <Select onValueChange={handleTimeSlotChange} value={selectedTimeSlot}>
                                                 <SelectTrigger className="w-full py-5 cardBorder">
                                                     <SelectValue placeholder="Select a timezone">
                                                         {checkout?.timeSlot?.title}
@@ -563,7 +571,7 @@ const Checkout = () => {
                                                     {availabeleTimeSlot?.map((slot) => {
                                                         return (
                                                             <div key={slot?.id}>
-                                                                <SelectItem disabled={slot?.isDisabled} value={slot} onClick={() => { setSelectedTimeSlot(slot) }}>{slot?.title}
+                                                                <SelectItem disabled={slot?.isDisabled} value={slot} >{slot?.title}
                                                                 </SelectItem>
                                                             </div>
                                                         )
