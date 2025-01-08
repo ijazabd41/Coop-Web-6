@@ -12,7 +12,6 @@ import { t } from '@/utils/translation';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes";
-import StripeModal from '../checkoutpage/StripeModal';
 
 // payment SVGS
 import CashfreeImage from "@/assets/payment_methods_svgs/ic_cashfree.svg"

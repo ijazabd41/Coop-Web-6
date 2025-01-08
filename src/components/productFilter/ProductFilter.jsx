@@ -1,11 +1,22 @@
 import { useState, useEffect } from "react"
-import { Collapse, Slider, Checkbox, Tree } from "antd/lib";
+import {
+    Collapse, Slider,
+    //  Checkbox
+    Tree
+} from "antd/lib";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterCategory, clearAllFilter, setFilterBrands, setFilterMinMaxPrice } from "@/redux/slices/productFilterSlice";
 import * as api from "@/api/apiRoutes";
 import { t } from "@/utils/translation"
 import { FiPlus, FiMinus } from "react-icons/fi";
-
+import CategoryTree from "./CategoryTree";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { Checkbox } from "@/components/ui/checkbox";
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
     const dispatch = useDispatch();
@@ -18,6 +29,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     const [brandOffset, setBrandOffset] = useState(0);
     const [tempMinPrice, setTempMinPrice] = useState(null)
     const [tempMaxPrice, setTempMaxPrice] = useState(null)
+    const [activeKey, setActiveKey] = useState(["1", "2", "3"]);
     const brandLimit = 10;
 
 
@@ -32,18 +44,26 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
         }
     }, [])
 
-    useEffect(() => {
-        const categories = filter?.category_id?.split(",")
-        const catNum = categories?.map((cat) => (parseInt(cat)))
-        setSelectedCategories(catNum)
-    }, [])
+    const handleActiveKey = (key) => {
+        setActiveKey((prevActiveKeys) =>
+            prevActiveKeys.includes(key)
+                ? prevActiveKeys.filter((item) => item !== key)
+                : [...prevActiveKeys, key]
+        );
+    };
 
-    useEffect(() => {
-        if (categories?.length > 0) {
-            const cat = transformCategoryData(categories);
-            setTreeData(cat);
-        }
-    }, [categories]);
+    // useEffect(() => {
+    //     const categories = filter?.category_id?.split(",")
+    //     const catNum = categories?.map((cat) => (parseInt(cat)))
+    //     setSelectedCategories(catNum)
+    // }, [])
+
+    // useEffect(() => {
+    //     if (categories?.length > 0) {
+    //         const cat = transformCategoryData(categories);
+    //         setTreeData(cat);
+    //     }
+    // }, [categories]);
 
 
 
@@ -56,56 +76,63 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
         }
     }
 
-    const transformCategoryData = (categories) => {
-        return categories?.map(category => ({
-            title: category.name,
-            key: category.id,
-            children: category.cat_active_childs.length > 0
-                ? transformCategoryData(category.cat_active_childs)
-                : []
-        }));
+    // const transformCategoryData = (categories) => {
+    //     return categories?.map(category => ({
+    //         title: category.name,
+    //         key: category.id,
+    //         children: category.cat_active_childs.length > 0
+    //             ? transformCategoryData(category.cat_active_childs)
+    //             : []
+    //     }));
+    // };
+
+    // const onExpand = (expandedKeysValue) => {
+    //     setExpandedKeys(expandedKeysValue);
+    // };
+
+    // const handleExpandCollapse = (node) => {
+    //     const newExpandedKeys = expandedKeys?.includes(node.key)
+    //         ? expandedKeys.filter(key => key !== node.key)
+    //         : [...expandedKeys, node.key];
+    //     setExpandedKeys(newExpandedKeys);
+    // };
+
+    // const renderTitle = (node) => {
+    //     const isExpanded = expandedKeys?.includes(node.key);
+    //     const hasChildren = node?.children && node.children.length > 0;
+
+    //     return (
+    //         <div className='flex  items-center gap-2'>
+    //             <div className="text-sm font-normal">{node.title}{' '}</div>
+    //             {hasChildren && (
+    //                 isExpanded
+    //                     ? <FiMinus size={18} onClick={() => handleExpandCollapse(node)} />
+    //                     : <FiPlus size={18} onClick={() => handleExpandCollapse(node)} />
+    //             )}
+    //         </div>
+    //     );
+    // };
+
+    // const renderTreeNodes = (data) =>
+    //     data?.map((item) => ({
+    //         ...item,
+    //         title: renderTitle(item),
+    //         children: item.children.length > 0 ? renderTreeNodes(item.children) : [],
+    //     }));
+
+    // const onCheck = (catIds) => {
+    //     setProductResult([])
+    //     setOffset(0)
+    //     setSelectedCategories(catIds)
+    //     dispatch(setFilterCategory({ data: catIds.join(",") }));
+    // }
+
+    const handleCategoryChange = (categories) => {
+        setSelectedCategories(categories);
+        setProductResult([]); // Reset products
+        setOffset(0); // Reset offset
+        dispatch(setFilterCategory({ data: categories.join(",") }));
     };
-
-    const onExpand = (expandedKeysValue) => {
-        setExpandedKeys(expandedKeysValue);
-    };
-
-    const handleExpandCollapse = (node) => {
-        const newExpandedKeys = expandedKeys?.includes(node.key)
-            ? expandedKeys.filter(key => key !== node.key)
-            : [...expandedKeys, node.key];
-        setExpandedKeys(newExpandedKeys);
-    };
-
-    const renderTitle = (node) => {
-        const isExpanded = expandedKeys?.includes(node.key);
-        const hasChildren = node?.children && node.children.length > 0;
-
-        return (
-            <div className='flex  items-center gap-2'>
-                <div className="text-sm font-normal">{node.title}{' '}</div>
-                {hasChildren && (
-                    isExpanded
-                        ? <FiMinus size={18} onClick={() => handleExpandCollapse(node)} />
-                        : <FiPlus size={18} onClick={() => handleExpandCollapse(node)} />
-                )}
-            </div>
-        );
-    };
-
-    const renderTreeNodes = (data) =>
-        data?.map((item) => ({
-            ...item,
-            title: renderTitle(item),
-            children: item.children.length > 0 ? renderTreeNodes(item.children) : [],
-        }));
-
-    const onCheck = (catIds) => {
-        setProductResult([])
-        setOffset(0)
-        setSelectedCategories(catIds)
-        dispatch(setFilterCategory({ data: catIds.join(",") }));
-    }
 
 
     const fetchBrands = async (bOffset) => {
@@ -176,26 +203,60 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                         </p>
                     </div>
                 </div>
-                <Collapse defaultActiveKey={["1", "2", "3"]} className="">
-                    <Collapse.Panel header={t("product_category")} key="1" className="text-base font-semibold  textColor">
-                        <div className='filter-row '>
-                            <Tree
-                                checkable
-                                treeData={renderTreeNodes(treeData)}
-                                expandedKeys={expandedKeys}
-                                onExpand={onExpand}
-                                defaultExpandAll={false}
-                                onCheck={onCheck}
-                                checkedKeys={selectedCategories}
-                                showLine={false}
-                                switcherIcon={null}
-                                className="textColor"
-                            />
-                            {/* <CategoryComponent data={category} selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} setproductresult={setproductresult} setoffset={setoffset} /> */}
+                <Collapsible open={activeKey.includes("1")} className="w-full border-b-[1px]" onOpenChange={() => handleActiveKey("1")}>
+                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                        <div className="text-start font-semibold textColor md:text-base">{t("product_category")}</div>
+                        <div className={`transition-transform duration-250 ${activeKey.includes("1") ? "rotate-0" : "-rotate-90"}`}>
+                            <FaChevronDown />
                         </div>
-                    </Collapse.Panel>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <div className='filter-row'>
+                            <CategoryTree
+                                categories={categories}
+                                selectedCategories={selectedCategories}
+                                onCategoryChange={handleCategoryChange}
+                                initialFilter={filter}
+                            />
+                        </div>
+                    </CollapsibleContent>
+                </Collapsible>
 
-                    {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold ">
+                <Collapsible open={activeKey.includes("2")} className="w-full border-b-[1px]" onOpenChange={() => handleActiveKey("2")}>
+                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                        <div className="text-base font-semibold textColor">{t("brands")}</div>
+                        <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
+                            <FaChevronDown />
+                        </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <div className='filter-row px-2 pb-4 md:px-2 lg:px-4'>
+                            {brands?.map((brand, index) => {
+                                const isChecked = filter.brand_ids.includes(brand.id);
+                                return (
+                                    <div key={brand.id} className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2">
+                                        <Checkbox
+                                            className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
+                                            checked={isChecked}
+                                            onCheckedChange={() => {
+                                                setProductResult([])
+                                                filterbyBrands(brand)
+                                            }}
+                                        />
+                                        <span className="text-sm font-normal textColor">{brand.name}</span>
+                                    </div>
+                                );
+                            })
+                            }
+                            {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+                        </div>
+                    </CollapsibleContent>
+                </Collapsible>
+
+
+                <Collapse defaultActiveKey={["1", "2", "3"]} className="">
+
+                    {/* {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold ">
                         <div className='filter-row'>
                             {
                                 // brands == null ? (<Loader />) :
@@ -224,7 +285,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                         </div>
                     </Collapse.Panel>
 
-                    }
+                    } */}
 
                     <Collapse.Panel header={t("priceRange")} key="3">
                         <div>
