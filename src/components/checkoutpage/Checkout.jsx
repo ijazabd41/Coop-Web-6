@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
 import Stepper from './Stepper'
 import AddressCard from '../cards/AddressCard'
@@ -39,6 +39,7 @@ const Checkout = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
+
     const { Razorpay } = useRazorpay();
     const city = useSelector(state => state.City.city);
     const cart = useSelector(state => state.Cart);
@@ -50,7 +51,6 @@ const Checkout = () => {
 
     const [orderId, setOrderId] = useState("")
     const [showStripe, setShowStripe] = useState(false)
-    const [capilizePaymeneMethod, setCapilizePaymeneMethod] = useState("")
     const [showOrderSuccess, setShowOrderSuccess] = useState(false)
 
     // stripe variables
@@ -94,6 +94,8 @@ const Checkout = () => {
     useEffect(() => {
         handleFilterTimeSlots();
     }, [checkout?.selectedDate])
+
+
 
 
 
@@ -232,7 +234,7 @@ const Checkout = () => {
 
     const handlePaymentClose = async () => {
         try {
-            const response = await api.deleteCart()
+            const response = await api.deleteCart();
             if (response.status == 1) {
                 dispatch(setCart({ data: [] }))
                 dispatch(clearCartPromo())
@@ -264,7 +266,7 @@ const Checkout = () => {
         });
     };
 
-    const handleRozarpayPayment = async (order_id, razorpay_transaction_id, amount) => {
+    const handleRozarpayPayment = async (order_id, razorpay_transaction_id, amount, capilizePaymeneMethod) => {
         try {
             const res = await initializeRazorpay();
             if (!res) {
@@ -356,7 +358,7 @@ const Checkout = () => {
 
     // TODO:
     // Got and Window not defined error
-    const handlePayStackPayment = async (orderId, amount) => {
+    const handlePayStackPayment = async (orderId, amount, capilizePaymeneMethod) => {
         try {
             const handler = PaystackPop.setup({
                 key: setting.payment_setting && setting.payment_setting.paystack_public_key,
@@ -401,6 +403,7 @@ const Checkout = () => {
 
     const handlePlaceOrder = async () => {
         const formatDate = formatDateWithTimeSlot(checkout?.selectedDate, checkout?.timeSlot);
+        const capilizePaymeneMethod = String(checkout?.selectedPaymentMethod).charAt(0).toUpperCase() + String(checkout?.selectedPaymentMethod).slice(1);
         try {
             if (checkout?.selectedPaymentMethod == null) {
                 toast.error("Please select payment method")
@@ -408,12 +411,11 @@ const Checkout = () => {
             } else if (checkout?.selectedDate == null) {
                 toast.error("Please select date")
                 return
-            } else if (address.selectedAddress == null) {
+            } else if (checkout?.address == null) {
                 toast.error("Please select address")
                 return
             } else {
-                const capilizePaymeneMethod = String(checkout?.selectedPaymentMethod).charAt(0).toUpperCase() + String(checkout?.selectedPaymentMethod).slice(1);
-                setCapilizePaymeneMethod(capilizePaymeneMethod)
+
                 const response = await api.placeOrder({
                     productVariantId: cart?.checkout?.product_variant_id,
                     quantity: cart?.checkout?.quantity,
@@ -433,7 +435,7 @@ const Checkout = () => {
                         await handleInitiateTransaction()
                     } else {
                         setOrderId(response?.data?.order_id);
-                        await handleInitiateTransaction(response?.data?.order_id)
+                        await handleInitiateTransaction(response?.data?.order_id, capilizePaymeneMethod)
                     }
                 }
             }
@@ -442,7 +444,7 @@ const Checkout = () => {
         }
     }
 
-    const handleInitiateTransaction = async (currentOrderID) => {
+    const handleInitiateTransaction = async (currentOrderID, capilizePaymeneMethod) => {
 
         try {
             if (checkout?.selectedPaymentMethod == "COD") {
@@ -452,13 +454,13 @@ const Checkout = () => {
 
             }
             else if (checkout?.selectedPaymentMethod == "paystack") {
-                handlePayStackPayment(currentOrderID, cart?.checkout?.total_amount)
+                handlePayStackPayment(currentOrderID, cart?.checkout?.total_amount, capilizePaymeneMethod)
             }
             else {
                 const response = await api.initiateTrasaction({ orderId: currentOrderID, paymentMethod: capilizePaymeneMethod, type: "order", })
                 if (response.status == 1) {
                     if (checkout?.selectedPaymentMethod == "razorpay") {
-                        handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, cart?.checkout?.total_amount, user?.user?.name, user?.user?.email, user?.user?.mobile)
+                        handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, cart?.checkout?.total_amount, capilizePaymeneMethod)
                     } else if (checkout?.selectedPaymentMethod == "stripe") {
                         setShowStripe(true)
                     }
@@ -473,13 +475,9 @@ const Checkout = () => {
                             midtrans: response?.data?.snapUrl,
                         };
                         // Select specific paymentUrls
-                        const redirectUrl = paymentUrls[selectedPaymentMethod];
+                        const redirectUrl = paymentUrls[checkout?.selectedPaymentMethod];
                         if (redirectUrl) {
-                            if (typeof window !== "undefined") {
-                                window.open(redirectUrl, '_blank');
-                            } else {
-                                return
-                            }
+                            window.open(redirectUrl, '_blank');
                         } else {
                             console.error("Unsupported payment method:", selectedPaymentMethod);
                         }

@@ -38,6 +38,7 @@ import { setLocalTheme } from '@/redux/slices/themeSlice';
 import { useTheme } from 'next-themes'
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
+import { clearCheckout } from '@/redux/slices/checkoutSlice';
 
 
 const Header = () => {
@@ -59,6 +60,12 @@ const Header = () => {
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
 
+
+    useEffect(() => {
+        if (router?.pathname != "/checkout") {
+            dispatch(clearCheckout())
+        }
+    }, [router])
 
     useEffect(() => {
         fetchCity();
