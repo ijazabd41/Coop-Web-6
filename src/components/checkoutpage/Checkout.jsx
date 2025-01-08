@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
 import Stepper from './Stepper'
 import AddressCard from '../cards/AddressCard'
 import { t } from "@/utils/translation"
-import { GoPlus } from "react-icons/go";
+import { GoPlus, GoPlusCircle } from "react-icons/go";
 import {
     Popover,
     PopoverContent,
@@ -26,9 +26,14 @@ import NewAddressModal from '../newaddressmodal/NewAddressModal'
 import * as api from "@/api/apiRoutes"
 import { clearCartPromo, setCart, setCartCheckout, setCartProducts, setCartPromo, setCartSubTotal } from "@/redux/slices/cartSlice"
 import { setAllAddresses, setSelectedAddress } from '@/redux/slices/addressSlice'
+import { checkoutReducer, setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout } from "@/redux/slices/checkoutSlice"
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { deductUserBalance } from '@/redux/slices/userSlice'
+import StripeModal from './StripeModal'
+// import PaystackPop from '@paystack/inline-js'
+import OrderSuccessModal from '../ordersuccessmodal/OrderSuccessModal'
+
 
 const Checkout = () => {
     const router = useRouter();
@@ -39,27 +44,35 @@ const Checkout = () => {
     const cart = useSelector(state => state.Cart);
     const address = useSelector((state) => state.Addresses);
     const user = useSelector((state) => state.User.user)
-    const setting = useSelector((state) => state.Setting.setting)
+    const setting = useSelector((state) => state.Setting)
 
-    const [currentStep, setCurrentStep] = useState(1);
-    const [couponseCodeId, setCouponCodeId] = useState(null);
+    const checkout = useSelector((state) => state.Checkout)
+
     const [orderId, setOrderId] = useState("")
+    const [showStripe, setShowStripe] = useState(false)
+    const [capilizePaymeneMethod, setCapilizePaymeneMethod] = useState("")
+    const [showOrderSuccess, setShowOrderSuccess] = useState(false)
+
+    // stripe variables
+    const [stripeOrderId, setStripeOrderId] = useState(null);
+    const [stripeClientSecret, setStripeClientSecret] = useState(null);
+    const [stripeTransactionId, setStripeTransactionId] = useState(null);
     // step 1 variables
     const [isAddressSelected, setIsAddressSelected] = useState(false)
     const [showAddAddres, setShowAddAddres] = useState(false)
     const [isOrderPlaced, setIsOrderPlaced] = useState(false)
     // step 2 Variables
-    const [selectedDate, setSelectedDate] = useState(null)
+    // const [selectedDate, setSelectedDate] = useState(null)
     const [timeSlotsData, setTimeSlotsData] = useState(null)
     const [timeSlots, setTimeSlots] = useState([])
     const [availabeleTimeSlot, setAvailableTimeSlot] = useState([])
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null)
-    const [orderNote, setOrderNote] = useState("");
+
 
     // step 3 variables
     const [checkoutData, setCheckoutData] = useState(null)
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
-    const [isWalletChecked, setIsWalletChecked] = useState(0);
+
 
     useEffect(() => {
         fetchAddress()
@@ -74,13 +87,15 @@ const Checkout = () => {
         if (isOrderPlaced) {
             setTimeout(() => {
                 handlePaymentClose();
-            }, 1000)
+            }, 5000)
         }
     }, [isOrderPlaced])
 
     useEffect(() => {
         handleFilterTimeSlots();
-    }, [selectedDate])
+    }, [checkout?.selectedDate])
+
+
 
     const handleFetchCheckout = async () => {
         const couponseCodeId = cart?.promo_code?.promo_code_id;
@@ -104,7 +119,7 @@ const Checkout = () => {
         if (date < finalDate) {
             toast.info("Please select a valid date")
         }
-        setSelectedDate(date)
+        dispatch(setSelectedDate({ data: date }))
     }
 
     const formatDate = (date) => {
@@ -121,6 +136,8 @@ const Checkout = () => {
             const response = await api.getAddress();
             if (response.status == 1) {
                 dispatch(setAllAddresses({ data: response.data }))
+            } else {
+                dispatch(setAllAddresses({ data: [] }))
             }
         } catch (error) {
             console.log("Error", error)
@@ -129,11 +146,11 @@ const Checkout = () => {
 
     const handleFilterTimeSlots = () => {
         const currentDate = new Date(); // Current date and time
-        const userSelectedDate = new Date(selectedDate ? selectedDate : new Date());
+        const userSelectedDate = new Date(checkout?.selectedDate ? checkout?.selectedDate : new Date());
 
         const updatedTimeSlots = timeSlots.map((slot) => {
             // Create date object for the slot's last order time
-            const lastOrderTime = new Date(selectedDate);
+            const lastOrderTime = new Date(checkout?.selectedDate);
             const [hours, minutes, seconds] = slot.last_order_time.split(":").map(Number);
             lastOrderTime.setHours(hours, minutes, seconds);
 
@@ -166,11 +183,11 @@ const Checkout = () => {
     };
 
     const handleTimeSlotChange = (value) => {
-        setSelectedTimeSlot(value)
+        dispatch(setTimeSlot({ data: value }))
     }
 
     const handleChangeOrderNote = (e) => {
-        setOrderNote(e.target.value)
+        dispatch(setOrderNote({ data: e.target.value }))
     }
 
     const handleShowAddress = () => {
@@ -179,26 +196,25 @@ const Checkout = () => {
     }
 
     const handleFirstStep = () => {
-        if (address?.selectedAddress.length == 0) {
+        if (checkout?.address == null) {
             const defaultAddress = address?.allAddresses.find((address) => address.is_default == 1)
-            dispatch(setSelectedAddress({ data: defaultAddress }))
-            setCurrentStep(2)
+            dispatch(setAddress({ data: defaultAddress }))
+            dispatch(setCurrentStep({ data: 2 }))
         } else {
-
-            setCurrentStep(2)
+            dispatch(setCurrentStep({ data: 2 }))
         }
     }
 
     const handleSecondStep = () => {
-        if (selectedDate == null) {
+        if (checkout?.selectedDate == null) {
             toast.error(t("please_select_date"))
             return
-        } else if (timeSlotsData?.time_slots_is_enabled == "true" && selectedTimeSlot == null) {
+        } else if (timeSlotsData?.time_slots_is_enabled == "true" && checkout?.timeSlot == null) {
             toast.error(t("please_select_time_slot"))
             return
         }
 
-        setCurrentStep(3)
+        dispatch(setCurrentStep({ data: 3 }))
     }
 
     const formatDateToDDMMYYYY = (date) => {
@@ -219,7 +235,11 @@ const Checkout = () => {
             const response = await api.deleteCart()
             if (response.status == 1) {
                 dispatch(setCart({ data: [] }))
+                dispatch(clearCartPromo())
                 dispatch(setCartProducts({ data: [] }))
+                dispatch(clearCheckout())
+                setShowOrderSuccess(false)
+                router.push("/")
             } else {
                 console.log("Error", response)
             }
@@ -227,7 +247,6 @@ const Checkout = () => {
             console.log("Error", error)
         }
     }
-
 
     const initializeRazorpay = () => {
         return new Promise((resolve) => {
@@ -245,41 +264,41 @@ const Checkout = () => {
         });
     };
 
-    const handleRozarpayPayment = async (order_id, razorpay_transaction_id, amount, name, email, mobile, app_name) => {
+    const handleRozarpayPayment = async (order_id, razorpay_transaction_id, amount) => {
         try {
             const res = await initializeRazorpay();
             if (!res) {
                 console.error("RazorPay SDK Load Failed");
                 return;
             }
-
             const key = setting?.payment_setting?.razorpay_key;
             const convertedAmount = Math.floor(amount * 100);
-
             const options = {
                 key: key,
                 amount: convertedAmount,
                 currency: "INR",
-                name: name,
+                name: user?.user?.name,
                 description: setting?.setting?.app_name,
                 image: setting?.setting?.web_settings.web_logo,
                 order_id: razorpay_transaction_id,
                 handler: async (res) => {
                     if (res.razorpay_payment_id) {
                         try {
-                            const response = await api.addRazorpayTransaction({
+                            const response = await api.addTransaction({
                                 orderId: order_id,
                                 transactionId: res.razorpay_payment_id,
+                                paymentMethod: capilizePaymeneMethod,
+                                type: "order"
                             });
-                            const result = await response.json();
-                            if (result.status === 1) {
-                                toast.success(result.message);
+                            if (response.status === 1) {
+                                toast.success(response.message);
                                 setIsOrderPlaced(true);
+                                setShowOrderSuccess(true)
                                 // setShow(true);
-                                dispatch(setCartProducts({ data: [] }));
                                 dispatch(setCartSubTotal({ data: 0 }));
+
                             } else {
-                                toast.error(result.message);
+                                toast.error(response.message);
                             }
                         } catch (error) {
                             console.error("Transaction error:", error);
@@ -296,19 +315,21 @@ const Checkout = () => {
                     },
                 },
                 prefill: {
-                    name: name,
-                    email: email,
-                    contact: mobile,
+                    name: user?.user?.name,
+                    email: user?.user?.email,
+                    contact: user?.user?.mobile,
                 },
                 notes: {
                     address: "Razorpay Corporate",
                 },
                 theme: {
-                    color: setting.setting?.web_settings.color,
+                    color: setting?.setting?.web_settings.color,
                 },
             };
 
+            // if (typeof window !== "undefined") {
             const rzpay = new window.Razorpay(options);
+
 
             rzpay.on("payment.cancel", (response) => {
                 alert("Payment Cancelled");
@@ -316,7 +337,7 @@ const Checkout = () => {
             });
 
             rzpay.on("payment.failed", (response) => {
-                api.deleteOrder(user?.jwtToken, order_id);
+                api.deleteOrder({ orderId: order_id });
             });
 
             rzpay.open();
@@ -333,75 +354,115 @@ const Checkout = () => {
         setIsOrderPlaced(false);
     };
 
-    const handlePlaceOrder = async () => {
-        const formatDate = formatDateWithTimeSlot(selectedDate, selectedTimeSlot);
+    // TODO:
+    // Got and Window not defined error
+    const handlePayStackPayment = async (orderId, amount) => {
         try {
-            if (selectedPaymentMethod == null) {
+            const handler = PaystackPop.setup({
+                key: setting.payment_setting && setting.payment_setting.paystack_public_key,
+                email: user && user?.email,
+                amount: parseFloat(amount) * 100,
+                currency: setting?.payment_setting && setting?.payment_setting?.paystack_currency_code,
+                ref: (new Date()).getTime().toString(),
+                label: setting?.setting && setting?.setting?.support_email,
+                onClose: function () {
+                    api.deleteOrder({ orderId: orderId });
+                    // setWalletAmount(user.user.balance);
+                    // dispatch(setWallet({ data: 0 }));
+
+                },
+                callback: async function (response) {
+                    try {
+                        // setloadingPlaceOrder(true);
+                        const reponse = await api.addTransaction({ orderId: orderId, transactionId: response.reference, paymentMethod: capilizePaymeneMethod, type: "order" })
+                        console.log("reponse", response)
+                        // setloadingPlaceOrder(false);
+                        if (response.status === 1) {
+                            toast.success(reponse.message);
+                            setIsOrderPlaced(true);
+                            // setShow(true);
+
+                            dispatch(setCartSubTotal({ data: 0 }));
+                        }
+                        else {
+                            toast.error(result.message);
+                            console.log(result)
+                        }
+                    } catch (error) {
+                        console.log("Error", error)
+                    }
+                }
+            })
+            handler.openIframe();
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    const handlePlaceOrder = async () => {
+        const formatDate = formatDateWithTimeSlot(checkout?.selectedDate, checkout?.timeSlot);
+        try {
+            if (checkout?.selectedPaymentMethod == null) {
                 toast.error("Please select payment method")
                 return
-            } else if (selectedDate == null) {
+            } else if (checkout?.selectedDate == null) {
                 toast.error("Please select date")
                 return
             } else if (address.selectedAddress == null) {
                 toast.error("Please select address")
                 return
             } else {
+                const capilizePaymeneMethod = String(checkout?.selectedPaymentMethod).charAt(0).toUpperCase() + String(checkout?.selectedPaymentMethod).slice(1);
+                setCapilizePaymeneMethod(capilizePaymeneMethod)
                 const response = await api.placeOrder({
                     productVariantId: cart?.checkout?.product_variant_id,
                     quantity: cart?.checkout?.quantity,
                     total: cart?.checkout?.sub_total,
                     deliveryCharge: cart?.checkout?.delivery_charge?.total_delivery_charge,
                     finalTotal: cart?.checkout?.total_amount,
-                    walletUsed: isWalletChecked,
-                    addressId: address?.selectedAddress?.id,
+                    walletUsed: checkout?.isWalletChecked,
+                    addressId: checkout?.address?.id,
                     deliveryTime: formatDate,
-                    orderNote: orderNote,
-                    paymentMethod: selectedPaymentMethod,
+                    orderNote: checkout?.orderNote,
+                    paymentMethod: checkout?.selectedPaymentMethod,
                     promocodeId: cart?.promo_code?.promo_code_id,
                 });
                 if (response?.status == 1) {
-
-                    setOrderNote("")
-                    if (selectedPaymentMethod !== "COD" || selectedPaymentMethod !== "wallet") {
+                    dispatch(setOrderNote(""))
+                    if (checkout?.selectedPaymentMethod === "COD" || checkout?.selectedPaymentMethod === "wallet") {
+                        await handleInitiateTransaction()
+                    } else {
                         setOrderId(response?.data?.order_id);
                         await handleInitiateTransaction(response?.data?.order_id)
-                    } else {
-                        await handleInitiateTransaction()
                     }
                 }
             }
-
         } catch (error) {
             console.log("Error", error)
         }
     }
 
     const handleInitiateTransaction = async (currentOrderID) => {
-        const capilizePaymeneMethod = String(selectedPaymentMethod).charAt(0).toUpperCase() + String(selectedPaymentMethod).slice(1);
+
         try {
-            if (selectedPaymentMethod == "COD") {
-                toast.success(response?.message)
-                dispatch(clearCartPromo())
-                dispatch(setCartCheckout({ data: [] }))
-                dispatch(setCartSubTotal({ data: 0 }));
+            if (checkout?.selectedPaymentMethod == "COD") {
+                setShowOrderSuccess(true)
                 setIsOrderPlaced(true)
-                router.push("/")
-                setCurrentStep(1)
-            } else if (selectedPaymentMethod == "Wallet") {
+            } else if (checkout?.selectedPaymentMethod == "Wallet") {
 
             }
-            else if (selectedPaymentMethod == "paystack") {
-
+            else if (checkout?.selectedPaymentMethod == "paystack") {
+                handlePayStackPayment(currentOrderID, cart?.checkout?.total_amount)
             }
             else {
                 const response = await api.initiateTrasaction({ orderId: currentOrderID, paymentMethod: capilizePaymeneMethod, type: "order", })
                 if (response.status == 1) {
-                    console.log("response", response)
-                    if (selectedPaymentMethod == "razorpay") {
-
+                    if (checkout?.selectedPaymentMethod == "razorpay") {
                         handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, cart?.checkout?.total_amount, user?.user?.name, user?.user?.email, user?.user?.mobile)
-
-                    } else {
+                    } else if (checkout?.selectedPaymentMethod == "stripe") {
+                        setShowStripe(true)
+                    }
+                    else {
                         dispatch(clearCartPromo())
                         //  payment methods redirect urls
                         const paymentUrls = {
@@ -414,7 +475,11 @@ const Checkout = () => {
                         // Select specific paymentUrls
                         const redirectUrl = paymentUrls[selectedPaymentMethod];
                         if (redirectUrl) {
-                            window.open(redirectUrl, '_blank');
+                            if (typeof window !== "undefined") {
+                                window.open(redirectUrl, '_blank');
+                            } else {
+                                return
+                            }
                         } else {
                             console.error("Unsupported payment method:", selectedPaymentMethod);
                         }
@@ -436,32 +501,37 @@ const Checkout = () => {
             <div className='container px-2'>
                 <div className='flex justify-center flex-col items-center'>
                     <div className='flex w-full lg:w-1/2'>
-                        <Stepper currentStep={currentStep} />
+                        <Stepper currentStep={checkout?.currentStep} />
                     </div>
                     <div className='w-full '>
                         {/* step 1 */}
                         {
-                            currentStep == 1 &&
+                            checkout?.currentStep == 1 &&
                             <div className='flex flex-col cardBorder rounded-sm mb-4'>
                                 <div className='flex  justify-between backgroundColor py-4 px-2 '>
                                     <span className='font-bold text-base md:text-xl'>{t("choose_delivery_address")}</span>
-                                    <button className='flex  items-center text-sm' onClick={handleShowAddress}><GoPlus />{t("add_address")}</button>
+                                    {address?.allAddresses?.length > 0 && <button className='flex  items-center text-sm' onClick={handleShowAddress}><GoPlus />{t("add_address")}</button>}
                                 </div>
-                                <div className='flex flex-col overflow-y-auto h-96'>
+                                {address?.allAddresses?.length > 0 ? <> <div className='flex flex-col overflow-y-auto h-96'>
                                     {address?.allAddresses?.map((address) => {
                                         return (
                                             <div key={address?.id}>  <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} /></div>
                                         )
                                     })}
                                 </div>
-                                <div className='flex justify-end m-4'>
-                                    <button onClick={handleFirstStep} className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' >{t("continue")}</button>
-                                </div>
+                                    <div className='flex justify-end m-4'>
+                                        <button onClick={handleFirstStep} className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' >{t("continue")}</button>
+                                    </div></> : <div className=' flex justify-center  my-2 cursor-pointer' onClick={() => setShowAddAddres(true)}>
+                                    <div className='border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl'>
+                                        <GoPlusCircle /> {t("add_address")}
+                                    </div>
+                                </div>}
+
                             </div>
                         }
                         {/* step 2 */}
                         {
-                            currentStep == 2 &&
+                            checkout?.currentStep == 2 &&
                             <div className='flex flex-col cardBorder rounded-sm mb-4 w-full'>
                                 <div className='flex  justify-between backgroundColor p-4'>
                                     <span className='font-bold text-xl'>{t("preferred_day_and_time")}</span>
@@ -471,11 +541,11 @@ const Checkout = () => {
                                         <div className='col-span-12  md:col-span-6 flex flex-col gap-1 '>
                                             <span className='text-base font-bold'>{t("preferred_delivery_day")}</span>
                                             <Popover>
-                                                <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between '>{formatDate(selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
+                                                <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between '>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
                                                 <PopoverContent className="w-full p-0">
                                                     <Calendar
                                                         mode="single"
-                                                        selected={selectedDate}
+                                                        selected={checkout?.selectedDate}
                                                         onSelect={handleSelectedDate}
                                                         className="rounded-md w-full"
                                                         fromDate={new Date()}
@@ -485,15 +555,17 @@ const Checkout = () => {
                                         </div>
                                         {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
                                             <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
-                                            <Select onValueChange={handleTimeSlotChange}>
+                                            <Select onValueChange={handleTimeSlotChange} value={checkout?.timeSlot?.title}>
                                                 <SelectTrigger className="w-full py-5 cardBorder">
-                                                    <SelectValue placeholder="Select a timezone " />
+                                                    <SelectValue placeholder="Select a timezone">
+                                                        {checkout?.timeSlot?.title}
+                                                    </SelectValue>
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {availabeleTimeSlot?.map((slot) => {
                                                         return (
                                                             <div key={slot?.id}>
-                                                                <SelectItem disabled={slot?.isDisabled} value={slot} onClick={() => { selectTimeZone(slot) }}>{slot?.title}
+                                                                <SelectItem disabled={slot?.isDisabled} value={slot} onClick={() => { setSelectedTimeSlot(slot) }}>{slot?.title}
                                                                 </SelectItem>
                                                             </div>
                                                         )
@@ -506,11 +578,11 @@ const Checkout = () => {
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-base font-bold '>{t("order_note_title")}</span>
-                                        <textarea name="" id="" className='cardBorder rounded-sm w-full p-2 outline-none' value={orderNote} onChange={(e) => handleChangeOrderNote(e)} placeholder={t("order_note")}></textarea>
+                                        <textarea name="" id="" className='cardBorder rounded-sm w-full p-2 outline-none' value={checkout?.orderNote} onChange={(e) => handleChangeOrderNote(e)} placeholder={t("order_note")}></textarea>
                                     </div>
 
                                     <div className='flex justify-end gap-4'>
-                                        <button className='cardBorder px-4 py-2 rounded-sm text-xl font-normal' onClick={() => setCurrentStep(1)}>{t("previous")}</button>
+                                        <button className='cardBorder px-4 py-2 rounded-sm text-xl font-normal' onClick={() => dispatch(setCurrentStep({ data: 1 }))}>{t("previous")}</button>
                                         <button className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' onClick={handleSecondStep}>{t("continue")}</button>
                                     </div>
                                 </div>
@@ -518,13 +590,13 @@ const Checkout = () => {
                         }
                         {/* step 3 */}
                         {
-                            currentStep == 3 &&
+                            checkout?.currentStep == 3 &&
                             <div className='grid grid-cols-12  gap-2 md:gap-6'>
                                 <div className='md:col-span-8 lg:col-span-9 col-span-12'>
-                                    <CheckoutPayment checkout={checkoutData} selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} setCurrentStep={setCurrentStep} />
+                                    <CheckoutPayment checkoutData={checkoutData} selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} setCurrentStep={setCurrentStep} />
                                 </div>
                                 <div className=' md:col-span-4 lg:col-span-3 col-span-12'>
-                                    <OrderSummaryCard checkout={checkoutData} handlePlaceOrder={handlePlaceOrder} />
+                                    <OrderSummaryCard checkoutData={checkoutData} handlePlaceOrder={handlePlaceOrder} />
                                 </div>
 
                             </div>
@@ -533,7 +605,9 @@ const Checkout = () => {
                 </div>
             </div>
             <NewAddressModal fetchAddress={fetchAddress} showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} />
-        </section>
+            <StripeModal showStripe={showStripe} setShowStripe={setShowStripe} />
+            <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} />
+        </section >
     )
 }
 

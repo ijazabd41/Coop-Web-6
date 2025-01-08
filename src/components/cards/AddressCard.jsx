@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedAddresForEdit, setSelectedAddress } from '@/redux/slices/addressSlice';
+import { setAddress } from "@/redux/slices/checkoutSlice"
 import * as api from '@/api/apiRoutes';
 import { Dialog, DialogContent, DialogOverlay } from '@/components/ui/dialog';
 import { FaRegEdit } from 'react-icons/fa';
@@ -10,6 +11,8 @@ import { t } from '@/utils/translation';
 
 const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAddress }) => {
     const dispatch = useDispatch();
+
+    const checkout = useSelector((state) => state.Checkout)
     const selectedAddress = useSelector((state) => state.Addresses.selectedAddress);
     const theme = useSelector((state) => state.Theme.theme);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -36,7 +39,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
     };
 
     const handleCheckboxChange = () => {
-        dispatch(setSelectedAddress({ data: address }))
+        dispatch(setAddress({ data: address }))
     };
 
     return (
@@ -51,7 +54,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                             type="checkbox"
                             id={`default-address-${address.id}`}
                             className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                            checked={selectedAddress?.id === address?.id}
+                            checked={checkout?.address?.id === address?.id}
                             onChange={handleCheckboxChange}
                         />
                         <label

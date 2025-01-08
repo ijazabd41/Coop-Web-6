@@ -8,6 +8,7 @@ import ThemeReducer from "@/redux/slices/themeSlice"
 import CartReducer from "@/redux/slices/cartSlice"
 import AddressReducer from "@/redux/slices/addressSlice"
 import FavoriteReducer from "@/redux/slices/FavoriteSlice"
+import CheckoutReducer from "@/redux/slices/checkoutSlice"
 
 export const rootReducer = combineReducers({
     Cart: CartReducer,
@@ -18,6 +19,7 @@ export const rootReducer = combineReducers({
     ProductFilter: ProductFilterReducer,
     Theme: ThemeReducer,
     Addresses: AddressReducer,
-    Favorite: FavoriteReducer
+    Favorite: FavoriteReducer,
+    Checkout: CheckoutReducer
 })
 

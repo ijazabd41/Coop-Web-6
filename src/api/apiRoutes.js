@@ -375,14 +375,16 @@ export const initiateTrasaction = async ({ orderId, paymentMethod, type, walletA
     return response.data;
 }
 
-export const addRazorpayTransaction = async ({ orderId, transactionId }) => {
+export const addTransaction = async ({ orderId, transactionId, paymentMethod, type }) => {
     const formData = new FormData();
     formData.append("order_id", orderId)
     formData.append("transaction_id", transactionId)
-    formData.append('type', 'order');
-    formData.append('payment_method', 'Razorpay');
+    formData.append('type', type);
+    formData.append('payment_method', paymentMethod);
     formData.append("request_from", "website");
-    const response = await api.post(`${apiEndPoints.initiateTrasaction}`, formData)
+    formData.append("device_type", "web")
+    formData.append("app_version", "1.0")
+    const response = await api.post(`${apiEndPoints.addTransaction}`, formData)
     return response.data;
 }
 

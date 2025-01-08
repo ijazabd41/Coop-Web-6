@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { CiWallet } from "react-icons/ci";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
+import { setCurrentStep, setPaymentMethod } from "@/redux/slices/checkoutSlice";
 
 import CashOnDeliveryImage from "@/assets/payment_methods_svgs/ic_cod.svg";
 import CashfreeImage from "@/assets/payment_methods_svgs/ic_cashfree.svg";
@@ -25,12 +26,14 @@ const paymentMethodsConfig = [
     { key: "paytabs_payment_method", label: "paytabs", image: PaytabsImage },
 ];
 
-const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMethod, setCurrentStep }) => {
+const CheckoutPayment = ({ checkoutData }) => {
+    const dispatch = useDispatch();
     const setting = useSelector((state) => state.Setting);
-
+    const checkout = useSelector((state) => state.Checkout);
+    const methodsContainerRef = useRef(null);
 
     const handleSelectedPaymentMethod = (value) => {
-        setSelectedPaymentMethod(value);
+        dispatch(setPaymentMethod({ data: value }));
     };
 
     const enabledPaymentMethods = paymentMethodsConfig.filter(
@@ -39,11 +42,32 @@ const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMe
             setting?.payment_setting?.[method.key] === "1"
     );
 
+    // Function to find the selected method element
+    const scrollToSelectedMethod = () => {
+        if (!methodsContainerRef.current) return;
 
+        const selectedMethod = methodsContainerRef.current.querySelector(
+            `[data-method="${checkout?.selectedPaymentMethod}"]`
+        );
+
+        if (selectedMethod) {
+            selectedMethod.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
+            });
+        }
+    };
+
+    // Effect to trigger scroll when selected method changes
+    useEffect(() => {
+        if (checkout?.selectedPaymentMethod) {
+            scrollToSelectedMethod();
+        }
+    }, [checkout?.selectedPaymentMethod]);
 
     return (
         <div>
-            <div className="flex flex-col cardBorder rounded-sm  w-full ">
+            <div className="flex flex-col cardBorder rounded-sm w-full">
                 <div className="flex justify-between backgroundColor p-4">
                     <span className="font-bold text-xl">{t("choose_payment_method")}</span>
                 </div>
@@ -66,10 +90,11 @@ const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMe
                     </div>
                     <div className="flex flex-col gap-3">
                         <h1 className="text-base font-bold">{t("payment_method")}</h1>
-                        <div className="flex flex-col gap-2 h-80 overflow-y-auto">
-                            {checkout?.cod_allowed == "1" && (
+                        <div ref={methodsContainerRef} className="flex flex-col gap-2 h-80 overflow-y-auto">
+                            {checkoutData?.cod_allowed == "1" && (
                                 <div
-                                    className={`p-2 flex justify-between items-center cardBorder rounded-sm ${selectedPaymentMethod === "COD"
+                                    data-method="COD"
+                                    className={`p-2 flex justify-between items-center cardBorder rounded-sm ${checkout?.selectedPaymentMethod === "COD"
                                         ? "bg-[#55ae7b26]"
                                         : ""
                                         }`}
@@ -87,9 +112,10 @@ const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMe
                                     <div>
                                         <input
                                             type="radio"
-                                            name="wallet_method"
+                                            name="payment_method"
                                             className="h-6 w-6 mt-2"
                                             onChange={() => handleSelectedPaymentMethod("COD")}
+                                            checked={checkout?.selectedPaymentMethod === "COD"}
                                         />
                                     </div>
                                 </div>
@@ -97,7 +123,8 @@ const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMe
                             {enabledPaymentMethods.map((method) => (
                                 <div
                                     key={method.key}
-                                    className={`p-2 flex justify-between items-center cardBorder rounded-sm ${selectedPaymentMethod === method.label
+                                    data-method={method.label}
+                                    className={`p-2 flex justify-between items-center cardBorder rounded-sm ${checkout?.selectedPaymentMethod === method.label
                                         ? "bg-[#55ae7b26]"
                                         : ""
                                         }`}
@@ -115,16 +142,20 @@ const CheckoutPayment = ({ checkout, selectedPaymentMethod, setSelectedPaymentMe
                                     <div>
                                         <input
                                             type="radio"
-                                            name="wallet_method"
+                                            name="payment_method"
                                             className="h-6 w-6 mt-2"
                                             onChange={() => handleSelectedPaymentMethod(method.label)}
+                                            checked={checkout?.selectedPaymentMethod === method.label}
                                         />
                                     </div>
                                 </div>
                             ))}
                         </div>
                         <div className="flex justify-end gap-4">
-                            <button className="cardBorder px-4 py-2 rounded-sm text-xl font-normal" onClick={() => setCurrentStep(2)}>
+                            <button
+                                className="cardBorder px-4 py-2 rounded-sm text-xl font-normal"
+                                onClick={() => dispatch(setCurrentStep({ data: 2 }))}
+                            >
                                 {t("previous")}
                             </button>
                         </div>
