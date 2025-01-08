@@ -13,6 +13,7 @@ import DeleteModal from '../deleteModal/DeleteModal';
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
     const user = useSelector(state => state.User.user)
+    const setting = useSelector(state=>state?.Setting?.setting);
 
     const [addWalletModal, setAddWalletModal] = useState(false)
     const [showLogout, setShowLogout] = useState(false)
@@ -100,7 +101,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         <ul>
                             <li className="flex justify-between items-center p-4 rounded  textColor" >
                                 <span>eGrocer Wallet</span>
-                                <span className="text-base text-orange-600 font-medium bg-[#EB9C001F] p-1 rounded-sm">$2630.00</span>
+                                <span className="text-base text-orange-600 font-medium bg-[#EB9C001F] p-1 rounded-sm">{setting?.currency}{user?.balance}</span>
                             </li>
                             <li className={`p-4  cursor-pointer  textColor ${activeTab == "add-balance" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={handleWalletBalanceModal}>
                                 Add Wallet Balance

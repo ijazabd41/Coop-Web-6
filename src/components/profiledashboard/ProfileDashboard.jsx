@@ -16,14 +16,14 @@ const ProfileDashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        setLoading(true)
-        const currentTab = router.pathname.split('/').pop();
-        setSelectedTab(currentTab || 'profile');
-        setLoading(false)
-    }, [router.pathname]);
+  useEffect(() => {
+    setLoading(true)
+    const currentTab = router.pathname.split('/').pop();
+    setSelectedTab(currentTab || 'profile');
+    setLoading(false)
+  }, [router.pathname]);
 
-    const activeTab = router.pathname.split('/').pop();
+  const activeTab = router.pathname.split('/').pop();
 
   return (
     <section>
@@ -37,21 +37,22 @@ const ProfileDashboard = () => {
             />
           </div>
 
-                    <div className='col-span-12 md:col-span-9  '>
-                        {loading ? <p>Loading</p> : <>
-                            {activeTab == "profile" && <Profile />}
-                            {activeTab == "address" && <Address />}
-                            {activeTab == "activeorders" && <ActiveOrders />}
-                            {activeTab == "orderhistory" && <OrderHistory />}
-                            {activeTab == "wishlist" && <Wishlist />}
-                            {activeTab == "wallethistory" && <WalletHistory />}
-                            {activeTab == "transactions" && <TransactionHistory />}
-                        </>}
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
+          <div className='col-span-12 md:col-span-9  '>
+            {loading ? <p>Loading</p> : <>
+              {activeTab == "profile" && <Profile />}
+              {activeTab == "address" && <Address />}
+              {activeTab == "activeorders" && <ActiveOrders />}
+              {activeTab == "orderhistory" && <OrderHistory />}
+              {activeTab == "wishlist" && <Wishlist />}
+              {activeTab == "wallethistory" && <WalletHistory />}
+              {activeTab == "transactions" && <TransactionHistory />}
+              {activeTab == "notifications" && <Notifications selectedTab={selectedTab} setSelectedTab={setSelectedTab} />}
+            </>}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }
 
 export default ProfileDashboard;

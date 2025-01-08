@@ -503,21 +503,19 @@ input[type="number"]::-webkit-outer-spin-button {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
 
-@media screen and (max-width: 768px) {
-  .swiper-pagination {
-    display: none;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .swiper-pagination {
+    display: none;
   }
 }
 

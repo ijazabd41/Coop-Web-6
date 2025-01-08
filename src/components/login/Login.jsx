@@ -409,6 +409,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const getCurrentUser = async () => {
     try {
       const response = await api.getUser();
+      // console.log("User Response",response);
       dispatch(setCurrentUser({ data: response.user }));
       toast.success("You're successfully Logged In");
     } catch (error) {

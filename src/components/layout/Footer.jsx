@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { BiMessageAltDots } from 'react-icons/bi'
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube, FaTwitter } from 'react-icons/fa'
 import { IoLocationOutline } from 'react-icons/io5'
 import { MdPhoneInTalk } from 'react-icons/md'
 import { useSelector } from 'react-redux'
@@ -19,7 +18,7 @@ import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg";
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
 
 const paymentMethodsConfig = [
-    { key: "cod_payment_method", lable: "COD", image: CashOnDeliveryImage },
+    { key: "cod_payment_method", label: "COD", image: CashOnDeliveryImage },
     { key: "razorpay_payment_method", label: "razorpay", image: RazorpayImage },
     { key: "paypal_payment_method", label: "paypal", image: PaypalImage },
     { key: "paystack_payment_method", label: "paystack", image: PaystackImage },
@@ -59,10 +58,10 @@ const Footer = () => {
                         }
                     </div>
                     <div className='col-span-6 w-full flex justify-start gap-3 md:justify-end'>
-                        {setting?.web_settings?.is_android_app !== "0" && <Link href={setting?.web_settings?.android_app_url} target='_blank' className='w-[160px]'>
+                        {setting?.web_settings?.is_android_app !== "0" && <Link href={setting?.web_settings?.android_app_url || "#"} target='_blank' className='w-[160px]'>
                             <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.play_store_logo} alt="playStoreLogo" />
                         </Link>}
-                        {setting?.web_settings?.is_ios_app !== "0" && <Link href={setting?.web_settings?.ios_app_url} target='_blank' className='w-[160px]'>
+                        {setting?.web_settings?.is_ios_app !== "0" && <Link href={setting?.web_settings?.ios_app_url || "#"} target='_blank' className='w-[160px]'>
                             <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.ios_store_logo} alt="appStoreLogo" />
                         </Link>}
                     </div>
@@ -100,7 +99,7 @@ const Footer = () => {
                             <p>{t("follow_us")}</p>
                             <div className='flex gap-4 mt-1 iconBackgroundColor p-3 w-fit rounded-[8px]'>
                                 {setting?.social_media?.slice(0, 5)?.map((social, idx) => (
-                                    <Link key={social?.id} href={social?.link} target='_blank'>
+                                    <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                         <i className={`${social?.icon}`}></i>
                                     </Link>
                                 ))}
