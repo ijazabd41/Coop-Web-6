@@ -23,12 +23,17 @@ const VerticleProductCard = ({ product }) => {
     const user = useSelector(state => state.User)
     const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
-    const [selectedVariant, setSelectedVariant] = useState(product?.variants?.[0])
+    const [selectedVariant, setSelectedVariant] = useState([])
     const [showVariants, setShowVariants] = useState(false)
     const [showProductDetail, setShowProductDetail] = useState(false)
 
     useEffect(() => {
-        setSelectedVariant(product?.variants?.[0])
+        const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
+        if (inStockVariant == undefined) {
+            setSelectedVariant(product?.variants[0])
+        } else {
+            setSelectedVariant(inStockVariant)
+        }
     }, [])
 
     const calculateDiscount = (discountPrice, actualPrice) => {
@@ -308,7 +313,7 @@ const VerticleProductCard = ({ product }) => {
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
 
-    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
+    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock == 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
 
 
     return (
@@ -327,7 +332,6 @@ const VerticleProductCard = ({ product }) => {
                     </div>
                 </div>
                 <div className='h-[100px] flex flex-col justify-between '>
-
                     <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
                     {product?.average_rating > 0 ?
                         <div className="rating">
@@ -355,7 +359,7 @@ const VerticleProductCard = ({ product }) => {
                     </div>
                 </div>
                 {!isProductAvailabel ? <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>
-                    <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${productsVariants?.[0]?.measurement} ${productsVariants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+                    <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
                     {isProductAlreadyAdded ?
                         <div className='md:w-1/2 w-full cardBorder  flex justify-between rounded-sm my-1'>
                             <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-5 h-7   rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>

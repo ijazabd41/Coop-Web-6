@@ -1,5 +1,7 @@
 import React from 'react'
-import Checkout from '../checkoutpage/Checkout'
+import dynamic from 'next/dynamic'
+
+const Checkout = dynamic(() => import('../checkoutpage/Checkout'), { ssr: false });
 import Layout from '../layout/Layout'
 
 const CheckoutPage = () => {

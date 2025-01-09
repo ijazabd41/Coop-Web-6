@@ -31,6 +31,7 @@ export const userReducer = createSlice({
             state.jwtToken = "";
         },
         deductUserBalance: (state, action) => {
+            console.log("action", action.payload.data)
             if (state.user) {
                 state.user.balance -= action.payload.data;
             }

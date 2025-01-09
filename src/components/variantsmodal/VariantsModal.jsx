@@ -43,7 +43,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     }
     const isVariantAvailable = (variant) => {
         return (
-            (variant?.is_unlimited_stock == 0 && variant?.stock == 0)
+            (variant?.is_unlimited_stock == 0 && variant?.stock <= 0)
         )
     }
 
@@ -207,7 +207,6 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
         }
     }
     const handleValidateAddExistingProduct = (productQuantity, product, variant) => {
-        // TODO:
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty
         if (Number(product.is_unlimited_stock)) {
             if (productQty < Number(product?.total_allowed_quantity)) {

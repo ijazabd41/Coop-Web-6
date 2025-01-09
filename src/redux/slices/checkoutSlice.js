@@ -8,7 +8,9 @@ const initialState = {
     formattedDate: null,
     selectedPaymentMethod: null,
     isWalletChecked: false,
-    orderNote: ""
+    usedWalletBalance: 0,
+    orderNote: "",
+    checkoutTotal: 0
 }
 
 
@@ -37,13 +39,19 @@ export const checkoutReducer = createSlice({
         setWalletChecked: (state, action) => {
             state.isWalletChecked = action.payload.data
         },
+        setUserWalletBalance: (state, action) => {
+            state.usedWalletBalance = action.payload.data
+        },
         setOrderNote: (state, action) => {
             state.orderNote = action.payload.data
+        },
+        setCheckoutTotal: (state, action) => {
+            state.checkoutTotal = action.payload.data
         },
         clearCheckout: () => initialState
     }
 })
 
-export const { setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout } = checkoutReducer.actions;
+export const { setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout, setCheckoutTotal, setUserWalletBalance } = checkoutReducer.actions;
 
 export default checkoutReducer.reducer

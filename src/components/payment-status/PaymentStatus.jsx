@@ -16,11 +16,10 @@ const PaymentStatus = () => {
     const [showOrderSuccess, setShowOrderSuccess] = useState(false)
     const [showOrderFailed, setShowOrderFailed] = useState(false)
 
-    console.log("query", query?.status)
     useEffect(() => {
         // Ensure the query is populated before proceeding
         if (!query || Object.keys(query).length === 0) return;
-
+        console.log("query from useEffect", query)
         if (
             query?.status === "success" ||
             query?.status === "PAYMENT_SUCCESS" ||
@@ -45,8 +44,10 @@ const PaymentStatus = () => {
     }, [showOrderSuccess, showOrderFailed])
 
     // http://localhost:3000/web-payment-status?status=success&type=order&payment_method=Cashfree
-    // https://devegrocer.thewrteam.in/web-payment-status?order_id=order-217-107&status_code=200&transaction_status=capture
     // https://devegrocer.thewrteam.in/web-payment-status?status=success&type=order&payment_method=Cashfree
+
+    // https://devegrocer.thewrteam.in/web-payment-status?order_id=order-217-107&status_code=200&transaction_status=capture
+
 
     // https://devegrocer.thewrteam.in/web-payment-status?order_id=order-213-107&status_code=201&transaction_status=pending&action=back
 
@@ -71,10 +72,19 @@ const PaymentStatus = () => {
         }
     }
 
+    const extractOrderNumber = (orderId) => {
+        if (!orderId) return null;
+        const regex = /^order-(\d+)-\d+$/;
+        const match = orderId.match(regex);
+        return match ? match[1] : /^\d+$/.test(orderId) ? orderId : null;
+    };
+
+
     const handleFailedOrder = async () => {
-        // const orderId = query.order_id
+        if (!query || Object.keys(query).length === 0) return;
+        const extractOrderId = extractOrderNumber(query?.order_id)
         try {
-            // const response = await api.deleteOrder(orderId)
+            const response = await api.deleteOrder({ orderId: extractOrderId })
             setShowOrderFailed(false)
             dispatch(clearCheckout())
             router.push("/")

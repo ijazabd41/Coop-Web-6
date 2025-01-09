@@ -3,7 +3,7 @@ import Image from "next/image";
 import { CiWallet } from "react-icons/ci";
 import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
-import { setCurrentStep, setPaymentMethod } from "@/redux/slices/checkoutSlice";
+import { setCurrentStep, setPaymentMethod, setUserWalletBalance, setWalletChecked } from "@/redux/slices/checkoutSlice";
 
 import CashOnDeliveryImage from "@/assets/payment_methods_svgs/ic_cod.svg";
 import CashfreeImage from "@/assets/payment_methods_svgs/ic_cashfree.svg";
@@ -14,6 +14,7 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg";
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg";
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg";
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
+import { deductUserBalance } from "@/redux/slices/userSlice";
 
 const paymentMethodsConfig = [
     { key: "razorpay_payment_method", label: "razorpay", image: RazorpayImage },
@@ -30,7 +31,15 @@ const CheckoutPayment = ({ checkoutData }) => {
     const dispatch = useDispatch();
     const setting = useSelector((state) => state.Setting);
     const checkout = useSelector((state) => state.Checkout);
+    const user = useSelector((state) => state.User)
+    const cart = useSelector((state) => state.Cart)
     const methodsContainerRef = useRef(null);
+
+    const [walletBalance, setWalletBalance] = useState(null)
+
+    useEffect(() => {
+        setWalletBalance(user?.user?.balance)
+    }, [user])
 
     const handleSelectedPaymentMethod = (value) => {
         dispatch(setPaymentMethod({ data: value }));
@@ -45,11 +54,9 @@ const CheckoutPayment = ({ checkoutData }) => {
     // Function to find the selected method element
     const scrollToSelectedMethod = () => {
         if (!methodsContainerRef.current) return;
-
         const selectedMethod = methodsContainerRef.current.querySelector(
             `[data-method="${checkout?.selectedPaymentMethod}"]`
         );
-
         if (selectedMethod) {
             selectedMethod.scrollIntoView({
                 behavior: 'smooth',
@@ -65,6 +72,39 @@ const CheckoutPayment = ({ checkoutData }) => {
         }
     }, [checkout?.selectedPaymentMethod]);
 
+    useEffect(() => {
+        if (checkout?.isWalletChecked) {
+            if (user?.user?.balance >= checkout?.data?.total_amount) {
+                dispatch(setPaymentMethod({ data: "wallet" }))
+            } else if (user?.user?.balance <= cart?.checkout?.total_amount) {
+                dispatch(setUserWalletBalance({ data: user?.user?.balance }))
+            }
+        } else {
+
+        }
+    }, [checkout?.isWalletChecked])
+
+    const handleWalletCheck = async () => {
+        if (checkout?.isWalletChecked == false) {
+            if (user?.user?.balance >= checkout?.checkoutTotal) {
+                setWalletBalance(walletBalance - checkout?.checkoutTotal)
+            } else {
+                setWalletBalance(0)
+
+            }
+        } else {
+            if (user?.user?.balance >= checkout?.checkoutTotal) {
+                setWalletBalance(walletBalance + checkout?.checkoutTotal)
+            } else {
+                setWalletBalance(walletBalance + user?.user?.balance)
+            }
+
+        }
+        dispatch(setWalletChecked({ data: !checkout?.isWalletChecked }))
+    }
+
+    console.log("checkout?.selectedPaymentMethod", checkout?.selectedPaymentMethod)
+
     return (
         <div>
             <div className="flex flex-col cardBorder rounded-sm w-full">
@@ -72,11 +112,11 @@ const CheckoutPayment = ({ checkoutData }) => {
                     <span className="font-bold text-xl">{t("choose_payment_method")}</span>
                 </div>
                 <div className="p-4 flex flex-col gap-2">
-                    <div className="flex flex-col gap-3 mb-3">
+                    {user?.user?.balance >= 1 && <div className="flex flex-col gap-3 mb-3">
                         <div className="flex justify-between">
                             <p className="text-base font-bold">{t("your_wallet")}</p>
                             <div className="flex gap-2 items-center">
-                                <input type="checkbox" className="h-4 w-4" />
+                                <input type="checkbox" className="h-4 w-4" onChange={handleWalletCheck} checked={checkout?.isWalletChecked} />
                                 <p>{t("use_wallet_balance")}</p>
                             </div>
                         </div>
@@ -85,10 +125,10 @@ const CheckoutPayment = ({ checkoutData }) => {
                                 <CiWallet size={40} className="bg-[#55ae7b26] p-1 rounded-sm" />
                                 {t("walletBalance")}
                             </div>
-                            <div className="font-bold text-xl">$2310.00</div>
+                            <div className="font-bold text-xl">{setting?.setting?.currency}{walletBalance}</div>
                         </div>
-                    </div>
-                    <div className="flex flex-col gap-3">
+                    </div>}
+                    {checkout?.selectedPaymentMethod == "wallet" ? <></> : <div className="flex flex-col gap-3">
                         <h1 className="text-base font-bold">{t("payment_method")}</h1>
                         <div ref={methodsContainerRef} className="flex flex-col gap-2 h-80 overflow-y-auto">
                             {checkoutData?.cod_allowed == "1" && (
@@ -159,7 +199,8 @@ const CheckoutPayment = ({ checkoutData }) => {
                                 {t("previous")}
                             </button>
                         </div>
-                    </div>
+                    </div>}
+
                 </div>
             </div>
         </div>

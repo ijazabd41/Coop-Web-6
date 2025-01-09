@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
 import Stepper from './Stepper'
@@ -26,23 +27,17 @@ import NewAddressModal from '../newaddressmodal/NewAddressModal'
 import * as api from "@/api/apiRoutes"
 import { clearCartPromo, setCart, setCartCheckout, setCartProducts, setCartPromo, setCartSubTotal } from "@/redux/slices/cartSlice"
 import { setAllAddresses, setSelectedAddress } from '@/redux/slices/addressSlice'
-import { checkoutReducer, setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout } from "@/redux/slices/checkoutSlice"
+import { checkoutReducer, setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout, setCheckoutTotal } from "@/redux/slices/checkoutSlice"
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { deductUserBalance } from '@/redux/slices/userSlice'
 import StripeModal from './StripeModal'
-// import PaystackPop from '@paystack/inline-js'
-// const UsePaystackPayment = dynamic(
-//     () => import('@paystack/inline-js').then(mod=>mod.),
-//     { ssr: false }
-// );
-// const PaystackPop = dynamic(() => import('@paystack/inline-js'), {
-//     ssr: false,
-// });
+import PaystackPop from '@paystack/inline-js'
 
 
 import OrderSuccessModal from '../orderstatusmodals/OrderSuccessModal'
 import dynamic from 'next/dynamic'
+import Loader from '../loader/Loader';
 
 
 const Checkout = () => {
@@ -62,6 +57,7 @@ const Checkout = () => {
     const [orderId, setOrderId] = useState("")
     const [showStripe, setShowStripe] = useState(false)
     const [showOrderSuccess, setShowOrderSuccess] = useState(false)
+    const [paymentLoading, setPaymentLoading] = useState(false)
 
     // stripe variables
     const [stripeOrderId, setStripeOrderId] = useState(null);
@@ -90,9 +86,10 @@ const Checkout = () => {
         handleFetchTimeSlots()
     }, [])
 
+
     useEffect(() => {
         handleFetchCheckout();
-    }, [cart?.promo_code])
+    }, [cart?.promo_code, cart?.cart])
 
     useEffect(() => {
         if (isOrderPlaced) {
@@ -108,11 +105,11 @@ const Checkout = () => {
 
     const handleFetchCheckout = async () => {
         const couponseCodeId = cart?.promo_code?.promo_code_id;
-
         try {
             const response = await api.getCart({ latitude: city?.latitude, longitude: city?.longitude, checkout: 1, promocode_id: couponseCodeId });
             if (response?.status == 1) {
                 dispatch(setCartCheckout({ data: response?.data }))
+                dispatch(setCheckoutTotal({ data: response?.data?.total_amount }))
                 setCheckoutData(response?.data)
             } else {
                 console.log("Error", response)
@@ -293,6 +290,7 @@ const Checkout = () => {
                 handler: async (res) => {
                     if (res.razorpay_payment_id) {
                         try {
+                            setPaymentLoading(true)
                             const response = await api.addTransaction({
                                 orderId: order_id,
                                 transactionId: res.razorpay_payment_id,
@@ -300,6 +298,7 @@ const Checkout = () => {
                                 type: "order"
                             });
                             if (response.status === 1) {
+                                setPaymentLoading(false)
                                 toast.success(response.message);
                                 setIsOrderPlaced(true);
                                 setShowOrderSuccess(true)
@@ -307,6 +306,7 @@ const Checkout = () => {
                                 dispatch(setCartSubTotal({ data: 0 }));
 
                             } else {
+                                setPaymentLoading(false)
                                 toast.error(response.message);
                             }
                         } catch (error) {
@@ -336,19 +336,13 @@ const Checkout = () => {
                 },
             };
 
-            // if (typeof window !== "undefined") {
             const rzpay = new window.Razorpay(options);
-
-
             rzpay.on("payment.cancel", (response) => {
-                alert("Payment Cancelled");
                 handleRazorpayCancel(order_id);
             });
-
             rzpay.on("payment.failed", (response) => {
                 api.deleteOrder({ orderId: order_id });
             });
-
             rzpay.open();
         } catch (error) {
             console.error("Error initializing Razorpay:", error);
@@ -363,9 +357,11 @@ const Checkout = () => {
         setIsOrderPlaced(false);
     };
 
-    // TODO:
-    // Got and Window not defined error
+
+
+
     const handlePayStackPayment = async (orderId, amount, capilizePaymeneMethod) => {
+
         try {
             const handler = PaystackPop.setup({
                 key: setting.payment_setting && setting.payment_setting.paystack_public_key,
@@ -375,34 +371,33 @@ const Checkout = () => {
                 ref: (new Date()).getTime().toString(),
                 label: setting?.setting && setting?.setting?.support_email,
                 onClose: function () {
+                    console.log("first")
                     api.deleteOrder({ orderId: orderId });
                     // setWalletAmount(user.user.balance);
                     // dispatch(setWallet({ data: 0 }));
 
                 },
-                callback: async function (response) {
+                callback: async function (res) {
                     try {
-                        // setloadingPlaceOrder(true);
-                        const reponse = await api.addTransaction({ orderId: orderId, transactionId: response.reference, paymentMethod: capilizePaymeneMethod, type: "order" })
-                        console.log("reponse", response)
-                        // setloadingPlaceOrder(false);
-                        if (response.status === 1) {
-                            toast.success(reponse.message);
+                        setPaymentLoading(true)
+                        const response = await api.addTransaction({ orderId: orderId, transactionId: res.reference, paymentMethod: capilizePaymeneMethod, type: "order" })
+                        if (response.status == 1) {
+                            setPaymentLoading(true)
+                            toast.success(response.message);
                             setIsOrderPlaced(true);
-                            // setShow(true);
-
                             dispatch(setCartSubTotal({ data: 0 }));
                         }
                         else {
-                            toast.error(result.message);
-                            console.log(result)
+                            setPaymentLoading(true)
+                            toast.error(response.message);
+                            console.log("error", response)
                         }
                     } catch (error) {
                         console.log("Error", error)
                     }
                 }
             })
-            // handler.openIframe();
+            handler.openIframe();
         } catch (error) {
             console.log("Paytabs Error", error)
         }
@@ -505,7 +500,7 @@ const Checkout = () => {
         <section>
             <BreadCrumb />
             <div className='container px-2'>
-                <div className='flex justify-center flex-col items-center'>
+                {paymentLoading ? <Loader height={100} width={100} /> : <div className='flex justify-center flex-col items-center'>
                     <div className='flex w-full lg:w-1/2'>
                         <Stepper currentStep={checkout?.currentStep} />
                     </div>
@@ -608,7 +603,8 @@ const Checkout = () => {
                             </div>
                         }
                     </div>
-                </div>
+                </div>}
+
             </div>
             <NewAddressModal fetchAddress={fetchAddress} showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} />
             <StripeModal showStripe={showStripe} setShowStripe={setShowStripe} />
