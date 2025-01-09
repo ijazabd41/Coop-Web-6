@@ -444,5 +444,8 @@
     "address_added_success": "Address added successfully",
     "default_address_msg": "This is Default Address",
     "continue_shopping": "Continue Shopping",
-    "backToCart": "Back to Cart"
+    "backToCart": "Back to Cart",
+    "wallet_amount_required": "Wallet Amount Required",
+    "wallet_amount_must_be_greater_than_zero":"Wallet Amount must be greater than zero",
+    "wallet_payment_method_required":"Wallet Payment Method Required"
 }

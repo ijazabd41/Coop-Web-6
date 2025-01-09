@@ -12,7 +12,17 @@ import { t } from '@/utils/translation';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes";
+import { IoIosCloseCircle } from 'react-icons/io';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { addUserBalance } from '@/redux/slices/userSlice';
+let PaystackPop;
 
+if (typeof window !== 'undefined') {
+    import('@paystack/inline-js').then(module => {
+        PaystackPop = module.default;
+    });
+}
 // payment SVGS
 import CashfreeImage from "@/assets/payment_methods_svgs/ic_cashfree.svg"
 import RazorpayImage from "@/assets/payment_methods_svgs/ic_razorpay.svg"
@@ -22,10 +32,6 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg"
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg"
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg"
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg"
-import { IoIosCloseCircle } from 'react-icons/io';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
-import { addUserBalance } from '@/redux/slices/userSlice';
 
 
 const paymentMethodsConfig = [
@@ -42,6 +48,7 @@ const paymentMethodsConfig = [
 const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
     const setting = useSelector(state => state.Setting)
+    // console.log(setting)
     const user = useSelector((state) => state?.User)
     const dispatch = useDispatch();
     const router = useRouter();
@@ -66,7 +73,7 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
     useEffect(() => {
         if (addWalletModal === false) {
-            setSelectPaymentMethod("");
+            setSelectPaymentMethod();
             setAmount(null);
         }
     }, [addWalletModal])
@@ -78,19 +85,94 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
     }
 
     const handleSubmit = async () => {
-        try {
-            const capitalizedPaymentMethod = selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1);
+        if (amount === null || amount <= 0 || selectedPaymentMethod === undefined) {
+            toast.error(t(amount === null ? "wallet_amount_required" : amount <= 0 ? "wallet_amount_must_be_greater_than_zero" : "wallet_payment_method_required"));
+            return;
+        }
+        const capitalizedPaymentMethod = selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1);
+        if (capitalizedPaymentMethod !== "Paystack") {
             const result = await api.initiateTrasaction({ paymentMethod: capitalizedPaymentMethod, type: "wallet", walletAmount: amount });
-            if(capitalizedPaymentMethod=== "Razorpay"){
-                handleRazorpayPayment(null, result?.data?.transaction_id, amount);
+            if (result?.status === 1) {
+                if (capitalizedPaymentMethod === "Razorpay") {
+                    handleRazorpayPayment(null, result?.data?.transaction_id, amount);
+                }
+                else if (capitalizedPaymentMethod === "Stripe") {
+                    setShowStripe(true);
+                }
+                else {
+                    const paymentUrls = {
+                        cashfree: result?.data?.redirectUrl,
+                        phonepe: result?.data?.redirectUrl,
+                        paytabs: result?.data?.redirectUrl,
+                        paypal: result?.data?.paypal_redirect_url,
+                        midtrans: result?.data?.snapUrl,
+                    };
+                    // Select specific paymentUrls
+                    const redirectUrl = paymentUrls[selectedPaymentMethod];
+                    if (redirectUrl) {
+                        router.push(redirectUrl)
+                    } else {
+                        console.error("Unsupported payment method:", selectedPaymentMethod);
+                    }
+                }
+            } else {
+                setAddWalletModal(false);
             }
-            else if (capitalizedPaymentMethod === "Stripe") {
-                setShowStripe(true);
-            }
-        } catch (e) {
-            console.log(e?.message)
+        } else {
+            handlePayStackPayment(null, amount, capitalizedPaymentMethod);
         }
     }
+
+
+    const handlePayStackPayment = async (orderId = null, amount, capilizePaymeneMethod) => {
+        // console.log("In handlepaystack payment function:", amount, capilizePaymeneMethod)
+        try {
+            const handler = PaystackPop.setup({
+                key: setting.payment_setting && setting.payment_setting.paystack_public_key,
+                email: user && user?.user?.email,
+                amount: parseFloat(amount) * 100,
+                currency: setting?.payment_setting && setting?.payment_setting?.paystack_currency_code,
+                ref: (new Date()).getTime().toString(),
+                label: setting?.setting && setting?.setting?.support_email,
+                onClose: function () {
+                    console.log("Paystack Payment Cancelled")
+                    // api.deleteOrder({ orderId: orderId });
+                    setAddWalletModal(false);
+                },
+                onError: (error) => {
+                    console.log("Error: ", error.message);
+                },
+                callback: async function (res) {
+                    try {
+                        console.log("Paystack Response:", res)
+                        // setPaymentLoading(true)
+                        const response = await api.addTransaction({ orderId: "", transactionId: res.reference, paymentMethod: capilizePaymeneMethod, type: "wallet", walletAmount: amount })
+                        if (response.status == 1) {
+                            // setPaymentLoading(true)
+                            toast.success(response.message);
+                            dispatch(addUserBalance({ data: amount }));
+                            setAddWalletModal(false);
+                            // setIsOrderPlaced(true);
+                            // dispatch(setCartSubTotal({ data: 0 }));
+                        }
+                        else {
+                            // setPaymentLoading(true)
+                            toast.error(response.message);
+                            setAddWalletModal(false);
+                            console.log("error", response)
+                        }
+                    } catch (error) {
+                        console.log("Error", error)
+                    }
+                }
+            })
+            handler.openIframe();
+        } catch (error) {
+            console.log("Paytabs Error", error)
+        }
+    }
+
+
     const initializeRazorpay = () => {
         return new Promise((resolve) => {
             const script = document.createElement("script");
@@ -203,7 +285,7 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 {addWalletModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-60 z-40"></div>
                 )}
-                <DialogContent aria-describedby="addWalletModal" >
+                <DialogContent aria-describedby="addWalletModal"  >
                     <DialogHeader className="flex flex-row justify-between items-center">
                         <DialogTitle>
                             <h1 className='font-bold text-xl'>{t("add_to_wallet")}</h1>
@@ -252,7 +334,7 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                                         </div>
                                     ))}
                                     <div className='pt-2 flex justify-end'>
-                                        <button className='flex justify-end px-4 py-2 primaryBackColor mt-auto self-end text-white rounded-sm text-xl font-normal ' onClick={handleSubmit}>
+                                        <button className='flex justify-end px-4 py-2 primaryBackColor mt-auto self-end text-white rounded-sm text-xl font-normal' onClick={handleSubmit}>
                                             {t("add_money")}
                                         </button>
                                     </div>
