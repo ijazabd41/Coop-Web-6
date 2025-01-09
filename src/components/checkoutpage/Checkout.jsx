@@ -89,7 +89,7 @@ const Checkout = () => {
 
     useEffect(() => {
         handleFetchCheckout();
-    }, [cart?.promo_code, cart?.cart])
+    }, [cart?.promo_code, cart?.cart, checkout?.address])
 
     useEffect(() => {
         if (isOrderPlaced) {

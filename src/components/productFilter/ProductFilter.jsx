@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/collapsible"
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
-import Slider from "./Slider";
+const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
+import dynamic from "next/dynamic";
 
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
@@ -195,7 +196,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                     </CollapsibleTrigger>
                     <CollapsibleContent className='px-2 pb-4 md:px-2 lg:px-4'>
                         <div className="flex flex-col gap-4">
-                            <Slider
+                            <PriceSlider
                                 minPrice={minPrice}
                                 maxPrice={maxPrice}
                                 setValues={setValues}

@@ -34,7 +34,6 @@ const CheckoutPayment = ({ checkoutData }) => {
     const user = useSelector((state) => state.User)
     const cart = useSelector((state) => state.Cart)
     const methodsContainerRef = useRef(null);
-
     const [walletBalance, setWalletBalance] = useState(null)
 
     useEffect(() => {
@@ -74,36 +73,27 @@ const CheckoutPayment = ({ checkoutData }) => {
 
     useEffect(() => {
         if (checkout?.isWalletChecked) {
-            if (user?.user?.balance >= checkout?.data?.total_amount) {
+            if (user?.user?.balance >= checkoutData?.total_amount) {
                 dispatch(setPaymentMethod({ data: "wallet" }))
-            } else if (user?.user?.balance <= cart?.checkout?.total_amount) {
+                dispatch(setUserWalletBalance({ data: checkout?.checkoutTotal }))
+                setWalletBalance(walletBalance - checkout?.checkoutTotal)
+            } else if (user?.user?.balance <= checkoutData?.total_amount) {
+                setWalletBalance(0)
                 dispatch(setUserWalletBalance({ data: user?.user?.balance }))
             }
         } else {
-
+            if (user?.user?.balance >= checkout?.checkoutTotal) {
+                setWalletBalance(walletBalance + checkoutData?.total_amount)
+            } else {
+                setWalletBalance(user?.user?.balance)
+            }
         }
     }, [checkout?.isWalletChecked])
 
     const handleWalletCheck = async () => {
-        if (checkout?.isWalletChecked == false) {
-            if (user?.user?.balance >= checkout?.checkoutTotal) {
-                setWalletBalance(walletBalance - checkout?.checkoutTotal)
-            } else {
-                setWalletBalance(0)
-
-            }
-        } else {
-            if (user?.user?.balance >= checkout?.checkoutTotal) {
-                setWalletBalance(walletBalance + checkout?.checkoutTotal)
-            } else {
-                setWalletBalance(walletBalance + user?.user?.balance)
-            }
-
-        }
         dispatch(setWalletChecked({ data: !checkout?.isWalletChecked }))
     }
 
-    console.log("checkout?.selectedPaymentMethod", checkout?.selectedPaymentMethod)
 
     return (
         <div>

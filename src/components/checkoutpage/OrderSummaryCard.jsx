@@ -52,7 +52,7 @@ const OrderSummaryCard = ({ checkoutData, handlePlaceOrder }) => {
                     <a href="#" className="">
                         {t("wallet_balance_used")}
                     </a>
-                    <span className="">- {setting?.currency} {user?.user?.balance}</span>
+                    <span className="">- {setting?.currency} {checkout?.usedWalletBalance}</span>
                 </div>
             )}
 
