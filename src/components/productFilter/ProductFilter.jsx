@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react"
-import {
-    Collapse, Slider,
-    //  Checkbox
-    Tree
-} from "antd/lib";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterCategory, clearAllFilter, setFilterBrands, setFilterMinMaxPrice } from "@/redux/slices/productFilterSlice";
 import * as api from "@/api/apiRoutes";
 import { t } from "@/utils/translation"
-import { FiPlus, FiMinus } from "react-icons/fi";
 import CategoryTree from "./CategoryTree";
 import {
     Collapsible,
@@ -17,8 +11,11 @@ import {
 } from "@/components/ui/collapsible"
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
+import Slider from "./Slider";
+
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
+    const setting = useSelector(state => state?.Setting?.setting)
     const dispatch = useDispatch();
     const [categories, setCategories] = useState(null)
     const [treeData, setTreeData] = useState([]);
@@ -52,20 +49,6 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
         );
     };
 
-    // useEffect(() => {
-    //     const categories = filter?.category_id?.split(",")
-    //     const catNum = categories?.map((cat) => (parseInt(cat)))
-    //     setSelectedCategories(catNum)
-    // }, [])
-
-    // useEffect(() => {
-    //     if (categories?.length > 0) {
-    //         const cat = transformCategoryData(categories);
-    //         setTreeData(cat);
-    //     }
-    // }, [categories]);
-
-
 
     const fetchCategories = async () => {
         try {
@@ -75,57 +58,6 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
             console.log("erorr", error)
         }
     }
-
-    // const transformCategoryData = (categories) => {
-    //     return categories?.map(category => ({
-    //         title: category.name,
-    //         key: category.id,
-    //         children: category.cat_active_childs.length > 0
-    //             ? transformCategoryData(category.cat_active_childs)
-    //             : []
-    //     }));
-    // };
-
-    // const onExpand = (expandedKeysValue) => {
-    //     setExpandedKeys(expandedKeysValue);
-    // };
-
-    // const handleExpandCollapse = (node) => {
-    //     const newExpandedKeys = expandedKeys?.includes(node.key)
-    //         ? expandedKeys.filter(key => key !== node.key)
-    //         : [...expandedKeys, node.key];
-    //     setExpandedKeys(newExpandedKeys);
-    // };
-
-    // const renderTitle = (node) => {
-    //     const isExpanded = expandedKeys?.includes(node.key);
-    //     const hasChildren = node?.children && node.children.length > 0;
-
-    //     return (
-    //         <div className='flex  items-center gap-2'>
-    //             <div className="text-sm font-normal">{node.title}{' '}</div>
-    //             {hasChildren && (
-    //                 isExpanded
-    //                     ? <FiMinus size={18} onClick={() => handleExpandCollapse(node)} />
-    //                     : <FiPlus size={18} onClick={() => handleExpandCollapse(node)} />
-    //             )}
-    //         </div>
-    //     );
-    // };
-
-    // const renderTreeNodes = (data) =>
-    //     data?.map((item) => ({
-    //         ...item,
-    //         title: renderTitle(item),
-    //         children: item.children.length > 0 ? renderTreeNodes(item.children) : [],
-    //     }));
-
-    // const onCheck = (catIds) => {
-    //     setProductResult([])
-    //     setOffset(0)
-    //     setSelectedCategories(catIds)
-    //     dispatch(setFilterCategory({ data: catIds.join(",") }));
-    // }
 
     const handleCategoryChange = (categories) => {
         setSelectedCategories(categories);
@@ -186,7 +118,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     return (
         <>
             <div className="md:cardBorder rounded-md headerBackgroundColor ">
-                <div className='md:p-4 bottomBorder '>
+                <div className='p-3 md:p-4 bottomBorder '>
                     <div className='flex justify-between items-center  '>
                         <h5 className="text-xl font-bold">{t("filters")}</h5>
                         <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'
@@ -203,9 +135,9 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                         </p>
                     </div>
                 </div>
-                <Collapsible open={activeKey.includes("1")} className="w-full border-b-[1px]" onOpenChange={() => handleActiveKey("1")}>
+                <Collapsible open={activeKey.includes("1")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("1")}>
                     <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                        <div className="text-start font-semibold textColor md:text-base">{t("product_category")}</div>
+                        <div className="text-start font-medium textColor md:text-base">{t("product_category")}</div>
                         <div className={`transition-transform duration-250 ${activeKey.includes("1") ? "rotate-0" : "-rotate-90"}`}>
                             <FaChevronDown />
                         </div>
@@ -222,9 +154,9 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                     </CollapsibleContent>
                 </Collapsible>
 
-                <Collapsible open={activeKey.includes("2")} className="w-full border-b-[1px]" onOpenChange={() => handleActiveKey("2")}>
+                <Collapsible open={activeKey.includes("2")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("2")}>
                     <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                        <div className="text-base font-semibold textColor">{t("brands")}</div>
+                        <div className="text-base font-medium textColor">{t("brands")}</div>
                         <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
                             <FaChevronDown />
                         </div>
@@ -254,72 +186,40 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                 </Collapsible>
 
 
-                <Collapse defaultActiveKey={["1", "2", "3"]} className="">
-
-                    {/* {brands?.length <= 0 ? null : <Collapse.Panel header={t("brands")} key="2" className="text-base font-semibold ">
-                        <div className='filter-row'>
-                            {
-                                // brands == null ? (<Loader />) :
-                                brands?.map((brand, index) => {
-                                    const isChecked = filter.brand_ids.includes(brand.id);
-                                    return (
-                                        <div key={brand.id}>
-                                            <Checkbox
-                                                checked={isChecked}
-                                                onChange={() => {
-                                                    setProductResult([])
-                                                    filterbyBrands(brand)
-                                                }}
-
-                                            >
-                                                <Checkbox.Group>
-                                                </Checkbox.Group>
-                                            </Checkbox>
-                                            <span className="text-sm font-normal textColor">{brand.name}</span>
-                                        </div>
-                                    );
-                                })
-                            }
-                            {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
-
+                <Collapsible open={activeKey.includes("3")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("3")}>
+                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                        <div className="text-base font-medium textColor">{t("priceRange")}</div>
+                        <div className={`transition-transform duration-250 ${activeKey.includes("3") ? "rotate-0" : "-rotate-90"}`}>
+                            <FaChevronDown />
                         </div>
-                    </Collapse.Panel>
-
-                    } */}
-
-                    <Collapse.Panel header={t("priceRange")} key="3">
-                        <div>
-                            <Slider range min={minPrice}
-                                max={maxPrice} step={0.01} onChange={(newValues) => {
-                                    setValues(newValues);
-                                }}
-                                value={values}
-                                onChangeComplete={
-                                    (newValues) => {
-                                        setTempMinPrice(newValues[0])
-                                        setTempMaxPrice(newValues[1])
-                                    }
-                                }
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className='px-2 pb-4 md:px-2 lg:px-4'>
+                        <div className="flex flex-col gap-4">
+                            <Slider
+                                minPrice={minPrice}
+                                maxPrice={maxPrice}
+                                setValues={setValues}
+                                setTempMaxPrice={setTempMaxPrice}
+                                setTempMinPrice={setTempMinPrice}
+                                values={values}
                             />
-                            <div className='range-prices'>
-                                <p>${values[0]}</p>
-                                <p>${values[1]}</p>
-                                {/* <p>{setting?.setting?.currency}{values[0]}</p> */}
-                                {/* <p>{setting?.setting?.currency}{values[1]}</p> */}
+                            <div className='range-prices flex justify-between'>
+                                <p>{setting?.currency}{values[0]}</p>
+                                <p>{setting?.currency}{values[1]}</p>
+
                             </div>
-                            <button className="price-filter-apply-btn" onClick={(newValues) => {
-                                setOffset(0)
-                                setProductResult([])
-                                dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
-                            }}>
-                                Apply
+                            <button className="rounded py-2 px-4 bg-gray-200 text-xl"
+                                onClick={(newValues) => {
+                                    setOffset(0)
+                                    setProductResult([])
+                                    dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
+                                }}>
+                                {t("apply")}
                             </button>
                         </div>
-                    </Collapse.Panel>
-                </Collapse>
-
-            </div >
-
+                    </CollapsibleContent>
+                </Collapsible>
+            </div>
         </>
     );
 };

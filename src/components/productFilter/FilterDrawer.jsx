@@ -12,7 +12,7 @@ import { IoIosCloseCircle } from 'react-icons/io';
 const FilterDrawer = ({ showFilter, setShowFilter, setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice }) => {
   return (
     <Sheet open={showFilter}>
-      <SheetContent className="p-2 w-full sm:w-[900px] overflow-scroll ">
+      <SheetContent className="p-2 w-full sm:w-[900px] overflow-y-auto">
         <SheetHeader className="px-0 py-3  flex justify-between text-left ">
           <SheetTitle className="text-2xl font-bold flex flex-row items-center p-0 justify-between">
             <p className='text-2xl font-bold'>{t("filter")}</p>
