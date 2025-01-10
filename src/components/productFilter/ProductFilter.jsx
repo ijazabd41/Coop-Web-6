@@ -1,18 +1,19 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterCategory, clearAllFilter, setFilterBrands, setFilterMinMaxPrice } from "@/redux/slices/productFilterSlice";
 import * as api from "@/api/apiRoutes";
-import { t } from "@/utils/translation"
+import { t } from "@/utils/translation";
 import CategoryTree from "./CategoryTree";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+} from "@/components/ui/collapsible";
+import { FaChevronDown } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
-const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
 import dynamic from "next/dynamic";
+import { resetSelectedCategories } from "@/redux/slices/categorySlice";
+const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
 
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
@@ -128,6 +129,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                                 setMinPrice(null);
                                 setMaxPrice(null);
                                 dispatch(clearAllFilter());
+                                dispatch(resetSelectedCategories())
                                 setOffset(0)
                                 setProductResult([])
                             }}

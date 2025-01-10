@@ -3,28 +3,30 @@ import BreadCrumb from '../breadcrumb/BreadCrumb'
 import * as api from "@/api/apiRoutes"
 import CategoryCard from './CategoryCard'
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice'
+import { setSelectedCategories } from '@/redux/slices/categorySlice'
 
 
 const Category = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { slug } = router.query
-
+    const selectedCategories = useSelector(state => state.SelectedCategories?.selectedCategories);
     const [categories, setCategories] = useState([])
 
     const categoryPerPage = 12;
+    const slug_id = slug == "all" ? "" : slug
     useEffect(() => {
-        fetchCategories();
+        fetchCategories(slug_id);
     }, [])
 
-    const fetchCategories = async (slug = "") => {
-        console.log("slig", slug)
-        let catSlug = slug == "all" ? "" : slug
-        console.log(catSlug)
+    const fetchCategories = async (Slug = "") => {
+        console.log("slug", Slug)
+        // let catSlug = slug == "all" ? "" : Slug
+        console.log(Slug)
         try {
-            const result = await api.getCategories({ limit: categoryPerPage, slug: catSlug })
+            const result = await api.getCategories({ limit: categoryPerPage, slug: Slug })
             setCategories(result)
         } catch (error) {
             console.log("Error", error)
@@ -32,25 +34,28 @@ const Category = () => {
     }
 
     const handleCategoryClick = (category) => {
+        // console.log(category)
+        dispatch(setSelectedCategories({ data: category?.id }))
         if (category?.has_child) {
-            fetchCategories(category?.slug)
+            // const activeChildSlug = category?.cat_active_childs?.[0]?.slug;
+            // fetchCategories(activeChildSlug);
             router.push(`/categories/${category?.slug}`)
         } else {
-            dispatch(setFilterCategory({ data: category?.id }))
+            const cats = [...selectedCategories, category?.id];
+            dispatch(setFilterCategory({ data: cats.join(",") }))
             router.push(`/products`)
-
         }
     }
 
     return (
         <section>
             <BreadCrumb />
-            <div className='container '>
-                <div className='grid grid-cols-12 my-10 '>
+            <div className='container'>
+                <div className={`grid grid-cols-12`}>
                     {
                         categories && categories?.data?.map((category) => {
                             return (
-                                <div key={category?.id} className='col-span-2' onClick={() => handleCategoryClick(category)}>
+                                <div key={category?.id} className={"col-span-2"} onClick={() => handleCategoryClick(category)}>
                                     <CategoryCard category={category} />
                                 </div>
 

@@ -7,8 +7,28 @@ import 'swiper/css/navigation';
 import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
 import { t } from "@/utils/translation"
 import Link from 'next/link';
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux'
+import { setFilterCategory } from '@/redux/slices/productFilterSlice';
+import { setSelectedCategories } from '@/redux/slices/categorySlice';
 
 const CategoriesContainer = ({ categories }) => {
+
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const selectedCategories = useSelector(state => state.SelectedCategories?.selectedCategories);
+    const handleCategoryClick = (category) => {
+        dispatch(setSelectedCategories({ data: category?.id }))
+        if (category?.has_child) {
+            router.push(`/categories/${category?.slug}`)
+        } else {
+            const cats = [...selectedCategories, category?.id];
+            dispatch(setFilterCategory({ data: cats.join(",") }))
+            router.push(`/products`)
+        }
+    }
+
+
     return (
         <section>
             <div className='container py-6'>
@@ -54,7 +74,7 @@ const CategoriesContainer = ({ categories }) => {
                     >
                         {categories?.categories?.map((category, index) => {
                             return (
-                                <SwiperSlide key={index}>
+                                <SwiperSlide key={index} onClick={() => handleCategoryClick(category)}>
                                     <CategoryCard category={category} />
                                 </SwiperSlide>
                             )

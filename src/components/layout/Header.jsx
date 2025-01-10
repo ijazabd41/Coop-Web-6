@@ -39,6 +39,7 @@ import { useTheme } from 'next-themes'
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
+import { setFilterCategory, setFilterSearch } from '@/redux/slices/productFilterSlice';
 
 
 const Header = () => {
@@ -50,6 +51,8 @@ const Header = () => {
     const setting = useSelector(state => state.Setting);
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
+    const categories = useSelector(state => state.Shop.shop);
+    // console.log(categories.categories)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false)
@@ -60,6 +63,7 @@ const Header = () => {
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    const [searchCatId, setSearchCatId] = useState(null);
 
     useEffect(() => {
         if (router?.pathname != "/checkout") {
@@ -132,6 +136,50 @@ const Header = () => {
     }
 
 
+    const [searchTerm, setSearchTerm] = useState("")
+    const handleSearchCategory = (value) => {
+        const parsedValue = Number(value);
+        if (!isNaN(parsedValue)) {
+            setSearchCatId(parsedValue)
+        } else {
+            setSearchCatId(null)
+        }
+    }
+
+    const handleSearchTerm = (e) => setSearchTerm(e.target.value);
+
+    useEffect(() => {
+        if (searchTerm === "") {
+            dispatch(setFilterSearch({ data: "" }))
+            dispatch(setFilterCategory({ data: "" }))
+            return;
+        }
+        const timeoutId = setTimeout(() => {
+            dispatch(setFilterCategory({ data: searchCatId }))
+            dispatch(setFilterSearch({ data: searchTerm }))
+            fetchSearchData();
+        }, 1000)
+
+        return () => {
+            clearTimeout(timeoutId);
+        }
+    }, [searchTerm])
+
+    const fetchSearchData = async () => {
+        try {
+            const response = await api.getProductByFilter({
+                latitude: city?.city?.latitude,
+                longitude: city?.city?.longitude,
+                filters: {
+                    category_id: searchCatId,
+                    search: searchTerm
+                }
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
 
 
 
@@ -239,10 +287,13 @@ const Header = () => {
                                     </div>
                                 </div>
                                 {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
-                                    <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
+
                                     <div className='flex '>
                                         <DropdownMenu >
-                                            <DropdownMenuTrigger className="border-none outline-none gap-2 p-0 shadow-none font-bold text-base "> {t("profile")}</DropdownMenuTrigger>
+                                            <DropdownMenuTrigger className="flex items-center border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
+                                                <span className='p-3 iconBackgroundColor rounded-full'><IoPersonOutline size={24} className='iconsColor' /></span>
+                                                {t("profile")}
+                                            </DropdownMenuTrigger>
                                             <DropdownMenuContent >
                                                 <Link href={"/profile"}>
                                                     <DropdownMenuItem className="items-center flex justify-start h-full">
@@ -341,19 +392,23 @@ const Header = () => {
 
                             {/* Second column: col-6 equivalent */}
                             <div className="lg:col-span-6 md:col-span-8  items-center headerSearch hidden lg:flex md:flex rounded-[5px]  ml-[20px]">
-                                <Select>
+                                <Select onValueChange={(value) => handleSearchCategory(value)} >
                                     <SelectTrigger className="w-[152px] h-full buttonBackground border-none">
-                                        <SelectValue placeholder="Theme" />
+                                        <SelectValue placeholder="All Categories" />
                                     </SelectTrigger>
                                     <SelectContent className="w-[152px] h-full z-10  hidden md:block lg:block">
-                                        <SelectItem value="light">{t("light")}</SelectItem>
-                                        <SelectItem value="dark">{t("dark")}</SelectItem>
+                                        <SelectItem value="placeholder">All Categories</SelectItem>
+                                        {categories?.categories?.map((category) => (
+                                            <SelectItem key={category?.id} value={category?.id}>{category?.name}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <input
                                     type="text"
                                     placeholder="Search Here..."
-                                    className="flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow "
+                                    className="flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow"
+                                    value={searchTerm}
+                                    onChange={(e) => handleSearchTerm(e)}
                                 />
                                 <button
                                     className="p-[20px] col-span-4 h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow"

@@ -6,15 +6,25 @@ import { useSelector, useDispatch } from 'react-redux'
 import Categories from '../categories/CategoriesContainer'
 import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
-import { setSetting } from '@/redux/slices/settingSlice'
+import { resetSelectedCategories } from '@/redux/slices/categorySlice'
+import { useRouter } from 'next/router'
+import { clearAllFilter } from '@/redux/slices/productFilterSlice'
 
 
 const Homepage = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const setting = useSelector(state => state.Setting.setting)
     const city = useSelector(state => state.City.city)
 
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (router?.pathname === "/") {
+            dispatch(resetSelectedCategories())
+            dispatch(clearAllFilter())
+        }
+    }, [])
 
     useEffect(() => {
         if (city) {

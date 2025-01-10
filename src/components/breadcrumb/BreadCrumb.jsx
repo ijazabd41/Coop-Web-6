@@ -43,7 +43,7 @@ const BreadCrumb = () => {
                                     </span>
                                 ) : (
                                     <Link
-                                        href={crumb?.href === "/product" ? "/products" : crumb.href}
+                                        href={crumb?.href === "/product" ? "/products" : crumb.href === "/categories"  ? "/categories/all" : crumb.href}
                                         className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap"
                                         style={{ maxWidth: '100%' }}
                                         title={crumb.label} // Tooltip to show full text on hover

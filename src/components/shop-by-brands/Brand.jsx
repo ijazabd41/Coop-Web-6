@@ -1,15 +1,59 @@
-import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import BreadCrumb from '../breadcrumb/BreadCrumb'
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import * as api from "@/api/apiRoutes"
+import BrandCard from './BrandCard';
+import { setFilterBrands } from '@/redux/slices/productFilterSlice';
+const Brands = () => {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const brandsPerPage = 12;
 
-const Brand = ({ brand }) => {
+    const [brands, setBrands] = useState([])
+
+    useEffect(() => {
+        fetchBrands()
+    }, [])
+
+
+    const fetchBrands = async () => {
+        try {
+            const response = await api.getBrands({ limit: brandsPerPage, offset: 0 });
+            // console.log(response.data);
+            setBrands(response.data);
+        } catch (error) {
+            console.log("Error", error);
+        }
+    }
+
+    const handleBrandClick = (brand) => {
+        dispatch(setFilterBrands({ data: [brand?.id] }))
+        router.push('/products')
+    }
+
+
+
     return (
-        <div className="backgroundColor  rounded-lg text-center flex flex-col items-center px-4 py-6 gap-6 hover:bg-transparent hover:cardBorder">
-            <div className='h-[120px] w-[120px] relative'>
-                <Image src={brand.image_url} alt={brand.name} className="mx-auto h-full w-full mb-2" fill />
+        <section>
+            <BreadCrumb />
+            <div className='container '>
+                <div className='grid grid-cols-12 gap-4 my-10'>
+                    {
+                        brands && brands?.map((brand) => {
+                            return (
+                                <div key={brand?.id} className='col-span-2' onClick={() => handleBrandClick(brand)}>
+                                    <BrandCard brand={brand} />
+                                </div>
+
+                            )
+                        })
+                    }
+                </div>
+
             </div>
-            <span className="block text-base font-semibold leading-[26px] overflow-hidden text-center text-ellipsis whitespace-nowrap w-full">{brand.name}</span>
-        </div>
+        </section>
     )
 }
 
-export default Brand
+export default Brands
