@@ -31,7 +31,7 @@ const OrderSummaryCard = ({ checkoutData, handlePlaceOrder }) => {
         <div className="w-full mx-auto cardBorder rounded-lg p-6 ">
             <div className="flex justify-between items-center mb-2">
                 <span className="font-bold ">Subtotal</span>
-                <span className="font-semibold text-gray-900">{setting?.currency} {checkoutData?.sub_total?.toFixed(2)}</span>
+                <span className="font-semibold ">{setting?.currency} {checkoutData?.sub_total?.toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between items-center mb-2">

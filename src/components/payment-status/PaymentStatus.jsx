@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from "next/router";
-import OrderSuccessModal from '../orderstatusmodals/OrderSuccessModal';
-import OrderFailedModal from '../orderstatusmodals/OrderFailedModal';
+import OrderSuccessModal from '../paymentstatusmodals/OrderSuccessModal';
+import OrderFailedModal from '../paymentstatusmodals/OrderFailedModal';
 import * as api from "@/api/apiRoutes"
 import { clearCartPromo, setCart, setCartProducts } from '@/redux/slices/cartSlice';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';

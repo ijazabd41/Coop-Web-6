@@ -235,7 +235,7 @@ const ProductDetail = () => {
                                 <div className='col-span-12 md:col-span-4 '>
                                     <div className='relative aspect-square h-auto w-full'>
                                         <Image src={product?.image_url} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' />
-                                        {selectVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
+                                        {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
                                     </div>

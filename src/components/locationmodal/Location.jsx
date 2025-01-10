@@ -286,10 +286,10 @@ const Location = ({ showLocation, setShowLocation }) => {
                                     </div>
                                     <h2 className=' text-center font-extrabold text-lg'>{t("select_delivery_location")}</h2>
                                     <button className='w-full m-auto rounded-lg primaryBorder p-1 font-medium flex items-center justify-center gap-1 mt-7' onClick={handleViewMap}><FaLocationCrosshairs /> {t("use_my_current_location")}</button>
-                                    <div class="flex items-center justify-between my-4 gap-2">
-                                        <hr class="flex-grow border-t-2 border-solid border-gray-300" />
-                                        <span class="  font-bold text-base">OR</span>
-                                        <hr class="flex-grow border-t-2 border-solid border-gray-300" />
+                                    <div className="flex items-center justify-between my-4 gap-2">
+                                        <hr className="flex-grow border-t-2 border-solid border-gray-300" />
+                                        <span className="  font-bold text-base">OR</span>
+                                        <hr className="flex-grow border-t-2 border-solid border-gray-300" />
                                     </div>
                                     <StandaloneSearchBox
                                         onLoad={ref => inputRef.current = ref}

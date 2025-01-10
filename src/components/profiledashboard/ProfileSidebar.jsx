@@ -13,7 +13,7 @@ import DeleteModal from '../deleteModal/DeleteModal';
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
     const user = useSelector(state => state.User.user)
-    const setting = useSelector(state=>state?.Setting?.setting);
+    const setting = useSelector(state => state?.Setting?.setting);
 
     const [addWalletModal, setAddWalletModal] = useState(false)
     const [showLogout, setShowLogout] = useState(false)
@@ -27,6 +27,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const handleWalletBalanceModal = () => {
         setAddWalletModal(true)
     }
+    
 
     const activeTab = router.pathname.split('/').pop();
 
@@ -125,9 +126,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </h3>
                         <ul>
                             <Link href={`/profile/notifications`}>
-                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "notifications" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notifications")}>
-                                Notification
-                            </li>
+                                <li className={`p-4  cursor-pointer  textColor ${activeTab == "notifications" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("notifications")}>
+                                    Notification
+                                </li>
                             </Link>
                             <li className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`} onClick={() => setShowLogout(true)}>
                                 Logout

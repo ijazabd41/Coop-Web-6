@@ -269,7 +269,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                                     <div className='relative aspect-square h-auto w-full'>
                                         <Image src={productDetails?.image_url} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
-                                        {selectVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
+                                        {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
                                     </div>

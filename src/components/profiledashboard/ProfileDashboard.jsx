@@ -3,15 +3,19 @@ import BreadCrumb from "../breadcrumb/BreadCrumb";
 import ProfileSidebar from "./ProfileSidebar";
 import Profile from "./Profile";
 import Address from "./Address";
-import ActiveOrders from "./ActiveOrders";
-import OrderHistory from "./OrderHistory";
+import ActiveOrders from "./orders/ActiveOrders";
+import OrderHistory from "./orders/PrevOrder";
 import Wishlist from "./Wishlist";
 import { useRouter } from "next/router";
 import WalletHistory from "./WalletHistory";
 import TransactionHistory from "./TransactionHistory";
 import Notifications from "./Notifications";
+import { setCurrentUser } from "@/redux/slices/userSlice";
+import * as api from "@/api/apiRoutes"
+import { useDispatch } from "react-redux";
 
 const ProfileDashboard = () => {
+  const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState("profile");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,6 +26,19 @@ const ProfileDashboard = () => {
     setSelectedTab(currentTab || 'profile');
     setLoading(false)
   }, [router.pathname]);
+
+  useEffect(() => {
+    getCurrentUser()
+  }, [])
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await api.getUser();
+      dispatch(setCurrentUser({ data: response.user }));
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const activeTab = router.pathname.split('/').pop();
 

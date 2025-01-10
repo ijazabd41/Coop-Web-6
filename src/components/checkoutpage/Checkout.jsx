@@ -30,12 +30,12 @@ import { setAllAddresses, setSelectedAddress } from '@/redux/slices/addressSlice
 import { checkoutReducer, setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout, setCheckoutTotal } from "@/redux/slices/checkoutSlice"
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { deductUserBalance } from '@/redux/slices/userSlice'
+import { deductUserBalance, setCurrentUser } from '@/redux/slices/userSlice'
 import StripeModal from './StripeModal'
 import PaystackPop from '@paystack/inline-js'
 
 
-import OrderSuccessModal from '../orderstatusmodals/OrderSuccessModal'
+import OrderSuccessModal from '../paymentstatusmodals/OrderSuccessModal'
 import dynamic from 'next/dynamic'
 import Loader from '../loader/Loader';
 
@@ -43,7 +43,6 @@ import Loader from '../loader/Loader';
 const Checkout = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-
 
     const { Razorpay } = useRazorpay();
     const city = useSelector(state => state.City.city);
@@ -84,7 +83,18 @@ const Checkout = () => {
     useEffect(() => {
         fetchAddress()
         handleFetchTimeSlots()
+        getCurrentUser()
     }, [])
+
+
+    const getCurrentUser = async () => {
+        try {
+            const response = await api.getUser();
+            dispatch(setCurrentUser({ data: response.user }));
+        } catch (error) {
+            console.log("error", error);
+        }
+    };
 
 
     useEffect(() => {
@@ -142,6 +152,8 @@ const Checkout = () => {
             const response = await api.getAddress();
             if (response.status == 1) {
                 dispatch(setAllAddresses({ data: response.data }))
+                const defaultAddress = response?.data?.find((address) => address.is_default == 1)
+                dispatch(setAddress({ data: defaultAddress }))
             } else {
                 dispatch(setAllAddresses({ data: [] }))
             }
@@ -203,8 +215,7 @@ const Checkout = () => {
 
     const handleFirstStep = () => {
         if (checkout?.address == null) {
-            const defaultAddress = address?.allAddresses.find((address) => address.is_default == 1)
-            dispatch(setAddress({ data: defaultAddress }))
+
             dispatch(setCurrentStep({ data: 2 }))
         } else {
             dispatch(setCurrentStep({ data: 2 }))
@@ -406,6 +417,7 @@ const Checkout = () => {
     const handlePlaceOrder = async () => {
         const formatDate = formatDateWithTimeSlot(checkout?.selectedDate, checkout?.timeSlot);
         const capilizePaymeneMethod = String(checkout?.selectedPaymentMethod).charAt(0).toUpperCase() + String(checkout?.selectedPaymentMethod).slice(1);
+        const status = checkout?.selectedPaymentMethod === "COD" || checkout?.selectedPaymentMethod === "wallet" ? 2 : 1
         try {
             if (checkout?.selectedPaymentMethod == null) {
                 toast.error("Please select payment method")
@@ -422,13 +434,15 @@ const Checkout = () => {
                     quantity: cart?.checkout?.quantity,
                     total: cart?.checkout?.sub_total,
                     deliveryCharge: cart?.checkout?.delivery_charge?.total_delivery_charge,
-                    finalTotal: cart?.checkout?.total_amount,
+                    finalTotal: checkout?.checkoutTotal,
                     walletUsed: checkout?.isWalletChecked,
+                    walletBalance: checkout?.usedWalletBalance,
                     addressId: checkout?.address?.id,
                     deliveryTime: formatDate,
                     orderNote: checkout?.orderNote,
                     paymentMethod: checkout?.selectedPaymentMethod,
                     promocodeId: cart?.promo_code?.promo_code_id,
+                    status: status
                 });
                 if (response?.status == 1) {
                     dispatch(setOrderNote(""))
@@ -451,17 +465,18 @@ const Checkout = () => {
             if (checkout?.selectedPaymentMethod == "COD") {
                 setShowOrderSuccess(true)
                 setIsOrderPlaced(true)
-            } else if (checkout?.selectedPaymentMethod == "Wallet") {
-
+            } else if (checkout?.selectedPaymentMethod == "wallet") {
+                setShowOrderSuccess(true)
+                setIsOrderPlaced(true)
             }
             else if (checkout?.selectedPaymentMethod == "paystack") {
-                handlePayStackPayment(currentOrderID, cart?.checkout?.total_amount, capilizePaymeneMethod)
+                handlePayStackPayment(currentOrderID, checkout?.checkoutTotal, capilizePaymeneMethod)
             }
             else {
                 const response = await api.initiateTrasaction({ orderId: currentOrderID, paymentMethod: capilizePaymeneMethod, type: "order", })
                 if (response.status == 1) {
                     if (checkout?.selectedPaymentMethod == "razorpay") {
-                        handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, cart?.checkout?.total_amount, capilizePaymeneMethod)
+                        handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, checkout?.checkoutTotal, capilizePaymeneMethod)
                     } else if (checkout?.selectedPaymentMethod == "stripe") {
                         setShowStripe(true)
                     }
@@ -483,7 +498,6 @@ const Checkout = () => {
                             console.error("Unsupported payment method:", selectedPaymentMethod);
                         }
                     }
-
                 } else {
                     setIsOrderPlaced(false)
                     api.deleteOrder({ orderId: orderId })

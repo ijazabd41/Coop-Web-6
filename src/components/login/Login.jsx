@@ -47,7 +47,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
-  const fcmToken = useSelector((state)=>state.User?.fcm_token);
+  const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
 
   const dispatch = useDispatch();
@@ -283,7 +283,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         if (
           response?.status == 1 &&
           res?.message ==
-            "OTP is valid, but no user found with this phone number."
+          "OTP is valid, but no user found with this phone number."
         ) {
           setShowNewUser(true);
           setShowLogin(false);
@@ -409,7 +409,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const getCurrentUser = async () => {
     try {
       const response = await api.getUser();
-      // console.log("User Response",response);
       dispatch(setCurrentUser({ data: response.user }));
       toast.success("You're successfully Logged In");
     } catch (error) {
@@ -868,13 +867,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     )}
                   </div>
                   {setting?.google_login == 1 &&
-                  (setting?.email_login == 1 || setting?.phone_login == 1) ? (
-                    <div class="flex items-center justify-between my-4 gap-2">
-                      <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
-                      <span class=" text-[#4B6272] font-bold text-base">
+                    (setting?.email_login == 1 || setting?.phone_login == 1) ? (
+                    <div className="flex items-center justify-between my-4 gap-2">
+                      <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
+                      <span className=" text-[#4B6272] font-bold text-base">
                         OR
                       </span>
-                      <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
+                      <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                     </div>
                   ) : (
                     <></>

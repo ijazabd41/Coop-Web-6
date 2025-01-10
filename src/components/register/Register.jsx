@@ -192,10 +192,10 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                         <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button>
                         <span className='text-base font-medium'>Already have an account? Sign in</span>
                     </div>
-                    <div class="flex items-center justify-between my-4 gap-2">
-                        <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
-                        <span class=" text-[#4B6272] font-bold text-base">OR</span>
-                        <hr class="flex-grow border-t-2 border-dashed border-gray-300" />
+                    <div className="flex items-center justify-between my-4 gap-2">
+                        <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
+                        <span className=" text-[#4B6272] font-bold text-base">OR</span>
+                        <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                     </div>
                     <div className="my-4">
                         <button className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>

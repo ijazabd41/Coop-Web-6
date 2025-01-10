@@ -319,7 +319,7 @@ const HorizontalProductCard = ({ product }) => {
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
                         <Image className=' object-cover aspect-square' fill alt={product.name} src={product.image_url} />
-                        {selectedVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+                        {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
                         <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
@@ -352,7 +352,7 @@ const HorizontalProductCard = ({ product }) => {
                                 : null}
                             <div className='flex'>
                                 {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
-                                    <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
+                                    <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
                             </div>
                         </div>
                         {!isProductAvailabel ? <div className='flex gap-3  w-full flex-col '>

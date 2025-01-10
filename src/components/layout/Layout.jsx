@@ -25,6 +25,7 @@ const Layout = ({ children }) => {
   useEffect(() => {
     fetchSetting();
     fetchPaymentSetting();
+
   }, [city]);
 
   const fetchSetting = async () => {
@@ -53,29 +54,9 @@ const Layout = ({ children }) => {
     }
   };
 
-  // const fetchCity = async () => {
-  //     setLoading(true)
-  //     try {
-  //         if (setting?.setting?.default_city && city?.city == null) {
-  //             const latitude = parseFloat(setting.setting.default_city?.latitude)
-  //             const longitude = parseFloat(setting.setting.default_city?.longitude)
-  //             const response = await api.getCity({ latitude: latitude, longitude: longitude })
-  //             if (response.status === 1) {
-  //                 dispatch(setCity({ data: response.data }));
-  //                 setLoading(false)
-  //             } else {
-  //                 setLocModal(true);
-  //                 setLoading(false)
-  //             }
-  //         } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
-  //             setShowLocation(true);
-  //             setLoading(false)
-  //         }
-  //     } catch (error) {
-  //         setLoading(false)
-  //         console.log("error", error)
-  //     }
-  // }
+
+
+
 
   return (
     <section>
@@ -87,7 +68,7 @@ const Layout = ({ children }) => {
           theme={theme}
           key="toastContainer"
           bodyClassName={"toast-body"}
-          toastClassName="toast-container-class"
+          toastClassName="toast-container-className"
         />
       </PushNotification>
       {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}

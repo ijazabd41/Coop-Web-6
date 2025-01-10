@@ -9,7 +9,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { t } from '@/utils/translation';
 
 
-const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAddress }) => {
+const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAddress, finalOrderAddress }) => {
     const dispatch = useDispatch();
 
     const checkout = useSelector((state) => state.Checkout)
@@ -50,13 +50,16 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                         {t("delivery_to")}: <span className="font-bold">{address?.name}</span>
                     </h2>
                     <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            id={`default-address-${address.id}`}
-                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                            checked={checkout?.address?.id === address?.id}
-                            onChange={handleCheckboxChange}
-                        />
+                        {!finalOrderAddress &&
+                            <input
+                                type="checkbox"
+                                id={`default-address-${address.id}`}
+                                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                                checked={checkout?.address?.id === address?.id}
+                                onChange={handleCheckboxChange}
+                            />
+                        }
+
                         <label
                             htmlFor={`default-address-${address.id}`}
                             className="ml-2 text-sm"
@@ -65,7 +68,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                         </label>
                     </div>
                 </div>
-                {address?.is_default === 1 && (
+                {(address?.is_default === 1 && !finalOrderAddress) && (
                     <p className="text-sm mb-2">{t('default_address_msg')}</p>
                 )}
 
@@ -74,7 +77,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                     <p className="text-base font-medium">
                         {t('phone')}: <span className="font-medium">{address?.mobile}</span>
                     </p>
-                    <div className="flex md:space-x-1 flex-col md:flex-row">
+                    {!finalOrderAddress && <div className="flex md:space-x-1 flex-col md:flex-row">
                         <button
                             className="flex items-center gap-1 text-base font-medium"
                             onClick={handleEditAddress}
@@ -90,7 +93,8 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                             <RiDeleteBinLine size={18} />
                             {t('delete')}
                         </button>
-                    </div>
+                    </div>}
+
                 </div>
             </div>
             <Dialog open={showDeleteModal}>

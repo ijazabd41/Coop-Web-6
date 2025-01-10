@@ -71,8 +71,10 @@ const CheckoutPayment = ({ checkoutData }) => {
         }
     }, [checkout?.selectedPaymentMethod]);
 
-    useEffect(() => {
-        if (checkout?.isWalletChecked) {
+
+
+    const handleWalletCheck = async () => {
+        if (!checkout?.isWalletChecked) {
             if (user?.user?.balance >= checkoutData?.total_amount) {
                 dispatch(setPaymentMethod({ data: "wallet" }))
                 dispatch(setUserWalletBalance({ data: checkout?.checkoutTotal }))
@@ -82,15 +84,13 @@ const CheckoutPayment = ({ checkoutData }) => {
                 dispatch(setUserWalletBalance({ data: user?.user?.balance }))
             }
         } else {
+            dispatch(setPaymentMethod({ data: null }))
             if (user?.user?.balance >= checkout?.checkoutTotal) {
                 setWalletBalance(walletBalance + checkoutData?.total_amount)
             } else {
                 setWalletBalance(user?.user?.balance)
             }
         }
-    }, [checkout?.isWalletChecked])
-
-    const handleWalletCheck = async () => {
         dispatch(setWalletChecked({ data: !checkout?.isWalletChecked }))
     }
 

@@ -27,6 +27,7 @@
     "login": "Login",
     "order": "Order",
     "orders": "Orders",
+    "orderNumber": "Order Number",
     "price": "Price",
     "seller": "Seller",
     "priceRange": "Price Range",
@@ -55,6 +56,7 @@
     "search": "Search",
     "sortBy": "Sort By",
     "status": "Status",
+    "orderStatus": "Order Status",
     "stripe": "Stripe ",
     "update": "Update",
     "Invoice": "Invoice",
@@ -339,6 +341,7 @@
     "write_cancel_reason": "Write cancel reason...",
     "request_a_return": "Request a return",
     "cancel_order": "Cancel Order",
+    "return_order": "Return Order",
     "please_type_return_reason": "Please type a return reason.",
     "product_rating_is_required": "Product Rating is Required.",
     "vegetarian": "Vegetarian",
@@ -445,7 +448,12 @@
     "default_address_msg": "This is Default Address",
     "continue_shopping": "Continue Shopping",
     "backToCart": "Back to Cart",
+    "orderDate": "Order Date",
+    "moteItems": "More Items",
+    "shippingAdress": "Shipping Address",
+    "reason": "Reason",
+    "submit": "Submit",
     "wallet_amount_required": "Wallet Amount Required",
-    "wallet_amount_must_be_greater_than_zero":"Wallet Amount must be greater than zero",
-    "wallet_payment_method_required":"Wallet Payment Method Required"
+    "wallet_amount_must_be_greater_than_zero": "Wallet Amount must be greater than zero",
+    "wallet_payment_method_required": "Wallet Payment Method Required"
 }

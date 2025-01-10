@@ -335,7 +335,7 @@ export const getTimeSlots = async () => {
     return response.data
 }
 
-export const placeOrder = async ({ productVariantId, quantity, total, deliveryCharge, finalTotal, paymentMethod, addressId, deliveryTime, walletBalance, walletUsed, orderNote, promocodeId = 0, }) => {
+export const placeOrder = async ({ productVariantId, quantity, total, deliveryCharge, finalTotal, paymentMethod, addressId, deliveryTime, walletBalance, walletUsed, orderNote, promocodeId = 0, status }) => {
     const formData = new FormData();
     formData.append("product_variant_id", productVariantId);
     formData.append("quantity", quantity);
@@ -344,13 +344,12 @@ export const placeOrder = async ({ productVariantId, quantity, total, deliveryCh
     formData.append("final_total", finalTotal);
     formData.append("payment_method", paymentMethod);
     formData.append("address_id", addressId);
+    formData.append("status", status)
 
     formData.append("delivery_time", deliveryTime);
-    if (walletBalance) {
-        formData.append("wallet_balance", walletBalance);
-    }
     if (walletUsed) {
-        formData.append("wallet_used", walletUsed);
+        formData.append("wallet_used", 1);
+        formData.append("wallet_balance", walletBalance);
     }
     if (orderNote !== "") {
         formData.append("order_note", orderNote);
@@ -375,10 +374,10 @@ export const initiateTrasaction = async ({ orderId, paymentMethod, type, walletA
     return response.data;
 }
 
-export const addTransaction = async ({ orderId, transactionId, paymentMethod, type,walletAmount = 0 }) => {
+export const addTransaction = async ({ orderId, transactionId, paymentMethod, type, walletAmount = 0 }) => {
     const formData = new FormData();
     formData.append("order_id", orderId)
-    if(walletAmount != 0){
+    if (walletAmount != 0) {
         formData.append("wallet_amount", walletAmount);
     }
     formData.append("transaction_id", transactionId)
@@ -410,4 +409,14 @@ export const getFAQs = async ({ limit = 7, offset = 0 }) => {
     const params = { limit, offset };
     const response = await api.get(`${apiEndPoints.getFaq}`, { params });
     return response.data;
+}
+
+
+export const getOrders = async ({ limit, offset, orderId, type }) => {
+    const params = { limit: limit, offset: offset, type: type }
+    if (orderId) {
+        params.order_id = orderId
+    }
+    const response = await api.get(`${apiEndPoints.getOrders}`, { params })
+    return response.data
 }

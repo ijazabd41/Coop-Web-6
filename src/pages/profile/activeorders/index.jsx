@@ -1,9 +1,9 @@
 import React from 'react'
 import ActiceOrdersPage from '@/components/pagecomponents/ActiveOrdersPage'
-const OrderDetail = () => {
+const index = () => {
     return (
         <div><ActiceOrdersPage /></div>
     )
 }
 
-export default OrderDetail
+export default index

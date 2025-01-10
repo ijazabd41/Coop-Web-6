@@ -316,7 +316,7 @@ const ListViewProductCard = ({ product }) => {
         <div className='col-span-6 md:col-span-3'>
           <div className='relative h-1/2 w-full  object-cover'>
             <Image src={product.image_url} height={0} width={0} alt={product.name} className='   w-3/4 aspect-square ' />
-            {selectedVariant?.discounted_price !== 0 ? <span class="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+            {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
               {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(0)}% {t("off")}
             </span> : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
