@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import Categories from '../categories/CategoriesContainer'
 import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
-import { resetSelectedCategories } from '@/redux/slices/categorySlice'
+// import { resetSelectedCategories } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/router'
 import { clearAllFilter } from '@/redux/slices/productFilterSlice'
 
@@ -21,7 +21,7 @@ const Homepage = () => {
 
     useEffect(() => {
         if (router?.pathname === "/") {
-            dispatch(resetSelectedCategories())
+            // dispatch(resetSelectedCategories())
             dispatch(clearAllFilter())
         }
     }, [])

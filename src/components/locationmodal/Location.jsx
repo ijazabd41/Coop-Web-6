@@ -65,7 +65,29 @@ const Location = ({ showLocation, setShowLocation }) => {
         setMapView(false)
     }
 
-    const handleViewMap = () => {
+    const handleViewMap = async () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            setlocalLocation({ lat: lat, lng: lng })
+        });
+        const geocoder = new window.google.maps.Geocoder();
+        const response = await geocoder.geocode({
+            location: {
+                lat: localLocation.lat,
+                lng: localLocation.lng,
+            }
+        }).then(response => {
+            if (response.results[0]) {
+                setlocalLocation(state => ({
+                    ...state,
+                    formatted_address: response.results[0].formatted_address
+                }));
+            }
+        }).catch((error) => {
+            console.log("err", error)
+        })
+        
         setMapView(true)
     }
 
@@ -259,11 +281,12 @@ const Location = ({ showLocation, setShowLocation }) => {
 
     const handleShowModal = () => {
         setShowLocation(false)
+        setMapView(false)
     }
 
     return (
         <>
-            {loading ? <Loader /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
+            {loading ? <Loader screen={"full"}/> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
                 <DialogContent
                     // onEscapeKeyDown={(e) => e.preventDefault()}
                     // onPointerDown={(e) => e.preventDefault()}

@@ -10,13 +10,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories } from '@/redux/slices/categorySlice';
+import { setSelectedCategories } from '@/redux/slices/productFilterSlice';
 
 const CategoriesContainer = ({ categories }) => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const selectedCategories = useSelector(state => state.SelectedCategories?.selectedCategories);
+    const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
     const handleCategoryClick = (category) => {
         dispatch(setSelectedCategories({ data: category?.id }))
         if (category?.has_child) {

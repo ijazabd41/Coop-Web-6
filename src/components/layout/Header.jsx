@@ -39,7 +39,8 @@ import { useTheme } from 'next-themes'
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
-import { setFilterCategory, setFilterSearch } from '@/redux/slices/productFilterSlice';
+import { setFilterCategory, setFilterSearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
+import SearchProductCard from '../cards/SearchProductCard';
 
 
 const Header = () => {
@@ -52,6 +53,7 @@ const Header = () => {
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
     const categories = useSelector(state => state.Shop.shop);
+    const filter = useSelector(state => state.ProductFilter)
     // console.log(categories.categories)
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
@@ -138,10 +140,12 @@ const Header = () => {
 
     const [searchTerm, setSearchTerm] = useState("")
     const handleSearchCategory = (value) => {
-        const parsedValue = Number(value);
+        const parsedValue = parseInt(value);
         if (!isNaN(parsedValue)) {
             setSearchCatId(parsedValue)
+            dispatch(setSearchedCategory({ data: String(parsedValue) }))
         } else {
+            dispatch(setSearchedCategory({ data: "" }))
             setSearchCatId(null)
         }
     }
@@ -150,12 +154,9 @@ const Header = () => {
 
     useEffect(() => {
         if (searchTerm === "") {
-            dispatch(setFilterSearch({ data: "" }))
-            dispatch(setFilterCategory({ data: "" }))
             return;
         }
         const timeoutId = setTimeout(() => {
-            dispatch(setFilterCategory({ data: searchCatId }))
             dispatch(setFilterSearch({ data: searchTerm }))
             fetchSearchData();
         }, 1000)
@@ -244,7 +245,7 @@ const Header = () => {
                     <div className='center-header headerBackgroundColor'>
                         <div className='container  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2'>
                             <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
-                                <Link href={"/"}><Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' fill className='h-full lg:full w-full lg:w-full object-contain' /></Link>
+                                <Link href={"/"}><Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' width={0} height={0} className='h-full lg:full w-full lg:w-full object-contain' /></Link>
                             </div>
                             <div className='hidden lg:flex order-2'>
                                 <ul className='flex gap-6'>
@@ -392,7 +393,7 @@ const Header = () => {
 
                             {/* Second column: col-6 equivalent */}
                             <div className="lg:col-span-6 md:col-span-8  items-center headerSearch hidden lg:flex md:flex rounded-[5px]  ml-[20px]">
-                                <Select onValueChange={(value) => handleSearchCategory(value)} >
+                                <Select value={filter?.searchedCategory ? Number(filter?.searchedCategory) : "placeholder"} onValueChange={(value) => handleSearchCategory(value)} >
                                     <SelectTrigger className="w-[152px] h-full buttonBackground border-none">
                                         <SelectValue placeholder="All Categories" />
                                     </SelectTrigger>
@@ -403,15 +404,24 @@ const Header = () => {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <input
-                                    type="text"
-                                    placeholder="Search Here..."
-                                    className="flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow"
-                                    value={searchTerm}
-                                    onChange={(e) => handleSearchTerm(e)}
-                                />
+                                <div className="relative flex-grow h-full">
+                                    <input
+                                        type="text"
+                                        placeholder="Search Here..."
+                                        className="w-full flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow"
+                                        value={filter?.search ? filter?.search : searchTerm}
+                                        onChange={(e) => handleSearchTerm(e)}
+                                    />
+                                    <div className="absolute w-full mt-1 flex flex-wrap items-center pr-3 z-10 bodyBackgroundColor">
+                                        {Array.from({ length: 0 })?.map((_, idx) => (
+                                            <SearchProductCard key={idx} />
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <button
                                     className="p-[20px] col-span-4 h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow"
+                                    onClick={() => router.push("/products")}
                                 >
                                     Search
                                 </button>

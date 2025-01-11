@@ -12,7 +12,7 @@ import {
 import { FaChevronDown } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
 import dynamic from "next/dynamic";
-import { resetSelectedCategories } from "@/redux/slices/categorySlice";
+// import { resetSelectedCategories } from "@/redux/slices/productFilterSlice";
 const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
 
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
@@ -129,7 +129,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                                 setMinPrice(null);
                                 setMaxPrice(null);
                                 dispatch(clearAllFilter());
-                                dispatch(resetSelectedCategories())
+                                // dispatch(resetSelectedCategories())
                                 setOffset(0)
                                 setProductResult([])
                             }}

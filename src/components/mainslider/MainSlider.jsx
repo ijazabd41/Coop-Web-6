@@ -3,6 +3,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Image from 'next/image';
 
 
 
@@ -25,10 +26,13 @@ const HomePageSlider = ({ slider }) => {
                         <SwiperSlide className='rounded-lg p-2 md:p-8' key={index}>
                             <div className="relative   rounded-lg shadow-lg ">
                                 <div className="flex flex-col items-center text-center rounded-xl">
-                                    <img
+                                    <Image
                                         src={slider.image_url}
                                         alt="Fruit Basket"
-                                        className="rounded-xl"
+                                        priority='false'
+                                        className="rounded-xl w-full h-full"
+                                        width={0}
+                                        height={0}
                                     />
                                 </div>
                             </div>

@@ -3,7 +3,7 @@ import BreadCrumb from '../breadcrumb/BreadCrumb'
 import { t } from "@/utils/translation"
 import Filter from '../productFilter/ProductFilter'
 import * as api from "@/api/apiRoutes"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     Select,
     SelectContent,
@@ -19,8 +19,10 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import FilterDrawer from '../productFilter/FilterDrawer'
 import { IoFilter } from 'react-icons/io5'
+import { setFilterCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice'
 
 const Products = () => {
+    const dispatch = useDispatch();
     const city = useSelector(state => state.City)
     const filter = useSelector(state => state.ProductFilter)
     const [productResult, setProductResult] = useState([])
@@ -36,6 +38,12 @@ const Products = () => {
     // const []
 
     const total_products_per_page = 12;
+
+    useEffect(() => {
+        if (filter?.searchedCategory) {
+            dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+        }
+    }, [])
 
     useEffect(() => {
         filterProductsFromApi({
@@ -177,7 +185,7 @@ const Products = () => {
                                             return (
                                                 isGridView ?
                                                     <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={product?.id}>
-                                                        <VerticleProductCard product={product}  />
+                                                        <VerticleProductCard product={product} />
                                                     </div>
                                                     :
                                                     <div className='col-span-12' key={product?.id}><ListViewProductCard product={product} /></div>

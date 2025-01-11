@@ -12,7 +12,9 @@ const initialState = {
     search_sizes: [],
     seller_id: "",
     country_id: "",
-    search_product: []
+    search_product: [],
+    selectedCategories: [],
+    searchedCategory: ""
 };
 
 export const productFilterReducer = createSlice({
@@ -64,6 +66,14 @@ export const productFilterReducer = createSlice({
             state.search = null;
             state.price_filter = null
             state.search_product = []
+            state.selectedCategories = []
+            state.searchedCategory = ""
+        },
+        setSelectedCategories: (state, action) => {
+            state.selectedCategories = [...state.selectedCategories, action.payload.data]
+        },
+        setSearchedCategory: (state, action) => {
+            state.searchedCategory = action.payload.data
         }
 
     }
@@ -82,7 +92,9 @@ export const {
     setFilterByCountry,
     setFilterBySeller,
     clearAllFilter,
-    setProductBySearch
+    setProductBySearch,
+    setSelectedCategories,
+    setSearchedCategory
 } = productFilterReducer.actions;
 
 export default productFilterReducer.reducer;

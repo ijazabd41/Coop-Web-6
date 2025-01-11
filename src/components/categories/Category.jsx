@@ -5,14 +5,14 @@ import CategoryCard from './CategoryCard'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice'
-import { setSelectedCategories } from '@/redux/slices/categorySlice'
+import { setSelectedCategories } from '@/redux/slices/productFilterSlice'
 
 
 const Category = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { slug } = router.query
-    const selectedCategories = useSelector(state => state.SelectedCategories?.selectedCategories);
+    const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
     const [categories, setCategories] = useState([])
 
     const categoryPerPage = 12;
