@@ -456,5 +456,6 @@
     "submit": "Submit",
     "wallet_amount_required": "Wallet Amount Required",
     "wallet_amount_must_be_greater_than_zero": "Wallet Amount must be greater than zero",
-    "wallet_payment_method_required": "Wallet Payment Method Required"
+    "wallet_payment_method_required": "Wallet Payment Method Required",
+    "all_categories": "All Categories"
 }

@@ -39,8 +39,9 @@ import { useTheme } from 'next-themes'
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
-import { setFilterCategory, setFilterSearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
+import { setFilterCategory, setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
 import SearchProductCard from '../cards/SearchProductCard';
+import SearchComponent from '../search/SearchComponent';
 
 
 const Header = () => {
@@ -65,7 +66,7 @@ const Header = () => {
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const [searchCatId, setSearchCatId] = useState(null);
+
 
     useEffect(() => {
         if (router?.pathname != "/checkout") {
@@ -137,49 +138,47 @@ const Header = () => {
         }
     }
 
+    const [searchCatId, setSearchCatId] = useState("")
+    const [typingTimeout, setTypingTimeout] = useState(null);
 
-    const [searchTerm, setSearchTerm] = useState("")
     const handleSearchCategory = (value) => {
-        const parsedValue = parseInt(value);
-        if (!isNaN(parsedValue)) {
-            setSearchCatId(parsedValue)
-            dispatch(setSearchedCategory({ data: String(parsedValue) }))
-        } else {
-            dispatch(setSearchedCategory({ data: "" }))
-            setSearchCatId(null)
-        }
+        setSearchCatId(value)
+        dispatch(setSearchedCategory({ data: value }))
     }
-
-    const handleSearchTerm = (e) => setSearchTerm(e.target.value);
-
-    useEffect(() => {
-        if (searchTerm === "") {
-            return;
-        }
-        const timeoutId = setTimeout(() => {
-            dispatch(setFilterSearch({ data: searchTerm }))
-            fetchSearchData();
-        }, 1000)
-
-        return () => {
-            clearTimeout(timeoutId);
-        }
-    }, [searchTerm])
-
-    const fetchSearchData = async () => {
+    const handleSearchData = async (searchValue) => {
         try {
             const response = await api.getProductByFilter({
                 latitude: city?.city?.latitude,
                 longitude: city?.city?.longitude,
                 filters: {
-                    category_id: searchCatId,
-                    search: searchTerm
+                    search: searchValue,
+                    category_id: filter?.searchedCategory
                 }
-            });
-            console.log(response.data);
+            })
+            dispatch(setProductBySearch({ data: response?.data }))
         } catch (error) {
-            console.log("Error:", error);
+            console.log("Error", error?.message)
         }
+    }
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        if (value.trim() === "") {
+            dispatch(setFilterSearch({ data: "" }))
+            clearTimeout(typingTimeout)
+            return
+        }
+        dispatch(setFilterSearch({ data: e.target.value }))
+        dispatch(setSearchedCategory({ data: searchCatId }))
+
+        if (typingTimeout) {
+            clearTimeout(typingTimeout)
+        }
+        const timeout = setTimeout(() => {
+            handleSearchData(e.target.value)
+        }, 2000);
+
+        setTypingTimeout(timeout)
     }
 
 
@@ -187,7 +186,7 @@ const Header = () => {
 
     return (
         <>
-            <section className='border-b-2 '>
+            <section className='border-b-2'> 
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
                     <div className="container  flex justify-between items-center h-[40px]">
                         <div className="flex items-center">
@@ -241,8 +240,8 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-                <div className='headerBackgroundColor pb-3'>
-                    <div className='center-header headerBackgroundColor'>
+                <div className='headerBackgroundColor pb-3 relative'>
+                    <div className='center-header headerBackgroundColor '>
                         <div className='container  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2'>
                             <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
                                 <Link href={"/"}><Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' width={0} height={0} className='h-full lg:full w-full lg:w-full object-contain' /></Link>
@@ -392,15 +391,15 @@ const Header = () => {
                             </div>
 
                             {/* Second column: col-6 equivalent */}
-                            <div className="lg:col-span-6 md:col-span-8  items-center headerSearch hidden lg:flex md:flex rounded-[5px]  ml-[20px]">
-                                <Select value={filter?.searchedCategory ? Number(filter?.searchedCategory) : "placeholder"} onValueChange={(value) => handleSearchCategory(value)} >
+                            <div className="lg:col-span-6 md:col-span-8  items-center headerSearch  lg:flex md:flex rounded-[5px] ml-[20px] hidden">
+                                <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)} >
                                     <SelectTrigger className="w-[152px] h-full buttonBackground border-none">
                                         <SelectValue placeholder="All Categories" />
                                     </SelectTrigger>
                                     <SelectContent className="w-[152px] h-full z-10  hidden md:block lg:block">
-                                        <SelectItem value="placeholder">All Categories</SelectItem>
+                                        <SelectItem value="all categories">{t("all_categories")}</SelectItem>
                                         {categories?.categories?.map((category) => (
-                                            <SelectItem key={category?.id} value={category?.id}>{category?.name}</SelectItem>
+                                            <SelectItem key={category?.id} value={`${category?.id}`}>{category?.name}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -409,21 +408,24 @@ const Header = () => {
                                         type="text"
                                         placeholder="Search Here..."
                                         className="w-full flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow"
-                                        value={filter?.search ? filter?.search : searchTerm}
-                                        onChange={(e) => handleSearchTerm(e)}
+                                        value={filter?.search ? filter?.search : ""}
+                                        onChange={(e) => handleSearch(e)}
                                     />
-                                    <div className="absolute w-full mt-1 flex flex-wrap items-center pr-3 z-10 bodyBackgroundColor">
-                                        {Array.from({ length: 0 })?.map((_, idx) => (
-                                            <SearchProductCard key={idx} />
+                                    <div className="absolute w-full mt-1 flex flex-wrap flex-col items-start pr-3 z-10 bodyBackgroundColor">
+                                        {router?.pathname !== "/products" && filter?.search_product?.map((product, idx) => (
+                                            <SearchProductCard key={idx} product={product} />
                                         ))}
                                     </div>
                                 </div>
 
                                 <button
                                     className="p-[20px] col-span-4 h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow"
-                                    onClick={() => router.push("/products")}
+                                    onClick={() => {
+                                        router.push("/products");
+                                        dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+                                    }}
                                 >
-                                    Search
+                                    {t("search")}
                                 </button>
                             </div>
 

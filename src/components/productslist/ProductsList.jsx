@@ -39,11 +39,11 @@ const Products = () => {
 
     const total_products_per_page = 12;
 
-    useEffect(() => {
-        if (filter?.searchedCategory) {
-            dispatch(setFilterCategory({ data: filter?.searchedCategory }))
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (filter?.searchedCategory) {
+    //         dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+    //     }
+    // }, [])
 
     useEffect(() => {
         filterProductsFromApi({
