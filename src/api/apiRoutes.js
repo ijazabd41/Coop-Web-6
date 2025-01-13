@@ -420,3 +420,27 @@ export const getOrders = async ({ limit, offset, orderId, type }) => {
     const response = await api.get(`${apiEndPoints.getOrders}`, { params })
     return response.data
 }
+
+export const changeOrderStatus = async ({ orderId, orderItemId, status, reason }) => {
+    const formData = new FormData();
+    formData.append("order_id", orderId)
+    formData.append("order_item_id", orderItemId)
+    formData.append("status", status)
+    if (reason) {
+        formData.append("reason", reason)
+    }
+    const response = await api.post(`${apiEndPoints.updateOrderStatus}`, formData)
+    return response.data;
+}
+
+export const reviewProduct = async ({ productId, rating, review, images }) => {
+    const formData = new FormData();
+    formData.append("product_id", productId)
+    formData.append("rate", rating)
+    formData.append("review", review)
+    for (let i = 0; i < images?.length; i++) {
+        formData.append(`image[${i}]`, images[i])
+    }
+    const response = await api.post(`${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.add}`, formData)
+    return response.data;
+}

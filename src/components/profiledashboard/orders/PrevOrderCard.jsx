@@ -11,7 +11,7 @@ import Link from 'next/link'
 const PrevOrderCard = ({ order }) => {
 
     const setting = useSelector((state) => state.Setting)
-    const deliveryDate = order?.status?.find((ord) => ord[0] == "6")[1]
+    const deliveryDate = order?.status?.find((ord) => ord[0] == "6")
 
     const orderFirstItem = order?.items[0]
 
@@ -31,7 +31,7 @@ const PrevOrderCard = ({ order }) => {
                         </div>
                         <div className='col-span-5 flex flex-col  items-end'>
                             <p className='font-normal text-sm'>{t("orderStatus")}</p>
-                            <span className='font-bold text-base'>{t("order_delivered_on")}{formatCustomDate(deliveryDate)}</span>
+                            <span className='font-bold text-base'>{t("order_delivered_on")}{formatCustomDate(deliveryDate[1])}</span>
                         </div>
                     </div>
                     <div className='p-4'>

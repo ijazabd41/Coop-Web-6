@@ -12,7 +12,7 @@ const PrevOrder = () => {
     const [totalOrders, setTotalOrders] = useState(null)
     useEffect(() => {
         handleFetchPrevOrders()
-    }, [])
+    }, [offset])
 
     const ordersPerPage = 10;
 

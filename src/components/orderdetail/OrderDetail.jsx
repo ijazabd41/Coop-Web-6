@@ -7,9 +7,8 @@ import OrderAdressCard from './OrderAdressCard';
 import { useSelector } from 'react-redux';
 import OrderItems from './OrderItems';
 import OrderStepper from './OrderStatusStepper';
-import FinalCheckoutSummary from './FinalChheckoutSummary';
-
-
+import FinalCheckoutSummary from './FinalCheckoutSummary';
+import BreadCrumb from '../breadcrumb/BreadCrumb';
 
 
 const OrderDetail = () => {
@@ -19,11 +18,13 @@ const OrderDetail = () => {
     const [orderDetail, setOrderDetail] = useState([])
     const [deliveryAddress, setDeliveryAddress] = useState([])
     const [loading, setLoading] = useState(false)
+    
     useEffect(() => {
         if (orderid) {
             handleFetchOrderDetail()
         }
     }, [orderid])
+
     const handleFetchOrderDetail = async () => {
         try {
             const response = await api.getOrders({ orderId: orderid })
@@ -41,6 +42,7 @@ const OrderDetail = () => {
 
     return (
         <section>
+            <BreadCrumb />
             <div className='container my-12'>
                 <div className='flex flex-col gap-12'>
                     <div className='flex justify-between backgroundColor p-4 rounded-md'>
@@ -63,7 +65,7 @@ const OrderDetail = () => {
                             </div>
                             <div className='flex flex-col gap-3'>
                                 <h1 className='font-bold text-2xl'>{t("items")}</h1>
-                                <OrderItems products={orderDetail?.items} />
+                                <OrderItems products={orderDetail?.items} handleFetchOrderDetail={handleFetchOrderDetail} />
                             </div>
                         </div>
                         <div className='col-span-4'>
