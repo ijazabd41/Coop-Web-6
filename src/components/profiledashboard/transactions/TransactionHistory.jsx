@@ -49,13 +49,13 @@ const TransactionHistory = () => {
                     {loading ?
                         Array?.from({ length: 6 })?.map((_, index) => {
                             return (
-                                <CardSkeleton height={200} padding="2px" />
+                                <CardSkeleton height={200} padding="2px" key={index} />
                             )
                         })
                         :
                         transaction?.map((transaction) => {
                             return (
-                                <TransactionCard transaction={transaction} />
+                                <TransactionCard transaction={transaction} key={transaction?.id} />
                             )
                         })
                     }
