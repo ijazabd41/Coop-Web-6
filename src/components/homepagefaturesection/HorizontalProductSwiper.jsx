@@ -49,9 +49,9 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                     </div>
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                         <button onClick={handleViewAll} >{t("see_all")}</button>
-                                        <div className=' md:flex hidden'>
-                                            <button className={`textColor buttonBorder rounded-full  prev-btn-${section?.id} `}><IoMdArrowBack className='textColor' size={20} /></button>
-                                            <button className={`textColor buttonBorder rounded-full  next-btn-${section?.id} `}><IoMdArrowForward className='textColor' size={20} /></button>
+                                        <div className=' md:flex hidden gap-2'>
+                                            <button className={`textColor buttonBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
+                                            <button className={`textColor buttonBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                                 spaceBetween: 10
                                             },
                                             768: {
-                                                slidesPerView: 3.5,
+                                                slidesPerView: 3.3,
                                                 spaceBetween: 10
                                             },
                                             500: {

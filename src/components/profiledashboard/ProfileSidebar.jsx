@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { FaUserCircle, FaShoppingCart, FaWallet, FaCog } from "react-icons/fa";
 import { useRouter } from 'next/router';
-import WalletBalanceModal from './WalletBalanceModal';
+import WalletBalanceModal from './wallet/WalletBalanceModal';
 import { useSelector } from 'react-redux';
 import { t } from '@/utils/translation';
 import Image from 'next/image';
@@ -27,7 +27,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const handleWalletBalanceModal = () => {
         setAddWalletModal(true)
     }
-    
+
 
     const activeTab = router.pathname.split('/').pop();
 
@@ -113,9 +113,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                                 </li>
                             </Link>
 
-                            <li className={`p-4  cursor-pointer  textColor ${activeTab == "transactions" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("transactions")}>
-                                Transaction History
-                            </li>
+                            <Link href={`/profile/transaction`}>
+                                <li className={`p-4  cursor-pointer  textColor ${activeTab == "transaction" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("transaction")}>
+                                    Transaction History
+                                </li>
+                            </Link>
                         </ul>
                     </div>
 

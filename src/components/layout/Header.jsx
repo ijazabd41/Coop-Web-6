@@ -416,51 +416,14 @@ const Header = () => {
                                 </div>
                             </div>
 
-                            {/* Second column: col-6 equivalent */}
-                            {/* <div className="lg:col-span-6 md:col-span-8  items-center headerSearch  lg:flex md:flex rounded-[5px] ml-[20px] hidden">
-                                <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)} >
-                                    <SelectTrigger className="w-[152px] h-full buttonBackground border-none">
-                                        <SelectValue placeholder="All Categories" />
-                                    </SelectTrigger>
-                                    <SelectContent className="w-[152px] h-full z-10  hidden md:block lg:block">
-                                        <SelectItem value="all categories">{t("all_categories")}</SelectItem>
-                                        {categories?.categories?.map((category) => (
-                                            <SelectItem key={category?.id} value={`${category?.id}`}>{category?.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <div className="relative flex-grow h-full">
-                                    <input
-                                        type="text"
-                                        placeholder="Search Here..."
-                                        className="w-full flex-grow px-4 py-2 text-sm  rounded  focus:outline-none h-full shadow"
-                                        value={filter?.search ? filter?.search : ""}
-                                        onChange={(e) => handleSearch(e)}
-                                    />
-                                    <div className="absolute w-full mt-1 flex flex-wrap flex-col items-start pr-3 z-10 bodyBackgroundColor">
-                                        {router?.pathname !== "/products" && filter?.search_product?.map((product, idx) => (
-                                            <SearchProductCard key={idx} product={product} />
-                                        ))}
-                                    </div>
-                                </div>
 
-                                <button
-                                    className="p-[20px] col-span-4 h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow"
-                                    onClick={() => {
-                                        router.push("/products");
-                                        dispatch(setFilterCategory({ data: filter?.searchedCategory }))
-                                    }}
-                                >
-                                    {t("search")}
-                                </button>
-                            </div> */}
 
                             <div className='hidden md:block lg:col-span-6 md:col-span-8'>
                                 <SearchComponent
                                     isMobile={isMobile}
                                     handleSearchCategory={handleSearchCategory}
                                     handleSearch={handleSearch}
-                                 />
+                                />
                             </div>
 
                             <div className="col-span-3 hidden order-3 justify-end lg:flex h-full">

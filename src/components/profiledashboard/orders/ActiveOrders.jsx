@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { t } from '@/utils/translation'
 import ActiveOrdersCard from './ActiveOrdersCard'
 import * as api from "@/api/apiRoutes"
+import CardSkeleton from '@/components/skeleton/CardSkeleton'
 
 const ActiveOrders = () => {
 
@@ -39,12 +40,19 @@ const ActiveOrders = () => {
                 <h2 className='font-bold text-xl'>{t("active_orders")}</h2>
             </div>
             <div>
-                {activeOrders?.map((order) => {
-                    return (
-                        
-                        <ActiveOrdersCard order={order} key={order?.id}/>
-                    )
-                })}
+                {loading ?
+                    Array?.from({ length: 6 })?.map((_, index) => {
+                        return (
+
+                            <CardSkeleton height={200} padding="p-4" key={index} />
+                        )
+                    })
+                    : activeOrders?.map((order) => {
+                        return (
+
+                            <ActiveOrdersCard order={order} key={order?.id} />
+                        )
+                    })}
             </div>
 
             {totalOrders > activeOrders?.length && <div className='flex justify-center p-4'>

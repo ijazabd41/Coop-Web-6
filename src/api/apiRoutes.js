@@ -298,7 +298,7 @@ export const deleteAddress = async ({ id }) => {
 }
 
 // wishlists api
-export const getFavorite = async ({ latitude, longitude }) => {
+export const getFavorite = async ({ latitude, longitude, limit, offset }) => {
     const params = { latitude: latitude, longitude: longitude };
     const response = await api.get(apiEndPoints.getFavorite, { params })
     return response.data
@@ -442,5 +442,39 @@ export const reviewProduct = async ({ productId, rating, review, images }) => {
         formData.append(`image[${i}]`, images[i])
     }
     const response = await api.post(`${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.add}`, formData)
+    return response.data;
+}
+
+export const getProductRating = async ({ ratingId }) => {
+    const formData = new FormData();
+    formData.append("id", ratingId)
+    const response = await api.post(`${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.edit}`, formData)
+    return response.data
+}
+
+export const updateReviewProduct = async ({ ratingId, rating, review, deleteImages, images }) => {
+    const formData = new FormData();
+    formData.append("id", ratingId);
+    formData.append("rate", rating);
+    formData.append("review", review);
+    formData.append("deleteImageIds", `[${deleteImages}]`);
+    for (let i = 0; i < images?.length; i++) {
+        formData.append(`image[${i}]`, images[i])
+    }
+    const response = await api.post(`${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.update}`, formData)
+    return response.data
+}
+export const downloadInvoice = async ({ orderId }) => {
+    const formData = new FormData();
+    formData.append("order_id", orderId)
+    const response = await api.post(`${apiEndPoints.getInvoice}`, formData, {
+        responseType: 'blob',
+    })
+    return response;
+}
+
+export const getUserTransactions = async ({ limit, offset, type }) => {
+    const params = { limit: limit, offset: offset, type: type }
+    const response = await api.get(`${apiEndPoints.getTransactions}`, { params })
     return response.data;
 }

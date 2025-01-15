@@ -85,18 +85,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE);
   }, []);
 
-  useEffect(() => {
-    let interval;
-    if (timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      setOtpDisabled(false);
-    }
+  // useEffect(() => {
+  //   let interval;
+  //   if (timer > 0) {
+  //     interval = setInterval(() => {
+  //       setTimer((prevTimer) => prevTimer - 1);
+  //     }, 1000);
+  //   } else if (timer === 0) {
+  //     setOtpDisabled(false);
+  //   }
 
-    return () => clearInterval(interval);
-  }, [timer]);
+  //   return () => clearInterval(interval);
+  // }, [timer]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -115,48 +115,42 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     };
   }, [showLogin]);
 
+
   const recaptchaClear = async () => {
     const recaptchaContainer = document.getElementById("recaptcha-container");
-
     if (window.recaptchaVerifier) {
       try {
-        await window.recaptchaVerifier.clear(); // Clear the widget
-        window.recaptchaVerifier = null; // Reset the verifier
-        console.log("ReCAPTCHA widget cleared");
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
       } catch (error) {
         console.error("Error clearing ReCAPTCHA verifier:", error);
       }
     }
-
     if (recaptchaContainer) {
-      recaptchaContainer.innerHTML = ""; // Clear the container
+      recaptchaContainer.innerHTML = "";
       console.log("ReCAPTCHA container cleared");
     }
   };
 
+
   const generateRecaptcha = async () => {
+    await recaptchaClear();
     const recaptchaContainer = document.getElementById("recaptcha-container");
     if (!recaptchaContainer) {
       console.error("Container element 'recaptcha-container' not found.");
       return null;
     }
 
-    // Clear the container in case any previous widget exists
-    recaptchaContainer.innerHTML = "";
-
-    // Initialize RecaptchaVerifier
     try {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
-        "recaptcha-container",
+        recaptchaContainer,
         {
           size: "invisible",
         }
       );
 
-      // Render the widget
-      const widgetId = await window.recaptchaVerifier.render();
-      console.log("ReCAPTCHA rendered with widgetId:", widgetId);
+      // window.recaptchaVerifier.render();
       return window.recaptchaVerifier;
     } catch (error) {
       console.error("Error initializing RecaptchaVerifier:", error.message);
@@ -426,6 +420,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   };
 
   const handleHideLogin = async () => {
+    await recaptchaClear();
     setIsOTP(false);
     setShowLogin(false);
     setError("");
@@ -433,7 +428,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setInputType("");
     setLoading(false);
     setMobileActiveKey(1);
-    await recaptchaClear();
+
   };
 
   const handleGoogleLogin = async () => {

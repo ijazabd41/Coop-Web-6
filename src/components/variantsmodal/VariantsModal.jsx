@@ -290,9 +290,9 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                                         <div className='flex items-center gap-1'>
                                             <div className='flex items-center gap-3 font-bold text-base '>{setting?.setting?.currency}{variant?.discounted_price == 0 ? variant?.price : variant?.discounted_price}
                                                 {!isVariantInStock ? isAdded ? <div className='flex  items-center  justify-end w-[90px]'>
-                                                    <button className='primaryBackColor text-white w-6 p-1 rounded-[4px]' onClick={(e) => handleQuantityDecrease(e, variant)}><FiMinus /></button>
+                                                    <button className='primaryBackColor text-white w-8 h-7 p-1   rounded-[4px]' onClick={(e) => handleQuantityDecrease(e, variant)}><FiMinus /></button>
                                                     <input value={quantity} type='text' disabled className='w-1/2  text-center bg-transparent' />
-                                                    <button className=' w-6 primaryBackColor text-white p-1 rounded-[4px]' onClick={(e) => handleQuantityIncrease(e, variant)}><FiPlus /></button>
+                                                    <button className=' w-8 h-7 primaryBackColor text-white p-1 rounded-[4px]' onClick={(e) => handleQuantityIncrease(e, variant)}><FiPlus /></button>
                                                 </div>
                                                     : <button className='flex gap-1 cartButtonBackground py-2 px-4 rounded-sm primaryColor justify-center font-semibold' onClick={(e) => handleIntialAddToCart(e, variant)}><FaShoppingBasket size={20} />Add</button> : <div className='font-bold text-[#db3d26]'>{t("out_of_stock")}</div>}
 

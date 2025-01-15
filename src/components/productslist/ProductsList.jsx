@@ -15,8 +15,7 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
 import ListViewProductCard from '../productcards/ListViewProductCard'
 import VerticleProductCard from '../productcards/VerticleProductCard'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import CardSkeleton from '../skeleton/CardSkeleton'
 import FilterDrawer from '../productFilter/FilterDrawer'
 import { IoFilter } from 'react-icons/io5'
 import { setFilterCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice'
@@ -138,7 +137,7 @@ const Products = () => {
                         </div>
                         <div className='col-span-12 md:col-span-9'>
                             <div className='flex flex-col gap-6'>
-                                {loading ? <Skeleton height={70} /> : <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
+                                {loading ? <CardSkeleton height={70} /> : <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
                                     <p className='text-dm font-normal order-2 md:order-1'>{totalProducts} {t("products_found")}</p>
                                     <div className='flex gap-4 order-1 md:order-2'>
                                         <div className='flex gap-2 items-center'>
@@ -174,8 +173,8 @@ const Products = () => {
                                         placeholderItems.map(index => {
                                             return (
                                                 isGridView ? <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
-                                                    <Skeleton height={300} />
-                                                </div> : <div className='col-span-12'><Skeleton height={300} /></div>
+                                                    <CardSkeleton height={300} />
+                                                </div> : <div className='col-span-12'><CardSkeleton height={200} /></div>
 
                                             )
                                         })

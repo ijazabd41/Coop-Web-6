@@ -9,6 +9,8 @@ import OrderItems from './OrderItems';
 import OrderStepper from './OrderStatusStepper';
 import FinalCheckoutSummary from './FinalCheckoutSummary';
 import BreadCrumb from '../breadcrumb/BreadCrumb';
+import { MdOutlineFileDownload } from 'react-icons/md';
+import ProductDetail from '../productdetail/ProductDetail';
 
 
 const OrderDetail = () => {
@@ -18,12 +20,13 @@ const OrderDetail = () => {
     const [orderDetail, setOrderDetail] = useState([])
     const [deliveryAddress, setDeliveryAddress] = useState([])
     const [loading, setLoading] = useState(false)
-    
+
     useEffect(() => {
         if (orderid) {
             handleFetchOrderDetail()
         }
     }, [orderid])
+
 
     const handleFetchOrderDetail = async () => {
         try {
@@ -33,9 +36,28 @@ const OrderDetail = () => {
             } else {
                 console.log("Error", response)
             }
-
         } catch (error) {
             console.log("Error", error)
+        }
+    }
+
+    const handleDownloadInvoice = async () => {
+        try {
+            const response = await api.downloadInvoice({ orderId: orderid })
+            var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+            var fileLink = document.createElement('a');
+            fileLink.href = fileURL;
+            fileLink.setAttribute('download', 'Invoice-No:' + orderid + '.pdf');
+            document.body.appendChild(fileLink);
+            fileLink.click();
+        } catch (error) {
+            if (error.request.statusText) {
+                toast.error(error.request.statusText);
+            } else if (error.message) {
+                toast.error(error.message);
+            } else {
+                toast.error("Something went wrong!");
+            }
         }
     }
 
@@ -50,10 +72,17 @@ const OrderDetail = () => {
                             <span className='font-normal text-base'>{t("orderNumber")}:</span>
                             <h1 className='text-2xl font-bold'>#{orderDetail?.id}</h1>
                         </div>
-                        <div className='flex flex-col items-end'>
-                            <span className='font-normal text-sm '>{t("orderDate")}</span>
-                            <p className='text-base font-medium'>{formatCustomDate(orderDetail?.date)}</p>
+                        <div className='flex gap-2 items-center'>
+                            <div className='flex flex-col items-end'>
+                                <span className='font-normal text-sm '>{t("orderDate")}</span>
+                                <p className='text-base font-medium'>{formatCustomDate(orderDetail?.date)}</p>
+                            </div>
+                            {Number(orderDetail?.active_status) === 6 ? <div className='border-l-2'>
+                                <button className='flex items-center gap-2 bg-[#29363F] p-2 ml-2 rounded-md text-white' onClick={handleDownloadInvoice}><MdOutlineFileDownload size={22} /> {t("GetInvoice")}</button>
+                            </div> : null}
+
                         </div>
+
                     </div>
                     <div className='grid grid-cols-12 gap-12'>
                         <div className='col-span-8 flex flex-col gap-12'>

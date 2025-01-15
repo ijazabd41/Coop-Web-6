@@ -45,7 +45,10 @@ const ProductRatingModal = ({ showRating, setShowRating, selectedProduct, handle
             if (response.status == 1) {
                 toast.success(response.message)
                 await handleFetchOrderDetail();
-                handleHideRatingModal
+                setRating(null)
+                setReview("")
+                setImages([])
+                setShowRating(false)
             } else {
                 console.log("error", response.message)
             }

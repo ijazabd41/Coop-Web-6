@@ -9,6 +9,7 @@ import { MdOutlineStar } from 'react-icons/md';
 import ProductRatingModal from './ProductRatingModal';
 import { rating } from '@/api/apiEndpoints';
 import { IoMdStar } from 'react-icons/io';
+import RatingUpdateModal from './RatingUpdateModal';
 
 const OrderItems = ({ products, handleFetchOrderDetail }) => {
 
@@ -19,6 +20,8 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
     const [showCancelMoodal, setShowCancelModal] = useState(false)
     const [showReturnModal, setShowReturnModal] = useState(false)
     const [showRating, setShowRating] = useState(false)
+    const [showUpdateRating, setShowUpdateRating] = useState(false)
+    const [ratingId, setRatingId] = useState(null)
 
     const handleCancel = (product) => {
         setSelectedProduct(product)
@@ -35,6 +38,14 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
         setShowRating(true)
     }
 
+    const handleShowUpdateRating = (product) => {
+
+        const rating = product?.item_rating?.find((rating) => rating?.user_id == user?.id)
+        const ratingId = rating?.id
+        setRatingId(ratingId)
+        setShowUpdateRating(true)
+    }
+
     return (
         <div className="rounded-md cardBorder">
             <table className="table-auto w-full rounded-md ">
@@ -48,7 +59,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                 </thead>
                 <tbody>
                     {products?.map((product) => {
-                        const userRating = product.item_rating.find((rating) => rating.user.id === user.id)
+                        const userRating = product?.item_rating?.find((rating) => rating?.user?.id === user?.id)
                         return (
                             <tr key={product?.id} className="border-b last:border-b-0 ">
                                 <td className="p-4 flex items-center gap-4">
@@ -86,7 +97,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                                 Number(product?.return_status) === 1 &&
                                                 product?.return_requested === null && (
                                                     <button
-                                                        className="px-4 py-2 text-orange-500 bg-[#ffc1071f] rounded-md hover:bg-blue-200"
+                                                        className="px-4 py-2 text-orange-500 bg-[#ffc1071f] rounded-md hover:bg-[#eacd761f]"
                                                         onClick={() => handleReturn(product)}
                                                     >
                                                         {t("return")}
@@ -128,12 +139,12 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                         </div>
                                         {(Number(product?.active_status) === 6 && product?.return_requested === null) ?
                                             userRating ?
-                                                <div className='flex items-center flex-col px-1'>
+                                                <div className='flex items-center flex-col px-1 cursor-pointer' onClick={() => handleShowUpdateRating(product)} >
                                                     {t("you_rated")}<span className='font-bold flex items-center '><IoMdStar size={20} />{userRating?.rate}</span>
                                                 </div>
                                                 :
                                                 <div>
-                                                    <button className='px-4 py-2 text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base' onClick={() => handleShowRating(product)}><MdOutlineStar size={20} />{t("rate")}</button>
+                                                    <button className='px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base' onClick={() => handleShowRating(product)}><MdOutlineStar size={20} />{t("rate")}</button>
                                                 </div> : <></>}
 
                                     </div>
@@ -148,6 +159,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
             <CancelReasonModal showCancelMoodal={showCancelMoodal} setShowCancelModal={setShowCancelModal} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
             <ReturnReasonModal showReturnModal={showReturnModal} setShowReturnModal={setShowReturnModal} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
             <ProductRatingModal showRating={showRating} setShowRating={setShowRating} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
+            <RatingUpdateModal ratingId={ratingId} showUpdateRating={showUpdateRating} setShowUpdateRating={setShowUpdateRating} handleFetchOrderDetail={handleFetchOrderDetail}/>
         </div>
     );
 };

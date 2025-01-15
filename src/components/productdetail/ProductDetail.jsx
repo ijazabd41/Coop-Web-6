@@ -41,7 +41,8 @@ const ProductDetail = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [ratingData, setRatingData] = useState({})
     const [quantity, setQuantity] = useState(1)
-
+    const [productImages, setProductImages] = useState([])
+    const [selectedImage, setSelectedImage] = useState("")
 
     const ratingsCount = 10;
 
@@ -60,6 +61,8 @@ const ProductDetail = () => {
             setProduct(res?.data)
             setSelectedVariant(res?.data?.variants?.[0])
             setIsLoading(false)
+            setProductImages([res?.data?.image_url, ...res?.data?.images])
+            setSelectedImage(res?.data?.image_url)
         } catch (error) {
             console.log("error", error)
             setIsLoading(false)
@@ -86,8 +89,6 @@ const ProductDetail = () => {
         const actualDiscountPrice = (difference / actualPrice)
         return actualDiscountPrice * 100;
     }
-
-
 
     const handleDecreaseQuantity = () => {
         if (quantity <= 1) {
@@ -220,6 +221,10 @@ const ProductDetail = () => {
         }
     }
 
+    const handleChangeCoverImage = (image) => {
+        setSelectedImage(image)
+    }
+
 
     return (
 
@@ -231,10 +236,10 @@ const ProductDetail = () => {
                     <div className='mt-1'>
                         <div className='flex flex-col p-1 md:p-6 justify-center  '>
 
-                            <div className='grid  grid-cols-1 md:grid-cols-12  mx-auto mt-2 gap-4 items-start  '>
+                            <div className='grid  grid-cols-1 md:grid-cols-12   mt-2 gap-4 items-start  '>
                                 <div className='col-span-12 md:col-span-4 '>
                                     <div className='relative aspect-square h-auto w-full'>
-                                        <Image src={product?.image_url} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' />
+                                        <Image src={selectedImage} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' />
                                         {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
@@ -262,10 +267,10 @@ const ProductDetail = () => {
                                                 },
                                             }}
                                         >
-                                            {product?.images?.map((image, index) => (
+                                            {productImages?.map((image, index) => (
                                                 <SwiperSlide key={product.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <Image src={image} alt={product.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' />
+                                                        <Image src={image} alt={product.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}

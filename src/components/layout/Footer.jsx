@@ -27,6 +27,7 @@ const paymentMethodsConfig = [
     { key: "midtrans_payment_method", label: "midtrans", image: MidtransImage },
     { key: "phonepay_payment_method", label: "phonepe", image: PhonePeImage },
     { key: "paytabs_payment_method", label: "paytabs", image: PaytabsImage },
+    
 ];
 
 const Footer = () => {

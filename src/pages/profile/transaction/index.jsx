@@ -1,5 +1,5 @@
 import React from 'react'
-import TransactionHistory from '@/components/profiledashboard/TransactionHistory'
+import TransactionHistory from '@/components/pagecomponents/TransactionHistoryPage'
 
 const Transaction = () => {
   return (

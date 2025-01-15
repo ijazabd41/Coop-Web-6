@@ -3,8 +3,7 @@ import BreadCrumb from '../breadcrumb/BreadCrumb'
 import * as api from "../../api/apiRoutes";
 import FAQCard from './FAQCard';
 import { t } from '@/utils/translation';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import CardSkeleton from '../skeleton/CardSkeleton';
 
 const FAQs = () => {
     const [faqs, setFaqs] = useState([]);
@@ -46,9 +45,9 @@ const FAQs = () => {
                 {faqs?.map((faq, idx) => (
                     <FAQCard key={idx} faq={faq} />
                 ))}
-                {!isLoading && Array.from({ length: total_faqs_per_page }).map((_, idx) => (
+                {isLoading && Array.from({ length: total_faqs_per_page }).map((_, idx) => (
                     <div key={idx} className='w-full'>
-                        <Skeleton height={60} />
+                        <CardSkeleton height={40} padding='p-1' />
                     </div>
                 ))}
                 <button className='px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'

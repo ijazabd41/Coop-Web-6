@@ -44,7 +44,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
 
     return (
         <div>
-            <div className="p-4 w-full border-b">
+            <div className="py-6 px-4 w-full border-b ">
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="font-semibold text-lg">
                         {t("delivery_to")}: <span className="font-bold">{address?.name}</span>

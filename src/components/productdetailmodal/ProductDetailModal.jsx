@@ -27,6 +27,7 @@ import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal } from '@/red
 import { toast } from 'react-toastify'
 import { BiHeart, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
+import Loader from '../loader/Loader'
 
 
 
@@ -39,11 +40,15 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
     const ratingsCount = 10;
+    const currency = setting?.setting?.currency
 
     const [productDetails, setProductDetails] = useState([])
     const [selectVariant, setSelectedVariant] = useState(product.variants[0])
     const [ratingData, setRatingData] = useState({})
     const [quantity, setQuantity] = useState(1)
+    const [productImages, setProductImages] = useState([]);
+    const [selectedImage, setSelectedImage] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const calculateDiscount = (discountPrice, actualPrice) => {
         const difference = actualPrice - discountPrice;
@@ -53,23 +58,29 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
     useEffect(() => {
         if (showDetailModal) {
-            const fetchProductById = async () => {
-                try {
-                    const res = await api.getProductById({
-                        latitude: city.latitude,
-                        longitude: city.longitude,
-                        id: product.id,
-                        slug: product.slug
-                    })
-                    setProductDetails(res.data)
-                } catch (error) {
-                    console.log("error", error)
-                }
-            }
             fetchProductById()
             fetchRatings()
         }
     }, [showDetailModal, product.id, product.slug])
+
+    const fetchProductById = async () => {
+        setLoading(true)
+        try {
+            const res = await api.getProductById({
+                latitude: city.latitude,
+                longitude: city.longitude,
+                id: product.id,
+                slug: product.slug
+            })
+            setLoading(false)
+            setProductImages([res?.data?.image_url, ...res?.data?.images])
+            setSelectedImage(res?.data?.image_url)
+            setProductDetails(res.data)
+        } catch (error) {
+            setLoading(true)
+            console.log("error", error)
+        }
+    }
 
     const handleChangeVariant = (variant) => {
         setSelectedVariant(variant)
@@ -85,7 +96,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
         }
     }
 
-    const currency = setting?.setting?.currency
+
 
     const handleHideDetailModal = () => {
         setShowDetailModal(false)
@@ -215,10 +226,12 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
             } else {
                 toast.error(t("required_login_message_for_wishlist"))
             }
-
         } catch (error) {
             console.log("Error", error)
         }
+    }
+    const handleChangeCoverImage = (image) => {
+        setSelectedImage(image)
     }
 
 
@@ -230,8 +243,8 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                         <IoIosCloseCircle size={32} onClick={handleHideDetailModal} />
                     </div>
                     </DialogHeader>
-                    <div className='mt-12 '>
-                        <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto'>
+                    <div className=' '>
+                        {loading ? <Loader /> : <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto'>
                             <div className='pb-6 border-b-2'>
                                 <h2 className='font-bold text-2xl break-all'>{productDetails?.name}</h2>
                                 <div className='flex items-center gap-1'>
@@ -268,7 +281,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                 <div className='md:col-span-5 col-span-12'>
 
                                     <div className='relative aspect-square h-auto w-full'>
-                                        <Image src={productDetails?.image_url} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
+                                        <Image src={selectedImage} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
                                         {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
@@ -296,10 +309,10 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                 },
                                             }}
                                         >
-                                            {productDetails?.images?.map((image, index) => (
+                                            {productImages?.map((image, index) => (
                                                 <SwiperSlide key={productDetails.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <Image src={image} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
+                                                        <Image src={image} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}
@@ -448,7 +461,8 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                             </div>
 
 
-                        </div>
+                        </div>}
+
                     </div>
                 </DialogContent>
             </Dialog>

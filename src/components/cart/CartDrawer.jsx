@@ -18,6 +18,8 @@ import Login from '../login/Login';
 import { useRouter } from 'next/router';
 import CouponCodeDrawer from '@/components/couponcode/CouponCodeDrawer';
 import { RiCoupon3Line } from 'react-icons/ri';
+import Link from 'next/link';
+import Loader from '../loader/Loader';
 
 const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     const dispatch = useDispatch();
@@ -124,7 +126,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                     </SheetHeader>
 
                     {loading ? (
-                        <p>Loading...</p>
+                        <p><Loader height={800} /></p>
                     ) : cartProductsData?.length !== 0 ? (
                         <>
 
@@ -185,10 +187,11 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                         </>
                     ) : (
                         <div className='flex items-center justify-center h-full my-auto mx-10'>
-                            <div>
+                            <div className='flex items-center justify-center flex-col gap-2'>
                                 <Image src={NoCartData} alt='No Cart Data' height={0} width={0} className='h-full w-full' />
                                 <h1 className='font-bold text-[22px] text-center py-2'>{t("empty_cart_list_message")}</h1>
                                 <p className='font-bold text-xs text-center'>{t("empty_cart_list_description")}</p>
+                                <Link href="/products" className="primaryBackColor text-white font-bold p-1 rounded-sm">{t("empty_cart_list_button_name")}</Link>
                             </div>
                         </div>
                     )}

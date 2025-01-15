@@ -15,7 +15,6 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
   const handleFetchNotifications = async () => {
     try {
       const response = await api.getNotifications({ limit: 7, offset: 0 });
-      console.log(response.data);
       setNotifications(response.data);
     } catch (error) {
       console.log("Error ", error);

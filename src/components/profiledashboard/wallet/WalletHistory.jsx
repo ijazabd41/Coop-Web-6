@@ -1,0 +1,68 @@
+import React, { useEffect, useState } from 'react'
+import { t } from "@/utils/translation"
+import WalletTransactionCard from './WalletTransactionCard'
+import * as api from "@/api/apiRoutes"
+import CardSkeleton from '@/components/skeleton/CardSkeleton'
+const WalletHistory = () => {
+
+    const [transactions, setTransactions] = useState([])
+    const [offset, setOffset] = useState(0)
+    const [total, setTotal] = useState(null)
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        fetchWalletTransaction();
+    }, [offset])
+
+    const transactionPerPage = 10;
+
+    const fetchWalletTransaction = async () => {
+        setLoading(true)
+        try {
+            const response = await api.getUserTransactions({ limit: transactionPerPage, offset, type: 'wallet' })
+            setTransactions((trnscn) => [...trnscn, ...response.data])
+            setTotal(response?.total)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log("Error", error)
+        }
+    }
+
+    const handleFetchMore = async () => {
+        setOffset(offSet => offSet + transactionPerPage)
+    }
+
+    return (
+        <div>
+            <div className='w-full cardBorder rounded-sm '>
+                <div className='buttonBackground flex justify-between p-4 items-center'>
+                    <h2 className='font-bold text-xl'>{t("wallet_history")}</h2>
+                </div>
+                <div>
+                    <div className='grid grid-cols-12 '>
+                        {loading ? Array?.from({ length: 6 })?.map((_, index) => {
+                            return (
+                                <div className='col-span-12  md:col-span-6'>
+                                    <CardSkeleton height={200} padding='p-4' />
+                                </div>
+                            )
+                        }) : transactions?.map((transaction) => {
+                            return (
+                                <div className='col-span-12  md:col-span-6 ' key={transaction?.id}>
+                                    <WalletTransactionCard transaction={transaction} />
+                                </div>
+                            )
+                        })}
+
+                    </div>
+                    {total > transactions?.length && <div className='flex justify-center'>
+                        <button className='bg-[#29363f] text-white font-bold text-base p-2 my-2 rounded-sm' onClick={handleFetchMore}>{t("load_more")}</button>
+                    </div>}
+
+                </div>
+            </div>
+        </div >
+    )
+}
+
+export default WalletHistory

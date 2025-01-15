@@ -22,12 +22,17 @@ const HorizontalProductCard = ({ product }) => {
     const user = useSelector(state => state.User)
     const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
-    const [selectedVariant, setSelectedVariant] = useState(product?.variants?.[0])
+    const [selectedVariant, setSelectedVariant] = useState([])
     const [showVariants, setShowVariants] = useState(false)
     const [showProductDetail, setShowProductDetail] = useState(false)
 
     useEffect(() => {
-        setSelectedVariant(product?.variants?.[0])
+        const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
+        if (inStockVariant == undefined) {
+            setSelectedVariant(product?.variants[0])
+        } else {
+            setSelectedVariant(inStockVariant)
+        }
     }, [])
 
     const calculateDiscount = (discountPrice, actualPrice) => {
@@ -311,11 +316,11 @@ const HorizontalProductCard = ({ product }) => {
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
 
-    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock == 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
+    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
 
     return (
         <div>
-            <div className='grid grid-cols-12 p-3 border-2   gap-2 group rounded-sm headerBackgroundColor'>
+            <div className='grid grid-cols-12 p-3   cardBorder rounded-sm   gap-2 group  headerBackgroundColor '>
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
                         <Image className=' object-cover aspect-square' fill alt={product.name} src={product.image_url} />
@@ -351,12 +356,12 @@ const HorizontalProductCard = ({ product }) => {
                                 </div>
                                 : null}
                             <div className='flex'>
-                                {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
-                                    <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
+                                {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>{setting?.currency}{product?.variants?.[0]?.discounted_price}</p>
+                                    <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className='text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
                             </div>
                         </div>
                         {!isProductAvailabel ? <div className='flex gap-3  w-full flex-col '>
-                            <button className=' w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${productsVariants?.[0]?.measurement} ${productsVariants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+                            <button className=' w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
                             {isProductAlreadyAdded ? <div className='flex justify-between w-full'>
                                 <button className='rounded-sm primaryBackColor h-[38px] w-[27px] p-2 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityDecrease}><BiMinus /></button>
                                 <input type="text" disabled value={addedQuantity} min={"1"} max={selectedVariant?.stock} className='text-center w-full' />

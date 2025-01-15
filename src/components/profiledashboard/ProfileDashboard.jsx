@@ -7,8 +7,8 @@ import ActiveOrders from "./orders/ActiveOrders";
 import OrderHistory from "./orders/PrevOrder";
 import Wishlist from "./Wishlist";
 import { useRouter } from "next/router";
-import WalletHistory from "./WalletHistory";
-import TransactionHistory from "./TransactionHistory";
+import WalletHistory from "./wallet/WalletHistory";
+import TransactionHistory from "./transactions/TransactionHistory";
 import Notifications from "./Notifications";
 import { setCurrentUser } from "@/redux/slices/userSlice";
 import * as api from "@/api/apiRoutes"
@@ -53,7 +53,7 @@ const ProfileDashboard = () => {
               selectedTab={selectedTab}
             />
           </div>
-
+    
           <div className='col-span-12 md:col-span-9  '>
             {loading ? <p>Loading</p> : <>
               {activeTab == "profile" && <Profile />}
@@ -62,7 +62,7 @@ const ProfileDashboard = () => {
               {activeTab == "orderhistory" && <OrderHistory />}
               {activeTab == "wishlist" && <Wishlist />}
               {activeTab == "wallethistory" && <WalletHistory />}
-              {activeTab == "transactions" && <TransactionHistory />}
+              {activeTab == "transaction" && <TransactionHistory />}
               {activeTab == "notifications" && <Notifications selectedTab={selectedTab} setSelectedTab={setSelectedTab} />}
             </>}
           </div>

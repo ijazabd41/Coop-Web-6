@@ -3,6 +3,7 @@ import { t } from "@/utils/translation"
 import PrevOrderCard from './PrevOrderCard'
 import * as api from "@/api/apiRoutes"
 import Loader from '@/components/loader/Loader'
+import CardSkeleton from '@/components/skeleton/CardSkeleton'
 
 const PrevOrder = () => {
 
@@ -17,15 +18,19 @@ const PrevOrder = () => {
     const ordersPerPage = 10;
 
     const handleFetchPrevOrders = async () => {
+        setLoading(true)
         try {
             const response = await api.getOrders({ limit: ordersPerPage, offset: offset, type: 0 })
             if (response?.status == 1) {
                 setPrevOrders((ord) => [...ord, ...response?.data])
                 setTotalOrders(response.total)
+                setLoading(false)
             } else {
+                setLoading(false)
                 console.log("Error", response)
             }
         } catch (error) {
+            setLoading(false)
             console.log("Error", error)
         }
     }
@@ -41,7 +46,11 @@ const PrevOrder = () => {
                 <h2 className='font-bold text-xl'>{t("order_history")}</h2>
             </div>
             <div>
-                {prevOrders?.map((order) => {
+                {loading ? Array.from({ length: 6 })?.map((_, index) => {
+                    return (
+                        <CardSkeleton height={200} padding="p-4" key={index} />
+                    )
+                }) : prevOrders?.map((order) => {
                     return (
                         <PrevOrderCard order={order} key={order?.id} />
                     )

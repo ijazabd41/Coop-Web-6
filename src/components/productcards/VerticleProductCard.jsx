@@ -313,12 +313,13 @@ const VerticleProductCard = ({ product }) => {
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
 
-    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock == 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
+    const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
+
 
 
     return (
         <div>
-            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 border-[1px] group rounded-md headerBackgroundColor textColor cardBorder'>
+            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
                         <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />
@@ -354,19 +355,19 @@ const VerticleProductCard = ({ product }) => {
                         </div>
                         : null}
                     <div className='flex'>
-                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='textColortext-base font-bold'>{setting?.currency}{productsVariants?.[0]?.discounted_price}</p>
-                            <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{productsVariants[0]?.price}</p></> : <p className='textColor text-base font-bold'>{setting?.currency}{productsVariants?.[0]?.price}</p>}
+                        {selectedVariant?.discounted_price !== 0 ? <>  <p className='textColortext-base font-bold'>{setting?.currency}{selectedVariant?.discounted_price}</p>
+                            <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className='textColor text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
                     </div>
                 </div>
                 {!isProductAvailabel ? <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>
-                    <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between px-2 rounded-[4px] p-[5px] buttonBackground ' >{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+                    <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between  rounded-[4px] p-[2px] buttonBackground text-sm' >{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={16} /></div> : <></>}</button>
                     {isProductAlreadyAdded ?
-                        <div className='md:w-1/2 w-full cardBorder  flex justify-between rounded-sm my-1'>
-                            <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-5 h-7   rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
+                        <div className='md:w-1/2 w-full cardBorder flex justify-between rounded-sm my-1'>
+                            <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-7 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
 
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
 
-                            <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8 md:w-6 rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
+                            <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
 
                         </div>
                         : <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor ' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>Add</span></button>}

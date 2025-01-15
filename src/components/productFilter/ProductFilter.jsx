@@ -211,7 +211,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                                 <p>{setting?.currency}{values[1]}</p>
 
                             </div>
-                            <button className="rounded py-2 px-4 bg-gray-200 text-xl"
+                            <button className="rounded py-2 px-4 buttonBackground text-xl"
                                 onClick={(newValues) => {
                                     setOffset(0)
                                     setProductResult([])

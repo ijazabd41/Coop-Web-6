@@ -15,11 +15,9 @@ const PriceSlider = ({ values, setValues, minPrice, maxPrice, setTempMinPrice, s
                     step={0.01}
                     className="relative flex h-15 w-full touch-none select-none items-center"
                     onValueChange={(newValues) => {
-                        console.log("In value change:", newValues);
                         setValues(newValues);
                     }}
                     onValueCommit={(newValues) => {
-                        console.log("In value commit:", newValues);
                         setTempMinPrice(newValues[0]);
                         setTempMaxPrice(newValues[1]);
                     }}

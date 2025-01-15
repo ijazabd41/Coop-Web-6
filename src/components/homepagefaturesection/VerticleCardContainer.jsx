@@ -41,7 +41,7 @@ const VerticleCardContainer = ({ section }) => {
                             <button onClick={handleViewAll}>{t("see_all")}</button>
                         </div>
                     </div>
-                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4'>
+                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4 cardBorder rounded-md'>
                         {section?.products?.map((product, index) => {
                             return (
                                 <div className='col-span-3' key={index}>

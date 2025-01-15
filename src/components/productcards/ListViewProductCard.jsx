@@ -22,13 +22,18 @@ const ListViewProductCard = ({ product }) => {
   const user = useSelector(state => state.User)
   const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)
 
-  const [selectedVariant, setSelectedVariant] = useState(product?.variants?.[0])
+  const [selectedVariant, setSelectedVariant] = useState([])
   const [showVariants, setShowVariants] = useState(false)
   const [showProductDetail, setShowProductDetail] = useState(false)
 
 
   useEffect(() => {
-    setSelectedVariant(product?.variants?.[0])
+    const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
+    if (inStockVariant == undefined) {
+      setSelectedVariant(product?.variants[0])
+    } else {
+      setSelectedVariant(inStockVariant)
+    }
   }, [])
 
   const calculateDiscount = (discountPrice, actualPrice) => {
@@ -307,27 +312,26 @@ const ListViewProductCard = ({ product }) => {
     cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
     : cart?.guestCart?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty
 
-  const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock == 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
-
+  const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
 
   return (
     <div >
-      <div className='grid grid-cols-12 items-center w-full p-3 group border-2'>
-        <div className='col-span-6 md:col-span-3'>
+      <div className='grid grid-cols-12 items-center w-full p-3 group border-2 headerBackgroundColor'>
+        <div className='col-span-6 md:col-span-2'>
           <div className='relative h-1/2 w-full  object-cover'>
-            <Image src={product.image_url} height={0} width={0} alt={product.name} className='   w-3/4 aspect-square ' />
+            <Image src={product.image_url} height={0} width={0} alt={product.name} className='  w-full h-full aspect-square rounded-sm' />
             {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
               {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(0)}% {t("off")}
             </span> : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
               <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
-              <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><Link href={"/"}><FaRegEye size={18} className='fontColor' /></Link></li>
+              <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><span onClick={handleShowDetailModal}><FaRegEye size={18} className='fontColor' /></span></li>
             </ul>
           </div>
         </div>
-        <div className='col-span-6 md:col-span-7 px-2'>
+        <div className='col-span-6 md:col-span-8 px-2'>
           <div className='flex flex-col items-start justify-between h-[100px]'>
-            <h3 className="flex text-[#2a3640] text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
+            <h3 className="flex  text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">{product?.name}</h3>
             {product?.average_rating > 0 ?
               <div className="rating">
                 <div className="flex">
@@ -347,36 +351,32 @@ const ListViewProductCard = ({ product }) => {
               </div>
               : null}
             <div className='flex'>
-              {selectedVariant?.discounted_price !== 0 ? <>  <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.discounted_price}</p>
-                <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>₹{product?.variants?.[0]?.price}</p></> : <p className='text-black text-base font-bold'>₹{product?.variants?.[0]?.price}</p>}
-
+              {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>{setting?.currency}{selectedVariant?.discounted_price}</p>
+                <p className=' text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className=' text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
             </div>
-
           </div>
         </div>
         <div className='col-span-12 md:col-span-2 '>
-          <div className='flex  gap-3  w-full md:flex-col   md:mb-0 items-center'>
+          {!isProductAvailabel ?
+            <div className='flex  gap-2  w-full md:flex-col   md:mb-0 items-center'>
+              <button className='w-full  flex items-center  justify-center rounded-[4px] p-2 buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+              <div className='flex gap-0 md:gap-3  h-[40px] md:h-[38px] w-full flex-col md:flex-row'>
+                {isProductAlreadyAdded ?
+                  <div className=' w-full cardBorder  flex justify-between rounded-sm  '>
+                    <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-8 p-4 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
+                    <input value={addedQuantity} disabled className='w-1/2  text-center bg-transparent' min={"1"} max={selectedVariant?.stock} />
+                    <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-8 p-4 rounded-[2px]' onClick={handleQuantityIncrease}><FaPlus /></button>
+                  </div>
+                  : <button onClick={handleIntialAddToCart} className=' w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-4 text-white bg-[#55ae7b26] primaryColor '><FaShoppingBasket size={20} /><span>Add</span></button>}
 
-            <button className='w-full  flex items-center my-[5px] justify-center rounded-[4px] p-[5px] buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${product?.variants?.[0]?.measurement} ${product?.variants?.[0]?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+              </div>
 
-            {!isProductAvailabel ? <div className='flex gap-0 md:gap-3  h-[40px] md:h-[38px] w-full flex-col md:flex-row'>
-
-              {isProductAlreadyAdded ?
-                <div className=' w-full cardBorder  flex justify-between rounded-sm my-1 '>
-                  <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-5 p-2 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
-
-                  <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
-
-                  <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8 md:w-6 rounded-[2px]' onClick={handleQuantityIncrease}><FaPlus /></button>
-
-                </div>
-                : <button className='w-full  flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor '><FaShoppingBasket size={20} onClick={handleIntialAddToCart} /><span>Add</span></button>}
-
-            </div> : <div className=' w-full flex items-center  justify-center text-center h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
-
-          </div>
+            </div>
+            : <div className='  w-full flex items-center  justify-center text-center h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
         </div>
       </div>
+      <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
+      <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
     </div>
   )
 }

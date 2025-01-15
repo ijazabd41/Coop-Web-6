@@ -58,12 +58,8 @@ const Cart = () => {
         }
     }
 
-    const handleCheckoutbtnClick = () => {
-        router.push("checkout")
 
-    }
 
-    console.log("cart", cart)
 
 
     return (
@@ -77,7 +73,7 @@ const Cart = () => {
                     </div>
                     <div className="grid grid-cols-12 gap-4 mt-6 ">
                         <div className="col-span-9 cardBorder rounded-sm">
-                            <div className="grid grid-cols-12 gap-4 p-4  font-medium border-b cardBorder">
+                            <div className="grid grid-cols-12 gap-4 p-4  font-medium border-b border-gray-300">
                                 <div className="col-span-4 font-bold">{t("product")}</div>
                                 <div className="col-span-2 text-center font-bold">{t("price")}</div>
                                 <div className="col-span-2 text-center font-bold">{t("quantity")}</div>
@@ -97,7 +93,7 @@ const Cart = () => {
                 </div>
             </div>
             <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
-        </section>
+        </section >
     );
 
 }

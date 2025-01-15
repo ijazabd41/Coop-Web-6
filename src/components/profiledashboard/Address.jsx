@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { t } from "@/utils/translation"
 import { CiCirclePlus } from "react-icons/ci";
 import { FaRegEdit } from 'react-icons/fa';
@@ -8,6 +8,7 @@ import NewAddressModal from '../newaddressmodal/NewAddressModal';
 import * as api from "@/api/apiRoutes"
 import { useSelector, useDispatch } from 'react-redux';
 import { setAllAddresses } from '@/redux/slices/addressSlice';
+import CardSkeleton from '../skeleton/CardSkeleton';
 
 const Address = () => {
 
@@ -15,20 +16,33 @@ const Address = () => {
     const addresses = useSelector(state => state.Addresses)
     const [showAddAddres, setShowAddAddres] = useState(false)
     const [isAddressSelected, setIsAddressSelected] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [total, setTotal] = useState(null)
+    const [offset, setOffset] = useState(0)
     useEffect(() => {
         fetchAddress()
     }, [])
 
+    // const addressPerPage = 10;
+
     const fetchAddress = async () => {
+        setLoading(true)
         try {
             const response = await api.getAddress();
             if (response.status == 1) {
                 dispatch(setAllAddresses({ data: response.data }))
+                setTotal(response.total)
             }
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.log("Error", error)
         }
     }
+
+    // const handleLoadMore = () => {
+    //     setOffset(offset => offset + addressPerPage);
+    // }
 
     const handleshowAddres = () => {
         setIsAddressSelected(false)
@@ -38,20 +52,27 @@ const Address = () => {
 
     return (
         <div className='w-full cardBorder rounded-sm '>
-
             <div className='buttonBackground flex justify-between p-4 items-center'>
                 <h2 className='font-bold text-xl'>{t("manage_address")}</h2>
                 <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>
             </div>
             <div className=''>
-                {addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
+                {loading ? Array?.from({ length: 6 })?.map((_, index) => {
+                    return (
+                        <CardSkeleton key={index} height={200} padding="2px" />
+                    )
+                }) : addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
                     return (
                         <div key={address?.id}>
                             <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} />
                         </div>
                     )
                 })}
-
+                {/* {total > addresses?.lenght &&
+                    <div className='flex justify-center my-2'>
+                        <button onClick={handleLoadMore} className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal'>{t("load_more")}</button>
+                    </div>
+                } */}
 
             </div>
             <NewAddressModal showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} fetchAddress={fetchAddress} />
