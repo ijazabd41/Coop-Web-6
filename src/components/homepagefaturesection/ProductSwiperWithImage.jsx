@@ -37,18 +37,18 @@ const ProductSwiperWithImage = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container  '>
+                <div className='container px-2 '>
                     <div>
-                        <div className='flex justify-between pb-3'>
+                        <div className='flex justify-between items-center mb-3'>
                             <div>
-                                <h2 className='textColor text-[24px] font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.title} </h2>
+                                <h2 className='textColor text-2xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.title} </h2>
                                 <p>{section?.short_description}</p>
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll}>{t("see_all")}</button>
                                 <div className=' md:flex gap-2 hidden'>
-                                    <button className={`buttonBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
-                                    <button className={`buttonBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
+                                    <button className={`cardBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
+                                    <button className={`cardBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
                                 </div>
                             </div>
                         </div>

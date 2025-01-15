@@ -38,20 +38,20 @@ const HorizontalProductSwiper = ({ section, index }) => {
         <div>
             {
                 section?.products?.length > 0 ?
-                    <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
+                    <section className='py-6 px-2' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
 
                         <div className='container '>
                             <div>
-                                <div className='flex justify-between pb-3 '>
+                                <div className='flex justify-between items-center mb-3 '>
                                     <div className='w-1/2'>
-                                        <h2 className='textColor text-[24px] font-extrabold  leading-[29px] m-0'>{section?.title}</h2>
+                                        <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{section?.title}</h2>
                                         <p className=''>{section?.short_description}</p>
                                     </div>
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                         <button onClick={handleViewAll} >{t("see_all")}</button>
                                         <div className=' md:flex hidden gap-2'>
-                                            <button className={`textColor buttonBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
-                                            <button className={`textColor buttonBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
+                                            <button className={`textColor cardBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
+                                            <button className={`textColor cardBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
                                         </div>
                                     </div>
                                 </div>

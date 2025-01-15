@@ -31,9 +31,9 @@ const CategoriesContainer = ({ categories }) => {
 
     return (
         <section>
-            <div className='container py-6'>
+            <div className='container py-6 px-2'>
                 <div className="flex justify-between items-center p-0 w-full mb-3">
-                    <div className="textColor text-[24px] font-bold !tracking-wide leading-[29px] m-0">
+                    <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
                         <p>{t('shop_by')} {t('categories')}</p>
                     </div>
                     <div className="">
@@ -41,8 +41,8 @@ const CategoriesContainer = ({ categories }) => {
                     <div className="flex items-center ">
                         {/* {categories?.categoriess?.length > 5 ? ( */}
                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
-                            <Link className="" href="/categories/all">{t('see_all')}</Link>
-                            <div className='flex gap-2 '>
+                            <Link className="text-nowrap" href="/categories/all">{t('see_all')}</Link>
+                            <div className='gap-2 hidden md:flex '>
                                 <button className="category-button-next cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 "
                                 >
                                     <IoMdArrowBack className='textColor' size={20} />
@@ -61,13 +61,16 @@ const CategoriesContainer = ({ categories }) => {
                     <Swiper
                         modules={[Navigation]}
                         spaceBetween={20}
-                        slidesPerView={5}
+                        slidesPerView={1.5}
                         navigation={{
                             nextEl: ".category-button-prev",
                             prevEl: ".category-button-next",
                         }}
                         breakpoints={{
-                            320: { slidesPerView: 2 },
+                            0: { slidesPerView: 1.5 },
+                            320: { slidesPerView: 2.2 },
+                            375: { slidesPerView: 2.3 },
+                            425: { slidesPerView: 2.5 },
                             768: { slidesPerView: 3 },
                             1024: { slidesPerView: 6 },
                         }}

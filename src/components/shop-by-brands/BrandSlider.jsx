@@ -19,20 +19,20 @@ const BrandSlider = ({ brands }) => {
     }
     return (
         <section>
-            <div className='container py-6'>
-                <div className='flex justify-between'>
-                    <h2 className='textColor text-[24px] font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
+            <div className='container py-6 px-2'>
+                <div className='flex justify-between items-center mb-3'>
+                    <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
                     <div className='flex gap-4 items-center flex-col md:flex-row'>
                         <Link href={"/brands"} >{t("see_all")}</Link>
-                        <div className=' flex gap-2'>
-                            <button className='buttonBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                            <button className='buttonBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                        <div className='gap-2 hidden md:flex'>
+                            <button className='cardBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                            <button className='cardBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
                         </div>
                     </div>
                 </div>
-                <div className='pt-6'>
+                <div >
                     <Swiper
-                        slidesPerView={5}
+                        slidesPerView={1.5}
                         spaceBetween={20}
                         modules={[Navigation]}
                         navigation={{
@@ -41,9 +41,12 @@ const BrandSlider = ({ brands }) => {
                         }}
                         className="brand-swiper"
                         breakpoints={{
-                            320: { slidesPerView: 2, spaceBetween: 10 },
-                            640: { slidesPerView: 3, spaceBetween: 15 },
-                            1024: { slidesPerView: 6, spaceBetween: 20 },
+                            0: { slidesPerView: 1.5 },
+                            320: { slidesPerView: 2.2 },
+                            375: { slidesPerView: 2.3 },
+                            425: { slidesPerView: 2.5 },
+                            768: { slidesPerView: 3 },
+                            1024: { slidesPerView: 6 },
                         }}
                     >
                         {brands?.brands?.map((brand, index) => (

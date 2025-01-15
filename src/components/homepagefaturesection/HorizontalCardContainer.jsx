@@ -29,8 +29,8 @@ const HorizontalCardContainer = ({ section }) => {
 
     return (
         <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-            {section?.products?.length > 0 ? <div className='container py-6'>
-                <div className='flex justify-between items-center pb-3'>
+            {section?.products?.length > 0 ? <div className='container py-6 px-2'>
+                <div className='flex justify-between items-center mb-3'>
                     <div>
                         <h2 className='text-2xl font-bold'>{section?.title}</h2>
                         <p className='text-base font-[500]'>{section?.short_description}</p>

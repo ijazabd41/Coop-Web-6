@@ -51,11 +51,11 @@ const Category = () => {
         <section>
             <BreadCrumb />
             <div className='container'>
-                <div className={`grid grid-cols-12`}>
+                <div className={`grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 "} gap-4 place-items-center place-content-center h-auto`}>
                     {
                         categories && categories?.data?.map((category) => {
                             return (
-                                <div key={category?.id} className={"col-span-2"} onClick={() => handleCategoryClick(category)}>
+                                <div key={category?.id} className={"col-span-1"} onClick={() => handleCategoryClick(category)}>
                                     <CategoryCard category={category} />
                                 </div>
 
