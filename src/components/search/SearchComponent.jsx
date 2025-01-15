@@ -1,0 +1,79 @@
+'use client'
+import React from 'react'
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { t } from "@/utils/translation"
+import { setFilterCategory } from '@/redux/slices/productFilterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
+import SearchProductCard from '../cards/SearchProductCard'
+import { FaSearch } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
+
+const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearchCategory, handleSearch }) => {
+    const dispatch = useDispatch()
+    const router = useRouter()
+    const categories = useSelector(state => state.Shop?.shop)
+    const filter = useSelector(state => state.ProductFilter)
+
+    return (
+        <>
+            {console.log("This Rendered")}
+            <div className={`flex w-full h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}>
+                <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)}>
+                    <SelectTrigger className={`w-full h-full buttonBackground cardBorder  focus:ring-0 rounded-t-sm rounded-b-none md:rounded-l-sm md:rounded-r-none md:w-[152px] md:border-none md:min-w-[152px]`}>
+                        <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent className="w-full h-full z-50 md:w-[152px]">
+                        <SelectItem value="all categories">{t("all_categories")}</SelectItem>
+                        {categories?.categories?.map((category) => (
+                            <SelectItem key={category?.id} value={`${category?.id}`}>{category?.name}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <div className='w-full flex flex-col flex-grow md:relative md:flex-row md:h-full'>
+                    <input
+                        type="text"
+                        placeholder="Search Here..."
+                        className="w-full flex-grow px-4 py-2 text-sm focus:outline-none h-full shadow cardBorder order-1"
+                        value={filter?.search ? filter?.search : ""}
+                        onChange={(e) => handleSearch(e)}
+                    />
+                    <button
+                        className="justify-center gap-1 px-4 py-2   h-full flex items-center rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow
+                        md:p-[20px]  text-whiterounded order-2"
+                        onClick={() => {
+                            router.push("/products");
+                            dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+                        }}
+                    >
+                        <FaSearch />
+                        {t("search")}
+                    </button>
+                    <div className="md:w-[calc(100%-126px)] mt-1 flex flex-wrap flex-col col-span-4 items-center bodyBackgroundColor gap-5 order-2 md:order-2 md:absolute 
+                      md:z-10 md:bodyBackgroundColor md:top-12 md:left-0
+                    ">
+                        {router?.pathname !== "/products" && filter?.search_product?.map((product, idx) => (
+                            <SearchProductCard key={idx} product={product} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default SearchComponent

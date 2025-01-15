@@ -8,14 +8,14 @@ const SearchProductCard = ({ product }) => {
     const dispatch = useDispatch()
     const setting = useSelector(state => state.Setting?.setting)
     return (
-        <Link href={`/product/${product?.slug}`} onClick={()=> dispatch(setProductBySearch({data:[]}))}>
-            <div className="w-full flex items-center gap-3 px-3 py-1">
+        <Link href={`/product/${product?.slug}`} onClick={() => dispatch(setProductBySearch({ data: [] }))} className="w-full">
+            <div className="flex items-center gap-3 px-3 py-1">
                 <div className="w-8 h-8">
                     <Image src={product?.image_url} className="w-full h-full object-cover rounded-sm" alt="product image" width={0} height={0} />
                 </div>
                 <div className="flex flex-col">
-                    <div className="text-xl font-semibold truncate">{product?.name}</div>
-                    <div className="text-base font-normal">
+                    <div className="text-xl font-semibold max-w-[150px] truncate">{product?.name}</div>
+                    <div className="text-base font-normal text-start">
                         {
                             product?.discounted_price ?
                                 <div>

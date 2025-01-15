@@ -8,6 +8,14 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -42,8 +50,9 @@ import { clearCheckout } from '@/redux/slices/checkoutSlice';
 import { setFilterCategory, setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
 import SearchProductCard from '../cards/SearchProductCard';
 import SearchComponent from '../search/SearchComponent';
-
-
+import dynamic from 'next/dynamic';
+import { useMediaQuery } from 'react-responsive';
+import { IoIosCloseCircle } from 'react-icons/io'
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const dispatch = useDispatch();
@@ -55,7 +64,11 @@ const Header = () => {
     const city = useSelector(state => state.City)
     const categories = useSelector(state => state.Shop.shop);
     const filter = useSelector(state => state.ProductFilter)
-    // console.log(categories.categories)
+
+    // Device Width Checking
+    const isMobile = useMediaQuery({ query: '(max-width: 765px)' })
+
+
     const [showCart, setShowCart] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false)
@@ -66,13 +79,25 @@ const Header = () => {
     const [showLocation, setShowLocation] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    const [mobileSearch, setMobileSearch] = useState(false)
+    const [searchCatId, setSearchCatId] = useState("")
+    const [typingTimeout, setTypingTimeout] = useState(null);
 
+
+    // console.log("Mobile Screen:", isMobile)
 
     useEffect(() => {
         if (router?.pathname != "/checkout") {
             dispatch(clearCheckout())
         }
     }, [router])
+
+    useEffect(() => {
+        // if mobile screen is dragged to desktop screen close the mobile search
+        if (isMobile === false && mobileSearch === true) {
+            setMobileSearch(false)
+        }
+    }, [isMobile])
 
     useEffect(() => {
         fetchCity();
@@ -138,8 +163,6 @@ const Header = () => {
         }
     }
 
-    const [searchCatId, setSearchCatId] = useState("")
-    const [typingTimeout, setTypingTimeout] = useState(null);
 
     const handleSearchCategory = (value) => {
         setSearchCatId(value)
@@ -164,6 +187,7 @@ const Header = () => {
     const handleSearch = (e) => {
         const value = e.target.value;
         if (value.trim() === "") {
+            dispatch(setProductBySearch({ data: [] }))
             dispatch(setFilterSearch({ data: "" }))
             clearTimeout(typingTimeout)
             return
@@ -181,12 +205,14 @@ const Header = () => {
         setTypingTimeout(timeout)
     }
 
-
+    const handleMobileSearch = () => {
+        setMobileSearch(!mobileSearch)
+    }
 
 
     return (
         <>
-            <section className='border-b-2'> 
+            <section className='border-b-2'>
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
                     <div className="container  flex justify-between items-center h-[40px]">
                         <div className="flex items-center">
@@ -391,7 +417,7 @@ const Header = () => {
                             </div>
 
                             {/* Second column: col-6 equivalent */}
-                            <div className="lg:col-span-6 md:col-span-8  items-center headerSearch  lg:flex md:flex rounded-[5px] ml-[20px] hidden">
+                            {/* <div className="lg:col-span-6 md:col-span-8  items-center headerSearch  lg:flex md:flex rounded-[5px] ml-[20px] hidden">
                                 <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)} >
                                     <SelectTrigger className="w-[152px] h-full buttonBackground border-none">
                                         <SelectValue placeholder="All Categories" />
@@ -427,6 +453,14 @@ const Header = () => {
                                 >
                                     {t("search")}
                                 </button>
+                            </div> */}
+
+                            <div className='hidden md:block lg:col-span-6 md:col-span-8'>
+                                <SearchComponent
+                                    isMobile={isMobile}
+                                    handleSearchCategory={handleSearchCategory}
+                                    handleSearch={handleSearch}
+                                 />
                             </div>
 
                             <div className="col-span-3 hidden order-3 justify-end lg:flex h-full">
@@ -437,8 +471,25 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-
-
+                <Sheet open={mobileSearch} onOpenChange={setMobileSearch}>
+                    <SheetContent className="p-0 w-full sm:w-[900px]">
+                        <SheetHeader>
+                            <SheetTitle className="flex justify-between px-4 py-2 items-center">
+                                {t("search")}
+                                <SheetTrigger className='focus:outline-none'><IoIosCloseCircle size={32} /></SheetTrigger>
+                            </SheetTitle>
+                            <SheetDescription>
+                                <SearchComponent
+                                    isMobile={isMobile}
+                                    mobileSearch={mobileSearch}
+                                    setMobileSearch={setMobileSearch}
+                                    handleSearch={handleSearch}
+                                    handleSearchCategory={handleSearchCategory}
+                                />
+                            </SheetDescription>
+                        </SheetHeader>
+                    </SheetContent>
+                </Sheet>
                 <CartDrawer showCart={showCart} setShowCart={setShowCart} setMobileActiveKey={setMobileActiveKey} />
                 <Login showLogin={showLogin} setShowLogin={setShowLogin} setMobileActiveKey={setMobileActiveKey} />
                 <Location showLocation={showLocation} setShowLocation={setShowLocation} />
@@ -449,7 +500,7 @@ const Header = () => {
                     <div className='flex  justify-between gap-16'>
                         <div className={`flex flex-col items-center gap-1`} onClick={handleHomeClick}><IoHomeOutline size={24} className={`h-10 w-10 ${mobileActiveKey == 1 ? 'primaryBackColor text-white  ' : 'bg-[#55AE7B14] primaryColor '}p-2 rounded-full`} /><span className='text-sm'>{t("home")}</span></div>
 
-                        <div className={`flex flex-col items-center gap-1`} ><IoSearchOutline size={24} className={`h-10 w-10 ${mobileActiveKey == 2 ? 'primaryBackColor text-white ' : 'bg-[#55AE7B14] primaryColor '} p-2 rounded-full`} /><span className='text-sm'>{t("search")}</span></div>
+                        <div className={`flex flex-col items-center gap-1`} onClick={handleMobileSearch} ><IoSearchOutline size={24} className={`h-10 w-10 ${mobileActiveKey == 2 ? 'primaryBackColor text-white ' : 'bg-[#55AE7B14] primaryColor '} p-2 rounded-full`} /><span className='text-sm'>{t("search")}</span></div>
 
                         <div className={`flex flex-col items-center gap-1`} onClick={handleProfileClick}><FaRegUser size={24} className={`h-10 w-10 ${mobileActiveKey == 3 ? 'primaryBackColor text-white ' : 'bg-[#55AE7B14] primaryColor '} p-2 rounded-full`} /><span className='text-sm'>{user?.jwtToken ? t("profile") : t("login")}</span></div>
                     </div>
