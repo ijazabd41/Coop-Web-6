@@ -9,6 +9,7 @@ import * as api from "@/api/apiRoutes"
 import { useSelector, useDispatch } from 'react-redux';
 import { setAllAddresses } from '@/redux/slices/addressSlice';
 import CardSkeleton from '../skeleton/CardSkeleton';
+import { GoPlusCircle } from 'react-icons/go';
 
 const Address = () => {
 
@@ -52,22 +53,28 @@ const Address = () => {
 
     return (
         <div className='w-full cardBorder rounded-sm '>
-            <div className='buttonBackground flex justify-between p-4 items-center'>
+            <div className='backgroundColor flex justify-between p-4 items-center'>
                 <h2 className='font-bold text-xl'>{t("manage_address")}</h2>
-                <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>
+                {addresses.length > 0 && <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>}
+
             </div>
             <div className=''>
                 {loading ? Array?.from({ length: 6 })?.map((_, index) => {
                     return (
                         <CardSkeleton key={index} height={200} padding="2px" />
                     )
-                }) : addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
+                }) : addresses.length > 0 ? addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
                     return (
                         <div key={address?.id}>
                             <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} />
                         </div>
                     )
-                })}
+                }) : <div className=' flex justify-center  my-2 cursor-pointer' onClick={() => setShowAddAddres(true)}>
+                    <div className='border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl'>
+                        <GoPlusCircle /> {t("add_address")}
+                    </div>
+                </div>}
+
                 {/* {total > addresses?.lenght &&
                     <div className='flex justify-center my-2'>
                         <button onClick={handleLoadMore} className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal'>{t("load_more")}</button>

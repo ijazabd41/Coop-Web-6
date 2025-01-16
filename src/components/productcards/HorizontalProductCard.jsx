@@ -320,10 +320,10 @@ const HorizontalProductCard = ({ product }) => {
 
     return (
         <div>
-            <div className='grid grid-cols-12 p-3   cardBorder rounded-sm   gap-2 group  headerBackgroundColor '>
+            <Link href={`/product/${product?.slug}`} className='grid grid-cols-12 p-3   cardBorder rounded-sm   gap-2 group  headerBackgroundColor '>
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
-                        <Image className=' object-cover aspect-square' fill alt={product.name} src={product.image_url} />
+                        <Image className=' object-cover aspect-square h-full w-full rounded-sm' height={0} width={0} alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
@@ -373,7 +373,7 @@ const HorizontalProductCard = ({ product }) => {
                     </div>
 
                 </div>
-            </div>
+            </Link>
             <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
         </div>

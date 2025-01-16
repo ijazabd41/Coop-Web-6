@@ -66,6 +66,7 @@
     "schedule": "Schedule",
     "myAddress": "My Address",
     "walletBalance": "Wallet Balance",
+    "addWalletBalance": "Add Wallet Balance",
     "applied": "Applied",
     "company": "Company",
     "confirm": "Confirm",
@@ -192,6 +193,7 @@
     "product_variants": "Product Variants",
     "terms_of_service": "Terms of Service",
     "agreement_message": "I Agree to the",
+    "my_wishlist": "My Wishlist",
     "agreement_updated_message": "By continuing you agree to eGrocer",
     "enter_valid_email": "Enter Valid Email Address",
     "tell_us_about_you": "Tell us a little about you",
@@ -463,5 +465,8 @@
     "wallet_payment_method_required": "Wallet Payment Method Required",
     "all_categories": "All Categories",
     "unable_to_load_tracking_data": "Unable to load tracking data",
-    "delivery_partner_details": "Delivery Partner Details"
+    "delivery_partner_details": "Delivery Partner Details",
+    "account_manage": "Account Manage",
+    "manage": "Manage",
+    "setting": "Setting"
 }

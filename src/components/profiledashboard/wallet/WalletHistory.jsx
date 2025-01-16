@@ -35,7 +35,7 @@ const WalletHistory = () => {
     return (
         <div>
             <div className='w-full cardBorder rounded-sm '>
-                <div className='buttonBackground flex justify-between p-4 items-center'>
+                <div className='backgroundColor flex justify-between p-4 items-center'>
                     <h2 className='font-bold text-xl'>{t("wallet_history")}</h2>
                 </div>
                 <div>

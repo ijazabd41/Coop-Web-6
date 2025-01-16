@@ -30,7 +30,7 @@ const VerticleProductCard = ({ product }) => {
     useEffect(() => {
         const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
         if (inStockVariant == undefined) {
-            setSelectedVariant(product?.variants[0])
+            setSelectedVariant(product?.variants?.[0])
         } else {
             setSelectedVariant(inStockVariant)
         }
@@ -319,7 +319,7 @@ const VerticleProductCard = ({ product }) => {
 
     return (
         <div>
-            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder'>
+            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
                         <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />

@@ -2,7 +2,8 @@ import React from 'react'
 import Loader from '../loader/Loader'
 import { useSelector } from 'react-redux'
 import FeatureSections from '../homepagefaturesection/FeatureSections'
-import { t } from '@/utils/translation'
+import HomeAllProducts from '../homepagefaturesection/HomeAllProducts'
+
 
 const HomePage = () => {
 
@@ -16,7 +17,7 @@ const HomePage = () => {
                 {setting?.setting == null ? <Loader /> :
                     <>
                         <FeatureSections />
-                        
+                        <HomeAllProducts />
                     </>
                 }
             </div>

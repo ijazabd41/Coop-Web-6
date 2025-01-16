@@ -43,7 +43,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const currency = setting?.setting?.currency
 
     const [productDetails, setProductDetails] = useState([])
-    const [selectVariant, setSelectedVariant] = useState(product.variants[0])
+    const [selectVariant, setSelectedVariant] = useState(product?.variants?.[0])
     const [ratingData, setRatingData] = useState({})
     const [quantity, setQuantity] = useState(1)
     const [productImages, setProductImages] = useState([]);

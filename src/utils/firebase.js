@@ -60,11 +60,12 @@ const FirebaseData = () => {
 
   try {
     onMessage(messaging, (payload) => {
-      // console.log("Front Notification:", payload);
       const data = payload?.data;
+      console.log("Front Notification:", data);
       new Notification(data?.title, {
         body: data?.message,
-        icon: data?.image || setting?.setting?.web_settings?.web_logo,
+        
+        // icon: data?.image || setting?.setting?.web_settings?.web_logo,
       });
     });
   } catch (err) {

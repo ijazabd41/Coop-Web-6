@@ -24,7 +24,7 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
   return (
     <div>
       <div className="cardBorder rounded-sm">
-        <div className="buttonBackground flex justify-between p-4 items-center">
+        <div className="backgroundColor flex justify-between p-4 items-center">
           <h2 className="font-bold text-xl">{t("notification")}</h2>
         </div>
         {notifications?.map((notification, idx) => (

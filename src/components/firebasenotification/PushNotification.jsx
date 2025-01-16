@@ -42,7 +42,7 @@ const PushNotification = ({ children }) => {
                 setToken(currentToken);
                 dispatch(setFcmToken({ data: currentToken }));
               } else {
-                setTokenFound(false);
+                // setTokenFound(false);
                 toast.error(t("permissionRequired"));
               }
             })
@@ -56,7 +56,7 @@ const PushNotification = ({ children }) => {
         } else if (permission === "default") {
           // registerServiceWorker();
         } else {
-          setTokenFound(false);
+          // setTokenFound(false);
           // toast.error('Permission is required for notifications.');
         }
       }

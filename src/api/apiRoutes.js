@@ -132,7 +132,7 @@ export const getProductByFilter = async ({ latitude, longitude, filters = undefi
         formData.append("tag_names", tag_names)
     }
     if (slug !== "") {
-        formData.append("slug", slug)
+        formData.append("tag_slug", slug)
     }
     if (filters !== undefined) {
         for (const filter in filters) {

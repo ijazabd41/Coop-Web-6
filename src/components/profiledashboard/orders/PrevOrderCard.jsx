@@ -12,7 +12,6 @@ const PrevOrderCard = ({ order }) => {
 
     const setting = useSelector((state) => state.Setting)
     const deliveryDate = order?.status?.find((ord) => ord[0] == "6")
-
     const orderFirstItem = order?.items[0]
 
 
@@ -55,7 +54,7 @@ const PrevOrderCard = ({ order }) => {
                         {order?.items?.length > 1 && <button className='rounded-full py-2 px-3 bg-[#12141814] font-medium text-base'>{order?.items?.length - 1} {t("moteItems")}</button>}
 
                     </div>
-                    <div className=' buttonBackground'>
+                    <div className='backgroundColor'>
                         <div className='flex justify-between p-4'>
                             <div className='flex flex-col'>
                                 <span>{`${t("total")} ${t("amount")}`} </span>

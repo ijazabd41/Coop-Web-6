@@ -71,7 +71,7 @@ const Profile = () => {
 
     return (
         <div className="w-full mx-auto h-fit border-2   rounded-lg   ">
-            <div className='w-full buttonBackground'>
+            <div className='w-full backgroundColor'>
                 <h2 className="text-2xl font-semibold  p-4">{t("editProfile")}</h2>
             </div>
             <div className='  items-center flex  flex-col py-12'>

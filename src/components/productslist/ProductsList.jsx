@@ -34,7 +34,7 @@ const Products = () => {
     const [isGridView, setIsGridView] = useState(true)
     const [loading, setLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
-    // const []
+    
 
     const total_products_per_page = 12;
 
@@ -100,6 +100,7 @@ const Products = () => {
         }
 
     };
+   
     const handlePrices = async (result) => {
         if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
             setMinPrice(parseInt(result.total_min_price));

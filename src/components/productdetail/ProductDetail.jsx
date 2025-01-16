@@ -24,6 +24,7 @@ import { toast } from 'react-toastify';
 import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
+import SimilarProducts from '../productslist/SimilarProducts';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -68,6 +69,8 @@ const ProductDetail = () => {
             setIsLoading(false)
         }
     }
+
+
 
     const fetchRatings = async () => {
         try {
@@ -270,7 +273,7 @@ const ProductDetail = () => {
                                             {productImages?.map((image, index) => (
                                                 <SwiperSlide key={product.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <Image src={image} alt={product.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
+                                                        <Image src={image} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}
@@ -455,11 +458,11 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div></div>
+                    </div>
                     <ProductDescription product={product} ratingData={ratingData} />
                 </div>
+                <SimilarProducts slug={slug} tag_names={product?.tag_names} />
             </>}
 
         </section >
