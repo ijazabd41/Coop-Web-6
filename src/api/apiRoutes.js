@@ -486,3 +486,25 @@ export const liveOrderTracking = async ({ orderId }) => {
     const response = await api.get(`${apiEndPoints.liveTracking}`, { params })
     return response.data
 }
+
+export const getSellers = async ({ limit, offset, latitude, longitude }) => {
+    const params = {
+        limit,
+        offset,
+        latitude,
+        longitude
+    }
+    const response = await api.get(`${apiEndPoints.getShopBySellers}`,{params})
+    return response.data;
+}
+
+export const getCountries = async ({ limit, offset, latitude, longitude }) => {
+    const params = {
+        limit,
+        offset,
+        latitude,
+        longitude
+    }
+    const response = await api.get(`${apiEndPoints.getShopByCountries}`,{params})
+    return response.data;
+} 

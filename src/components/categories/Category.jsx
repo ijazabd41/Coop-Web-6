@@ -51,7 +51,7 @@ const Category = () => {
         <section>
             <BreadCrumb />
             <div className='container'>
-                <div className={`grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 "} gap-4 place-items-center place-content-center h-auto`}>
+                <div className={`grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 h-auto my-5 px-2`}>
                     {
                         categories && categories?.data?.map((category) => {
                             return (

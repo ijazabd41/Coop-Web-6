@@ -66,15 +66,15 @@ const ProductDescription = ({ product, ratingData }) => {
     return (
         <div>
             <div className=' rounded-sm my-2 cardBorder '>
-                <div className='flex gap-4 p-4   border-b-2'>
-                    <span className={`text-sm px-1 md:text-xl md:px-4 py-2 rounded-sm cursor-pointer ${selectedTab == 0 ? "bg-[#29363F] text-white" : " "}`} onClick={handleProductDescSelect}>{t("product_desc_title")}</span>
-                    <span className={`text-sm px-1  md:text-xl md:px-4 py-2 rounded-sm cursor-pointer ${selectedTab == 1 ? "bg-[#29363F] text-white" : ""}`} onClick={handleProductReviewSelect}>{t("rating_and_reviews")}</span>
+                <div className='flex flex-wrap gap-4 p-4   border-b-2'>
+                    <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 0 ? "bg-[#29363F] w-fit text-white" : " "}`} onClick={handleProductDescSelect}>{t("product_desc_title")}</span>
+                    <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""}`} onClick={handleProductReviewSelect}>{t("rating_and_reviews")}</span>
                 </div>
                 <div className=' '>
                     {selectedTab == 0 ?
                         product?.description !== "" ? <div className='p-4'>
-                            <div className='overflow-x-scroll md:overflow-hidden' dangerouslySetInnerHTML={{ __html: product?.description }} />
-                        </div> : <p>No Description available</p> : <></>
+                            <div className='overflow-x-auto md:overflow-hidden' dangerouslySetInnerHTML={{ __html: product?.description }} />
+                        </div> : <p>{t("no_product_description")}</p> : <></>
                     }
                     {selectedTab == 1 &&
                         <div className='p-4'>

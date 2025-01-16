@@ -178,6 +178,10 @@
   .infoContent h6 {
     @apply text-[16px] leading-[19px];
   }
+  /* Toast Margin Responsive */
+  div.toast-container-className {
+    @apply mx-3 my-2 md:mx-0 md:my-0;
+  }
 }
 
 input[type="number"]::-webkit-inner-spin-button,

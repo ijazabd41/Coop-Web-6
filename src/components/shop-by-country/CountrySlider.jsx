@@ -7,8 +7,16 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Country from './Country';
 import { t } from '@/utils/translation';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const CountrySlider = ({ countries }) => {
+    const router = useRouter()
+    const dispatch = useDispatch()
+    const handleCountryClick = (country) => {
+        dispatch(setFilterByCountry({ data: country?.id }));
+        router.push(`/products`)
+    }
     return (
         <section>
             <div className='container py-6 px-2'>
@@ -16,7 +24,7 @@ const CountrySlider = ({ countries }) => {
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("countries")} </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row text-nowrap'>
-                            <Link href={"/"} >{t("see_all")}</Link>
+                            <Link href={"/countries"} >{t("see_all")}</Link>
                             <div className='hidden md:flex gap-2'>
                                 <button className='cardBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
                                 <button className='cardBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
@@ -41,7 +49,7 @@ const CountrySlider = ({ countries }) => {
                             }}
                         >
                             {countries?.countries?.map((country, index) => (
-                                <SwiperSlide key={country.id} >
+                                <SwiperSlide key={country.id} onClick={()=> handleCountryClick(country)}>
                                     <Country country={country} />
                                 </SwiperSlide>
                             ))}

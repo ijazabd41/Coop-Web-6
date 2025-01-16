@@ -468,5 +468,7 @@
     "delivery_partner_details": "Delivery Partner Details",
     "account_manage": "Account Manage",
     "manage": "Manage",
-    "setting": "Setting"
+    "setting": "Setting",
+    "no_product_description": "No Description available",
+    "link_copied_to_clipboard" : "Link Copied to Clipboard !"
 }

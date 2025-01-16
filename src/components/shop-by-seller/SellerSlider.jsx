@@ -7,8 +7,18 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { t } from '@/utils/translation';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
 
 const SellerSlider = ({ sellers }) => {
+    const router  = useRouter()
+    const dispatch = useDispatch()
+
+    const handleSellerClick = (seller) => {
+        dispatch(setFilterBySeller({ data: seller?.id }));
+        router.push("/products")
+    }
     return (
         <section className=' my-6'>
             <div className='container py-12 px-2'>
@@ -16,10 +26,10 @@ const SellerSlider = ({ sellers }) => {
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("sellers")} </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row'>
-                            <Link href={"/"} >{t("see_all")}</Link>
+                            <Link href={"/sellers"} >{t("see_all")}</Link>
                             <div className='hidden md:flex gap-2'>
-                                <button className='buttonBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                                <button className='buttonBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                                <button className='cardBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                                <button className='cardBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
                             </div>
                         </div>
                     </div>
@@ -41,7 +51,7 @@ const SellerSlider = ({ sellers }) => {
                             }}
                         >
                             {sellers?.sellers?.map((seller, index) => (
-                                <SwiperSlide key={seller.id} >
+                                <SwiperSlide key={seller.id} onClick={()=> handleSellerClick(seller)} >
                                     <Seller seller={seller} />
                                 </SwiperSlide>
                             ))}

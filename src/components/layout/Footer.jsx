@@ -27,7 +27,7 @@ const paymentMethodsConfig = [
     { key: "midtrans_payment_method", label: "midtrans", image: MidtransImage },
     { key: "phonepay_payment_method", label: "phonepe", image: PhonePeImage },
     { key: "paytabs_payment_method", label: "paytabs", image: PaytabsImage },
-    
+
 ];
 
 const Footer = () => {
@@ -46,7 +46,7 @@ const Footer = () => {
         <section className='footer'>
             <div className='container text-white px-2'>
                 <div className='md:grid lg:grid lg:grid-cols-12 md:grid-cols-12 flex flex-col items-center py-12 border-b-[1px] gap-3'>
-                    <div className='col-span-6'>
+                    <div className='col-span-6 place-self-start'>
                         {(setting?.web_settings?.app_title !== "" && setting?.web_settings?.app_short_description !== "") &&
                             <>
                                 <h3 className='font-bold text-2xl'>
@@ -60,10 +60,10 @@ const Footer = () => {
                     </div>
                     <div className='col-span-6 w-full flex justify-start gap-3 md:justify-end'>
                         {setting?.web_settings?.is_android_app !== "0" && <Link href={setting?.web_settings?.android_app_url || "#"} target='_blank' className='w-[160px]'>
-                            <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.play_store_logo} alt="playStoreLogo" />
+                            {setting?.web_settings?.play_store_logo && <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.play_store_logo} alt="playStoreLogo" />}
                         </Link>}
                         {setting?.web_settings?.is_ios_app !== "0" && <Link href={setting?.web_settings?.ios_app_url || "#"} target='_blank' className='w-[160px]'>
-                            <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.ios_store_logo} alt="appStoreLogo" />
+                            {setting?.web_settings?.ios_store_logo && <Image className='w-full h-full' width={0} height={0} src={setting?.web_settings?.ios_store_logo} alt="appStoreLogo" />}
                         </Link>}
                     </div>
                 </div>

@@ -37,12 +37,12 @@ const Brands = () => {
     return (
         <section>
             <BreadCrumb />
-            <div className='container '>
-                <div className='grid grid-cols-12 gap-4 my-10'>
+            <div className='container px-3 '>
+                <div className='grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2  h-auto my-2 px-2'>
                     {
                         brands && brands?.map((brand) => {
                             return (
-                                <div key={brand?.id} className='col-span-2' onClick={() => handleBrandClick(brand)}>
+                                <div key={brand?.id} className='col-span-1' onClick={() => handleBrandClick(brand)}>
                                     <BrandCard brand={brand} />
                                 </div>
 

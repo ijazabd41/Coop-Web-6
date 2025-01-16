@@ -25,12 +25,15 @@ import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSub
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import SimilarProducts from '../productslist/SimilarProducts';
+import { usePathname } from 'next/navigation';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { slug } = router.query;
-
+    console.log(router)
+    const pathname = usePathname()
+    console.log(pathname)
     const city = useSelector(state => state.City.city)
     const setting = useSelector(state => state.Setting)
     const cart = useSelector(state => state.Cart)
@@ -228,6 +231,11 @@ const ProductDetail = () => {
         setSelectedImage(image)
     }
 
+    const handleCopyToClipboard = () => {
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`)
+        toast.success(t("link_copied_to_clipboard"))
+    }
+
 
     return (
 
@@ -346,7 +354,7 @@ const ProductDetail = () => {
                                                 <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
                                             </div>
                                             <div>
-                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-2 md:px-4 lg:py-3 rounded-sm text-base font-semibold' onClick={handleAddToCart}><FaShoppingBasket size={22} />Add to Cart</button>
+                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-2 md:px-4 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
                                             </div>
                                         </div>
 
@@ -440,19 +448,19 @@ const ProductDetail = () => {
                                     <div className='flex justify-between items-center my-2 md:my-0'>
                                         <span className='text-sm font-normal'>{t("shareProduct")}:</span>
                                         <div className='flex gap-3'>
-                                            <WhatsappShareButton url='google.com'>
+                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
                                                 <WhatsappIcon className='h-10 w-10 rounded-full' />
                                             </WhatsappShareButton>
-                                            <TwitterShareButton>
+                                            <TwitterShareButton  url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
                                                 <TwitterIcon className='h-10 w-10 rounded-full' />
                                             </TwitterShareButton>
-                                            <FacebookShareButton>
+                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
                                                 <FacebookIcon className='h-10 w-10 rounded-full' />
                                             </FacebookShareButton>
                                             {/* <InstapaperShareButton>
                                             <InstapaperIcon className='h-10 w-10 rounded-full' />
                                         </InstapaperShareButton> */}
-                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
+                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 hover:cursor-pointer' onClick={handleCopyToClipboard} />
                                         </div>
                                     </div>
                                 </div>
@@ -465,7 +473,7 @@ const ProductDetail = () => {
                 <SimilarProducts slug={slug} tag_names={product?.tag_names} />
             </>}
 
-        </section >
+        </section>
     )
 }
 
