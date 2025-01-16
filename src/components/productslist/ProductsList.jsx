@@ -18,7 +18,7 @@ import VerticleProductCard from '../productcards/VerticleProductCard'
 import CardSkeleton from '../skeleton/CardSkeleton'
 import FilterDrawer from '../productFilter/FilterDrawer'
 import { IoFilter } from 'react-icons/io5'
-import { setFilterCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice'
+import { setFilterSort, setFilterView } from '@/redux/slices/productFilterSlice'
 
 const Products = () => {
     const dispatch = useDispatch();
@@ -114,13 +114,20 @@ const Products = () => {
     }
     const handleGridViewChange = () => {
         setIsGridView(true)
+        dispatch(setFilterView({ data: true }))
     }
     const handleListViewChange = () => {
         setIsGridView(false)
+        dispatch(setFilterView({ data: false }))
     }
 
     const handleFetchMore = async () => {
         setOffset(offSet => offSet + total_products_per_page)
+    }
+
+    const sortProduct = async (value) => {
+        setProductResult([])
+        dispatch(setFilterSort({ data: value }));
     }
 
     const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
@@ -142,7 +149,7 @@ const Products = () => {
                                     <div className='flex gap-4 order-1 md:order-2'>
                                         <div className='flex gap-2 items-center'>
                                             <p className='text-sm font-normal'>{t("sortBy")}</p>
-                                            <Select>
+                                            <Select onValueChange={sortProduct} value={filter?.sort_filter}>
                                                 <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
                                                     <SelectValue placeholder={t("default")} />
                                                 </SelectTrigger>
@@ -159,10 +166,10 @@ const Products = () => {
                                         </div>
                                         <div className='flex gap-4 items-center'>
                                             <span
-                                                className={isGridView ? 'primaryBackColor rounded-md text-white p-1.5' : ''}
+                                                className={filter?.grid_view ? 'primaryBackColor rounded-md text-white p-1.5' : ''}
                                             ><BsFillGrid3X3GapFill size={23} onClick={handleGridViewChange} /></span>
                                             <span
-                                                className={!isGridView ? 'primaryBackColor rounded-md text-white  p-1.5' : ''}
+                                                className={!filter?.grid_view ? 'primaryBackColor rounded-md text-white  p-1.5' : ''}
                                             ><FaThList size={23} onClick={handleListViewChange} /></span>
                                         </div>
                                     </div>
@@ -172,7 +179,7 @@ const Products = () => {
                                     {loading ?
                                         placeholderItems.map(index => {
                                             return (
-                                                isGridView ? <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
+                                                filter?.grid_view ? <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
                                                     <CardSkeleton height={300} />
                                                 </div> : <div className='col-span-12'><CardSkeleton height={200} /></div>
 
@@ -180,9 +187,8 @@ const Products = () => {
                                         })
 
                                         : productResult?.map((product) => {
-
                                             return (
-                                                isGridView ?
+                                                filter?.grid_view ?
                                                     <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={product?.id}>
                                                         <VerticleProductCard product={product} />
                                                     </div>

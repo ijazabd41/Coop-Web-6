@@ -47,8 +47,8 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
     }
 
     return (
-        <div className="rounded-md cardBorder">
-            <table className="table-auto w-full rounded-md ">
+        <div className="rounded-md cardBorder overflow-scroll md:overflow-hidden">
+            <table className="table-auto w-full rounded-md">
                 <thead className="backColor ">
                     <tr>
                         <th className="text-left p-4 border-b ">{t("product")}</th>
@@ -159,7 +159,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
             <CancelReasonModal showCancelMoodal={showCancelMoodal} setShowCancelModal={setShowCancelModal} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
             <ReturnReasonModal showReturnModal={showReturnModal} setShowReturnModal={setShowReturnModal} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
             <ProductRatingModal showRating={showRating} setShowRating={setShowRating} selectedProduct={selectedProduct} handleFetchOrderDetail={handleFetchOrderDetail} />
-            <RatingUpdateModal ratingId={ratingId} showUpdateRating={showUpdateRating} setShowUpdateRating={setShowUpdateRating} handleFetchOrderDetail={handleFetchOrderDetail}/>
+            <RatingUpdateModal ratingId={ratingId} showUpdateRating={showUpdateRating} setShowUpdateRating={setShowUpdateRating} handleFetchOrderDetail={handleFetchOrderDetail} />
         </div>
     );
 };

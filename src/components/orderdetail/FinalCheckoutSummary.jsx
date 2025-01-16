@@ -7,7 +7,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
     const setting = useSelector(state => state.Setting.setting)
 
     return (
-        <div className="max-w-md p-6 rounded-lg border cartBorder shadow-sm">
+        <div className="max-w-md p-6 rounded-md border cartBorder ">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg  font-medium">{t("payment_method")}</h2>
                 <span className="font-semibold">{orderDetail?.payment_method}</span>
@@ -19,8 +19,6 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
                         <span className="">{t("transaction_id")}</span>
                         <span className='font-semibold'>{orderDetail?.transaction_id}</span>
                     </div>}
-
-
 
                     <div className="flex justify-between items-center">
                         <span className="">{t("sub_total")}</span>

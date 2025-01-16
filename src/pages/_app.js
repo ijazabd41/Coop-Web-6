@@ -20,7 +20,6 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     // Show loader on route change start
     const handleStart = () => setLoading(true);
-    // Hide loader when route change is complete or fails
     const handleComplete = () => setLoading(false);
 
     router.events.on("routeChangeStart", handleStart);

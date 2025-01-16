@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { t } from "@/utils/translation"
 import Image from 'next/image'
 import DemoImage from "/public/demo.png"
@@ -6,10 +6,12 @@ import { IoIosArrowRoundForward } from 'react-icons/io'
 import { formatCustomDate } from '@/lib/utils'
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
+import LiveTrackingModal from './LiveTrackingModal'
 
 
 const ActiveOrdersCard = ({ order }) => {
 
+    const [showLiveTracking, setShowLiveTracking] = useState(false)
     const setting = useSelector(state => state.Setting)
 
     const getOrderStatus = () => {
@@ -47,6 +49,9 @@ const ActiveOrdersCard = ({ order }) => {
 
     const orderFirstItem = order?.items[0]
 
+    const handleShowLiveTracking = () => {
+        setShowLiveTracking(true)
+    }
 
     return (
         <div className='w-full   '>
@@ -94,12 +99,14 @@ const ActiveOrdersCard = ({ order }) => {
                             </div>
                             <div className='flex items-center gap-2'>
                                 <Link href={`/order-detail/${order?.id}`} className='py-2 px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
-                                <button className='py-2 px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium'>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button>
+                                {order?.active_status == "5" ? <button className='py-2 px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <LiveTrackingModal showLiveTracking={showLiveTracking} setShowLiveTracking={setShowLiveTracking} order={order} />
         </div>
     )
 }

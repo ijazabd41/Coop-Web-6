@@ -31,7 +31,6 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
 
     return (
         <>
-            {console.log("This Rendered")}
             <div className={`flex w-full h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}>
                 <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)}>
                     <SelectTrigger className={`w-full h-full buttonBackground cardBorder  focus:ring-0 rounded-t-sm rounded-b-none md:rounded-l-sm md:rounded-r-none md:w-[152px] md:border-none md:min-w-[152px]`}>

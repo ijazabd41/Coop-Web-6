@@ -84,26 +84,34 @@ const OrderDetail = () => {
                         </div>
 
                     </div>
-                    <div className='grid grid-cols-12 gap-12'>
-                        <div className='col-span-8 flex flex-col gap-12'>
-                            <div className='flex flex-col gap-3'>
-                                <h1 className='font-bold text-2xl'>{t("shippingAdress")}</h1>
-                                <div className='cardBorder rounded-sm'>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+
+                        <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
+                            <div className="flex flex-col gap-3">
+                                <h1 className="font-bold text-2xl">{t("shippingAdress")}</h1>
+                                <div className="cardBorder rounded-sm">
                                     <OrderAdressCard orderDetail={orderDetail} />
                                 </div>
                             </div>
-                            <div className='flex flex-col gap-3'>
-                                <h1 className='font-bold text-2xl'>{t("items")}</h1>
-                                <OrderItems products={orderDetail?.items} handleFetchOrderDetail={handleFetchOrderDetail} />
+                            <div className="flex flex-col gap-3">
+                                <h1 className="font-bold text-2xl">{t("items")}</h1>
+                                <OrderItems
+                                    products={orderDetail?.items}
+                                    handleFetchOrderDetail={handleFetchOrderDetail}
+                                />
                             </div>
                         </div>
-                        <div className='col-span-4'>
-                            {orderDetail?.status?.length > 0 && <div className='flex flex-col gap-3'>
-                                <h1 className='font-bold text-2xl'>{t("track_order")}</h1>
-                                <OrderStepper orderDetail={orderDetail} />
-                            </div>}
-                            <div className='mt-6 flex flex-col gap-3'>
-                                <h1 className='font-bold text-2xl'>{t("billing_details")}</h1>
+
+                        {/* Right Column */}
+                        <div className="col-span-12 md:col-span-4 flex flex-col gap-6">
+                            {orderDetail?.status?.length > 0 && (
+                                <div className="flex flex-col gap-3">
+                                    <h1 className="font-bold text-2xl">{t("track_order")}</h1>
+                                    <OrderStepper orderDetail={orderDetail} />
+                                </div>
+                            )}
+                            <div className="flex flex-col gap-3">
+                                <h1 className="font-bold text-2xl">{t("billing_details")}</h1>
                                 <FinalCheckoutSummary orderDetail={orderDetail} />
                             </div>
                         </div>

@@ -19,22 +19,17 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { FaFacebookF, FaInstagram, FaMoon, FaRegUser, FaSun, FaYoutube } from "react-icons/fa";
 import Image from 'next/image';
 import * as api from "@/api/apiRoutes"
-import { setSetting } from '@/redux/slices/settingSlice'
-import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoSunnyOutline, IoHomeOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoHomeOutline, IoSearchOutline } from 'react-icons/io5';
 import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from '../cart/CartDrawer';
 import Login from '../login/Login';
-import Register from '../register/Register';
 import { t } from "@/utils/translation"
-import NewUserModal from '../newusermodal/NewUserModal';
 import { useDispatch, useSelector } from 'react-redux';
 import Location from "@/components/locationmodal/Location"
 import { BiBell, BiBookmarkHeart, BiCartAlt, BiMoneyWithdraw, BiUserCircle, BiWallet } from 'react-icons/bi';
@@ -47,10 +42,8 @@ import { useTheme } from 'next-themes'
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
-import { setFilterCategory, setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
-import SearchProductCard from '../cards/SearchProductCard';
+import { setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
 import SearchComponent from '../search/SearchComponent';
-import dynamic from 'next/dynamic';
 import { useMediaQuery } from 'react-responsive';
 import { IoIosCloseCircle } from 'react-icons/io'
 const Header = () => {
@@ -62,7 +55,6 @@ const Header = () => {
     const setting = useSelector(state => state.Setting);
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
-    const categories = useSelector(state => state.Shop.shop);
     const filter = useSelector(state => state.ProductFilter)
 
     // Device Width Checking
@@ -337,19 +329,23 @@ const Header = () => {
                                                         </span>
                                                     </DropdownMenuItem>
                                                 </Link>
+                                                <Link href={"/profile/wishlist"}>
+                                                    <DropdownMenuItem wnMenuItem className="items-center flex justify-start h-full">
+                                                        <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                            <BiBookmarkHeart size={22} />
+                                                            {t("wishlist")}
+                                                        </span>
+                                                    </DropdownMenuItem>
+                                                </Link>
+                                                <Link href={"/profile/notifications"}>
+                                                    <DropdownMenuItem className="items-center flex justify-start h-full">
+                                                        <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                            <BiBell size={22} />
+                                                            {t("notification")}
+                                                        </span>
+                                                    </DropdownMenuItem>
+                                                </Link>
 
-                                                <DropdownMenuItem className="items-center flex justify-start h-full">
-                                                    <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                                        <BiBookmarkHeart size={22} />
-                                                        {t("wishlist")}
-                                                    </span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem className="items-center flex justify-start h-full">
-                                                    <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                                        <BiBell size={22} />
-                                                        {t("notification")}
-                                                    </span>
-                                                </DropdownMenuItem>
                                                 <Link href={"/profile/address"}>
                                                     <DropdownMenuItem className="items-center flex justify-start h-full">
                                                         <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
@@ -358,12 +354,14 @@ const Header = () => {
                                                         </span>
                                                     </DropdownMenuItem>
                                                 </Link>
-                                                <DropdownMenuItem className="items-center flex justify-start h-full">
-                                                    <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
-                                                        <BiWallet size={22} />
-                                                        {t("walletBalance")}
-                                                    </span>
-                                                </DropdownMenuItem>
+                                                <Link href={"/profile/wallethistory"}>
+                                                    <DropdownMenuItem className="items-center flex justify-start h-full">
+                                                        <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
+                                                            <BiWallet size={22} />
+                                                            {t("walletBalance")}
+                                                        </span>
+                                                    </DropdownMenuItem>
+                                                </Link>
                                                 <DropdownMenuItem className="items-center flex justify-start h-full" >
                                                     <span className="flex p-2 gap-2 text-base font-semibold bg-transparent" onClick={() => setShowLogout(true)}>
                                                         <RiLogoutCircleRLine size={20} />

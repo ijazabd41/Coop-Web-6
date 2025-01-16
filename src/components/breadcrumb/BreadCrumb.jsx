@@ -13,7 +13,7 @@ const BreadCrumb = () => {
             const formattedBreadcrumbs = pathArray.map((path, index) => {
                 const href = `/${pathArray.slice(0, index + 1).join('/')}`;
                 return { label: decodeURIComponent(path), href };
-            });
+            }); 
             setBreadcrumbs(formattedBreadcrumbs);
         }
     }, [router.pathname, router.asPath]);
@@ -43,7 +43,7 @@ const BreadCrumb = () => {
                                     </span>
                                 ) : (
                                     <Link
-                                        href={crumb?.href === "/product" ? "/products" : crumb.href === "/categories"  ? "/categories/all" : crumb.href}
+                                        href={crumb?.href === "/product" ? "/products" : crumb.href === "/categories" ? "/categories/all" : crumb.href}
                                         className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap"
                                         style={{ maxWidth: '100%' }}
                                         title={crumb.label} // Tooltip to show full text on hover

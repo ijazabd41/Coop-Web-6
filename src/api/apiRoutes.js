@@ -478,3 +478,11 @@ export const getUserTransactions = async ({ limit, offset, type }) => {
     const response = await api.get(`${apiEndPoints.getTransactions}`, { params })
     return response.data;
 }
+
+export const liveOrderTracking = async ({ orderId }) => {
+    const params = {
+        order_id: orderId
+    }
+    const response = await api.get(`${apiEndPoints.liveTracking}`, { params })
+    return response.data
+}
