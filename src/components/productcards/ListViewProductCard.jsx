@@ -325,7 +325,7 @@ const ListViewProductCard = ({ product }) => {
             </span> : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
               <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
-              <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><span onClick={handleShowDetailModal}><FaRegEye size={18} className='fontColor' /></span></li>
+              <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor hover:cursor-pointer'><span onClick={handleShowDetailModal}><FaRegEye size={18} className='fontColor' /></span></li>
             </ul>
           </div>
         </div>
@@ -358,16 +358,16 @@ const ListViewProductCard = ({ product }) => {
         </div>
         <div className='col-span-12 md:col-span-2 '>
           {!isProductAvailabel ?
-            <div className='flex  gap-2  w-full md:flex-col   md:mb-0 items-center'>
-              <button className='w-full  flex items-center  justify-center rounded-[4px] p-2 buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
-              <div className='flex gap-0 md:gap-3  h-[40px] md:h-[38px] w-full flex-col md:flex-row'>
+            <div className='flex  gap-2  w-full md:flex-col mt-2  md:mb-0 items-center'>
+              <button className='w-full  flex items-center  justify-center rounded-[4px] p-2 buttonBackground line-clamp-1' onClick={(e) => handleShowVariantModal(e, product)}>{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
+              <div className='flex gap-0 md:gap-3   md:h-[38px] w-full h-full flex-col md:flex-row'>
                 {isProductAlreadyAdded ?
                   <div className=' w-full cardBorder  flex justify-between rounded-sm  '>
-                    <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-8 p-4 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
+                    <button className='flex items-center justify-center primaryBackColor text-white  font-bold text-sm w-8 md:w-6 md:p-1.5 p-2 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus className='text-white w-full h-full' /></button>
                     <input value={addedQuantity} disabled className='w-1/2  text-center bg-transparent' min={"1"} max={selectedVariant?.stock} />
-                    <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-8 p-4 rounded-[2px]' onClick={handleQuantityIncrease}><FaPlus /></button>
+                    <button className='flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 md:w-6 md:p-1.5 p-2 rounded-[2px]' onClick={handleQuantityIncrease}><FaPlus className='text-white w-full h-full' /></button>
                   </div>
-                  : <button onClick={handleIntialAddToCart} className=' w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-4 text-white bg-[#55ae7b26] primaryColor '><FaShoppingBasket size={20} /><span>Add</span></button>}
+                  : <button onClick={handleIntialAddToCart} className=' w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] px-4 py-2 text-white bg-[#55ae7b26] primaryColor '><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
               </div>
 

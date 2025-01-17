@@ -93,7 +93,7 @@ const Cart = () => {
                 </div>
             </div>
             <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
-        </section >
+        </section>
     );
 
 }

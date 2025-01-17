@@ -623,7 +623,7 @@ const Checkout = () => {
             <NewAddressModal fetchAddress={fetchAddress} showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} />
             <StripeModal showStripe={showStripe} setShowStripe={setShowStripe} />
             <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} />
-        </section >
+        </section>
     )
 }
 

@@ -23,7 +23,7 @@ import Returnable from "@/assets/Returnable.svg";
 import NotReturnable from "@/assets/NotReturnable.svg";
 import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share"
 import { IoIosCloseCircle } from 'react-icons/io'
-import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice'
+import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice'
 import { toast } from 'react-toastify'
 import { BiHeart, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
@@ -233,7 +233,10 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const handleChangeCoverImage = (image) => {
         setSelectedImage(image)
     }
-
+ const handleCopyToClipboard = () => {
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`)
+        toast.success(t("link_copied_to_clipboard"))
+    }
 
     return (
         <>
@@ -339,14 +342,14 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                         </div>
                                     </div>
                                     <div className='flex gap-4 flex-col lg:flex-row'>
-                                        <div className='flex gap-4 items-center'>
+                                        <div className='flex gap-6 md:gap-4 items-center'>
                                             <div className='flex border-2 rounded-sm p-1 lg:py-[10px] items-center w-1/2'>
                                                 <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
                                                 <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
                                                 <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
                                             </div>
                                             <div>
-                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-1 md:px-2 lg:py-3 rounded-sm text-base font-semibold' onClick={handleAddToCart}><FaShoppingBasket size={22} />Add to Cart</button>
+                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-1 md:px-2 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
                                             </div>
                                         </div>
 
@@ -355,7 +358,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                 {favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}
                                             </span>
 
-                                            <span> {favoriteProducts && favoriteProducts?.includes(product?.id) ?
+                                            <span className="text-nowrap"> {favoriteProducts && favoriteProducts?.includes(product?.id) ?
                                                 t("removeTowishlist") : t("addToWishlist")}</span>
                                         </div>
                                     </div>
@@ -441,19 +444,19 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                                         <span className='text-sm font-normal'>{t("shareProduct")}:</span>
                                         <div className='flex gap-3'>
-                                            <WhatsappShareButton url='google.com'>
+                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
                                                 <WhatsappIcon className='h-10 w-10 rounded-full' />
                                             </WhatsappShareButton>
-                                            <TwitterShareButton>
+                                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
                                                 <TwitterIcon className='h-10 w-10 rounded-full' />
                                             </TwitterShareButton>
-                                            <FacebookShareButton>
+                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
                                                 <FacebookIcon className='h-10 w-10 rounded-full' />
                                             </FacebookShareButton>
                                             {/* <InstapaperShareButton>
                                             <InstapaperIcon className='h-10 w-10 rounded-full' />
                                         </InstapaperShareButton> */}
-                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 ' />
+                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2  hover:cursor-pointer' onClick={handleCopyToClipboard} />
                                         </div>
                                     </div>
                                 </div>

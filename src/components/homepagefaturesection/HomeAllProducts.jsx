@@ -46,13 +46,13 @@ const HomeAllProducts = () => {
     return (
         <section>
             <div className='container'>
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-3 px-2'>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{t("allProducts")}</h2>
                     <div className='grid grid-cols-12 gap-2'>
                         {loading ?
                             placeholderItems.map(index => {
                                 return (
-                                    <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-2' key={index}>
+                                    <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2' key={index}>
                                         <CardSkeleton height={300} />
                                     </div>
 
@@ -61,7 +61,7 @@ const HomeAllProducts = () => {
                             :
                             allProducts?.map((product) => {
                                 return (
-                                    <div key={product?.id} className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-2'>
+                                    <div key={product?.id} className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'>
                                         <VerticleProductCard product={product} />
                                     </div>
                                 )

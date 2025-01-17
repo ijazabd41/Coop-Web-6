@@ -6,16 +6,16 @@ import { useSelector } from 'react-redux'
 const WalletTransactionCard = ({ transaction }) => {
     const setting = useSelector(state => state.Setting.setting)
     return (
-        <div>
-            <div className="border rounded-lg cardBorder p-4 m-4 ">
+        <div >
+            <div className="border rounded-lg cardBorder p-4 m-4 md:p-2 lg:p-1.7">
                 {/* Header: Transaction ID and Date */}
                 <div className="flex justify-between  text-sm mb-3">
                     <div>
-                        <p className="font-semibold">{t("transaction_id")}</p>
+                        <p className="font-semibold text-nowrap">{t("transaction_id")}</p>
                         <p className=" font-bold">{transaction?.id}</p>
                     </div>
                     <div className="text-right">
-                        <p className="font-semibold">{t("date")}</p>
+                        <p className="font-semibold break-words">{t("date")}</p>
                         <p className="">{formatCustomDate(transaction?.created_at)}</p>
                     </div>
                 </div>
@@ -23,7 +23,7 @@ const WalletTransactionCard = ({ transaction }) => {
                 {/* Message Section */}
                 <div className="border-t pt-3 mb-4">
                     <p className="font-semibold  mb-1">{t("message")}</p>
-                    <p className="font-bold  leading-snug">
+                    <p className="font-bold  leading-snug line-clamp-1">
                         {transaction?.message}
                     </p>
                 </div>

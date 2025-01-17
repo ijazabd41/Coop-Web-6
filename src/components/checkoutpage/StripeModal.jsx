@@ -5,6 +5,7 @@ import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSelector } from 'react-redux';
+import { t } from '@/utils/translation';
 
 
 const CheckoutForm = () => {
@@ -59,7 +60,7 @@ const StripeModal = ({ showStripe, setShowStripe }) => {
             <DialogContent>
                 <DialogHeader alogHeader className="flex flex-row justify-between items-center">
                     <div className="relative aspect-square object-cover h-[68px] w-[72px]">
-                        <p>Stripe</p>
+                        <p>{t("stripe")}</p>
                     </div>
                     <div>
                         <IoIosCloseCircle size={32} onClick={() => setShowStripe(false)} />

@@ -118,7 +118,7 @@ const OrderDetail = () => {
                     </div>
                 </div>
             </div>
-        </section >
+        </section>
     )
 }
 

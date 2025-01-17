@@ -31,8 +31,8 @@ const TransactionCard = ({ transaction }) => {
     };
 
     return (
-        <div className='col-span-6'>
-            <div className="border rounded-lg  cardBorder p-4 m-4">
+        <div className='col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-4'>
+            <div className="border rounded-lg  cardBorder p-4 m-4 md:m-2 lg:m-1.5">
                 {/* Header: Transaction ID and Date */}
                 <div className="flex justify-between  text-sm mb-3">
                     <div>
@@ -61,7 +61,7 @@ const TransactionCard = ({ transaction }) => {
                 </div>
 
                 {/* Transaction Amount Section */}
-                <div className=" p-3 rounded-lg flex justify-between items-center backgroundColor">
+                <div className=" p-1 rounded-lg flex justify-between items-center backgroundColor">
                     <div>
                         <p className=" text-sm">{t("transaction")} {t("amount")}</p>
                         <p className="text-2xl font-bold">{setting?.currency}{transaction?.amount?.toFixed(2)}</p>

@@ -34,7 +34,7 @@ const Products = () => {
     const [isGridView, setIsGridView] = useState(true)
     const [loading, setLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
-    
+
 
     const total_products_per_page = 12;
 
@@ -100,7 +100,7 @@ const Products = () => {
         }
 
     };
-   
+
     const handlePrices = async (result) => {
         if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
             setMinPrice(parseInt(result.total_min_price));
@@ -138,18 +138,18 @@ const Products = () => {
             <div >
                 <div><BreadCrumb /></div>
                 <div className='container px-2'>
-                    <div className='w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold' onClick={() => setShowFilter(true)}><IoFilter />{t("filter")}</div>
+                    <div className='w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold hover:cursor-pointer' onClick={() => setShowFilter(true)}><IoFilter />{t("filter")}</div>
                     <div className='my-8 grid grid-cols-12 gap-6'>
                         <div className=' col-span-3 rounded-sm hidden md:block '>
                             <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
                         </div>
                         <div className='col-span-12 md:col-span-9'>
                             <div className='flex flex-col gap-6'>
-                                {loading ? <CardSkeleton height={70} /> : <div className='flex justify-between  flex-col md:flex-row items-start md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
+                                {loading ? <CardSkeleton height={70} /> : <div className='flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
                                     <p className='text-dm font-normal order-2 md:order-1'>{totalProducts} {t("products_found")}</p>
-                                    <div className='flex gap-4 order-1 md:order-2'>
-                                        <div className='flex gap-2 items-center'>
-                                            <p className='text-sm font-normal'>{t("sortBy")}</p>
+                                    <div className='flex justify-between gap-3 order-1 md:order-2'>
+                                        <div className='flex  gap-2 items-center'>
+                                            <p className='text-sm text-nowrap font-normal'>{t("sortBy")}</p>
                                             <Select onValueChange={sortProduct} value={filter?.sort_filter}>
                                                 <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
                                                     <SelectValue placeholder={t("default")} />
@@ -165,12 +165,12 @@ const Products = () => {
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <div className='flex gap-4 items-center'>
+                                        <div className='flex  gap-4 items-center'>
                                             <span
-                                                className={filter?.grid_view ? 'primaryBackColor rounded-md text-white p-1.5' : ''}
+                                                className={`${filter?.grid_view ? 'primaryBackColor rounded-md text-white p-1.5' : ''} hover:cursor-pointer`}
                                             ><BsFillGrid3X3GapFill size={23} onClick={handleGridViewChange} /></span>
                                             <span
-                                                className={!filter?.grid_view ? 'primaryBackColor rounded-md text-white  p-1.5' : ''}
+                                                className={`${!filter?.grid_view ? 'primaryBackColor rounded-md text-white  p-1.5' : ''} hover:cursor-pointer`}
                                             ><FaThList size={23} onClick={handleListViewChange} /></span>
                                         </div>
                                     </div>

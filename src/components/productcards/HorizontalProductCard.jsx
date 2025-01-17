@@ -366,7 +366,7 @@ const HorizontalProductCard = ({ product }) => {
                                 <button className='rounded-sm primaryBackColor h-[38px] w-[27px] p-2 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityDecrease}><BiMinus /></button>
                                 <input type="text" disabled value={addedQuantity} min={"1"} max={selectedVariant?.stock} className='text-center w-full' />
                                 <button className='rounded-sm primaryBackColor h-[38px] w-[27px] p-2 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityIncrease}><BiPlus /></button>
-                            </div> : <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white bg-[#55ae7b26] primaryColor' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>Add</span></button>}
+                            </div> : <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white bg-[#55ae7b26] primaryColor' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                         </div> : <div className='flex items-center h-[92px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
 

@@ -307,9 +307,9 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                                         <div
                                             key={method.key}
                                             data-method={method.label}
-                                            className={`p-2 flex justify-between items-center cardBorder rounded-sm ${selectedPaymentMethod === method.label
-                                                ? "bg-[#55ae7b26]"
-                                                : ""
+                                            className={`p-2 flex justify-between items-center  rounded-sm ${selectedPaymentMethod === method.label
+                                                ? "bg-[#55ae7b26] primaryBorder"
+                                                : "cardBorder"
                                                 }`}
                                             onClick={() => handleSelectedPaymentMethod(method.label)}
                                         >
@@ -324,12 +324,13 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                                                 <p className="font-medium text-base">{t(method.label)}</p>
                                             </div>
                                             <div>
-                                                <input
-                                                    type="radio"
-                                                    name="payment_method"
-                                                    className="h-6 w-6 mt-2"
-                                                    checked={selectedPaymentMethod === method.label}
-                                                />
+                                                    <input
+                                                        id="paymentRadio"
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        className="appearance-none w-6 h-6 mt-[5px] rounded-full outline outline-1 outline-black border-2 border-white cursor-pointer checked:primaryBackColor checked:p-[3px] checked:border-[3px] checked:border-white"
+                                                        checked={selectedPaymentMethod === method.label}
+                                                    />
                                             </div>
                                         </div>
                                     ))}

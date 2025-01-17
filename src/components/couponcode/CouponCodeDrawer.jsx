@@ -53,7 +53,7 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                     })}
                 </div>
             </SheetContent>
-        </Sheet >
+        </Sheet>
     )
 }
 

@@ -179,7 +179,7 @@ const WishlistCard = ({ product, setWishlistProducts }) => {
                                     <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8 md:w-10 rounded-[2px] h-9' onClick={handleQuantityIncrease}><FaPlus /></button>
 
                                 </div>
-                                : <button className=' flex gap-2  primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}><FaShoppingBasket size={22} />Add</button>}
+                                : <button className=' flex gap-2  primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}><FaShoppingBasket size={22} />{t("add")}</button>}
 
                         </div>
                         <div className='col-span-3 font-bold text-base'>

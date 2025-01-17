@@ -146,7 +146,7 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
           </div>
         </DialogHeader>
         <div>
-          <p className='text-xs text-center mb-2'>Note: You have to Update Your Profile For Login Purposes</p>
+          <p className='text-xs text-center mb-2'>{t("update_your_profile_note")}</p>
           <div className='flex flex-col gap-2' >
             <div className='flex flex-col gap-1'>
               <span className='font-bold text-base'>{t("name")}</span>

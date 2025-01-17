@@ -8,7 +8,7 @@ import StatusSix from "@/assets/statusIcons/status_icon_delivered.svg"
 import StatusSeven from "@/assets/statusIcons/status_icon_cancel.svg"
 import StatusEight from "@/assets/statusIcons/status_icon_returned.svg"
 import Image from "next/image";
-
+import { t } from "@/utils/translation"
 
 const statuses = [
     {
@@ -27,14 +27,14 @@ const statuses = [
 const OrderStepper = ({ orderDetail }) => {
 
     const statusMappings = {
-        "1": { icon: StatusOne, label: "Payment Pending" },
-        "2": { icon: StatusTwo, label: "Received" },
-        "3": { icon: StatusThree, label: "Processed" },
-        "4": { icon: StatusFour, label: "Shipped" },
-        "5": { icon: StatusFive, label: "Out For Delivery" },
-        "6": { icon: StatusSix, label: "Delivered" },
-        "7": { icon: StatusSeven, label: "Cancelled" },
-        "8": { icon: StatusEight, label: "Returned" },
+        "1": { icon: StatusOne, label: t("paymentPending") },
+        "2": { icon: StatusTwo, label: t("order_status_display_name_recieved") },
+        "3": { icon: StatusThree, label: t("processed") },
+        "4": { icon: StatusFour, label: t("shipped") },
+        "5": { icon: StatusFive, label: t("out_for_delivery") },
+        "6": { icon: StatusSix, label: t("order_status_display_name_delivered") },
+        "7": { icon: StatusSeven, label: t("cancelled") },
+        "8": { icon: StatusEight, label: t("returned") },
     };
 
     const [steps, setSteps] = useState([])
@@ -48,7 +48,7 @@ const OrderStepper = ({ orderDetail }) => {
             const status = statusMappings[statusCode] || {};
             return {
                 icon: status.icon,
-                label: `Your order has been ${status.label}`,
+                label: `${t("your_order_has_been")} ${status.label}`,
                 timestamp: new Date(timestamp).toLocaleString("en-US", {
                     day: "2-digit",
                     month: "short",
@@ -87,9 +87,9 @@ const OrderStepper = ({ orderDetail }) => {
                         <p className="font-medium">{status.label}</p>
                         <p className="text-gray-500 text-sm">{status.timestamp}</p>
                     </div>
-                </div >
+                </div>
             ))}
-        </div >
+        </div>
     );
 };
 

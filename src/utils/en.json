@@ -470,5 +470,6 @@
     "manage": "Manage",
     "setting": "Setting",
     "no_product_description": "No Description available",
-    "link_copied_to_clipboard" : "Link Copied to Clipboard !"
+    "link_copied_to_clipboard" : "Link Copied to Clipboard !",
+    "update_your_profile_note": "Note: You have to Update Your Profile For Login Purposes"
 }
