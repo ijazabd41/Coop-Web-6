@@ -267,6 +267,7 @@ const Header = () => {
                                     {language?.availableLanguages && language?.availableLanguages?.map((language) => {
                                         return (
                                             <DropdownMenuItem
+                                                key={language?.id}
                                                 onSelect={() => handleLanguageChange(language)}
                                                 className="flex gap-2"
                                             >
