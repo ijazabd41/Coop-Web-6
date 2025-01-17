@@ -23,6 +23,7 @@ import { setFilterSort, setFilterView } from '@/redux/slices/productFilterSlice'
 const Products = () => {
     const dispatch = useDispatch();
     const city = useSelector(state => state.City)
+   
     const filter = useSelector(state => state.ProductFilter)
     const [productResult, setProductResult] = useState([])
     const [offset, setOffset] = useState(0)
@@ -37,6 +38,8 @@ const Products = () => {
 
 
     const total_products_per_page = 12;
+
+
 
     // useEffect(() => {
     //     if (filter?.searchedCategory) {

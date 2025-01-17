@@ -61,10 +61,10 @@ const FirebaseData = () => {
   try {
     onMessage(messaging, (payload) => {
       const data = payload?.data;
-      console.log("Front Notification:", data);
+      // console.log("Front Notification:", data);
       new Notification(data?.title, {
         body: data?.message,
-        
+
         // icon: data?.image || setting?.setting?.web_settings?.web_logo,
       });
     });

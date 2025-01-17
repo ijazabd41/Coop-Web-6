@@ -17,31 +17,31 @@ const ActiveOrdersCard = ({ order }) => {
     const getOrderStatus = () => {
         switch (order?.active_status) {
             case "1":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#e3aa0e] rounded-sm text-base font-bold text-[#e3aa0e]'>Payment Pending</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#e3aa0e] rounded-sm text-base font-bold text-[#e3aa0e]'>{t("paymentPending")}</span>
                 break;
             case "2":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]'>Received</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]'>{t("order_status_display_name_recieved")}</span>
                 break;
             case "3":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#805AD5] rounded-sm text-base font-bold text-[#805AD5]'>Processed</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#805AD5] rounded-sm text-base font-bold text-[#805AD5]'>{t("processed")}</span>
                 break;
             case "4":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#3182CE] rounded-sm text-base font-bold text-[#3182CE]'>Shipped</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#3182CE] rounded-sm text-base font-bold text-[#3182CE]'>{t("order_status_display_name_shipped")}</span>
                 break;
             case "5":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#2D3748] rounded-sm text-base font-bold text-[#2D3748]'>Out For Delivery</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#2D3748] rounded-sm text-base font-bold text-[#2D3748]'>{t("out_for_delivery")}</span>
                 break;
             case "6":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#2D3748] rounded-sm text-base font-bold text-[#2D3748]'>Delivered</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#2D3748] rounded-sm text-base font-bold text-[#2D3748]'>{t("order_status_display_name_delivered")}</span>
                 break;
             case "7":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#db3232] rounded-sm text-base font-bold text-[#db3232]'>Cancelled</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#db3232] rounded-sm text-base font-bold text-[#db3232]'>{t("cancelled")}</span>
                 break;
             case "8":
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]'>Returned</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]'>{t("returned")}</span>
                 break;
             default:
-                return <span className='p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]'>Returned</span>
+                return <span className='p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]'>{t("returned")}</span>
                 break;
         }
 

@@ -18,13 +18,16 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IoIosCloseCircle } from 'react-icons/io';
 import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAuthType } from '@/redux/slices/userSlice';
 
 
 const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) => {
 
     const dispatch = useDispatch();
+
+    const setting = useSelector(state => state.Setting.setting)
+    const language = useSelector(state => state.Language.selectedLanguage)
 
     useEffect(() => {
         setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE)
@@ -163,6 +166,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                         <div className='flex flex-col gap-1 pl-0'>
                             <span className='font-bold text-base'>{t("mobileNumber")}<span className='text-red-500'>*</span></span>
                             <PhoneInput
+                                inputStyle={{ direction: language?.type }}
                                 country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
                                 value={phoneNumber}
                                 onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
@@ -190,19 +194,20 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
                         <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button>
-                        <span className='text-base font-medium'>Already have an account? Sign in</span>
+                        <span className='text-base font-medium'>{t("alreadyHaveAnAccount")} {t("signIn")}</span>
                     </div>
                     <div className="flex items-center justify-between my-4 gap-2">
                         <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
-                        <span className=" text-[#4B6272] font-bold text-base">OR</span>
+                        <span className=" text-[#4B6272] font-bold text-base">{t("or")}</span>
                         <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                     </div>
                     <div className="my-4">
                         <button className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"><Image src={GoogleLogo} alt="Google logo" height={30} width={30} className="h-[30px] w-[30px] object-cover " /> {t("continue_with_google")}</button>
                     </div>
                     <div className="py-6 flex items-center justify-center">
-                        <p className=" text-center ">By creating account you agree to eGrocer
-                            Terms of Service and Privacy Policy.</p>
+                        <p className=" text-center ">
+                            {t("agreement_updated_message")} {setting?.web_setting?.site_title} {t("terms_of_service")} {t("and")} {t("privacy_policy")}
+                        </p>
                     </div>
                 </div>
             </DialogContent>

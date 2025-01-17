@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 const ProductSwiperWithImage = ({ section }) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const language = useSelector(state => state.Language.selectedLanguage)
     const theme = useSelector(state => state.Theme.theme)
     const shop = useSelector(state => state.Shop.shop);
     const [promotionImage, setPromotionImage] = useState(null)
@@ -38,7 +39,7 @@ const ProductSwiperWithImage = ({ section }) => {
         <div>
             {section?.products?.length > 0 ? <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
                 <div className='container px-2 '>
-                    <div>
+                    <div dir={language?.type}>
                         <div className='flex justify-between items-center mb-3'>
                             <div>
                                 <h2 className='textColor text-2xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.title} </h2>
@@ -46,7 +47,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll}>{t("see_all")}</button>
-                                <div className=' md:flex gap-2 hidden'>
+                                <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                                     <button className={`cardBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
                                     <button className={`cardBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
                                 </div>

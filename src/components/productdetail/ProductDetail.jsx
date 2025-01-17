@@ -36,6 +36,7 @@ const ProductDetail = () => {
     console.log(pathname)
     const city = useSelector(state => state.City.city)
     const setting = useSelector(state => state.Setting)
+
     const cart = useSelector(state => state.Cart)
     const user = useSelector(state => state.User)
     const favoriteProducts = useSelector(state => state.Favorite.favouriteProductIds)

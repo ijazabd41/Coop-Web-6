@@ -8,10 +8,11 @@ import { IoIosCloseCircle } from 'react-icons/io'
 import { t } from '@/utils/translation'
 import * as api from "@/api/apiRoutes"
 import {
-    GoogleMap, Marker, useJsApiLoader, Polyline, OverlayView
+    GoogleMap, Marker, useJsApiLoader, Polyline
 } from '@react-google-maps/api';
 import { BiChevronRight, BiPhoneCall } from 'react-icons/bi'
 import { IoLocationOutline } from 'react-icons/io5'
+import { Link } from 'lucide-react'
 
 const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => {
     const [map, setMap] = useState(null);
@@ -42,7 +43,7 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
         if (showLiveTracking) {
             fetchLocation(order?.id);
         }
-    }, [order])
+    }, [order, showLiveTracking])
 
     useEffect(() => {
         let interval;
@@ -180,12 +181,12 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
                                         </div>
                                     </div>
                                     <div className="bg-blue-500 p-2 rounded-full">
-                                        <a
+                                        <Link
                                             href={`tel:${order?.delivery_boy_mobile || ""}`}
                                             className="text-white"
                                         >
                                             <BiPhoneCall size={25} />
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

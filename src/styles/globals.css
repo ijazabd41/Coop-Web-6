@@ -209,13 +209,14 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 
+
 .react-tel-input .form-control {
   position: relative;
   font-size: 16px;
   letter-spacing: 0.01rem;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  padding-left: 48px;
+  padding-inline-start: 48px;
   margin-left: 0;
   background: #ffffff;
   border: 1px solid #cacaca;
@@ -224,6 +225,14 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 44px !important;
   width: 100% !important;
   outline: none;
+}
+
+.react-tel-input .selected-flag {
+  padding: 0px 5px 0 8px !important;
+}
+
+.react-tel-input .selected-flag .arrow {
+  right: 20px !important;
 }
 
 .react-loading-skeleton {
@@ -243,7 +252,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: var(--body-background-color) !important;
 }
 
-.otp-container > input {
+.otp-container>input {
   background-color: var(--body-background-color) !important;
 }
 

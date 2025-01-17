@@ -7,24 +7,26 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { t } from "@/utils/translation"
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setFilterBrands } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/router';
 const BrandSlider = ({ brands }) => {
     const dispatch = useDispatch()
     const router = useRouter()
+    const language = useSelector(state => state.Language.selectedLanguage)
     const handleBrandClick = (brand) => {
         dispatch(setFilterBrands({ data: [brand?.id] }))
         router.push(`/products`)
     }
+
     return (
         <section>
-            <div className='container py-6 px-2'>
+            <div className='container py-6 px-2' dir={language?.type}>
                 <div className='flex justify-between items-center mb-3'>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
-                    <div className='flex gap-4 items-center flex-col md:flex-row'>
+                    <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                         <Link href={"/brands"} >{t("see_all")}</Link>
-                        <div className='gap-2 hidden md:flex'>
+                        <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                             <button className='cardBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
                             <button className='cardBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
                         </div>

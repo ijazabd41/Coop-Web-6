@@ -18,7 +18,7 @@ const HomeAllProducts = () => {
     const totalProductsPerPage = 12;
     useEffect(() => {
         handleFetchProduct()
-    }, [offset])
+    }, [offset, city])
 
     useEffect(() => {
         setOffset(0)
@@ -26,6 +26,7 @@ const HomeAllProducts = () => {
 
     const handleFetchProduct = async () => {
         setLoading(true)
+
         try {
             const response = await api.getProductByFilter({ latitude: city?.latitude, longitude: city?.longitude, filters: { limit: totalProductsPerPage, offset: offset } });
             setTotalProducts(response.total)

@@ -202,6 +202,12 @@ export const getPaymentSetting = async () => {
     return response.data;
 }
 
+export const getSystemLanguages = async ({ id, isDefault, systemType }) => {
+    const params = { id: id, is_default: isDefault, system_type: systemType }
+    const response = await api.get(apiEndPoints.getSystemLanguage, { params })
+    return response.data
+}
+
 // cart apis
 export const getCart = async ({ latitude, longitude, checkout = 0, promocode_id = 0 }) => {
     const params = { latitude: latitude, longitude: longitude, is_checkout: checkout };

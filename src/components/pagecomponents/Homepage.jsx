@@ -15,9 +15,14 @@ const Homepage = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const setting = useSelector(state => state.Setting.setting)
+    const language = useSelector(state => state.Language.selectedLanguage)
     const city = useSelector(state => state.City.city)
 
     const [loading, setLoading] = useState(false)
+
+
+
+    useEffect(() => { }, [language])
 
     useEffect(() => {
         if (router?.pathname === "/") {

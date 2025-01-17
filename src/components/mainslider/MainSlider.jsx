@@ -4,22 +4,25 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
 
 
 
 
 const HomePageSlider = ({ slider }) => {
+
+    const language = useSelector(state => state.Language.selectedLanguage)
+
     return (
         <div className="w-full mx-auto h-full backgroundColor mb-6">
             <Swiper
+                dir={language?.type}
                 modules={[Pagination, Autoplay]}
-                // spaceBetween={20} // Space between slides
                 slidesPerView={1.2} // Show 1.5 slides at a time
                 centeredSlides={true} // Center the active slide
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 2000, disableOnInteraction: false }}
-                className="homePageSwiper relative "
-            // loop={true}
+                className="homePageSwiper relative"
             >
                 {slider?.sliders?.map((slider, index) => {
                     return (

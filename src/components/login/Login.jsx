@@ -47,6 +47,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
+  const language = useSelector(state => state.Language.selectedLanguage)
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
 
@@ -579,9 +580,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {t("otp_send_message")}
                       <p className="font-weight-bold py-2">
                         {authType == "email" ? (
-                          <div className="flex gap-2">email: {email}</div>
+                          <div className="flex gap-2">{t('email')}: {email}</div>
                         ) : (
-                          <div className="flex gap-2">phone: {phoneNumber}</div>
+                          <div className="flex gap-2">{t("phone")}: {phoneNumber}</div>
                         )}
                       </p>
                     </span>
@@ -644,7 +645,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           `Resend OTP`
                         ) : (
                           <>
-                            Resend OTP in <strong> {formatTime(timer)} </strong>{" "}
+                            {t("resetOtpIn")} <strong> {formatTime(timer)} </strong>{" "}
                           </>
                         )}
                       </button>
@@ -673,6 +674,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             )}
                             <>
                               <PhoneInput
+                                inputStyle={{ direction: language?.type }}
+
                                 country={
                                   process.env
                                     .NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE
@@ -866,7 +869,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     <div className="flex items-center justify-between my-4 gap-2">
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                       <span className=" text-[#4B6272] font-bold text-base">
-                        OR
+                        {t("or")}
                       </span>
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                     </div>
@@ -894,8 +897,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   )}
                   <div className="py-6 flex items-center justify-center">
                     <p className=" text-center ">
-                      By creating account you agree to eGrocer Terms of Service
-                      and Privacy Policy.
+                      {t("agreement_updated_message")} {setting?.web_setting?.site_title} {t("terms_of_service")} {t("and")} {t("privacy_policy")}
                     </p>
                   </div>
                 </>

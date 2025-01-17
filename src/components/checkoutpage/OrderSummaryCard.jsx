@@ -30,7 +30,7 @@ const OrderSummaryCard = ({ checkoutData, handlePlaceOrder }) => {
     return (
         <div className="w-full mx-auto cardBorder rounded-lg p-6 ">
             <div className="flex justify-between items-center mb-2">
-                <span className="font-bold ">Subtotal</span>
+                <span className="font-bold ">{t("sub_total")}</span>
                 <span className="font-semibold ">{setting?.currency} {checkoutData?.sub_total?.toFixed(2)}</span>
             </div>
 

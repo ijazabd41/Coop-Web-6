@@ -46,7 +46,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                 <div className='w-full flex flex-col flex-grow md:relative md:flex-row md:h-full'>
                     <input
                         type="text"
-                        placeholder="Search Here..."
+                        placeholder={t("iAmLookingFor")}
                         className="w-full flex-grow px-4 py-2 text-sm focus:outline-none h-full shadow cardBorder order-1"
                         value={filter?.search ? filter?.search : ""}
                         onChange={(e) => handleSearch(e)}

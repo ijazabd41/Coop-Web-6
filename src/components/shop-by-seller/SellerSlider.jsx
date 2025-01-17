@@ -10,8 +10,12 @@ import { t } from '@/utils/translation';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
+import { useSelector } from 'react-redux';
 
 const SellerSlider = ({ sellers }) => {
+
+    const language = useSelector(state => state.Language.selectedLanguage)
+
     const router  = useRouter()
     const dispatch = useDispatch()
 
@@ -22,12 +26,12 @@ const SellerSlider = ({ sellers }) => {
     return (
         <section className=' my-6'>
             <div className='container py-12 px-2'>
-                <div className='flex flex-col gap-3 '>
+                <div className='flex flex-col gap-3 ' dir={language?.type}>
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("sellers")} </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row'>
                             <Link href={"/sellers"} >{t("see_all")}</Link>
-                            <div className='hidden md:flex gap-2'>
+                            <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                                 <button className='cardBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
                                 <button className='cardBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
                             </div>

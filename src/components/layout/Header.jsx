@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useState } from 'react'
 import {
     Select,
@@ -45,7 +44,9 @@ import { clearCheckout } from '@/redux/slices/checkoutSlice';
 import { setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
 import SearchComponent from '../search/SearchComponent';
 import { useMediaQuery } from 'react-responsive';
-import { IoIosCloseCircle } from 'react-icons/io'
+import { IoIosCloseCircle } from 'react-icons/io';
+import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
+
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const dispatch = useDispatch();
@@ -56,6 +57,8 @@ const Header = () => {
     const user = useSelector(state => state.User);
     const city = useSelector(state => state.City)
     const filter = useSelector(state => state.ProductFilter)
+    const language = useSelector(state => state.Language)
+
 
     // Device Width Checking
     const isMobile = useMediaQuery({ query: '(max-width: 765px)' })
@@ -76,7 +79,6 @@ const Header = () => {
     const [typingTimeout, setTypingTimeout] = useState(null);
 
 
-    // console.log("Mobile Screen:", isMobile)
 
     useEffect(() => {
         if (router?.pathname != "/checkout") {
@@ -90,11 +92,9 @@ const Header = () => {
             setMobileSearch(false)
         }
     }, [isMobile])
-
     useEffect(() => {
         fetchCity();
     }, [setting])
-
     useEffect(() => {
         if (router.pathname.includes("/profile")) {
             setMobileActiveKey(3)
@@ -105,6 +105,19 @@ const Header = () => {
         setTheme(theme)
         dispatch(setLocalTheme({ data: theme }));
     };
+
+    const handleLanguageChange = async (language) => {
+        try {
+            const response = await api.getSystemLanguages({ id: language?.id, isDefault: 0, systemType: 3 })
+            if (response.status == 1) {
+                dispatch(setSelectedLanguage({ data: response?.data }))
+                document.documentElement.dir = response?.data?.type
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
 
     const fetchCity = async () => {
         try {
@@ -227,7 +240,7 @@ const Header = () => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
                                     {themes?.theme == "light" ? <FaSun /> : <FaMoon />}
-                                    {themes?.theme}
+                                    {t(themes?.theme)}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-[100px] ">
                                     <DropdownMenuItem
@@ -246,15 +259,24 @@ const Header = () => {
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                            <Select>
-                                <SelectTrigger className="w-[100px] border-none">
-                                    <SelectValue placeholder="Theme" />
-                                </SelectTrigger>
-                                <SelectContent className="w-[100px] ">
-                                    <SelectItem value="light">l</SelectItem>
-                                    <SelectItem value="dark">D</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
+                                    {language?.selectedLanguage ? language?.selectedLanguage?.name : "English"}
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[100px] ">
+                                    {language?.availableLanguages && language?.availableLanguages?.map((language) => {
+                                        return (
+                                            <DropdownMenuItem
+                                                onSelect={() => handleLanguageChange(language)}
+                                                className="flex gap-2"
+                                            >
+                                                {language?.name}
+                                            </DropdownMenuItem>
+                                        )
+                                    })}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
                         </div>
                     </div>
                 </div>
@@ -433,7 +455,7 @@ const Header = () => {
                     </div>
                 </div>
                 <Sheet open={mobileSearch} onOpenChange={setMobileSearch}>
-                    <SheetContent className="p-0 w-full sm:w-[900px]">
+                    <SheetContent className="p-0 w-full sm:w-[900px]" side={language?.selectedLanguage?.type == "RTL" ? "left" : "right"}>
                         <SheetHeader>
                             <SheetTitle className="flex justify-between px-4 py-2 items-center">
                                 {t("search")}

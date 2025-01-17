@@ -322,7 +322,7 @@ const VerticleProductCard = ({ product }) => {
             <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
-                        <Image className='rounded-lg object-cover ' fill alt={product.name} src={product.image_url} />
+                        <Image className='rounded-lg object-cover h-full w-full' height={0} width={0} alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
@@ -364,13 +364,12 @@ const VerticleProductCard = ({ product }) => {
                     {isProductAlreadyAdded ?
                         <div className='md:w-1/2 w-full cardBorder flex justify-between rounded-sm my-1'>
                             <button className=' md:px-0.5 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-7 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
-
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
 
-                            <button className=' flex items-center justify-center font-bold text-sm  md:px-0.5 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
+                            <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
 
                         </div>
-                        : <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor ' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>Add</span></button>}
+                        : <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white bg-[#55ae7b26] primaryColor ' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                 </div> : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
 

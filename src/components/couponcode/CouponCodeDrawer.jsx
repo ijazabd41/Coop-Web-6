@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
 
     const cart = useSelector(state => state.Cart)
+    const language = useSelector(state => state.Language.selectedLanguage)
     const [couponCodes, setCouponCodes] = useState([])
 
 
@@ -37,8 +38,8 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
         setShowCouponCode(false)
     }
     return (
-        <Sheet open={showCouponCode}>
-            <SheetContent className="p-0 w-full sm:w-[900px] ">
+        <Sheet open={showCouponCode} >
+            <SheetContent className="p-0 w-full sm:w-[900px] " side={language?.type == "RTL" ? "left" : "right"}>
                 <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
                     <SheetTitle className="text-2xl p-2 font-bold flex flex-row items-center  justify-between">
                         <p className='text-2xl font-bold'>{t("coupons")}</p>

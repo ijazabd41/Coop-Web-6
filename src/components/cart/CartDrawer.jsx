@@ -28,6 +28,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     const cart = useSelector(state => state.Cart)
     const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting.setting)
+    const language = useSelector(state => state.Language.selectedLanguage)
 
     const [showLogin, setShowLogin] = useState(false)
     const [cartProductsData, setCartProductsData] = useState([])
@@ -115,7 +116,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     return (
         <>
             <Sheet open={showCart} >
-                <SheetContent className="p-0 w-full sm:w-[900px] flex flex-col h-screen">
+                <SheetContent side={language?.type == "RTL" ? "left" : "right"} className="p-0 w-full sm:w-[900px] flex flex-col h-screen">
                     <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
                         <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
                             <p className='text-2xl font-bold'>{t("shoppingCart")}</p>

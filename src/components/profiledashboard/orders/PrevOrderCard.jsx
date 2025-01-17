@@ -57,7 +57,7 @@ const PrevOrderCard = ({ order }) => {
                     <div className='backgroundColor'>
                         <div className='flex justify-between p-4'>
                             <div className='flex flex-col'>
-                                <span>{`${t("total")} ${t("amount")}`} </span>
+                                <span>{`${t("total")} ${t("Credit")}`} </span>
                                 <span className='font-bold text-lg'>{setting?.setting?.currency}{order?.final_total}</span>
                             </div>
                             <div className='flex items-center'>

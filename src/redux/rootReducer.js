@@ -9,6 +9,7 @@ import CartReducer from "@/redux/slices/cartSlice"
 import AddressReducer from "@/redux/slices/addressSlice"
 import FavoriteReducer from "@/redux/slices/FavoriteSlice"
 import CheckoutReducer from "@/redux/slices/checkoutSlice"
+import LanguageReducer from "@/redux/slices/languageSlice"
 
 export const rootReducer = combineReducers({
     Cart: CartReducer,
@@ -21,5 +22,6 @@ export const rootReducer = combineReducers({
     Addresses: AddressReducer,
     Favorite: FavoriteReducer,
     Checkout: CheckoutReducer,
+    Language: LanguageReducer
 })
 

@@ -17,6 +17,7 @@ const CategoriesContainer = ({ categories }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
+    const language = useSelector(state => state.Language.selectedLanguage)
     const handleCategoryClick = (category) => {
         dispatch(setSelectedCategories({ data: category?.id }))
         if (category?.has_child) {
@@ -31,7 +32,7 @@ const CategoriesContainer = ({ categories }) => {
 
     return (
         <section>
-            <div className='container py-6 px-2'>
+            <div className='container py-6 px-2' dir={language?.type}>
                 <div className="flex justify-between items-center p-0 w-full mb-3">
                     <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
                         <p>{t('shop_by')} {t('categories')}</p>
@@ -42,9 +43,8 @@ const CategoriesContainer = ({ categories }) => {
                         {/* {categories?.categoriess?.length > 5 ? ( */}
                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
                             <Link className="text-nowrap" href="/categories/all">{t('see_all')}</Link>
-                            <div className='gap-2 hidden md:flex '>
-                                <button className="category-button-next cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 "
-                                >
+                            <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
+                                <button className="category-button-next cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
                                     <IoMdArrowBack className='textColor' size={20} />
                                 </button>
                                 <button className=" category-button-prev cardBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
@@ -59,6 +59,7 @@ const CategoriesContainer = ({ categories }) => {
 
                 <div className='flex'>
                     <Swiper
+
                         modules={[Navigation]}
                         spaceBetween={20}
                         slidesPerView={1.5}

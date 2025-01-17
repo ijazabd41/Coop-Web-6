@@ -215,7 +215,6 @@ const Checkout = () => {
 
     const handleFirstStep = () => {
         if (checkout?.address == null) {
-
             dispatch(setCurrentStep({ data: 2 }))
         } else {
             dispatch(setCurrentStep({ data: 2 }))
@@ -367,9 +366,6 @@ const Checkout = () => {
         // setTotalPayment(totalPayment);
         setIsOrderPlaced(false);
     };
-
-
-
 
     const handlePayStackPayment = async (orderId, amount, capilizePaymeneMethod) => {
 

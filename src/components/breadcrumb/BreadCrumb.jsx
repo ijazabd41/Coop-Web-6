@@ -13,7 +13,7 @@ const BreadCrumb = () => {
             const formattedBreadcrumbs = pathArray.map((path, index) => {
                 const href = `/${pathArray.slice(0, index + 1).join('/')}`;
                 return { label: decodeURIComponent(path), href };
-            }); 
+            });
             setBreadcrumbs(formattedBreadcrumbs);
         }
     }, [router.pathname, router.asPath]);

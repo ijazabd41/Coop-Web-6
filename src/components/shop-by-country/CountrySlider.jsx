@@ -9,6 +9,7 @@ import Country from './Country';
 import { t } from '@/utils/translation';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const CountrySlider = ({ countries }) => {
     const router = useRouter()
@@ -17,15 +18,18 @@ const CountrySlider = ({ countries }) => {
         dispatch(setFilterByCountry({ data: country?.id }));
         router.push(`/products`)
     }
+
+    const language = useSelector(state => state.Language.selectedLanguage)
+
     return (
         <section>
             <div className='container py-6 px-2'>
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-3' dir={language?.type}>
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("countries")} </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row text-nowrap'>
                             <Link href={"/countries"} >{t("see_all")}</Link>
-                            <div className='hidden md:flex gap-2'>
+                            <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                                 <button className='cardBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
                                 <button className='cardBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
                             </div>
