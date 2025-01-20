@@ -58,7 +58,7 @@ const ActiveOrdersCard = ({ order }) => {
 
             <div className='py-3 px-4'>
                 <div className='w-full cardBorder rounded-md'>
-                    <div className='grid grid-cols-12 p-4 border-b-2'>
+                    <div className='flex flex-col gap-3 md:gap-0 md:grid grid-cols-12 p-4 border-b-2'>
                         <div className='col-span-1  '>
                             <p className='font-normal text-sm'>{t("order")}</p>
                             <p className='font-bold text-sm'>{order?.id}</p>
@@ -67,13 +67,13 @@ const ActiveOrdersCard = ({ order }) => {
                             <p className='font-normal text-sm'>{t("orderDate")}</p>
                             <p className='font-bold text-sm'>{formatCustomDate(order?.date)}</p>
                         </div>
-                        <div className='col-span-3 flex flex-col  items-end'>
+                        <div className='col-span-3 flex flex-col items-start md:items-end'>
                             <p className='font-normal text-sm'>{t("orderStatus")}</p>
                             {getOrderStatus()}
                         </div>
                     </div>
                     <div className='p-4'>
-                        <div className='flex justify-between mb-4'>
+                        <div className='flex justify-between gap-2 md:gap-0 mb-4'>
                             <div className='flex items-start gap-2'>
                                 <div className='h-[64px] w-[64px] relative aspect-square '>
                                     {orderFirstItem?.image_url && <Image src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
@@ -89,17 +89,18 @@ const ActiveOrdersCard = ({ order }) => {
                             </div>
 
                         </div>
-                        {order?.items?.length > 1 && <button className='rounded-full py-2 px-3 bg-[#12141814] font-medium text-base'>+{order?.items?.length - 1} {t("moteItems")}</button>}
+                        {order?.items?.length > 1 && <button className='rounded-full py-2  px-3 bg-[#12141814] font-medium text-base'>+{order?.items?.length - 1} {t("moteItems")}</button>}
                     </div>
-                    <div className=' backgroundColor'>
-                        <div className='flex justify-between p-4'>
-                            <div className='flex flex-col '>
+                    <div className='backgroundColor'>
+                        {/* TODO: */}
+                        <div className={`flex justify-between p-4 md:${order?.active_status == "5" ? "flex-col" : "flex-row"}`}>
+                            <div className='flex flex-col'>
                                 <span>{t("total")} {t("amount")}</span>
                                 <span className='font-bold text-lg'>{setting?.setting?.currency}{order?.final_total}</span>
                             </div>
                             <div className='flex items-center gap-2'>
-                                <Link href={`/order-detail/${order?.id}`} className='py-2 px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
-                                {order?.active_status == "5" ? <button className='py-2 px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
+                                <Link href={`/order-detail/${order?.id}`} className='py-1 px-1 md:py-2 md:px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
+                                {order?.active_status == "5" ? <button className='py-1 px-1 md:py-2 md:px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
 
                             </div>
                         </div>

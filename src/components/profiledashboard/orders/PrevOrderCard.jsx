@@ -19,22 +19,22 @@ const PrevOrderCard = ({ order }) => {
         <div className='w-full   '>
             <div className='py-3 px-4'>
                 <div className='w-full  cardBorder rounded-md'>
-                    <div className='grid grid-cols-12 p-4 border-b-2'>
-                        <div className='col-span-1  '>
+                    <div className='md:grid md:grid-cols-12 p-4 border-b-2 flex  flex-col gap-4 md:gap-0'>
+                        <div className='col-span-3  '>
                             <p className='font-normal text-sm'>{t("order")}</p>
                             <p className='font-bold text-sm'>{order?.id}</p>
                         </div>
-                        <div className='col-span-6'>
+                        <div className='col-span-3'>
                             <p className='font-normal text-sm'>{t("orderDate")}</p>
                             <p className='font-bold text-sm'>{formatCustomDate(order?.date)}</p>
                         </div>
-                        <div className='col-span-5 flex flex-col  items-end'>
+                        <div className='col-span-5 flex flex-col items-start'>
                             <p className='font-normal text-sm'>{t("orderStatus")}</p>
                             <span className='font-bold text-base'>{t("order_delivered_on")}{formatCustomDate(deliveryDate?.[1])}</span>
                         </div>
                     </div>
                     <div className='p-4'>
-                        <div className='flex justify-between mb-4'>
+                        <div className='flex justify-between mb-4 gap-3 md:gap-0'>
                             <div className='flex items-center gap-2'>
                                 <div className='h-[64px] w-[64px] relative aspect-square '>
                                     {/* condition rendering for prevent TypeError: Cannot read properties of null (reading 'default') error */}

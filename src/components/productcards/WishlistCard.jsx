@@ -154,42 +154,119 @@ const WishlistCard = ({ product, setWishlistProducts }) => {
 
     return (
         <div className='cardBorder'>
-            <div className='p-4'>
-                <div className='p-4'>
-                    <div className='grid grid-cols-12 '>
-                        <div className='col-span-6 flex gap-2'>
-                            <div className='h-16 w-16'><Image src={product?.image_url} alt='Image' height={0} width={0} className='object-cover h-full w-full rounded-sm' /></div>
-                            <div>
-                                <h2 className='font-bold text-base '>{product?.name}</h2>
-                                <p className='font-normal text-sm flex gap-1 items-center cursor-pointer' onClick={handleShowVariatModal} >
-                                    {product?.variants[0]?.measurement}
-                                    {product?.variants[0]?.stock_unit_name}
-                                    {product?.variants?.length > 1 ? <IoMdArrowDropdown /> : <></>}
-                                </p>
+            {/* <div className='p-4'>
+            <div className='p-4 relative'>
+                <div className='grid grid-flow-row md:grid-cols-12 gap-4'>
+                    <div className='row-span-1 md:col-span-4 flex gap-2'>
+                        <div className='h-16 w-16'>
+                            <Image src={product?.image_url} alt='Image' height={64} width={64} className='object-cover h-full w-full rounded-sm' />
+                        </div>
+                        <div>
+                            <h2 className='font-bold text-base truncate'>{product?.name}</h2>
+                            <p className='font-normal text-sm flex gap-1 items-center cursor-pointer' onClick={handleShowVariatModal}>
+                                {product?.variants[0]?.measurement}
+                                {product?.variants[0]?.stock_unit_name}
+                                {product?.variants?.length > 1 && <IoMdArrowDropdown />}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className='row-span-1 md:col-span-6'>
+                        <div className='flex flex-col-reverse justify-end gap-3 md:flex-row items-center'>
+                            {isProductAlreadyAdded ? (
+                                <div className='h-1/2 max-w-[130px] md:w-2/5 cardBorder flex justify-between rounded-sm my-1'>
+                                    <button className='md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px] h-9' onClick={handleQuantityDecrease}>
+                                        <FaMinus />
+                                    </button>
+                                    <input value={addedQuantity} disabled className='w-full text-center' min="1" max={product?.variants[0]?.stock} />
+                                    <button className='flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px] h-9' onClick={handleQuantityIncrease}>
+                                        <FaPlus />
+                                    </button>
+                                </div>
+                            ) : (
+                                <button className='h-9 max-w-[130px] flex gap-2 justify-center items-center primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}>
+                                    <FaShoppingBasket size={22} />
+                                    {t("add")}
+                                </button>
+                            )}
+
+                            <div className='flex flex-col font-bold text-base min-w-[120px]'>
+                                {product?.variants[0]?.discounted_price !== 0 ? (
+                                    <>
+                                        <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
+                                        <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p>
+                                    </>
+                                ) : (
+                                    <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>
+                                )}
                             </div>
                         </div>
-                        <div className='col-span-2'>
-                            {isProductAlreadyAdded ?
+                    </div>
+                </div>
 
-                                <div className='md:w-3/4  w-full cardBorder  flex justify-between rounded-sm my-1'>
-                                    <button className=' md:p-1 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8 md:w-8 rounded-[2px] h-9' onClick={handleQuantityDecrease}><FaMinus /></button>
-
-                                    <input value={addedQuantity} disabled className='w-full  text-center' min={"1"} max={product?.variants[0]?.stock} />
-
-                                    <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8 md:w-10 rounded-[2px] h-9' onClick={handleQuantityIncrease}><FaPlus /></button>
-
+                <div className='absolute right-3 top-3 md:right-5 md:top-5' onClick={() => handleRemoveFromWishlist(product?.id)}>
+                    <RiDeleteBin6Line size={22} className='text-red-400' />
+                </div>
+            </div>
+        </div> */}
+            <div className="p-4">
+                <div className="p-4">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                        <div className="flex justify-between max-w-[200px]">
+                            <div className="flex gap-2">
+                                <div className='h-16 w-16'>
+                                    <Image src={product?.image_url} alt='Image' height={64} width={64} className='object-cover h-full w-full rounded-sm' />
                                 </div>
-                                : <button className=' flex gap-2  primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}><FaShoppingBasket size={22} />{t("add")}</button>}
+                                <div className="flex flex-col">
+                                    <h2 className="font-bold text-lg">{product?.name}</h2>
+                                    <p className="font-normal text-sm flex gap-1 items-center cursor-pointer" onClick={handleShowVariatModal}>
+                                        {product?.variants[0]?.measurement}
+                                        {product?.variants[0]?.stock_unit_name}
+                                        {product?.variants?.length > 1 && <IoMdArrowDropdown />}
+                                    </p>
+                                </div>
 
+                            </div>
+                            <div className='block md:hidden' onClick={() => handleRemoveFromWishlist(product?.id)}>
+                                <RiDeleteBin6Line size={22} className='text-red-400' />
+                            </div>
                         </div>
-                        <div className='col-span-3 font-bold text-base'>
-                            {product?.variants[0]?.discounted_price !== 0 ? <>  <p className='textColortext-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
-                                <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p></> : <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>}
+                        {/* TODO: Make UI Fixed */}
+                        <div className="flex flex-col-reverse md:flex-row justify-end gap-2 max-w-[150px]">
+                            {isProductAlreadyAdded ? (
+                                <div className='cardBorder flex w-ful h-full justify-between rounded-sm my-1'>
+                                    <button className='md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px]' onClick={handleQuantityDecrease}>
+                                        <FaMinus />
+                                    </button>
+                                    <input value={addedQuantity} disabled className='w-full h-full text-center' min="1" max={product?.variants[0]?.stock} />
+                                    <button className='flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px]' onClick={handleQuantityIncrease}>
+                                        <FaPlus />
+                                    </button>
+                                </div>
+                            ) : (
+                                <button className='flex gap-2 w-full h-full justify-center items-center primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}>
+                                    <FaShoppingBasket size={22} />
+                                    {t("add")}
+                                </button>
+                            )}
+                            <div className='flex flex-col w-full font-bold text-base'>
+                                {product?.variants[0]?.discounted_price !== 0 ? (
+                                    <>
+                                        <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
+                                        <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p>
+                                    </>
+                                ) : (
+                                    <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>
+                                )}
+                            </div>
                         </div>
-                        <div className='col-span-1  ' onClick={() => handleRemoveFromWishlist(product?.id)}><RiDeleteBin6Line size={22} className='text-red-400' /></div>
+                        <div className='hidden md:block' onClick={() => handleRemoveFromWishlist(product?.id)}>
+                            <RiDeleteBin6Line size={22} className='text-red-400' />
+                        </div>
                     </div>
                 </div>
             </div>
+            {/* Variants Modal */}
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
         </div>
     )

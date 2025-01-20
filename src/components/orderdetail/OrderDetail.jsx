@@ -67,24 +67,24 @@ const OrderDetail = () => {
             <BreadCrumb />
             <div className='container my-12'>
                 <div className='flex flex-col gap-12'>
-                    <div className='flex justify-between backgroundColor p-4 rounded-md'>
+                    <div className='flex flex-col md:flex-row justify-between backgroundColor p-4 rounded-md'>
                         <div>
                             <span className='font-normal text-base'>{t("orderNumber")}:</span>
                             <h1 className='text-2xl font-bold'>#{orderDetail?.id}</h1>
                         </div>
-                        <div className='flex gap-2 items-center'>
-                            <div className='flex flex-col items-end'>
+                        <div className='flex flex-col gap-2 items-start md:flex-row md:items-center'>
+                            <div className='flex flex-col items-start md:items-end'>
                                 <span className='font-normal text-sm '>{t("orderDate")}</span>
                                 <p className='text-base font-medium'>{formatCustomDate(orderDetail?.date)}</p>
                             </div>
-                            {Number(orderDetail?.active_status) === 6 ? <div className='border-l-2'>
-                                <button className='flex items-center gap-2 bg-[#29363F] p-2 ml-2 rounded-md text-white' onClick={handleDownloadInvoice}><MdOutlineFileDownload size={22} /> {t("GetInvoice")}</button>
+                            {Number(orderDetail?.active_status) === 6 ? <div className='md:border-l-2'>
+                                <button className='flex items-center gap-2 bg-[#29363F] p-2 md:ml-2 rounded-md text-white' onClick={handleDownloadInvoice}><MdOutlineFileDownload size={22} /> {t("GetInvoice")}</button>
                             </div> : null}
 
                         </div>
 
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-12 px-2 md:px-0 md:gap-8">
 
                         <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
                             <div className="flex flex-col gap-3">

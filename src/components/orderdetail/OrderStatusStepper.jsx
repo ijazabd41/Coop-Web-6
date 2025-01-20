@@ -78,7 +78,7 @@ const OrderStepper = ({ orderDetail }) => {
 
                         </div>
                         {index < steps.length - 1 && (
-                            <div className="absolute top-12 left-1/2 w-2 h-12 primaryBackColor transform -translate-x-1/2"></div>
+                            <div className="absolute top-12 left-1/2 w-2 h-20 md:h-28 lg:h-20 primaryBackColor transform -translate-x-1/2"></div>
                         )}
                     </div>
 
