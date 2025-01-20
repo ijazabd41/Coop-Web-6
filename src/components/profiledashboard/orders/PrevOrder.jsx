@@ -4,6 +4,8 @@ import PrevOrderCard from './PrevOrderCard'
 import * as api from "@/api/apiRoutes"
 import Loader from '@/components/loader/Loader'
 import CardSkeleton from '@/components/skeleton/CardSkeleton'
+import OrderNotFoundImage from "@/assets/not_found_images/No_Orders.svg"
+import Image from 'next/image'
 
 const PrevOrder = () => {
 
@@ -27,6 +29,7 @@ const PrevOrder = () => {
                 setLoading(false)
             } else {
                 setLoading(false)
+                setPrevOrders([])
                 console.log("Error", response)
             }
         } catch (error) {
@@ -50,7 +53,10 @@ const PrevOrder = () => {
                     return (
                         <CardSkeleton height={200} padding="p-4" key={index} />
                     )
-                }) : prevOrders?.map((order) => {
+                }) : prevOrders?.length == 0 ? <div className='h-full w-full flex items-center justify-center flex-col gap-2 p-3'>
+                    <Image src={OrderNotFoundImage} alt='Order Not found' height={0} width={0} className='h-1/2 w-1/2' />
+                    <h2 className='text-2xl font-bold'>{t("no_order")}</h2>
+                </div> : prevOrders?.map((order) => {
                     return (
                         <PrevOrderCard order={order} key={order?.id} />
                     )

@@ -3,6 +3,8 @@ import { t } from "@/utils/translation"
 import WalletTransactionCard from './WalletTransactionCard'
 import * as api from "@/api/apiRoutes"
 import CardSkeleton from '@/components/skeleton/CardSkeleton'
+import NoTransactionFound from "@/assets/not_found_images/No_Transaction.svg"
+import Image from 'next/image'
 const WalletHistory = () => {
 
     const [transactions, setTransactions] = useState([])
@@ -19,9 +21,16 @@ const WalletHistory = () => {
         setLoading(true)
         try {
             const response = await api.getUserTransactions({ limit: transactionPerPage, offset, type: 'wallet' })
-            setTransactions((trnscn) => [...trnscn, ...response.data])
-            setTotal(response?.total)
-            setLoading(false)
+            if (response.status == 1) {
+                setTransactions((trnscn) => [...trnscn, ...response.data])
+                setTotal(response?.total)
+                setLoading(false)
+            } else {
+                setTransactions([])
+                setTotal(0)
+                setLoading(false)
+            }
+
         } catch (error) {
             setLoading(false)
             console.log("Error", error)
@@ -46,13 +55,16 @@ const WalletHistory = () => {
                                     <CardSkeleton height={200} padding='p-4' />
                                 </div>
                             )
-                        }) : transactions?.map((transaction) => {
+                        }) : transactions?.length > 0 ? transactions?.map((transaction) => {
                             return (
                                 <div className='col-span-12  md:col-span-6 lg:col-span-4 ' key={transaction?.id}>
                                     <WalletTransactionCard transaction={transaction} />
                                 </div>
                             )
-                        })}
+                        }) : <div className=' col-span-12 h-full w-full flex items-center justify-center flex-col gap-2 p-2'>
+                            <Image src={NoTransactionFound} alt='Transactions Not found' height={0} width={0} className='h-3/4 w-3/4' />
+                            <h2 className='text-2xl font-bold'>{t("no_transaction")}</h2>
+                        </div>}
 
                     </div>
                     {total > transactions?.length && <div className='flex justify-center'>

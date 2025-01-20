@@ -4,6 +4,8 @@ import * as api from "@/api/apiRoutes"
 import { useDispatch, useSelector } from 'react-redux'
 import WishlistCard from '../productcards/WishlistCard'
 import CardSkeleton from '../skeleton/CardSkeleton'
+import NoWishListImage from "@/assets/not_found_images/Empty_Wishlist.svg"
+import Image from 'next/image'
 
 const Wishlist = () => {
     const city = useSelector(state => state.City.city)
@@ -29,6 +31,7 @@ const Wishlist = () => {
                 setTotal(response.total)
             } else {
                 setLoading(false)
+                setTotal(0)
                 console.log(response.message)
             }
         } catch (error) {
@@ -55,15 +58,17 @@ const Wishlist = () => {
                             <CardSkeleton height={200} padding="3px" key={index} />
                         )
                     })
-                    : wishlistProducts && wishlistProducts?.map((prdct) => {
+                    : wishlistProducts?.length > 0 ? wishlistProducts?.map((prdct) => {
                         return (
                             <div key={prdct?.id}>
-                                <WishlistCard product={prdct} setWishlistProducts={setWishlistProducts} />
+                                <WishlistCard product={prdct} setWishlistProducts={setWishlistProducts} wishlistProducts={wishlistProducts} setTotal={setTotal} />
                             </div>
                         )
-                    })}
-
-                {total > wishlistProducts?.length &&
+                    }) : <div className=' col-span-12 h-full w-full flex items-center justify-center flex-col gap-2 p-2'>
+                        <Image src={NoWishListImage} alt='Your wishlist is Empty' height={0} width={0} className='h-1/2 w-1/2' />
+                        <h2 className='text-2xl font-bold'>{t("enter_wishlist_message")}</h2>
+                    </div>}
+                {(total > wishlistProducts?.length) &&
                     <div className='flex justify-center my-2'>
                         <button onClick={handleLoadMore} className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal'>{t("load_more")}</button>
                     </div>

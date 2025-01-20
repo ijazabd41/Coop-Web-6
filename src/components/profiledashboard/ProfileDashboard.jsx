@@ -13,6 +13,7 @@ import Notifications from "./Notifications";
 import { setCurrentUser } from "@/redux/slices/userSlice";
 import * as api from "@/api/apiRoutes"
 import { useDispatch } from "react-redux";
+import withAuth from "@/checkauth/CheckAuth";
 
 const ProfileDashboard = () => {
   const dispatch = useDispatch();
@@ -21,10 +22,10 @@ const ProfileDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
+
     const currentTab = router.pathname.split('/').pop();
     setSelectedTab(currentTab || 'profile');
-    setLoading(false)
+
   }, [router.pathname]);
 
   useEffect(() => {
@@ -32,11 +33,14 @@ const ProfileDashboard = () => {
   }, [])
 
   const getCurrentUser = async () => {
+    setLoading(true)
     try {
       const response = await api.getUser();
       dispatch(setCurrentUser({ data: response.user }));
+      setLoading(false)
     } catch (error) {
       console.log("error", error);
+      setLoading(false)
     }
   };
 
@@ -53,7 +57,7 @@ const ProfileDashboard = () => {
               selectedTab={selectedTab}
             />
           </div>
-    
+
           <div className='col-span-12 md:col-span-9  '>
             {loading ? <p>Loading</p> : <>
               {activeTab == "profile" && <Profile />}
@@ -72,4 +76,4 @@ const ProfileDashboard = () => {
   )
 }
 
-export default ProfileDashboard;
+export default withAuth(ProfileDashboard);

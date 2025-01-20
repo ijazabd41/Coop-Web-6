@@ -87,7 +87,7 @@ const Location = ({ showLocation, setShowLocation }) => {
         }).catch((error) => {
             console.log("err", error)
         })
-        
+
         setMapView(true)
     }
 
@@ -286,7 +286,7 @@ const Location = ({ showLocation, setShowLocation }) => {
 
     return (
         <>
-            {loading ? <Loader screen={"full"}/> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
+            {loading ? <Loader screen={"full"} /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
                 <DialogContent
                     // onEscapeKeyDown={(e) => e.preventDefault()}
                     // onPointerDown={(e) => e.preventDefault()}

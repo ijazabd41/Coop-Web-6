@@ -10,7 +10,7 @@ import { setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSl
 import { toast } from 'react-toastify'
 import { t } from "@/utils/translation"
 
-const WishlistCard = ({ product, setWishlistProducts }) => {
+const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal }) => {
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting.setting)
     const cart = useSelector(state => state.Cart)
@@ -32,9 +32,10 @@ const WishlistCard = ({ product, setWishlistProducts }) => {
             if (response.status == 1) {
                 const updateProducts = wishlistProducts?.filter((prdct) => prdct?.id != prdctId)
                 setWishlistProducts(updateProducts)
+                setTotal((prevTotal) => Math.max(prevTotal - 1, 0));
             } else {
                 console.log(response.message)
-            }
+            } s
         } catch (error) {
             console.log("Error", error)
         }

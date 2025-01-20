@@ -367,7 +367,7 @@ const ListViewProductCard = ({ product }) => {
                     <input value={addedQuantity} disabled className='w-1/2  text-center bg-transparent' min={"1"} max={selectedVariant?.stock} />
                     <button className='flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 md:w-6 md:p-1.5 p-2 rounded-[2px]' onClick={handleQuantityIncrease}><FaPlus className='text-white w-full h-full' /></button>
                   </div>
-                  : <button onClick={handleIntialAddToCart} className=' w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] px-4 py-2 text-white bg-[#55ae7b26] primaryColor '><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
+                  : <button onClick={handleIntialAddToCart} className=' w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] px-4 py-2 text-white addToCartColor primaryColor '><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
               </div>
 

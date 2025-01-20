@@ -12,7 +12,7 @@ import {
 } from '@react-google-maps/api';
 import { BiChevronRight, BiPhoneCall } from 'react-icons/bi'
 import { IoLocationOutline } from 'react-icons/io5'
-import { Link } from 'lucide-react'
+import Link from 'next/link'
 
 const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => {
     const [map, setMap] = useState(null);
@@ -71,10 +71,10 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
     const handleHideLiveTracking = () => {
         setShowLiveTracking(false)
     }
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_APP_MAP_API
-    })
+    // const { isLoaded } = useJsApiLoader({
+    //     id: 'google-map-script',
+    //     googleMapsApiKey: process.env.NEXT_PUBLIC_APP_MAP_API
+    // })
 
     const GOOGLE_MAPS_LIBRARIES = ["places", "geometry"];
 
@@ -89,8 +89,8 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
     }, [])
 
     const containerStyle = {
-        width: '735px',
-        height: '410px'
+        width: '100%',
+        height: 'calc(50vh - 100px)',
     };
 
     const polylineOptions = {
@@ -113,7 +113,7 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
 
     return (
         <Dialog open={showLiveTracking}  >
-            <DialogContent className="max-w-fit">
+            <DialogContent className="w-full ">
                 <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
                     {t("livetracking")}
                     <div>
@@ -122,37 +122,39 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                     <div className="w-full">
-                        {isLoaded ? (
-                            <div className="relative">
-                                <GoogleMap
-                                    mapContainerStyle={containerStyle}
-                                    center={riderLocation && riderLocation}
-                                    zoom={7}
-                                    onLoad={onLoad}
-                                    onUnmount={onUnmount}
-                                >
-                                    {riderLocation && userLocation && (
-                                        <>
-                                            <Marker position={riderLocation}></Marker>
-                                            <Marker position={userLocation}></Marker>
-                                        </>
-                                    )}
-                                    {riderLocation && userLocation && (
-                                        <Polyline
-                                            path={[riderLocation, userLocation]}
-                                            options={polylineOptions}
-                                        />
-                                    )}
-                                </GoogleMap>
-                                {showOverlay && (
-                                    <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-white/90">
-                                        <div className='bg-white rounded-lg shadow-md p-5 text-center'>
-                                            <p className="text-[#dc3545] font-bold">{t("unable_to_load_tracking_data")}</p>
-                                        </div>
-                                    </div>
+                        {/* {isLoaded ?  */}
+
+                        <div className="relative">
+                            <GoogleMap
+                                mapContainerStyle={containerStyle}
+                                center={riderLocation && riderLocation}
+                                zoom={7}
+                                onLoad={onLoad}
+                                onUnmount={onUnmount}
+                            >
+                                {riderLocation && userLocation && (
+                                    <>
+                                        <Marker position={riderLocation}></Marker>
+                                        <Marker position={userLocation}></Marker>
+                                    </>
                                 )}
-                            </div>
-                        ) : null}
+                                {riderLocation && userLocation && (
+                                    <Polyline
+                                        path={[riderLocation, userLocation]}
+                                        options={polylineOptions}
+                                    />
+                                )}
+                            </GoogleMap>
+                            {showOverlay && (
+                                <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-white/90">
+                                    <div className='bg-white rounded-lg shadow-md p-5 text-center'>
+                                        <p className="text-[#dc3545] font-bold">{t("unable_to_load_tracking_data")}</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* : null} */}
                     </div>
                     <div className="w-full pt-4">
                         <div className="flex justify-between items-center border-b pb-2">

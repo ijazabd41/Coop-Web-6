@@ -32,7 +32,8 @@ const Address = () => {
             const response = await api.getAddress();
             if (response.status == 1) {
                 dispatch(setAllAddresses({ data: response.data }))
-                setTotal(response.total)
+            } else {
+                dispatch(setAllAddresses({ data: [] }))
             }
             setLoading(false)
         } catch (error) {
@@ -51,11 +52,12 @@ const Address = () => {
     }
 
 
+
     return (
         <div className='w-full cardBorder rounded-sm '>
             <div className='backgroundColor flex justify-between p-4 items-center'>
                 <h2 className='font-bold text-xl'>{t("manage_address")}</h2>
-                {addresses.length > 0 && <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>}
+                {addresses?.allAddresses?.length == 0 && <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>}
 
             </div>
             <div className=''>
@@ -63,7 +65,7 @@ const Address = () => {
                     return (
                         <CardSkeleton key={index} height={200} padding="2px" />
                     )
-                }) : addresses.length > 0 ? addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
+                }) : addresses?.allAddresses?.length > 0 ? addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
                     return (
                         <div key={address?.id}>
                             <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} />

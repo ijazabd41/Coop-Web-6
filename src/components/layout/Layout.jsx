@@ -13,16 +13,19 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import PushNotification from "../firebasenotification/PushNotification";
 import LangFile from "@/utils/en.json"
 import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
-
+import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.User)
   const theme = useSelector((state) => state.Theme.theme);
   const setting = useSelector((state) => state.Setting);
   const city = useSelector((state) => state.City);
   const language = useSelector(state => state.Language.selectedLanguage)
 
   const [loading, setLoading] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(true);
   // const [showLocation, setShowLocation] = useState(false)
 
   useEffect(() => {
@@ -65,9 +68,12 @@ const Layout = ({ children }) => {
     try {
       const res = await api.getSetting();
       dispatch(setSetting({ data: res?.data }));
+
       dispatch(
         setFavoriteProductIds({ data: res?.data?.favorite_product_ids })
       );
+      document.documentElement.style.setProperty("--primary-color", res?.data?.web_settings?.color);
+      document.documentElement.style.setProperty("--light-primary-color", res?.data?.web_settings?.light_color);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -87,22 +93,42 @@ const Layout = ({ children }) => {
   };
 
 
+  useEffect(() => {
+    // Show loader on route change start
+    const handleStart = () => setLoading(true);
+    const handleComplete = () => setLoading(false);
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+
+    // Cleanup event listeners
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleComplete);
+      router.events.off("routeChangeError", handleComplete);
+    };
+  }, [router]);
+
 
 
 
   return (
     <section>
-      <PushNotification>
-        <Header />
-        {children}
-        <Footer />
-        <ToastContainer
-          theme={theme}
-          key="toastContainer"
-          bodyClassName={"toast-body"}
-          toastClassName="toast-container-className"
-        />
-      </PushNotification>
+      {loading ? <Loader screen="full" /> :
+        <PushNotification>
+          <Header />
+          {children}
+          <Footer />
+          <ToastContainer
+            theme={theme}
+            key="toastContainer"
+            bodyClassName={"toast-body"}
+            toastClassName="toast-container-className"
+          />
+        </PushNotification>
+
+      }
       {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}
     </section>
   );

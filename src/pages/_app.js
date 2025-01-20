@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import "@/styles/globals.css";
 import { Provider, useDispatch } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -45,9 +45,11 @@ export default function App({ Component, pageProps }) {
       />
       <Provider store={store}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <PersistGate loading={null} persistor={persistor}>
-            {loading ? <Loader screen="full" /> : <Component {...pageProps} />}
-          </PersistGate>
+          <Suspense fallback={<Loader screen="full" />}>
+            <PersistGate loading={null} persistor={persistor}>
+              <Component {...pageProps} />
+            </PersistGate>
+          </Suspense>
         </ThemeProvider >
       </Provider>
 

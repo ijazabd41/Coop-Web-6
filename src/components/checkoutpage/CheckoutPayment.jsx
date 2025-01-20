@@ -112,7 +112,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                         </div>
                         <div className="rounded backgroundColor flex justify-between items-center p-2">
                             <div className="flex gap-4 items-center font-medium text-base">
-                                <CiWallet size={40} className="bg-[#55ae7b26] p-1 rounded-sm" />
+                                <CiWallet size={40} className="addToCartColor p-1 rounded-sm" />
                                 {t("walletBalance")}
                             </div>
                             <div className="font-bold text-xl">{setting?.setting?.currency}{walletBalance}</div>
@@ -125,7 +125,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                                 <div
                                     data-method="COD"
                                     className={`p-2 flex justify-between items-center cardBorder rounded-sm ${checkout?.selectedPaymentMethod === "COD"
-                                        ? "bg-[#55ae7b26]"
+                                        ? "addToCartColor"
                                         : ""
                                         }`}
                                 >
@@ -155,7 +155,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                                     key={method.key}
                                     data-method={method.label}
                                     className={`p-2 flex justify-between items-center cardBorder rounded-sm ${checkout?.selectedPaymentMethod === method.label
-                                        ? "bg-[#55ae7b26]"
+                                        ? "addToCartColor"
                                         : ""
                                         }`}
                                 >

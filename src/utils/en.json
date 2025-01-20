@@ -211,6 +211,7 @@
     "delete_user_message": "Are you sure?\nYou want to delete account?\nYou will not undone once delete account!",
     "proceed_to_checkout": "Proceed to Checkout",
     "login_to_checkout": "Login to Checkout",
+    "login_to_access": "Please log in to access this route",
     "transaction_history": "Transaction History",
     "wallet_history": "Wallet History",
     "wallet_transactions": "Wallet Transactions",
@@ -475,6 +476,6 @@
     "setting": "Setting",
     "iAmLookingFor": "I am looking for...",
     "no_product_description": "No Description available",
-    "link_copied_to_clipboard" : "Link Copied to Clipboard !",
+    "link_copied_to_clipboard": "Link Copied to Clipboard !",
     "update_your_profile_note": "Note: You have to Update Your Profile For Login Purposes"
 }

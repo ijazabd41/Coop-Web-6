@@ -7,13 +7,14 @@
   --primary-color: #55ae7b;
   --border-color: #d8e0e6;
   --font-color: #141a1f;
+  --light-primary-color: #C8E5D5;
   --footer-background-color: #141a1f;
   --icons-background-color: #c8e5d530;
   --button-background-color: #f3f5f7;
   --font-family: "Nunito", sans-serif;
   --swiper-background-color: #f2f5f7;
   --button-border-color: #8ba2b3;
-  --cart-button-bg: #55ae7b26;
+  /* --cart-button-bg: #55ae7b26; */
   --bs-body-bg: #fff;
   --shimmer-highlight-color: #dddddd;
 }
@@ -146,6 +147,10 @@
     background-color: var(--swiper-background-color);
   }
 
+  .addToCartColor {
+    background-color: var(--light-primary-color)
+  }
+
   .infoContent h1,
   .infoContent h2,
   .infoContent h3,
@@ -178,6 +183,7 @@
   .infoContent h6 {
     @apply text-[16px] leading-[19px];
   }
+
   /* Toast Margin Responsive */
   div.toast-container-className {
     @apply mx-3 my-2 md:mx-0 md:my-0;
