@@ -50,11 +50,11 @@ const FAQs = () => {
                         <CardSkeleton height={40} padding='p-1' />
                     </div>
                 ))}
-                <button className='px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'
+                {faqs?.length > 0 && <button className='px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'
                     onClick={() => handlePageChange(currPage + 1)}
                 >
                     {t("load_more")}
-                </button>
+                </button>}
             </div>
         </section>
     )
