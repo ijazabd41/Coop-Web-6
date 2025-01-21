@@ -10,6 +10,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
     const dispatch = useDispatch();
 
     const cart = useSelector(state => state.Cart);
+    const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting.setting)
 
 
@@ -27,13 +28,13 @@ const CartCouponCard = ({ setShowCouponCode }) => {
 
     return (
         <div className="max-w-sm p-4  border  rounded-md cardBorder">
-
-            <div className="flex justify-between items-center mb-4">
+            {user?.jwtToken &&  <div className="flex justify-between items-center mb-4">
                 <h3 className="text-sm font-medium ">{t("have_coupon")}</h3>
                 <button className="px-3 py-1 text-sm font-medium border rounded hover:primaryBackColor hover:text-white" onClick={() => setShowCouponCode(true)}>
                     {t("view_coupon")}
                 </button>
-            </div>
+            </div>}
+           
 
             {cart?.promo_code && (
                 <div className="mb-4">

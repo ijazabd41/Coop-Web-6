@@ -21,10 +21,29 @@ const Cart = () => {
     const [cartData, setCartData] = useState([])
     const [loading, setLoading] = useState(false)
     useEffect(() => {
-        fetchCart()
+        if (cart?.isGuest == true && cart?.guestCart?.length == 0) {
+            setCartProductsData([])
+        }
+        else if (cart.isGuest == false) {
+            fetchCart()
+        } else if (cart?.guestCart?.length > 0 && cart?.isGuest == true) {
+            fetchGuestCart()
+        }
     }, [])
 
-
+    const fetchGuestCart = async () => {
+        try {
+            const variantIds = cart?.guestCart?.map((p) => p.product_variant_id);
+            const quantities = cart?.guestCart?.map((p) => p.qty);
+            const response = await api.getGuestCart({ latitude: city?.latitude, longitude: city?.longitude, variant_ids: variantIds?.join(","), quantities: quantities?.join(",") })
+            if (response.status == 1) {
+                setCartProductsData(response.data.cart);
+                dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
 
     const fetchCart = async () => {
         setLoading(true)
@@ -71,22 +90,30 @@ const Cart = () => {
                         <h1 className="font-bold text-2xl">{t("myCart")}</h1>
                         <p className="font-medium text-base">{`${t("there_are")} ${cartProductsData?.length}  ${t("product_in_your_cart")}`}</p>
                     </div>
-                    <div className="grid grid-cols-12 gap-4 mt-6 ">
-                        <div className="col-span-9 cardBorder rounded-sm">
-                            <div className="grid grid-cols-12 gap-4 p-4  font-medium border-b border-gray-300">
-                                <div className="col-span-4 font-bold">{t("product")}</div>
-                                <div className="col-span-2 text-center font-bold">{t("price")}</div>
-                                <div className="col-span-2 text-center font-bold">{t("quantity")}</div>
-                                <div className="col-span-2 text-center font-bold">{t("total")}</div>
-                                <div className="col-span-1 text-center font-bold">{t("action")}</div>
-                            </div>
+                    <div className="grid grid-cols-12  gap-4 mt-6 ">
+                        <div className="col-span-12 md:col-span-9 cardBorder rounded-sm w-full overflow-hidden">
+                            <div className="w-full overflow-x-auto">
+                                <div className="grid grid-cols-12 gap-4 min-w-[600px] p-4 font-medium border-b border-gray-300">
+                                    <div className="col-span-4 font-bold">{t("product")}</div>
+                                    <div className="col-span-2 text-center font-bold">{t("price")}</div>
+                                    <div className="col-span-2 text-center font-bold">{t("quantity")}</div>
+                                    <div className="col-span-2 text-center font-bold">{t("total")}</div>
+                                    <div className="col-span-1 text-center font-bold">{t("action")}</div>
+                                </div>
 
-                            {cartProductsData?.map((product) => (
-                                <CartProductCard key={product?.id} product={product} cartProductsData={cartProductsData} setCartProductsData={setCartProductsData} />
-                            ))}
+                                {cartProductsData?.map((product) => (
+                                    <CartProductCard
+                                        key={product?.id}
+                                        product={product}
+                                        cartProductsData={cartProductsData}
+                                        setCartProductsData={setCartProductsData}
+                                    />
+                                ))}
+                            </div>
                         </div>
 
-                        <div className="col-span-3">
+
+                        <div className="col-span-12 md:col-span-3">
                             <CartCouponCard setShowCouponCode={setShowCouponCode} />
                         </div>
                     </div>

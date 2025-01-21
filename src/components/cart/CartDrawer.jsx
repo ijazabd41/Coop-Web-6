@@ -12,7 +12,7 @@ import * as api from "@/api/apiRoutes"
 import { IoIosCloseCircle } from 'react-icons/io';
 import NoCartData from "@/assets/Empty_Cart.svg"
 import Image from 'next/image';
-import { clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal } from '@/redux/slices/cartSlice';
+import { clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import Login from '../login/Login';
 import { useRouter } from 'next/router';
@@ -92,6 +92,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
             if (response.status == 1) {
                 setCartProductsData(response.data.cart);
                 dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
+                dispatch(setGuestCartTotal({ data: response?.data?.sub_total }))
             }
         } catch (error) {
             console.log("Error", error)
