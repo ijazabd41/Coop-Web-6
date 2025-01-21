@@ -23,7 +23,7 @@ const withAuth = (WrappedComponent) => {
             setAuthChecked(true)
         }, [user, router])
         if (!authChecked) {
-            return <Loader screen="full" />; // or a loading spinner
+            return <Loader screen="full" />;
         }
 
         return isAuthorized ? <WrappedComponent {...props} /> : null;

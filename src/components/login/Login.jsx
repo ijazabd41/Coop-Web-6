@@ -638,7 +638,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {loading == true ? t("loading") : t("login")}
                     </button>
                   </div>
-                  <div className="mt-2 text-center">
+                  {authType == "phone" && <div className="mt-2 text-center">
                     <div className="text-base font-medium flex gap-1 justify-center my-2">
                       <button onClick={handleSendOTP} disabled={otpDisabled}>
                         {timer === 0 ? (
@@ -650,7 +650,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                         )}
                       </button>
                     </div>
-                  </div>
+                  </div>}
+
                 </form>
               ) : (
                 <>

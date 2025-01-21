@@ -206,14 +206,14 @@ const VerticleProductCard = ({ product }) => {
             if (productQty < Number(product?.total_allowed_quantity)) {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             } else {
-                toast.error('Apologies, maximum product quantity limit reached!');
+                toast.error(t("max_cart_limit_error"))
             }
         } else {
             if (productQty >= Number(selectedVariant.stock)) {
                 toast.error(t("out_of_stock_message"));
             }
             else if (Number(productQty) >= Number(product.total_allowed_quantity)) {
-                toast.error('Apologies, maximum product quantity limit reached');
+                toast.error(t("max_cart_limit_error"))
             } else {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             }

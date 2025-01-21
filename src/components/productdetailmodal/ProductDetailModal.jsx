@@ -41,7 +41,6 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
     const ratingsCount = 10;
     const currency = setting?.setting?.currency
-
     const [productDetails, setProductDetails] = useState([])
     const [selectVariant, setSelectedVariant] = useState(product?.variants?.[0])
     const [ratingData, setRatingData] = useState({})
@@ -126,6 +125,12 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
         const isExisting = cart.guestCart.find((cartProduct) => cartProduct?.product_id == product?.id && cartProduct?.product_variant_id == selectVariant?.id)
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty;
         const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.id && selectVariant?.id == prdct?.product_variant_id)
+        const totalQty = productQty ? productQty + quantity : quantity
+
+        if (totalQty >= Number(selectVariant.stock)) {
+            toast.error(t("out_of_stock_message"));
+            return
+        }
         if (cart?.isGuest) {
             if (productQty + quantity > product?.total_allowed_quantity) {
                 toast.error(t("max_cart_limit_error"))
@@ -141,6 +146,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                     dispatch(addtoGuestCart({ data: updatedProduct }))
                     handleCalculateTotal(updatedProduct)
                     setQuantity(1)
+                    toast.success(t("product_added_successfully"))
                 } else {
                     const productPrice = selectVariant.discounted_price !== 0 ? selectVariant.discounted_price : selectVariant.price
                     const productData = { product_id: product.id, product_variant_id: selectVariant?.id, qty: quantity, productPrice: productPrice };
@@ -148,6 +154,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                     let products = [...cart.guestCart, productData]
                     handleCalculateTotal(products)
                     setQuantity(1)
+                    toast.success(t("product_added_successfully"))
                 }
             }
         } else {
@@ -170,9 +177,9 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                             const productData = [...cart.cartProducts, { product_id: product.id, product_variant_id: selectVariant?.id, qty: quantity }];
                             dispatch(setCartProducts({ data: productData }))
                         }
-
                         dispatch(setCart({ data: response }))
                         dispatch(setCartSubTotal({ data: response.sub_total }))
+                        toast.success(t("product_added_successfully"))
                     }
                 }
             } catch (error) {
@@ -233,7 +240,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const handleChangeCoverImage = (image) => {
         setSelectedImage(image)
     }
- const handleCopyToClipboard = () => {
+    const handleCopyToClipboard = () => {
         navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`)
         toast.success(t("link_copied_to_clipboard"))
     }

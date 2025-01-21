@@ -363,9 +363,9 @@ const HorizontalProductCard = ({ product }) => {
                         {!isProductAvailabel ? <div className='flex gap-3  w-full flex-col '>
                             <button className=' w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground ' onClick={(e) => handleShowVariantModal(e, product)}>{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={22} /></div> : <></>}</button>
                             {isProductAlreadyAdded ? <div className='flex justify-between w-full'>
-                                <button className='rounded-sm primaryBackColor h-[38px] w-[27px] p-2 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityDecrease}><BiMinus /></button>
+                                <button className='rounded-sm primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityDecrease}><BiMinus /></button>
                                 <input type="text" disabled value={addedQuantity} min={"1"} max={selectedVariant?.stock} className='text-center w-full' />
-                                <button className='rounded-sm primaryBackColor h-[38px] w-[27px] p-2 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityIncrease}><BiPlus /></button>
+                                <button className='rounded-sm primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityIncrease}><BiPlus /></button>
                             </div> : <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white addToCartColor primaryColor' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                         </div> : <div className='flex items-center h-[92px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
