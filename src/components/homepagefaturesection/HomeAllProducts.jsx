@@ -29,8 +29,10 @@ const HomeAllProducts = () => {
 
         try {
             const response = await api.getProductByFilter({ latitude: city?.latitude, longitude: city?.longitude, filters: { limit: totalProductsPerPage, offset: offset } });
-            setTotalProducts(response.total)
-            setAllProducts((products) => [...products, ...response.data])
+            if (response.status == 1) {
+                setTotalProducts(response.total)
+                setAllProducts((products) => [...products, ...response.data])
+            }
             setLoading(false)
         } catch (error) {
             setLoading(false)

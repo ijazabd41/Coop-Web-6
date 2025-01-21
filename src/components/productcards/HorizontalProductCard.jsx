@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { FaRegEye, FaRegHeart, FaShoppingBasket, FaStar } from 'react-icons/fa'
@@ -12,6 +11,7 @@ import { toast } from 'react-toastify';
 import { MdArrowDropDown } from "react-icons/md";
 import { BiHeart, BiMinus, BiPlus, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const HorizontalProductCard = ({ product }) => {
 
@@ -323,7 +323,7 @@ const HorizontalProductCard = ({ product }) => {
             <Link href={`/product/${product?.slug}`} className='grid grid-cols-12 p-3   cardBorder rounded-sm   gap-2 group  headerBackgroundColor '>
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
-                        <Image className=' object-cover aspect-square h-full w-full rounded-sm' height={0} width={0} alt={product.name} src={product.image_url} />
+                        <ImageWithPlaceholder className='object-cover aspect-square h-full w-full rounded-sm' alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}

@@ -1,16 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import {
     Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import Image from 'next/image'
+    DialogContent, DialogHeader
+} from "@/components/ui/dialog";
 import RatingLightBox from './RatingLightBox';
 import { t } from '@/utils/translation';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const RatingImagesModal = ({ showImagesModal, setShowImagesModal, images }) => {
 
@@ -37,11 +32,9 @@ const RatingImagesModal = ({ showImagesModal, setShowImagesModal, images }) => {
                         {images?.map((image, index) => {
                             return (
                                 <div className="relative w-24 h-24 rounded overflow-hidden" key={index}>
-                                    <Image
+                                    <ImageWithPlaceholder
                                         src={image}
                                         alt="Rating image"
-                                        height={0}
-                                        width={0}
                                         className="h-full w-full"
                                         onClick={() => handleLightBox(index)}
                                     /></div>

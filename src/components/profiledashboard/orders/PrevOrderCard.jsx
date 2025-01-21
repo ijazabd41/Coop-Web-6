@@ -1,12 +1,9 @@
-import React from 'react'
 import { t } from "@/utils/translation"
-import Image from 'next/image'
-import DemoImage from "/public/demo.png"
-import { IoIosArrowRoundForward } from 'react-icons/io'
 import { formatCustomDate } from '@/lib/utils'
 import { useSelector } from 'react-redux'
 import { FaArrowRight } from 'react-icons/fa'
 import Link from 'next/link'
+import ImageWithPlaceholder from '@/components/image-with-placeholder/ImageWithPlaceholder'
 
 const PrevOrderCard = ({ order }) => {
 
@@ -38,7 +35,7 @@ const PrevOrderCard = ({ order }) => {
                             <div className='flex items-center gap-2'>
                                 <div className='h-[64px] w-[64px] relative aspect-square '>
                                     {/* condition rendering for prevent TypeError: Cannot read properties of null (reading 'default') error */}
-                                    {orderFirstItem?.image_url && <Image src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
+                                    {orderFirstItem?.image_url && <ImageWithPlaceholder src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
                                 </div>
                                 <div>
                                     <p className='font-bold text-base'>{orderFirstItem?.product_name}</p>

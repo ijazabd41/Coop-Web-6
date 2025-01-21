@@ -1,12 +1,11 @@
-import Image from 'next/image'
 import React from 'react'
-import Demo from "/public/demo.png"
 import { IoClose } from 'react-icons/io5'
 import { TiMinus, TiPlus } from "react-icons/ti";
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
 import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 
 const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData }) => {
@@ -218,7 +217,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
                 <div className='col-span-3 '>
                     <div className='h-full w-full object-cover aspect-square relative'>
-                        <Image src={product?.image_url} alt='Image' height={0} width={0} className='h-full w-full object-cover' />
+                        <ImageWithPlaceholder src={product?.image_url} alt='Image' className='h-full w-full object-cover' />
                     </div>
                 </div>
                 <div className='col-span-9'>

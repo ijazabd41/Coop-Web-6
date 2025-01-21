@@ -11,7 +11,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
 
     const cart = useSelector(state => state.Cart);
     const user = useSelector(state => state.User)
-    const setting = useSelector(state => state.Setting.setting)
+    const setting = useSelector(state => state.Setting?.setting)
 
 
     const handleClearPromo = () => {
@@ -34,7 +34,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
                     {t("view_coupon")}
                 </button>
             </div>}
-           
+
 
             {cart?.promo_code && (
                 <div className="mb-4">
@@ -66,7 +66,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
                     cart?.promo_code && (
                         <div className="flex justify-between  mt-3 font-bold text-base">
                             <p className=''>{t("promoDiscount")}</p>
-                            <p>{setting?.currency}{cart?.promo_code?.discount}</p>
+                            <p className=''>{setting?.currency}{cart?.promo_code?.discount?.toFixed(setting?.decimal_point)}</p>
                         </div>
                     )
                 }
@@ -76,9 +76,9 @@ const CartCouponCard = ({ setShowCouponCode }) => {
 
             <hr className="mb-4 border-gray-300" />
 
-            <div className="flex justify-between items-center mb-4 backgroundColor p-3 rounded">
+            <div className="flex flex-wrap justify-between gap-2 items-center mb-4 backgroundColor p-3 rounded">
                 <p className="text-lg font-bold ">{t("total")}</p>
-                <p className="text-lg font-bold ">{setting?.currency} {cart?.promo_code ? (cart?.cartSubTotal - cart?.promo_code?.discount) : cart?.cartSubTotal}</p>
+                <p className="text-lg font-bold">{setting?.currency} {cart?.promo_code ? (cart?.cartSubTotal?.toFixed(setting?.decimal_point) - cart?.promo_code?.discount) : cart?.cartSubTotal?.toFixed(setting?.decimal_point)}</p>
             </div>
 
             <button className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded " onClick={handleToCheckOut}>

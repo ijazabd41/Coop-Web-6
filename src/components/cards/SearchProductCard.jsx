@@ -1,8 +1,8 @@
 import { setProductBySearch } from '@/redux/slices/productFilterSlice'
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const SearchProductCard = ({ product }) => {
     const dispatch = useDispatch()
@@ -11,7 +11,7 @@ const SearchProductCard = ({ product }) => {
         <Link href={`/product/${product?.slug}`} onClick={() => dispatch(setProductBySearch({ data: [] }))} className="w-full">
             <div className="flex items-center gap-3 px-3 py-1">
                 <div className="w-8 h-8">
-                    <Image src={product?.image_url} className="w-full h-full object-cover rounded-sm" alt="product image" width={0} height={0} />
+                    <ImageWithPlaceholder src={product?.image_url} className="w-full h-full object-cover rounded-sm" alt="product image" />
                 </div>
                 <div className="flex flex-col">
                     <div className="text-xl font-semibold max-w-[150px] truncate">{product?.name}</div>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
 import { FaMinus, FaPlus, FaShoppingBasket } from 'react-icons/fa'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import * as api from "@/api/apiRoutes"
@@ -9,6 +8,7 @@ import VariantsModal from '../variantsmodal/VariantsModal'
 import { setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify'
 import { t } from "@/utils/translation"
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal }) => {
     const dispatch = useDispatch();
@@ -154,117 +154,67 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
 
 
     return (
-        <div className='cardBorder'>
-            {/* <div className='p-4'>
-            <div className='p-4 relative'>
-                <div className='grid grid-flow-row md:grid-cols-12 gap-4'>
-                    <div className='row-span-1 md:col-span-4 flex gap-2'>
-                        <div className='h-16 w-16'>
-                            <Image src={product?.image_url} alt='Image' height={64} width={64} className='object-cover h-full w-full rounded-sm' />
-                        </div>
-                        <div>
-                            <h2 className='font-bold text-base truncate'>{product?.name}</h2>
-                            <p className='font-normal text-sm flex gap-1 items-center cursor-pointer' onClick={handleShowVariatModal}>
-                                {product?.variants[0]?.measurement}
-                                {product?.variants[0]?.stock_unit_name}
-                                {product?.variants?.length > 1 && <IoMdArrowDropdown />}
-                            </p>
-                        </div>
+        <div className='cardBorder min-w-[700px]'>
+            <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
+                {/* Product Image and Details */}
+                <div className="col-span-4 flex space-x-5">
+                    <div className="w-16 h-16 rounded-sm">
+                        <ImageWithPlaceholder
+                            src={product?.image_url}
+                            alt="Image"
+                            className="h-full w-full object-cover"
+                        />
                     </div>
-
-                    <div className='row-span-1 md:col-span-6'>
-                        <div className='flex flex-col-reverse justify-end gap-3 md:flex-row items-center'>
-                            {isProductAlreadyAdded ? (
-                                <div className='h-1/2 max-w-[130px] md:w-2/5 cardBorder flex justify-between rounded-sm my-1'>
-                                    <button className='md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px] h-9' onClick={handleQuantityDecrease}>
-                                        <FaMinus />
-                                    </button>
-                                    <input value={addedQuantity} disabled className='w-full text-center' min="1" max={product?.variants[0]?.stock} />
-                                    <button className='flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px] h-9' onClick={handleQuantityIncrease}>
-                                        <FaPlus />
-                                    </button>
-                                </div>
-                            ) : (
-                                <button className='h-9 max-w-[130px] flex gap-2 justify-center items-center primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}>
-                                    <FaShoppingBasket size={22} />
-                                    {t("add")}
-                                </button>
-                            )}
-
-                            <div className='flex flex-col font-bold text-base min-w-[120px]'>
-                                {product?.variants[0]?.discounted_price !== 0 ? (
-                                    <>
-                                        <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
-                                        <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p>
-                                    </>
-                                ) : (
-                                    <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>
-                                )}
-                            </div>
-                        </div>
+                    <div className="flex flex-col">
+                        <h2 className="font-bold text-lg">{product?.name}</h2>
+                        <p className="font-normal text-sm flex gap-1 items-center cursor-pointer" onClick={handleShowVariatModal}>
+                            {product?.variants[0]?.measurement}
+                            {product?.variants[0]?.stock_unit_name}
+                            {product?.variants?.length > 1 && <IoMdArrowDropdown />}
+                        </p>
                     </div>
                 </div>
 
-                <div className='absolute right-3 top-3 md:right-5 md:top-5' onClick={() => handleRemoveFromWishlist(product?.id)}>
-                    <RiDeleteBin6Line size={22} className='text-red-400' />
+                {/* Quantity Selector */}
+                <div className="col-span-4 flex items-center justify-center rounded">
+                    {isProductAlreadyAdded ? (
+                        <div className='cardBorder flex w-[100px] h-[30px] justify-between rounded-sm my-1'>
+                            <button className='md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px]' onClick={handleQuantityDecrease}>
+                                <FaMinus />
+                            </button>
+                            <input value={addedQuantity} disabled className='w-full h-full text-center' min="1" max={product?.variants[0]?.stock} />
+                            <button className='flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px]' onClick={handleQuantityIncrease}>
+                                <FaPlus />
+                            </button>
+                        </div>
+                    ) : (
+                        <button className='flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}>
+                            <FaShoppingBasket size={22} />
+                            {t("add")}
+                        </button>
+                    )}
                 </div>
-            </div>
-        </div> */}
-            <div className="p-4">
-                <div className="p-4">
-                    <div className="flex flex-col md:flex-row justify-between gap-4">
-                        <div className="flex justify-between max-w-[200px]">
-                            <div className="flex gap-2">
-                                <div className='h-16 w-16'>
-                                    <Image src={product?.image_url} alt='Image' height={64} width={64} className='object-cover h-full w-full rounded-sm' />
-                                </div>
-                                <div className="flex flex-col">
-                                    <h2 className="font-bold text-lg">{product?.name}</h2>
-                                    <p className="font-normal text-sm flex gap-1 items-center cursor-pointer" onClick={handleShowVariatModal}>
-                                        {product?.variants[0]?.measurement}
-                                        {product?.variants[0]?.stock_unit_name}
-                                        {product?.variants?.length > 1 && <IoMdArrowDropdown />}
-                                    </p>
-                                </div>
 
-                            </div>
-                            <div className='block md:hidden' onClick={() => handleRemoveFromWishlist(product?.id)}>
-                                <RiDeleteBin6Line size={22} className='text-red-400' />
-                            </div>
-                        </div>
-                        {/* TODO: Make UI Fixed */}
-                        <div className="flex flex-col-reverse md:flex-row justify-end gap-2 max-w-[150px]">
-                            {isProductAlreadyAdded ? (
-                                <div className='cardBorder flex w-ful h-full justify-between rounded-sm my-1'>
-                                    <button className='md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px]' onClick={handleQuantityDecrease}>
-                                        <FaMinus />
-                                    </button>
-                                    <input value={addedQuantity} disabled className='w-full h-full text-center' min="1" max={product?.variants[0]?.stock} />
-                                    <button className='flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px]' onClick={handleQuantityIncrease}>
-                                        <FaPlus />
-                                    </button>
-                                </div>
-                            ) : (
-                                <button className='flex gap-2 w-full h-full justify-center items-center primaryColor py-2 px-6 rounded-sm text-base font-semibold bg-[#55AE7B1F]' onClick={handleIntialAddToCart}>
-                                    <FaShoppingBasket size={22} />
-                                    {t("add")}
-                                </button>
-                            )}
-                            <div className='flex flex-col w-full font-bold text-base'>
-                                {product?.variants[0]?.discounted_price !== 0 ? (
-                                    <>
-                                        <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
-                                        <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p>
-                                    </>
-                                ) : (
-                                    <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>
-                                )}
-                            </div>
-                        </div>
-                        <div className='hidden md:block' onClick={() => handleRemoveFromWishlist(product?.id)}>
-                            <RiDeleteBin6Line size={22} className='text-red-400' />
-                        </div>
-                    </div>
+                {/* Product Price */}
+                <div className="col-span-2 text-center">
+                    {product?.variants[0]?.discounted_price !== 0 ? (
+                        <>
+                            <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.discounted_price}</p>
+                            <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{product?.variants[0]?.price}</p>
+                        </>
+                    ) : (
+                        <p className='textColor text-base font-bold'>{setting?.currency}{product?.variants[0]?.price}</p>
+                    )}
+                </div>
+
+                {/* Remove Button */}
+                <div className="col-span-2 text-center">
+                    <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={handleRemoveFromWishlist}
+                    >
+                        <RiDeleteBin6Line size={26} />
+                    </button>
                 </div>
             </div>
             {/* Variants Modal */}

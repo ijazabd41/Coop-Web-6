@@ -1,11 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { useEffect, useState } from 'react';
 import {
     Sheet,
     SheetContent,
@@ -13,39 +6,40 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { FaFacebookF, FaInstagram, FaMoon, FaRegUser, FaSun, FaYoutube } from "react-icons/fa";
-import Image from 'next/image';
-import * as api from "@/api/apiRoutes"
+} from "@/components/ui/dropdown-menu";
+import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
+import * as api from "@/api/apiRoutes";
 import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoHomeOutline, IoSearchOutline } from 'react-icons/io5';
 import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from '../cart/CartDrawer';
 import Login from '../login/Login';
-import { t } from "@/utils/translation"
+import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from 'react-redux';
-import Location from "@/components/locationmodal/Location"
-import { BiBell, BiBookmarkHeart, BiCartAlt, BiMoneyWithdraw, BiUserCircle, BiWallet } from 'react-icons/bi';
+import Location from "@/components/locationmodal/Location";
+import { BiBell, BiBookmarkHeart, BiCartAlt, BiUserCircle, BiWallet } from 'react-icons/bi';
 import { RiLogoutCircleRLine } from 'react-icons/ri';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { setCity } from '@/redux/slices/citySlice';
 import { setLocalTheme } from '@/redux/slices/themeSlice';
-import { useTheme } from 'next-themes'
+import { useTheme } from 'next-themes';
 import LogoutModal from '../logoutmodal/LogoutModal';
 import ProfileDrawer from '../profiledashboard/ProfileDrawer';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
-import { setFilterSearch, setProductBySearch, setSearchedCategory, setSelectedCategories } from '@/redux/slices/productFilterSlice';
+import { setFilterSearch, setProductBySearch, setSearchedCategory } from '@/redux/slices/productFilterSlice';
 import SearchComponent from '../search/SearchComponent';
 import { useMediaQuery } from 'react-responsive';
 import { IoIosCloseCircle } from 'react-icons/io';
-import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
+import { setSelectedLanguage } from "@/redux/slices/languageSlice";
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
+import Image from 'next/image';
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
@@ -220,22 +214,22 @@ const Header = () => {
             <section className='border-b-2'>
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
                     <div className="container  flex justify-between items-center h-[40px]">
-                        <div className="flex items-center">
+                        {setting?.setting?.social_media?.length > 0 && <div className="flex items-center">
                             <p>{t("follow_us")}</p>
                             <div className="flex">
-                                <ul className="flex gap-2 px-[16px] py-[8px]">
-                                    <li className="border-r-[2px] border-white p-2">
-                                        <FaFacebookF size={20} />
-                                    </li>
-                                    <li className="border-r-[2px] p-2 border-white">
-                                        <FaInstagram size={20} />
-                                    </li>
-                                    <li className="border-r-[2px] p-2 border-white">
-                                        <FaYoutube size={20} />
-                                    </li>
+                                <ul className="flex gap-0 px-[16px] py-[8px]">
+                                    {setting?.setting?.social_media && setting?.setting?.social_media?.slice(0, 5)?.map((social, index) => {
+                                        return (
+                                            <Link key={social?.id} href={social?.link || "#"} target='_blank'>
+                                                <li className="border-r-[2px] p-3 border-white">
+                                                    <i className={`${social?.icon}`}></i>
+                                                </li>
+                                            </Link>
+                                        );
+                                    })}
                                 </ul>
                             </div>
-                        </div>
+                        </div>}
                         <div className="flex gap-[8px]">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
@@ -353,7 +347,7 @@ const Header = () => {
                                                     </DropdownMenuItem>
                                                 </Link>
                                                 <Link href={"/profile/wishlist"}>
-                                                    <DropdownMenuItem wnMenuItem className="items-center flex justify-start h-full">
+                                                    <DropdownMenuItem  className="items-center flex justify-start h-full">
                                                         <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
                                                             <BiBookmarkHeart size={22} />
                                                             {t("wishlist")}

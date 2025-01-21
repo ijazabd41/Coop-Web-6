@@ -85,18 +85,18 @@ const Cart = () => {
         <section>
             <BreadCrumb />
             <div className="container">
-                <div className="my-12">
+                <div className="my-12 px-2">
                     <div className="flex flex-col gap-1">
                         <h1 className="font-bold text-2xl">{t("myCart")}</h1>
                         <p className="font-medium text-base">{`${t("there_are")} ${cartProductsData?.length}  ${t("product_in_your_cart")}`}</p>
                     </div>
                     <div className="grid grid-cols-12  gap-4 mt-6 ">
-                        <div className="col-span-12 md:col-span-9 cardBorder rounded-sm w-full overflow-hidden">
+                        <div className="col-span-12 md:col-span-8 cardBorder rounded-sm w-full overflow-hidden">
                             <div className="w-full overflow-x-auto">
                                 <div className="grid grid-cols-12 gap-4 min-w-[600px] p-4 font-medium border-b border-gray-300">
                                     <div className="col-span-4 font-bold">{t("product")}</div>
                                     <div className="col-span-2 text-center font-bold">{t("price")}</div>
-                                    <div className="col-span-2 text-center font-bold">{t("quantity")}</div>
+                                    <div className="col-span-3 text-center font-bold">{t("quantity")}</div>
                                     <div className="col-span-2 text-center font-bold">{t("total")}</div>
                                     <div className="col-span-1 text-center font-bold">{t("action")}</div>
                                 </div>
@@ -113,7 +113,7 @@ const Cart = () => {
                         </div>
 
 
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-12 md:col-span-4">
                             <CartCouponCard setShowCouponCode={setShowCouponCode} />
                         </div>
                     </div>

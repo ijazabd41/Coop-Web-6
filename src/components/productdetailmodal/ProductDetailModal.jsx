@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as api from "@/api/apiRoutes"
 import {
     Dialog,
@@ -14,13 +14,12 @@ import { Navigation } from "swiper/modules";
 import { useSelector, useDispatch } from 'react-redux'
 import { t } from "@/utils/translation"
 import { FiMinus, FiPlus } from 'react-icons/fi'
-import { MdArrowDropDown } from 'react-icons/md'
-import VegIcon from "@/assets/VegIcon.svg";
-import NonVegIcon from "@/assets/NonVegIcon.svg";
-import NonCancelable from "@/assets/NotCancelable.svg";
-import Cancelable from "@/assets/Cancelable.svg";
-import Returnable from "@/assets/Returnable.svg";
-import NotReturnable from "@/assets/NotReturnable.svg";
+import VegIcon from "@/assets/VegIcon.svg"
+import NonVegIcon from "@/assets/NonVegIcon.svg"
+import NonCancelable from "@/assets/NotCancelable.svg"
+import Cancelable from "@/assets/Cancelable.svg"
+import Returnable from "@/assets/Returnable.svg"
+import NotReturnable from "@/assets/NotReturnable.svg"
 import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share"
 import { IoIosCloseCircle } from 'react-icons/io'
 import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice'
@@ -28,6 +27,7 @@ import { toast } from 'react-toastify'
 import { BiHeart, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import Loader from '../loader/Loader'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 
 
@@ -284,7 +284,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                 <div className='md:col-span-5 col-span-12'>
 
                                     <div className='relative aspect-square h-auto w-full'>
-                                        <Image src={selectedImage} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' />
+                                        <ImageWithPlaceholder src={selectedImage} alt={productDetails.name}  className='h-full w-full aspect-square rounded-sm' />
                                         {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
@@ -315,7 +315,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             {productImages?.map((image, index) => (
                                                 <SwiperSlide key={productDetails.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <Image src={image} alt={productDetails.name} fill className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
+                                                        <ImageWithPlaceholder src={image} alt={productDetails.name} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}

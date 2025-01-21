@@ -122,7 +122,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     </div>
 
                     {/* Other Settings Section */}
-                    <div>
+                    <div className='h-full'>
                         <h3 className="text-base font-semibold textColor  flex items-center  p-4 cardBorder">
                             <FaCog className="mr-2 textColor" size={20} /> {`${t("address_type_other")} ${t("setting")}`}
                         </h3>

@@ -1,11 +1,11 @@
-import Image from 'next/image'
 import React from 'react'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const BrandCard = ({ brand }) => {
     return (
         <div className="backgroundColor  rounded-sm text-center flex flex-col items-center px-4 py-6 gap-2 hover:bg-transparent hover:cardBorder hover:cursor-pointer">
-            <div className='h-44 w-44 '>
-                <Image src={brand?.image_url} alt={brand?.name} className="rounded-sm mx-auto h-full w-full object-cover mb-2" width={0} height={0} />
+            <div className='h-28 w-28  '>
+                <ImageWithPlaceholder src={brand?.image_url} alt={brand?.name} className="rounded-sm mx-auto h-full w-full object-cover mb-2" />
             </div>
             <div className="text-base font-semibold leading-[26px] text-center w-full truncate">{brand?.name}</div>
         </div>

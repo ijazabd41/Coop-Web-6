@@ -3,10 +3,10 @@ import { t } from "@/utils/translation"
 import { Progress } from "@/components/ui/progress"
 import * as api from "@/api/apiRoutes";
 import NoReviewImage from "@/assets/No_Review_Found.svg"
-import Image from 'next/image';
 import ProductReviewCard from './ProductReviewCard';
 import RatingImagesModal from './RatingImagesModal';
 import RatingLightBox from './RatingLightBox';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const ProductDescription = ({ product, ratingData }) => {
     const [selectedTab, setSelectedTab] = useState(0)
@@ -118,11 +118,9 @@ const ProductDescription = ({ product, ratingData }) => {
                                                         {ratingImages?.slice(0, 6)?.map((image, index) => {
                                                             return (
                                                                 <div className="relative w-24 h-24 md:w-28 md:h-28 rounded overflow-hidden" key={index}>
-                                                                    <Image
+                                                                    <ImageWithPlaceholder
                                                                         src={image}
                                                                         alt="Rating image"
-                                                                        height={0}
-                                                                        width={0}
                                                                         className="h-full w-full"
                                                                         onClick={() => handleLightBox(index)}
                                                                     />
@@ -159,7 +157,7 @@ const ProductDescription = ({ product, ratingData }) => {
                                         :
                                         <div className='flex flex-col items-center justify-center mx-auto gap-3'>
                                             <div className='relative '>
-                                                <Image src={NoReviewImage} alt='No review found' height={0} width={0} />
+                                                <ImageWithPlaceholder src={NoReviewImage} alt='No review found' height={0} width={0} />
                                             </div>
                                             <h2 className='text-xl md:text-2xl font-bold'>{t("no_ratings_available_yet")}</h2>
                                         </div>

@@ -1,21 +1,16 @@
-import React, { useEffect } from 'react'
 import {
     Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+    DialogContent, DialogHeader
 } from "@/components/ui/dialog"
-import { FaShoppingBasket, FaStar } from 'react-icons/fa'
-import Image from 'next/image'
+import { FaShoppingBasket } from 'react-icons/fa'
 import * as api from "@/api/apiRoutes"
 import { useSelector, useDispatch } from 'react-redux'
 import { t } from '@/utils/translation'
 import { IoIosCloseCircle } from 'react-icons/io'
 import { FiMinus, FiPlus } from 'react-icons/fi'
-import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal, subGuestCartTotal } from '@/redux/slices/cartSlice'
+import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSubTotal, subGuestCartTotal } from '@/redux/slices/cartSlice'
 import { toast } from 'react-toastify'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 
 const VariantsModal = ({ product, showVariants, setShowVariants }) => {
@@ -275,7 +270,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                     <div className='p-2 md:p-6'>
                         <div className='backgroundColor rounded-md flex gap-2 p-4 items-center'>
                             <div className='h-[54px] w-[54px] relative rounded-md '>
-                                <Image src={product?.image_url} fill alt={product?.name} className='h-full w-full' />
+                                <ImageWithPlaceholder src={product?.image_url} alt={product?.name} className='h-full w-full' />
                             </div>
                             <h3 className='font-medium text-base leading-[24px] break-all'>{product?.name}</h3>
                         </div>
@@ -294,12 +289,8 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                                                     <input value={quantity} type='text' disabled className='w-1/2  text-center bg-transparent' />
                                                     <button className=' w-8 h-7 primaryBackColor text-white p-1 rounded-[4px]' onClick={(e) => handleQuantityIncrease(e, variant)}><FiPlus /></button>
                                                 </div>
-                                                    : <button className='flex gap-1 cartButtonBackground py-2 px-4 rounded-sm primaryColor justify-center font-semibold' onClick={(e) => handleIntialAddToCart(e, variant)}><FaShoppingBasket size={20} />{t("add")}</button> : <div className='font-bold text-[#db3d26]'>{t("out_of_stock")}</div>}
-
-
-
+                                                    : <button className='flex gap-1 addToCartColor py-2 px-4 rounded-sm primaryColor justify-center font-semibold' onClick={(e) => handleIntialAddToCart(e, variant)}><FaShoppingBasket size={20} />{t("add")}</button> : <div className='font-bold text-[#db3d26]'>{t("out_of_stock")}</div>}
                                             </div>
-
                                         </div>
                                     </div>
                                 )

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { t } from "@/utils/translation"
 import * as api from "@/api/apiRoutes"
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import WishlistCard from '../productcards/WishlistCard'
 import CardSkeleton from '../skeleton/CardSkeleton'
 import NoWishListImage from "@/assets/not_found_images/Empty_Wishlist.svg"
@@ -51,7 +51,7 @@ const Wishlist = () => {
             <div className='backgroundColor flex justify-between p-4 items-center'>
                 <h2 className='font-bold text-xl'>{t("wishlist")}</h2>
             </div>
-            <div>
+            <div className="overflow-auto">
                 {loading ?
                     Array?.from({ length: 6 })?.map((_, index) => {
                         return (

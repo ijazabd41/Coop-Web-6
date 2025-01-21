@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import Image from 'next/image'
+import { useState } from 'react'
 import { FaCalendarAlt } from 'react-icons/fa'
 import RatingLightBox from './RatingLightBox'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const ProductReviewCard = ({ review }) => {
 
@@ -33,7 +33,7 @@ const ProductReviewCard = ({ review }) => {
             <div className="flex gap-4 p-4 border-b-2   max-w-full">
                 {/* User Image */}
                 <div className="w-12 h-12  rounded">
-                    <Image src={review?.user?.profile} alt={review?.user?.name} height={0} width={0} className='h-full w-full rounded-sm' />
+                    <ImageWithPlaceholder src={review?.user?.profile} alt={review?.user?.name} className='h-full w-full rounded-sm' />
                 </div>
 
                 {/* Review Content */}
@@ -67,7 +67,7 @@ const ProductReviewCard = ({ review }) => {
                     <div className="flex gap-2 flex-wrap">
                         {review?.images?.map((image, index) => {
                             return (<div className="w-16 h-16 rounded" key={index}>
-                                <Image src={image?.image_url} alt="Rating image" height={0} width={0} className='h-full w-full rounded' onClick={() => handleLightBox(index)} />
+                                <ImageWithPlaceholder src={image?.image_url} alt="Rating image" className='h-full w-full rounded' onClick={() => handleLightBox(index)} />
                             </div>)
                         })}
                     </div>

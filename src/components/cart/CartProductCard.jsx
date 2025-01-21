@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
 import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => {
     const dispatch = useDispatch();
@@ -225,11 +225,9 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             {/* Product Image and Details */}
             <div className="col-span-4 flex space-x-4">
                 <div className="w-16 h-16 rounded-sm">
-                    <Image
+                    <ImageWithPlaceholder
                         src={product?.image_url}
-                        alt="Image"
-                        height={0}
-                        width={0}
+                        alt={product?.name}
                         className="h-full w-full object-cover"
                     />
                 </div>
@@ -261,7 +259,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             </div>
 
             {/* Quantity Selector */}
-            <div className="col-span-2 flex items-center justify-center rounded cardBorder">
+            <div className="col-span-3 flex items-center justify-center rounded cardBorder">
                 <button className="px-2 py-1" onClick={handleQuantityDecrease}>
                     <FaMinus />
                 </button>

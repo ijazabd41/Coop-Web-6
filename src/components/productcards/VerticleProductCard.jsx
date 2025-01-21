@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { FaRegHeart, FaRegEye, FaRegStar, FaStar, FaShoppingBasket, FaMinus, FaPlus } from "react-icons/fa";
 import Link from 'next/link';
 import { t } from "@/utils/translation"
@@ -12,6 +11,7 @@ import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 
 const VerticleProductCard = ({ product }) => {
@@ -322,7 +322,7 @@ const VerticleProductCard = ({ product }) => {
             <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full '>
-                        <Image className='rounded-lg object-cover h-full w-full' height={0} width={0} alt={product.name} src={product.image_url} />
+                        <ImageWithPlaceholder className='rounded-lg object-cover h-full w-full' alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}

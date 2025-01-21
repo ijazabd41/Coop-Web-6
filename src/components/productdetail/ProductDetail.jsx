@@ -26,6 +26,7 @@ import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import SimilarProducts from '../productslist/SimilarProducts';
 import { usePathname } from 'next/navigation';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -251,7 +252,7 @@ const ProductDetail = () => {
                             <div className='grid  grid-cols-1 md:grid-cols-12   mt-2 gap-4 items-start  '>
                                 <div className='col-span-12 md:col-span-4 '>
                                     <div className='relative aspect-square h-auto w-full'>
-                                        <Image src={selectedImage} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' />
+                                        <ImageWithPlaceholder src={selectedImage} alt={product?.name} className='h-full w-full aspect-square rounded-sm' />
                                         {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
@@ -282,7 +283,7 @@ const ProductDetail = () => {
                                             {productImages?.map((image, index) => (
                                                 <SwiperSlide key={product.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <Image src={image} alt={product?.name} height={0} width={0} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
+                                                        <ImageWithPlaceholder src={image} alt={product?.name} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}

@@ -1,5 +1,4 @@
 import { t } from '@/utils/translation';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import CancelReasonModal from './CancelReasonModal';
@@ -10,6 +9,7 @@ import ProductRatingModal from './ProductRatingModal';
 import { rating } from '@/api/apiEndpoints';
 import { IoMdStar } from 'react-icons/io';
 import RatingUpdateModal from './RatingUpdateModal';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const OrderItems = ({ products, handleFetchOrderDetail }) => {
 
@@ -47,8 +47,8 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
     }
 
     return (
-        <div className="rounded-md cardBorder overflow-scroll md:overflow-hidden">
-            <table className="table-auto w-full rounded-md">
+        <div className="rounded-md cardBorder overflow-auto">
+            <table className="table-auto w-full rounded-md min-w-[600px]">
                 <thead className="backColor ">
                     <tr>
                         <th className="text-left p-4 border-b ">{t("product")}</th>
@@ -63,9 +63,9 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                         return (
                             <tr key={product?.id} className="border-b last:border-b-0 ">
                                 <td className="p-4 flex items-center gap-4">
-                                    <Image src={product?.image_url} alt='Products' className="w-12 h-12 backColor rounded-md" height={0} width={0} />
-                                    <div>
-                                        <p className="font-bold">{product?.name}</p>
+                                    <ImageWithPlaceholder src={product?.image_url} alt='Products' className="w-12 h-12 backColor rounded-md" />
+                                    <div className='max-w-full overflow-hidden'>
+                                        <h2 className="font-bold truncate">{product?.name}</h2>
                                         <p className="text-sm ">{`${product?.variant_name} x ${product?.quantity}`}</p>
                                     </div>
                                 </td>

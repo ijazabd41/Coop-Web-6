@@ -1,6 +1,5 @@
 import React from 'react'
-import Logo from "/public/egrocerLogo.png"
-import Image from 'next/image'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const CategoryCard = ({ category }) => {
 
@@ -8,7 +7,7 @@ const CategoryCard = ({ category }) => {
         <div className='flex flex-col category-card p-3 hover:textPrimaryColor hover:cardBorder rounded-sm headerBackgroundColor cursor-pointer'>
             <div className='gap-3 flex flex-col items-center'>
                 <div className='relative h-[122px] w-[122px]'>
-                    <Image src={category.image_url} alt='Category Image' width={0} height={0} className='rounded-full w-full h-full object-cover p-2' />
+                    <ImageWithPlaceholder src={category.image_url} alt='Category Image' className='rounded-full w-full h-full object-cover p-2' />
                 </div>
                 <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full truncate">{category.name}</div>
             </div>

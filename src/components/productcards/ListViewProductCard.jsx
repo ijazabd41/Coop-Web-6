@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
 import { t } from "@/utils/translation"
 import { FaMinus, FaPlus, FaRegEye, FaRegHeart, FaShoppingBasket, FaStar } from 'react-icons/fa'
 import Link from 'next/link'
@@ -12,6 +11,7 @@ import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import { BiHeart, BiSolidHeart } from 'react-icons/bi'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 
 const ListViewProductCard = ({ product }) => {
 
@@ -319,7 +319,7 @@ const ListViewProductCard = ({ product }) => {
       <div className='grid grid-cols-12 items-center w-full p-3 group border-2 headerBackgroundColor'>
         <div className='col-span-6 md:col-span-2'>
           <div className='relative h-1/2 w-full  object-cover'>
-            <Image src={product.image_url} height={0} width={0} alt={product.name} className='  w-full h-full aspect-square rounded-sm' />
+            <ImageWithPlaceholder src={product.image_url} alt={product.name} className='w-full h-full aspect-square rounded-sm' />
             {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
               {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(0)}% {t("off")}
             </span> : null}

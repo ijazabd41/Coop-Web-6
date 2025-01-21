@@ -57,7 +57,7 @@ const Address = () => {
         <div className='w-full cardBorder rounded-sm '>
             <div className='backgroundColor flex justify-between p-4 items-center'>
                 <h2 className='font-bold text-xl'>{t("manage_address")}</h2>
-                {addresses?.allAddresses?.length == 0 && <button className=' flex items-center gap-2 py-2 px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>}
+                {addresses?.allAddresses?.length > 0 && <button className=' flex items-center gap-2 py-1 px-1.5 md:py-2 md:px-3 rounded-sm text-base font-medium primaryBackColor text-white' onClick={handleshowAddres}><CiCirclePlus size={25} className='font-bold' />{t("add_new_address")}</button>}
 
             </div>
             <div className=''>
