@@ -365,9 +365,7 @@ const VerticleProductCard = ({ product }) => {
                         <div className='md:w-1/2 w-full cardBorder flex justify-between rounded-sm my-1'>
                             <button className=' md:px-0.5 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-7 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
-
                             <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
-
                         </div>
                         : <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white addToCartColor primaryColor ' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 

@@ -42,6 +42,9 @@ import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder
 import Image from 'next/image';
 import MobileNavSidebar from '../mobile-nav-sidebar/MobileNavSidebar';
 
+import { IoIosCloseCircle } from 'react-icons/io';
+import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
+
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const dispatch = useDispatch();
@@ -268,7 +271,6 @@ const Header = () => {
                                     {language?.availableLanguages && language?.availableLanguages?.map((language) => {
                                         return (
                                             <DropdownMenuItem
-                                                key={language?.id}
                                                 onSelect={() => handleLanguageChange(language)}
                                                 className="flex gap-2"
                                             >
