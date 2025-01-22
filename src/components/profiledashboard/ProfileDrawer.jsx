@@ -25,7 +25,7 @@ const ProfileDrawer = ({ showProfile, setShowProfile, selectedTab, setSelectedTa
                         </div>
                     </SheetTitle>
                 </SheetHeader>
-                <div className='h-full overflow-scroll'>
+                <div className='overflow-y-scroll h-[calc(100vh-70px)]'>
                     <ProfileSidebar setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
                 </div>
             </SheetContent>

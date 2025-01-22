@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 const AboutUs = () => {
   const setting = useSelector((state) => state?.Setting?.setting);
-  console.log(setting?.about);
   return (
     <section>
       <div>

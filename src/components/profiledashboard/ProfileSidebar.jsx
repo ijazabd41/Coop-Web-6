@@ -35,7 +35,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
     return (
         <div>
-            <div className="cardBorder rounded-sm ">
+            <div className="cardBorder rounded-sm">
                 {/* Header Section */}
                 <div className='backgroundColor'>
                     <div className="flex items-center p-4">
@@ -122,7 +122,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     </div>
 
                     {/* Other Settings Section */}
-                    <div className='h-full'>
+                    <div className=''>
                         <h3 className="text-base font-semibold textColor  flex items-center  p-4 cardBorder">
                             <FaCog className="mr-2 textColor" size={20} /> {`${t("address_type_other")} ${t("setting")}`}
                         </h3>

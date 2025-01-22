@@ -40,6 +40,7 @@ import { IoIosCloseCircle } from 'react-icons/io';
 import { setSelectedLanguage } from "@/redux/slices/languageSlice";
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import Image from 'next/image';
+import MobileNavSidebar from '../mobile-nav-sidebar/MobileNavSidebar';
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
@@ -71,6 +72,8 @@ const Header = () => {
     const [mobileSearch, setMobileSearch] = useState(false)
     const [searchCatId, setSearchCatId] = useState("")
     const [typingTimeout, setTypingTimeout] = useState(null);
+
+    const [mobileNav, setMobileNav] = useState(false);
 
 
 
@@ -208,6 +211,10 @@ const Header = () => {
         setMobileSearch(!mobileSearch)
     }
 
+    const handleMobileNav = () => {
+        setMobileNav(!mobileNav)
+    }
+
 
     return (
         <>
@@ -297,8 +304,8 @@ const Header = () => {
                                     </Link>
                                 </ul>
                             </div>
-                            <div className='flex sm:order-1 md:order-1 lg:hidden'>
-                                <RxHamburgerMenu size={21} />
+                            <div className='flex sm:order-1 md:order-1 lg:hidden hover:cursor-pointer'>
+                                <RxHamburgerMenu size={21} onClick={handleMobileNav} />
                             </div>
                             <div className=' gap-4 order-3 hidden md:flex lg:flex '>
                                 <div className='flex items-center gap-2 cursor-pointer' onClick={handleCartOpen}>
@@ -347,7 +354,7 @@ const Header = () => {
                                                     </DropdownMenuItem>
                                                 </Link>
                                                 <Link href={"/profile/wishlist"}>
-                                                    <DropdownMenuItem  className="items-center flex justify-start h-full">
+                                                    <DropdownMenuItem className="items-center flex justify-start h-full">
                                                         <span className="flex p-2 gap-2 text-base font-semibold bg-transparent">
                                                             <BiBookmarkHeart size={22} />
                                                             {t("wishlist")}
@@ -468,6 +475,7 @@ const Header = () => {
                         </SheetHeader>
                     </SheetContent>
                 </Sheet>
+                <MobileNavSidebar open={mobileNav} setOpen={setMobileNav} handleLanguageChange={handleLanguageChange} />
                 <CartDrawer showCart={showCart} setShowCart={setShowCart} setMobileActiveKey={setMobileActiveKey} />
                 <Login showLogin={showLogin} setShowLogin={setShowLogin} setMobileActiveKey={setMobileActiveKey} />
                 <Location showLocation={showLocation} setShowLocation={setShowLocation} />
