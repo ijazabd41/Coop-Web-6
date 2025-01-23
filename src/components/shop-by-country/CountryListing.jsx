@@ -5,16 +5,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setFilterByCountry } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/router'
 import Country from './Country'
+import CardSkeleton from '../skeleton/CardSkeleton'
 const CountryListing = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const city = useSelector(state => state.City.city);
 
+    const countriesPerPage = 12;
     const [countries, setCountries] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
     const handleFetchCountries = async () => {
+        setIsLoading(true)
         try {
             const response = await api.getCountries({
-                limit: 10,
+                limit: countriesPerPage,
                 offset: 0
             })
             console.log(response?.data);
@@ -22,14 +27,18 @@ const CountryListing = () => {
         } catch (error) {
             console.log("Error:", error)
         }
+        setIsLoading(false)
     }
+
     useEffect(() => {
         handleFetchCountries()
     }, [])
+
     const handleCountryClick = (country) => {
         dispatch(setFilterByCountry({ data: country?.id }));
         router.push(`/products`)
     }
+
     return (
         <section>
             <BreadCrumb />
@@ -44,6 +53,12 @@ const CountryListing = () => {
 
                             )
                         })
+                    }
+                    {isLoading && Array.from({ length: countriesPerPage }).map((_, index) => (
+                        <div key={index}>
+                            <CardSkeleton height={150} />
+                        </div>
+                    ))
                     }
                 </div>
 

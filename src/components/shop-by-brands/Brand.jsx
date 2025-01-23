@@ -5,12 +5,14 @@ import { useRouter } from 'next/router';
 import * as api from "@/api/apiRoutes"
 import BrandCard from './BrandCard';
 import { setFilterBrands } from '@/redux/slices/productFilterSlice';
+import CardSkeleton from '../skeleton/CardSkeleton';
 const Brands = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const brandsPerPage = 12;
 
     const [brands, setBrands] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         fetchBrands()
@@ -18,6 +20,7 @@ const Brands = () => {
 
 
     const fetchBrands = async () => {
+        setIsLoading(true)
         try {
             const response = await api.getBrands({ limit: brandsPerPage, offset: 0 });
             // console.log(response.data);
@@ -25,6 +28,7 @@ const Brands = () => {
         } catch (error) {
             console.log("Error", error);
         }
+        setIsLoading(false)
     }
 
     const handleBrandClick = (brand) => {
@@ -38,7 +42,7 @@ const Brands = () => {
         <section>
             <BreadCrumb />
             <div className='container px-3 '>
-                <div className='grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2  h-auto my-2 px-2'>
+                <div className='grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2  h-auto my-5 px-2'>
                     {
                         brands && brands?.map((brand) => {
                             return (
@@ -48,6 +52,12 @@ const Brands = () => {
 
                             )
                         })
+                    }
+                    {isLoading && Array.from({ length: brandsPerPage }).map((_, index) => (
+                        <div key={index} className='col-span-1'>
+                            <CardSkeleton height={150} />
+                        </div>
+                    )) 
                     }
                 </div>
 
