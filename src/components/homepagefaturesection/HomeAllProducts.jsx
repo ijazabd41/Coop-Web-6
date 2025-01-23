@@ -9,7 +9,7 @@ import CardSkeleton from '../skeleton/CardSkeleton'
 const HomeAllProducts = () => {
 
     const city = useSelector((state) => state.City.city)
-
+    const setting = useSelector(state => state.Setting.setting)
     const [allProducts, setAllProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [totalProducts, setTotalProducts] = useState(null)
@@ -21,19 +21,26 @@ const HomeAllProducts = () => {
     }, [offset, city])
 
     useEffect(() => {
+        setAllProducts([])
         setOffset(0)
     }, [city])
 
     const handleFetchProduct = async () => {
         setLoading(true)
-
+        const latitude = city?.latitude || setting?.default_city?.latitude
+        const longitude = city?.longitude || setting?.default_city?.longitude
         try {
-            const response = await api.getProductByFilter({ latitude: city?.latitude, longitude: city?.longitude, filters: { limit: totalProductsPerPage, offset: offset } });
-            if (response.status == 1) {
-                setTotalProducts(response.total)
-                setAllProducts((products) => [...products, ...response.data])
+            if (latitude && longitude) {
+                const response = await api.getProductByFilter({ latitude: latitude, longitude: longitude, filters: { limit: totalProductsPerPage, offset: offset } });
+                if (response.status == 1) {
+                    setTotalProducts(response.total)
+                    setAllProducts((products) => [...products, ...response.data])
+                    setLoading(false)
+                } else {
+                    return
+                }
             }
-            setLoading(false)
+
         } catch (error) {
             setLoading(false)
             console.log("Error", error)

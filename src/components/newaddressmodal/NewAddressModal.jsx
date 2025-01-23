@@ -102,7 +102,7 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
                 lng: parseFloat(city?.city ? city?.city?.longitude : 0),
             });
         }
-    }, [isAddressSelected, addresses?.selectedEditAddress]);
+    }, [isAddressSelected, addresses?.selectedEditAddress, showAddAddres]);
 
     const handleConfirmAddress = async (e) => {
         e.preventDefault();

@@ -42,8 +42,8 @@ import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder
 import Image from 'next/image';
 import MobileNavSidebar from '../mobile-nav-sidebar/MobileNavSidebar';
 
-import { IoIosCloseCircle } from 'react-icons/io';
-import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
+
+import { setAvailableLanguages } from "@/redux/slices/languageSlice";
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
@@ -117,7 +117,6 @@ const Header = () => {
             console.log("error", error)
         }
     }
-
 
     const fetchCity = async () => {
         try {
@@ -449,12 +448,12 @@ const Header = () => {
                                     handleSearch={handleSearch}
                                 />
                             </div>
-
-                            <div className="col-span-3 hidden order-3 justify-end lg:flex h-full">
-                                <button className="p-[10px] w-44 flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 primaryBackColor gap-2 text-xl">
+                            {setting?.setting?.support_number && <div className="col-span-3 hidden order-3 justify-end lg:flex h-full">
+                                <Link href={`tel:${setting?.support_number}`} className="p-[10px] w-44 flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 primaryBackColor gap-2 text-xl">
                                     <FaPhoneVolume size={18} /> {setting?.setting?.support_number}
-                                </button>
-                            </div>
+                                </Link>
+                            </div>}
+
                         </div>
                     </div>
                 </div>

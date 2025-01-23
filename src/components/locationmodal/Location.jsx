@@ -3,6 +3,7 @@ import {
     Dialog,
     DialogContent,
     DialogHeader,
+    DialogOverlay
 } from "@/components/ui/dialog"
 import { t } from "@/utils/translation"
 import { useSelector } from 'react-redux'
@@ -22,6 +23,7 @@ import { IoIosCloseCircle } from 'react-icons/io'
 const Location = ({ showLocation, setShowLocation }) => {
     const city = useSelector(state => state.City)
     const setting = useSelector(state => state.Setting)
+    const theme = useSelector((state) => state.Theme.theme);
     const inputRef = useRef();
     const dispatch = useDispatch()
     const [mapView, setMapView] = useState(false)
@@ -287,11 +289,13 @@ const Location = ({ showLocation, setShowLocation }) => {
     return (
         <>
             {loading ? <Loader screen={"full"} /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
+                <DialogOverlay
+                    className={`${theme == "light" ? "bg-white/100" : "bg-black/100"}`}
+                />
                 <DialogContent
-                    // onEscapeKeyDown={(e) => e.preventDefault()}
-                    // onPointerDown={(e) => e.preventDefault()}
                     onInteractOutside={(e) => e.preventDefault()}
                 >
+
                     <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
                         <div>
                             {t("select_location")}

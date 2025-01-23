@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
     fetchSetting();
     fetchPaymentSetting();
     fetchLanguage();
-  }, [city]);
+  }, []);
   const fetchLanguage = async () => {
     try {
       const response = await api.getSystemLanguages({ id: 0, isDefault: 0, systemType: 3 })
@@ -68,7 +68,6 @@ const Layout = ({ children }) => {
     try {
       const res = await api.getSetting();
       dispatch(setSetting({ data: res?.data }));
-
       dispatch(
         setFavoriteProductIds({ data: res?.data?.favorite_product_ids })
       );

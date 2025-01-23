@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux'
 import { FaArrowRight } from 'react-icons/fa'
 import Link from 'next/link'
 import ImageWithPlaceholder from '@/components/image-with-placeholder/ImageWithPlaceholder'
+import * as api from "@/api/apiRoutes"
+import ReoderConfirmModal from "./ReoderConfirmModal"
+import { useState } from "react"
 
 const PrevOrderCard = ({ order }) => {
 
@@ -11,6 +14,11 @@ const PrevOrderCard = ({ order }) => {
     const deliveryDate = order?.status?.find((ord) => ord[0] == "6")
     const orderFirstItem = order?.items[0]
 
+    const [showReoderModal, setShowReorderModal] = useState(false)
+
+    const handleReoder = () => {
+        setShowReorderModal(true)
+    }
 
     return (
         <div className='w-full   '>
@@ -57,13 +65,20 @@ const PrevOrderCard = ({ order }) => {
                                 <span>{`${t("total")} ${t("Credit")}`} </span>
                                 <span className='font-bold text-lg'>{setting?.setting?.currency}{order?.final_total}</span>
                             </div>
-                            <div className='flex items-center'>
-                                <Link href={`/order-detail/${order?.id}`} className=' flex items-center gap-2 py-2 px-3  cardBorder rounded-sm font-medium text-base hover:primaryBackColor hover:text-white'>{t("view_details")} <FaArrowRight /></Link>
+                            <div className="flex gap-2 items-center justify-center">
+                                <div className="">
+                                    <button className="cardBorder py-2 px-3 rounded-sm font-medium text-base hover:primaryBackColor hover:text-white" onClick={handleReoder}>{t("reorder")}</button>
+                                </div>
+                                <div className='flex items-center'>
+                                    <Link href={`/order-detail/${order?.id}`} className=' flex items-center gap-2 py-2 px-3  cardBorder rounded-sm font-medium text-base hover:primaryBackColor hover:text-white'>{t("view_details")} <FaArrowRight /></Link>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+            <ReoderConfirmModal showReoderModal={showReoderModal} setShowReorderModal={setShowReorderModal} order={order} />
         </div>
     )
 }

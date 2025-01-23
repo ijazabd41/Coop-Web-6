@@ -35,7 +35,7 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
                                 <h3 className="font-semibold text-base">{coupon?.promo_code}</h3>
                                 <p className="text-sm overflow-hidden">{coupon?.promo_code_message}</p>
                             </div>
-                            <button className="px-4 py-1 border border-gray-300 rounded-md text-sm hover:primaryBackColor transition-colors hover:text-white" onClick={handleApplyCoupon}>
+                            <button disabled={coupon?.is_applicable == 0} className="px-4 py-1 border cardBorder rounded-md text-sm hover:primaryBackColor transition-colors hover:text-white disabled:text-gray-400 disabled:bg-transparent" onClick={handleApplyCoupon}>
                                 {t("apply")}
                             </button>
                         </div>

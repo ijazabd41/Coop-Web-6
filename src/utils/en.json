@@ -478,5 +478,8 @@
     "no_product_description": "No Description available",
     "link_copied_to_clipboard": "Link Copied to Clipboard !",
     "update_your_profile_note": "Note: You have to Update Your Profile For Login Purposes",
-    "product_added_successfully": "The product has been successfully added to your cart."
+    "product_added_successfully": "The product has been successfully added to your cart.",
+    "reorder": "Reorder",
+    "reOrder_warning": "Only items currently in stock can be added to your cart.",
+    "items_added_to_cart": "Items Added To Cart"
 }
