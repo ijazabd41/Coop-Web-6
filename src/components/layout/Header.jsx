@@ -75,7 +75,7 @@ const Header = () => {
     const [mobileSearch, setMobileSearch] = useState(false)
     const [searchCatId, setSearchCatId] = useState("")
     const [typingTimeout, setTypingTimeout] = useState(null);
-
+    const [isSuggLoading, setIsSuggLoading] = useState(false)
     const [mobileNav, setMobileNav] = useState(false);
 
 
@@ -173,6 +173,7 @@ const Header = () => {
         dispatch(setSearchedCategory({ data: value }))
     }
     const handleSearchData = async (searchValue) => {
+        setIsSuggLoading(true)
         try {
             const response = await api.getProductByFilter({
                 latitude: city?.city?.latitude,
@@ -183,6 +184,7 @@ const Header = () => {
                 }
             })
             dispatch(setProductBySearch({ data: response?.data }))
+            setIsSuggLoading(false)
         } catch (error) {
             console.log("Error", error?.message)
         }
@@ -196,6 +198,7 @@ const Header = () => {
             clearTimeout(typingTimeout)
             return
         }
+        setIsSuggLoading(true)
         dispatch(setFilterSearch({ data: e.target.value }))
         dispatch(setSearchedCategory({ data: searchCatId }))
 
@@ -444,6 +447,7 @@ const Header = () => {
 
                             <div className='hidden md:block lg:col-span-6 md:col-span-8'>
                                 <SearchComponent
+                                    isSuggLoading={isSuggLoading}
                                     isMobile={isMobile}
                                     handleSearchCategory={handleSearchCategory}
                                     handleSearch={handleSearch}
@@ -467,6 +471,7 @@ const Header = () => {
                             </SheetTitle>
                             <SheetDescription>
                                 <SearchComponent
+                                    isSuggLoading={isSuggLoading}
                                     isMobile={isMobile}
                                     mobileSearch={mobileSearch}
                                     setMobileSearch={setMobileSearch}

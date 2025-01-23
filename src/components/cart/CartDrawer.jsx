@@ -122,7 +122,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                         <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
                             <p className='text-2xl font-bold'>{t("shoppingCart")}</p>
                             <div>
-                                <IoIosCloseCircle size={32} onClick={() => setShowCart(false)} />
+                                <IoIosCloseCircle className='hover:cursor-pointer' size={32} onClick={() => setShowCart(false)} />
                             </div>
                         </SheetTitle>
                     </SheetHeader>
