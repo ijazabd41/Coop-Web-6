@@ -271,6 +271,7 @@ const Header = () => {
                                         return (
                                             <DropdownMenuItem
                                                 onSelect={() => handleLanguageChange(language)}
+                                                key={language?.id}
                                                 className="flex gap-2"
                                             >
                                                 {language?.name}
@@ -287,7 +288,7 @@ const Header = () => {
                     <div className='center-header headerBackgroundColor '>
                         <div className='container  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2'>
                             <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
-                                <Link href={"/"}>{setting?.setting?.web_settings?.web_logo && <Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' width={0} height={0} className='h-full lg:full w-full lg:w-full object-contain' />}</Link>
+                                <Link href={"/"}>{setting?.setting?.web_settings?.web_logo && <Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' width={0} height={0} className='h-full lg:full w-full lg:w-full object-contain' priority={true} />}</Link>
                             </div>
                             <div className='hidden lg:flex order-2'>
                                 <ul className='flex gap-6'>

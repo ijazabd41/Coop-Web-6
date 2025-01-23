@@ -3,6 +3,7 @@ import Loader from '../loader/Loader'
 import { useSelector } from 'react-redux'
 import FeatureSections from '../homepagefaturesection/FeatureSections'
 import HomeAllProducts from '../homepagefaturesection/HomeAllProducts'
+import HomeOfferModal from '../homepageoffermodal/HomeOfferModal'
 
 
 const HomePage = () => {
@@ -20,6 +21,9 @@ const HomePage = () => {
                     <>
                         <FeatureSections />
                         <HomeAllProducts />
+                        {setting.setting && setting?.setting?.popup_enabled === "1" &&
+                            <HomeOfferModal />
+                        }
                     </>
                 }
             </div>

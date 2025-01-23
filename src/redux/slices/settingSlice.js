@@ -4,7 +4,8 @@ const initialState = {
     setting: null,
     payment_setting: null,
     settingsFetchedTime: new Date(),
-    paymentSettingsFetchTime: new Date()
+    paymentSettingsFetchTime: new Date(),
+    isPopupSeen: false
 };
 export const settingReducer = createSlice({
     name: "setting",
@@ -20,7 +21,10 @@ export const settingReducer = createSlice({
             state.payment_setting = action.payload.data;
             state.paymentSettingsFetchTime = new Date();
         },
+        setIsPopupSeen: (state, action) => {
+            state.isPopupSeen = action.payload.data;
+        }
     }
 });
-export const { setSetting, setPaymentSetting } = settingReducer.actions;
+export const { setSetting, setPaymentSetting, setIsPopupSeen } = settingReducer.actions;
 export default settingReducer.reducer;
