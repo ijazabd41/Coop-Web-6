@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from "next/router";
 import OrderSuccessModal from '../paymentstatusmodals/OrderSuccessModal';
@@ -7,6 +8,13 @@ import { clearCartPromo, setCart, setCartProducts } from '@/redux/slices/cartSli
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import dynamic from 'next/dynamic';
+import animationOne from "@/assets/order_place_animation/order_placed_back_animation.json";
+import animationTwo from "@/assets/order_place_animation/order_success_tick_animation.json";
+import AnimationOne from "@/assets/order_place_animation/order_failed_animation.json"
+import { t } from "@/utils/translation";
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 const PaymentStatus = () => {
     const dispatch = useDispatch();
@@ -187,10 +195,75 @@ const PaymentStatus = () => {
         }
     }
 
+    const handleViewOrder = () => {
+        const orderId = extractOrderNumber(query?.order_id)
+        router.push(`/order-detail/${orderId}`)
+    }
+
     return (
-        <section>
+        <section className='min-h-[600px]  flex items-center'>
             <div className='container'>
-                {showOrderSuccess == true ? <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> : <OrderFailedModal showOrderFailed={showOrderFailed} handleFailedOrder={handleFailedOrder} />}
+                {/* {showOrderSuccess == true ? <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> : <OrderFailedModal showOrderFailed={showOrderFailed} handleFailedOrder={handleFailedOrder} />} */}
+                {showOrderSuccess == true ?
+                    <div className="flex flex-col items-center gap-8 ">
+                        {/* Lottie animations */}
+                        <div className="relative h-44">
+                            <Lottie
+                                className="h-44"
+                                animationData={animationTwo}
+                                loop={false}
+                            />
+                            <Lottie
+                                className="h-44 absolute z-60 -left-5 top-0"
+                                animationData={animationOne}
+                                loop={true}
+                            />
+                            <Lottie
+                                className="h-44 absolute z-60 -right-5 top-0"
+                                animationData={animationOne}
+                                loop={true}
+                            />
+                        </div>
+                        <div className="text-center mt-8">
+                            <h1 className="text-2xl">{t("order_placed_description")}</h1>
+                            <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
+                                <button
+                                    className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl"
+                                    onClick={handlePaymentClose}
+                                >
+                                    {t("home")}
+                                </button>
+                                <button
+                                    className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl"
+                                    onClick={handleViewOrder}
+                                >
+                                    {t("view_order_details")}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    <div className="flex flex-col relative gap-8">
+                        {/* Lottie animations */}
+
+                        <Lottie
+                            className="h-44"
+                            animationData={AnimationOne}
+                            loop={false}
+                        />
+
+                        <div className="text-center mt-8">
+                            <h1 className="text-2xl">{t("order_failed_description")}</h1>
+                            <button
+                                className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl"
+                                onClick={handleFailedOrder}
+                            >
+                                {t("home")}
+                            </button>
+                        </div>
+                    </div>
+
+                }
             </div>
         </section>
     )

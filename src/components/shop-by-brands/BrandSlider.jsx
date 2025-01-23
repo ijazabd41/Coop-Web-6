@@ -24,7 +24,7 @@ const BrandSlider = ({ brands }) => {
             <div className='container py-6 px-2' dir={language?.type}>
                 <div className='flex justify-between items-center mb-3'>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
-                    <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
+                    <div className={`flex items-center gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                         <Link href={"/brands"} >{t("see_all")}</Link>
                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                             <button className='cardBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>

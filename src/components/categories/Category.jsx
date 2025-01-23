@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice'
 import { setSelectedCategories } from '@/redux/slices/productFilterSlice'
+import CardSkeleton from '../skeleton/CardSkeleton'
 
 
 const Category = () => {
@@ -14,6 +15,7 @@ const Category = () => {
     const { slug } = router.query
     const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
     const [categories, setCategories] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const categoryPerPage = 12;
     const slug_id = slug == "all" ? "" : slug
@@ -25,12 +27,14 @@ const Category = () => {
         console.log("slug", Slug)
         // let catSlug = slug == "all" ? "" : Slug
         console.log(Slug)
+        setIsLoading(true)
         try {
             const result = await api.getCategories({ limit: categoryPerPage, slug: Slug })
             setCategories(result)
         } catch (error) {
             console.log("Error", error)
         }
+        setIsLoading(false)
     }
 
     const handleCategoryClick = (category) => {
@@ -62,6 +66,11 @@ const Category = () => {
                             )
                         })
                     }
+                    {isLoading && Array.from({ length: 12 }).map((_, index) => (
+                        <div key={index} className='col-span-1'>
+                            <CardSkeleton height={180} />
+                        </div>
+                    ))}
                 </div>
 
             </div>
