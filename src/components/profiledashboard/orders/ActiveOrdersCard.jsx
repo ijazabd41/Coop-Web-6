@@ -7,12 +7,15 @@ import { formatCustomDate } from '@/lib/utils'
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
 import LiveTrackingModal from './LiveTrackingModal'
+import ReoderConfirmModal from './ReoderConfirmModal'
 
 
 const ActiveOrdersCard = ({ order }) => {
 
+    const [showReoderModal, setShowReorderModal] = useState(false)
     const [showLiveTracking, setShowLiveTracking] = useState(false)
     const setting = useSelector(state => state.Setting)
+
 
     const getOrderStatus = () => {
         switch (order?.active_status) {
@@ -51,6 +54,10 @@ const ActiveOrdersCard = ({ order }) => {
 
     const handleShowLiveTracking = () => {
         setShowLiveTracking(true)
+    }
+
+    const handleReoder = () => {
+        setShowReorderModal(true)
     }
 
     return (
@@ -92,22 +99,22 @@ const ActiveOrdersCard = ({ order }) => {
                         {order?.items?.length > 1 && <button className='rounded-full py-2  px-3 bg-[#12141814] font-medium text-base'>+{order?.items?.length - 1} {t("moteItems")}</button>}
                     </div>
                     <div className='backgroundColor'>
-                        {/* TODO: */}
-                        <div className={`flex justify-between p-4 md:${order?.active_status == "5" ? "flex-col" : "flex-row"}`}>
-                            <div className='flex flex-col'>
-                                <span>{t("total")} {t("amount")}</span>
-                                <span className='font-bold text-lg'>{setting?.setting?.currency}{order?.final_total}</span>
+                        <div className={`flex justify-between p-4 flex-col md:flex-row gap-1 md:gap-0`}>
+                            <div className='flex gap-1 items-center'>
+                                <span>{t("total")} {t("Credit")} </span>
+                                <span className='font-bold text-lg'> {setting?.setting?.currency}{order?.final_total}</span>
                             </div>
                             <div className='flex items-center gap-2'>
                                 <Link href={`/order-detail/${order?.id}`} className='py-1 px-1 md:py-2 md:px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
                                 {order?.active_status == "5" ? <button className='py-1 px-1 md:py-2 md:px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
-
+                                <button className="cardBorder py-2 px-3 rounded-sm font-medium text-base hover:primaryBackColor hover:text-white" onClick={handleReoder}>{t("reorder")}</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <LiveTrackingModal showLiveTracking={showLiveTracking} setShowLiveTracking={setShowLiveTracking} order={order} />
+            <ReoderConfirmModal showReoderModal={showReoderModal} setShowReorderModal={setShowReorderModal} order={order} />
         </div>
     )
 }

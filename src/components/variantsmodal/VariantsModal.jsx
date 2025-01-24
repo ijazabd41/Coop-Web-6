@@ -174,10 +174,10 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     };
     const handleValidateAddNewProduct = (productQuantity, product, variant) => {
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty
-
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
-
             toast.error('Oops, Limited Stock Available');
+        } else if (variant?.is_unlimited_stock == 0 && variant?.stock == 0) {
+            toast.error(t("out_of_stock_message"));
         }
         else if (Number(product.is_unlimited_stock)) {
             addToCart(product.id, variant, 1);

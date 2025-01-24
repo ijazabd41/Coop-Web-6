@@ -141,8 +141,7 @@ const ProductDetail = () => {
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty;
         const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.id && selectVariant?.id == prdct?.product_variant_id)
         const totalQty = productQty ? productQty + quantity : quantity
-
-        if (totalQty >= Number(selectVariant.stock)) {
+        if ((Number(product?.is_unlimited_stock) == 0) && selectVariant?.stock <= 0) {
             toast.error(t("out_of_stock_message"));
             return
         }

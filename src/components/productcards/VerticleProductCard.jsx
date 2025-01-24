@@ -176,6 +176,8 @@ const VerticleProductCard = ({ product }) => {
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
 
             toast.error('Oops, Limited Stock Available');
+        } else if (selectedVariant?.is_unlimited_stock == 0 && selectedVariant?.stock <= 0) {
+            toast.error(t("out_of_stock_message"));
         }
         else if (Number(product.is_unlimited_stock)) {
             addToCart(product.id, selectedVariant.id, 1);

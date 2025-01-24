@@ -115,7 +115,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                                 <CiWallet size={40} className="addToCartColor p-1 rounded-sm" />
                                 {t("walletBalance")}
                             </div>
-                            <div className="font-bold text-xl">{setting?.setting?.currency}{walletBalance}</div>
+                            <div className="font-bold text-xl">{setting?.setting?.currency}{walletBalance?.toFixed(2)}</div>
                         </div>
                     </div>}
                     {checkout?.selectedPaymentMethod == "wallet" ? <></> : <div className="flex flex-col gap-3">

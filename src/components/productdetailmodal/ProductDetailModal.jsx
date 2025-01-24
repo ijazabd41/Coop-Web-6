@@ -126,8 +126,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty;
         const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.id && selectVariant?.id == prdct?.product_variant_id)
         const totalQty = productQty ? productQty + quantity : quantity
-
-        if (totalQty >= Number(selectVariant.stock)) {
+        if ((Number(product?.is_unlimited_stock) == 0) && selectVariant?.stock <= 0) {
             toast.error(t("out_of_stock_message"));
             return
         }
@@ -291,7 +290,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                 <div className='md:col-span-5 col-span-12'>
 
                                     <div className='relative aspect-square h-auto w-full'>
-                                        <ImageWithPlaceholder src={selectedImage} alt={productDetails.name}  className='h-full w-full aspect-square rounded-sm' />
+                                        <ImageWithPlaceholder src={selectedImage} alt={productDetails.name} className='h-full w-full aspect-square rounded-sm' />
                                         {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
 import { useDispatch } from 'react-redux';
 import * as api from "@/api/apiRoutes";
-import { clearCartPromo, setCart, setCartProducts } from '@/redux/slices/cartSlice';
+import { clearCartPromo, setCart, setCartProducts, setCartPromo, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
 import { t } from "@/utils/translation";
 
@@ -33,10 +33,8 @@ const PaymentStatus = () => {
 
     useEffect(() => {
         if (!query || Object.keys(query).length === 0) return;
-
         const paymentStatus = checkPaymentStatus(query);
         const isWallet = isWalletTransaction(query);
-
         setStatus((prev) => ({
             ...prev,
             [isWallet ? 'wallet' : 'order']: {
@@ -53,6 +51,7 @@ const PaymentStatus = () => {
             if (response.status === 1) {
                 dispatch(setCart({ data: [] }));
                 dispatch(clearCartPromo());
+                dispatch(setCartSubTotal({ data: 0 }));
                 dispatch(setCartProducts({ data: [] }));
                 dispatch(clearCheckout());
                 router.replace("/");
@@ -85,7 +84,11 @@ const PaymentStatus = () => {
 
     const handleViewOrder = async () => {
         const orderId = extractOrderNumber(query?.order_id);
-        await handlePaymentClose()
+        dispatch(setCart({ data: [] }));
+        dispatch(clearCartPromo());
+        dispatch(setCartSubTotal({ data: 0 }));
+        dispatch(setCartProducts({ data: [] }));
+        dispatch(clearCheckout());
         router.push(`/order-detail/${orderId}`);
     };
 

@@ -44,7 +44,6 @@ const Checkout = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { Razorpay } = useRazorpay();
     const city = useSelector(state => state.City.city);
     const cart = useSelector(state => state.Cart);
     const address = useSelector((state) => state.Addresses);
@@ -66,7 +65,6 @@ const Checkout = () => {
     // step 1 variables
     const [isAddressSelected, setIsAddressSelected] = useState(false)
     const [showAddAddres, setShowAddAddres] = useState(false)
-    const [isOrderPlaced, setIsOrderPlaced] = useState(false)
     const [checkOutError, setCheckOutError] = useState(false)
     // step 2 Variables
     // const [selectedDate, setSelectedDate] = useState(null)
@@ -103,13 +101,7 @@ const Checkout = () => {
         handleFetchCheckout();
     }, [cart?.promo_code, cart?.cart, checkout?.address])
 
-    // useEffect(() => {
-    //     if (isOrderPlaced) {
-    //         setTimeout(() => {
-    //             handlePaymentClose();
-    //         }, 5000)
-    //     }
-    // }, [isOrderPlaced])
+
 
     useEffect(() => {
         handleFilterTimeSlots();
@@ -256,23 +248,6 @@ const Checkout = () => {
         return timeSlot ? `${formattedDate} ${timeSlot.title}` : formattedDate;
     };
 
-    // const handlePaymentClose = async () => {
-    //     try {
-    //         const response = await api.deleteCart();
-    //         if (response.status == 1) {
-    //             dispatch(setCart({ data: [] }))
-    //             dispatch(clearCartPromo())
-    //             dispatch(setCartProducts({ data: [] }))
-    //             dispatch(clearCheckout())
-    //             setShowOrderSuccess(false)
-    //             router.push("/")
-    //         } else {
-    //             console.log("Error", response)
-    //         }
-    //     } catch (error) {
-    //         console.log("Error", error)
-    //     }
-    // }
 
     const initializeRazorpay = () => {
         return new Promise((resolve) => {
@@ -319,12 +294,7 @@ const Checkout = () => {
                             });
                             if (response.status === 1) {
                                 setPaymentLoading(false)
-                                toast.success(response.message);
-                                setIsOrderPlaced(true);
-                                setShowOrderSuccess(true)
-                                // setShow(true);
-                                dispatch(setCartSubTotal({ data: 0 }));
-                                return router.push(`${setting?.setting?.web_settings?.website_url}/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${order_id}`)
+                                return router.push(`/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${order_id}`)
 
                             } else {
                                 setPaymentLoading(false)
@@ -370,12 +340,8 @@ const Checkout = () => {
         }
     }
 
-    const handleRazorpayCancel = (order_id) => {
-        api.deleteOrder({ orderId: order_id });
-        // setWalletDeductionAmt(walletDeductionAmt);
-        // setWalletAmount(user.user.balance);
-        // setTotalPayment(totalPayment);
-        setIsOrderPlaced(false);
+    const handleRazorpayCancel = async (order_id) => {
+        await api.deleteOrder({ orderId: order_id });
     };
 
     const handlePayStackPayment = async (orderId, amount, capilizePaymeneMethod) => {
@@ -399,14 +365,11 @@ const Checkout = () => {
                         setPaymentLoading(true)
                         const response = await api.addTransaction({ orderId: orderId, transactionId: res.reference, paymentMethod: capilizePaymeneMethod, type: "order" })
                         if (response.status == 1) {
-                            setPaymentLoading(true)
-                            toast.success(response.message);
-                            setIsOrderPlaced(true);
-                            dispatch(setCartSubTotal({ data: 0 }));
-                            return router.push(`${setting?.setting?.web_settings?.website_url}/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${orderId}`)
+                            setPaymentLoading(false)
+                            return router.push(`/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${orderId}`)
                         }
                         else {
-                            setPaymentLoading(true)
+                            setPaymentLoading(false)
                             toast.error(response.message);
                             console.log("error", response)
                         }
@@ -470,10 +433,10 @@ const Checkout = () => {
         try {
             if (checkout?.selectedPaymentMethod == "COD") {
                 // redirect after successfull COD order
-                return router.push(`${setting?.setting?.web_settings?.website_url}/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`)
+                return router.push(`/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`)
             } else if (checkout?.selectedPaymentMethod == "wallet") {
                 // redirect after successfull wallet order
-                return router.push(`${setting?.setting?.web_settings?.website_url}/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`)
+                return router.push(`/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`)
             }
             else if (checkout?.selectedPaymentMethod == "paystack") {
                 handlePayStackPayment(currentOrderID, checkout?.checkoutTotal, capilizePaymeneMethod)

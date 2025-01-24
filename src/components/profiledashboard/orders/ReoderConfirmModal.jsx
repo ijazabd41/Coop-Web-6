@@ -3,11 +3,13 @@ import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
 import { t } from '@/utils/translation';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
 
 const ReoderConfirmModal = ({ showReoderModal, setShowReorderModal, order }) => {
-
+    const dispatch = useDispatch();
     const theme = useSelector(state => state.Theme.theme)
+    const city = useSelector(state => state.City.city)
 
     const handleHideReorder = () => {
         setShowReorderModal(false)
@@ -21,8 +23,32 @@ const ReoderConfirmModal = ({ showReoderModal, setShowReorderModal, order }) => 
             if (response.status == 1) {
                 toast.success(t("items_added_to_cart"))
                 setShowReorderModal(false)
+                await fetchCart();
             } else {
                 console.log("error", response)
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+
+    const fetchCart = async () => {
+        try {
+            const cartData = await api.getCart({ latitude: city?.latitude, longitude: city?.longitude })
+            if (cartData.status == 1) {
+                dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
+                const productsData = cartData?.data?.cart?.map((product) => {
+                    return {
+                        product_id: product?.product_id,
+                        product_variant_id: product?.product_variant_id,
+                        qty: product?.qty
+                    };
+                });
+                dispatch(setCartProducts({ data: productsData }));
+            } else {
+                dispatch(setCartProducts({ data: [] }));
+                dispatch(setCartSubTotal({ data: 0 }));
             }
         } catch (error) {
             console.log("Error", error)
