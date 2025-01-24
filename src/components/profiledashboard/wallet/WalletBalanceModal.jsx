@@ -32,6 +32,7 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg"
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg"
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg"
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg"
+import StripeModal from '@/components/checkoutpage/StripeModal';
 
 
 const paymentMethodsConfig = [
@@ -56,6 +57,8 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
     const [selectedPaymentMethod, setSelectPaymentMethod] = useState()
     const [amount, setAmount] = useState(null);
     const [showStripe, setShowStripe] = useState(false);
+    const [stripeClientSecret, setStripeClientSecret] = useState("");
+    const [stripeTransId, setStripeTransId] = useState(null);
 
     const handleSelectedPaymentMethod = (value) => {
         setSelectPaymentMethod(value)
@@ -78,11 +81,11 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
         }
     }, [addWalletModal])
 
-    const handleSuccessWalletAdd = () => {
-        setTimeout(() => {
-            router.push("/")
-        }, 1500);
-    }
+    // const handleSuccessWalletAdd = () => {
+    //     setTimeout(() => {
+    //         router.push("/")
+    //     }, 1500);
+    // }
 
     const handleSubmit = async () => {
         if (amount === null || amount <= 0 || selectedPaymentMethod === undefined) {
@@ -97,7 +100,10 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                     handleRazorpayPayment(null, result?.data?.transaction_id, amount);
                 }
                 else if (capitalizedPaymentMethod === "Stripe") {
+                    setStripeClientSecret(result?.data?.client_secret);
+                    setStripeTransId(result?.data?.id)
                     setShowStripe(true);
+                    // setAddWalletModal(false);
                 }
                 else {
                     const paymentUrls = {
@@ -135,7 +141,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 ref: (new Date()).getTime().toString(),
                 label: setting?.setting && setting?.setting?.support_email,
                 onClose: function () {
-                    console.log("Paystack Payment Cancelled")
                     // api.deleteOrder({ orderId: orderId });
                     setAddWalletModal(false);
                 },
@@ -144,14 +149,15 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 },
                 callback: async function (res) {
                     try {
-                        console.log("Paystack Response:", res)
+                        // console.log("Paystack Response:", res)
                         // setPaymentLoading(true)
                         const response = await api.addTransaction({ orderId: "", transactionId: res.reference, paymentMethod: capilizePaymeneMethod, type: "wallet", walletAmount: amount })
                         if (response.status == 1) {
                             // setPaymentLoading(true)
-                            toast.success(response.message);
+                            // toast.success(response.message);
                             dispatch(addUserBalance({ data: amount }));
                             setAddWalletModal(false);
+                            router.push("/web-payment-status?type=wallet&status_code=200&status=success")
                             // setIsOrderPlaced(true);
                             // dispatch(setCartSubTotal({ data: 0 }));
                         }
@@ -218,11 +224,12 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                                 walletAmount: amount
                             });
                             if (response.status === 1) {
-                                toast.success(response.message);
-                                console.log("Wallet Amount added", amount)
+                                // toast.success(response.message);
+                                // console.log("Wallet Amount added", amount)
                                 dispatch(addUserBalance({ data: amount }));
                                 setAddWalletModal(false);
-                                handleSuccessWalletAdd();
+                                // handleSuccessWalletAdd();
+                                router.push("/web-payment-status?type=wallet&status_code=200&status=success");
 
                             } else {
                                 toast.error(response.message);
@@ -231,6 +238,8 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                         } catch (error) {
                             console.log("Transaction error:", error);
                         }
+                    } else {
+                        console.log("Razorpay Payment Failed")
                     }
                 },
                 modal: {
@@ -238,7 +247,8 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                     ondismiss: async (reason) => {
                         // console.log("In ondismiss payment close", reason);
                         if (reason === undefined) {
-                            toast.error("Payment Failed");
+                            // toast.error("Payment Failed");
+                            // console.log("modal dismissed")
                             setAddWalletModal(false);
                         }
                     },
@@ -269,6 +279,9 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
             rzpay.on("payment.failed", (response) => {
                 setAddWalletModal(false);
+                // console.log("Failed Response",response);
+                router.push("/web-payment-status?type=wallet&status=failed")
+                // console.log(payment.failed)
             });
 
             rzpay.open();
@@ -345,6 +358,14 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                     </div>
                 </DialogContent>
             </Dialog>
+            <StripeModal
+                clientSecret={stripeClientSecret}
+                stripeTransId={stripeTransId}
+                showStripe={showStripe}
+                setShowStripe={setShowStripe}
+                amount={amount}
+                setWalletModal={setAddWalletModal}
+            />
         </div>
     )
 }

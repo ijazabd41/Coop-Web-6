@@ -14,6 +14,7 @@ import { setCurrentUser } from "@/redux/slices/userSlice";
 import * as api from "@/api/apiRoutes"
 import { useDispatch } from "react-redux";
 import withAuth from "@/checkauth/CheckAuth";
+import CardSkeleton from "../skeleton/CardSkeleton";
 
 const ProfileDashboard = () => {
   const dispatch = useDispatch();
@@ -59,7 +60,11 @@ const ProfileDashboard = () => {
           </div>
 
           <div className='col-span-12 md:col-span-9  '>
-            {loading ? <p>Loading</p> : <>
+            {loading ? 
+            <div className="flex flex-col gap-2">
+              <CardSkeleton height={50}/>
+              <CardSkeleton height={800} />
+            </div> : <>
               {activeTab == "profile" && <Profile />}
               {activeTab == "address" && <Address />}
               {activeTab == "activeorders" && <ActiveOrders />}

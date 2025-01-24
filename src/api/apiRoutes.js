@@ -369,7 +369,9 @@ export const placeOrder = async ({ productVariantId, quantity, total, deliveryCh
 
 export const initiateTrasaction = async ({ orderId, paymentMethod, type, walletAmount = 0 }) => {
     const formData = new FormData();
-    formData.append("order_id", orderId)
+    if (orderId) {
+        formData.append("order_id", orderId)
+    }
     formData.append("payment_method", paymentMethod)
     formData.append("type", type)
     formData.append("request_from", "website");
@@ -500,7 +502,7 @@ export const getSellers = async ({ limit, offset, latitude, longitude }) => {
         latitude,
         longitude
     }
-    const response = await api.get(`${apiEndPoints.getShopBySellers}`,{params})
+    const response = await api.get(`${apiEndPoints.getShopBySellers}`, { params })
     return response.data;
 }
 
@@ -511,6 +513,6 @@ export const getCountries = async ({ limit, offset, latitude, longitude }) => {
         latitude,
         longitude
     }
-    const response = await api.get(`${apiEndPoints.getShopByCountries}`,{params})
+    const response = await api.get(`${apiEndPoints.getShopByCountries}`, { params })
     return response.data;
 } 
