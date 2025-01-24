@@ -67,7 +67,7 @@ const ProductReviewCard = ({ review }) => {
                     <div className="flex gap-2 flex-wrap">
                         {review?.images?.map((image, index) => {
                             return (<div className="w-16 h-16 rounded" key={index}>
-                                <ImageWithPlaceholder src={image?.image_url} alt="Rating image" className='h-full w-full rounded' onClick={() => handleLightBox(index)} />
+                                <ImageWithPlaceholder src={image?.image_url} alt="Rating image" className='h-full w-full rounded' handleOnClick={() => handleLightBox(index)} />
                             </div>)
                         })}
                     </div>

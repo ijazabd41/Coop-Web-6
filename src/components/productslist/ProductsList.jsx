@@ -19,11 +19,13 @@ import CardSkeleton from '../skeleton/CardSkeleton'
 import FilterDrawer from '../productFilter/FilterDrawer'
 import { IoFilter } from 'react-icons/io5'
 import { setFilterSort, setFilterView } from '@/redux/slices/productFilterSlice'
+import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg"
+import Image from 'next/image'
 
 const Products = () => {
     const dispatch = useDispatch();
     const city = useSelector(state => state.City)
-   
+
     const filter = useSelector(state => state.ProductFilter)
     const [productResult, setProductResult] = useState([])
     const [offset, setOffset] = useState(0)
@@ -63,7 +65,7 @@ const Products = () => {
             country_id: filter?.country_id,
             section_id: filter?.section_id
         });
-    }, [filter.search, filter.category_id, filter.brand_ids, filter.sort_filter, filter?.search_sizes, filter?.price_filter, offset])
+    }, [filter.search, filter.category_id, filter.brand_ids, filter.sort_filter, filter?.search_sizes, filter?.price_filter, offset, city?.city])
     const filterProductsFromApi = async (filter) => {
         try {
             setLoading(true);
@@ -148,9 +150,9 @@ const Products = () => {
                         </div>
                         <div className='col-span-12 md:col-span-9'>
                             <div className='flex flex-col gap-6'>
-                                {loading ? <CardSkeleton height={70} /> : <div className='flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0'>
+                                {loading ? <CardSkeleton height={70} /> : <div className='flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor'>
                                     <p className='text-dm font-normal order-2 md:order-1'>{totalProducts} {t("products_found")}</p>
-                                    <div className='flex justify-between gap-3 order-1 md:order-2'>
+                                    <div className='flex justify-between gap-3 order-1 md:order-2 '>
                                         <div className='flex  gap-2 items-center'>
                                             <p className='text-sm text-nowrap font-normal'>{t("sortBy")}</p>
                                             <Select onValueChange={sortProduct} value={filter?.sort_filter}>
@@ -190,16 +192,24 @@ const Products = () => {
                                             )
                                         })
 
-                                        : productResult?.map((product) => {
-                                            return (
-                                                filter?.grid_view ?
-                                                    <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={product?.id}>
-                                                        <VerticleProductCard product={product} />
-                                                    </div>
-                                                    :
-                                                    <div className='col-span-12' key={product?.id}><ListViewProductCard product={product} /></div>
-                                            )
-                                        })}
+                                        : productResult?.length <= 0 ?
+                                            <div className='flex flex-col justify-center items-center col-span-12'>
+                                                <div className='h-3/4 w-3/4'>
+                                                    <Image src={NoOrderSvg} alt="Product not found" height={0} width={0} className='h-full w-full' />
+                                                </div>
+                                                <h2 className='font-bold text-2xl'>{t("no_products_found")}</h2>
+                                            </div>
+                                            :
+                                            productResult?.map((product) => {
+                                                return (
+                                                    filter?.grid_view ?
+                                                        <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={product?.id}>
+                                                            <VerticleProductCard product={product} />
+                                                        </div>
+                                                        :
+                                                        <div className='col-span-12' key={product?.id}><ListViewProductCard product={product} /></div>
+                                                )
+                                            })}
 
 
                                     <div className='col-span-12 mt-6 w-full flex justify-center mx-auto'>

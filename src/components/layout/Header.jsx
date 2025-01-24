@@ -411,7 +411,13 @@ const Header = () => {
                             </div>
                             <div className='flex  md:hidden gap-2 order-3 items-center'>
                                 <div >{themes?.theme == "light" ? <FaSun onClick={() => handleChangeTheme('dark')} /> : <FaMoon onClick={() => handleChangeTheme('light')} />}</div>
-                                <div onClick={handleCartOpen}><IoCartOutline size={20} /></div>
+                                <div onClick={handleCartOpen}><IoCartOutline size={20} /> {
+                                    cart.isGuest == true ? <p className={cart?.guestCart
+                                        ?.length != 0 ? "flex absolute top-1.5 right-0.5  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-semibold text-xs" : "none"}> {cart?.guestCart
+                                            ?.length != 0 ? cart?.guestCart
+                                            ?.length : null}</p> :
+                                        <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor top-1 right-0   textBackground rounded-full text-center h-4 w-4 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
+                                }</div>
                             </div>
                         </div>
 

@@ -414,6 +414,7 @@
     "namePlaceholder": "Enter Name",
     "emailPlaceholder": "Enter Email Address",
     "otpPlaceholder": "Enter OTP ",
+    "address_not_deliverable": "Selected Address Is Not Deliverable",
     "passwordPlaceholder": "Enter Password",
     "confirmPasswordPlaceholder": "Enter Confirm Password",
     "alreadyHaveAnAccount": "Already have an account?",

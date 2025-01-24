@@ -122,7 +122,7 @@ const ProductDescription = ({ product, ratingData }) => {
                                                                         src={image}
                                                                         alt="Rating image"
                                                                         className="h-full w-full"
-                                                                        onClick={() => handleLightBox(index)}
+                                                                        handleOnClick={() => handleLightBox(index)}
                                                                     />
                                                                     {index === 5 && (
                                                                         <div onClick={handleOpenImagesModal} className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold">

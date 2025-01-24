@@ -35,6 +35,7 @@ const ProductDetail = () => {
     const pathname = usePathname()
     const city = useSelector(state => state.City.city)
     const setting = useSelector(state => state.Setting)
+    const language = useSelector(state => state.Language.selectedLanguage)
 
 
     const cart = useSelector(state => state.Cart)
@@ -265,7 +266,7 @@ const ProductDetail = () => {
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
                                     </div>
-                                    <div className='mt-[10px]'>
+                                    <div dir={language?.type} className={`mt-[10px] ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                                         <Swiper
                                             spaceBetween={10}
                                             modules={[Navigation]}
@@ -290,8 +291,8 @@ const ProductDetail = () => {
                                         >
                                             {productImages?.map((image, index) => (
                                                 <SwiperSlide key={product.id} >
-                                                    <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <ImageWithPlaceholder src={image} alt={product?.name} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
+                                                    <div className='h-auto relative w-full aspect-square' key={index} >
+                                                        <ImageWithPlaceholder src={image} alt={product?.name} className='h-full w-full aspect-square rounded-sm' handleOnClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}

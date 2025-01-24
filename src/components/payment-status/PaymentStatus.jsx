@@ -1,63 +1,35 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useRouter } from "next/router";
-import OrderSuccessModal from '../paymentstatusmodals/OrderSuccessModal';
-import OrderFailedModal from '../paymentstatusmodals/OrderFailedModal';
-import * as api from "@/api/apiRoutes"
+import dynamic from 'next/dynamic';
+import { useDispatch } from 'react-redux';
+import * as api from "@/api/apiRoutes";
 import { clearCartPromo, setCart, setCartProducts } from '@/redux/slices/cartSlice';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
-import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import dynamic from 'next/dynamic';
-import animationOne from "@/assets/order_place_animation/order_placed_back_animation.json";
-import animationTwo from "@/assets/order_place_animation/order_success_tick_animation.json";
-import AnimationOne from "@/assets/order_place_animation/order_failed_animation.json"
 import { t } from "@/utils/translation";
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import animationOne from "@/assets/order_place_animation/order_placed_back_animation.json";
+import animationTwo from "@/assets/order_place_animation/order_success_tick_animation.json";
+import animationFailed from "@/assets/order_place_animation/order_failed_animation.json";
 
 const PaymentStatus = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { query } = router;
 
-    const [showOrderSuccess, setShowOrderSuccess] = useState(false)
-    const [showOrderFailed, setShowOrderFailed] = useState(false)
-    const [showOrderPending, setShowOrderPending] = useState(false)
+    const [status, setStatus] = useState({
+        order: { success: false, failed: false, pending: false },
+        wallet: { success: false, failed: false, pending: false }
+    });
 
-    const [showWalletSuccess, setShowWalletSuccess] = useState(false)
-    const [showWalletPending, setShowWalletPending] = useState(false)
-    const [showWalletFailed, setShowWalletFailed] = useState(false)
-
-    const checkPaymentStatus = (query) => {
-        if (!query || Object.keys(query).length === 0) return null;
-
-        const { status, status_code, transaction_status } = query;
-
-        // Check for pending status first
-        if (status === 'pending' || transaction_status === 'pending') {
-            return 'pending';
-        }
-
-        // Check for success status
-        if (
-            status === 'success' ||
-            status === 'PAYMENT_SUCCESS' ||
-            (status_code === '200' && transaction_status === 'capture')
-        ) {
-            return 'success';
-        }
-
-        // If neither success nor pending, then it's failed
+    const checkPaymentStatus = ({ status, status_code, transaction_status }) => {
+        if (status === 'pending' || transaction_status === 'pending') return 'pending';
+        if (status === 'success' || status === 'PAYMENT_SUCCESS' || (status_code === '200' && transaction_status === 'capture')) return 'success';
         return 'failed';
     };
 
-    const isWalletTransaction = (query) => {
-        if (!query) return false;
-        const { type, order_id } = query;
-        return type === 'wallet' || order_id?.startsWith('wallet-');
-    };
-
+    const isWalletTransaction = ({ type, order_id }) => type === 'wallet' || order_id?.startsWith('wallet-');
 
     useEffect(() => {
         if (!query || Object.keys(query).length === 0) return;
@@ -65,114 +37,32 @@ const PaymentStatus = () => {
         const paymentStatus = checkPaymentStatus(query);
         const isWallet = isWalletTransaction(query);
 
-        console.log("paymentStatus:", paymentStatus, "isWallet:", isWallet)
-
-        if (isWallet) {
-            console.log("Wallet Payment");
-            switch (paymentStatus) {
-                case 'success':
-                    setShowWalletSuccess(true);
-                    break;
-                case 'pending':
-                    // Handle pending wallet transactions
-                    setShowWalletPending(true);
-                    break;
-                case 'failed':
-                    setShowWalletFailed(true)
-                    break;
-            }
-        } else {
-            console.log("Order Payment");
-            switch (paymentStatus) {
-                case 'success':
-                    setShowOrderSuccess(true);
-                    break;
-                case 'pending':
-                    // Handle pending orders
-                    setShowOrderPending(true);
-                    break;
-                case 'failed':
-                    setShowOrderFailed(true);
-                    break;
-            }
-        }
+        setStatus((prev) => ({
+            ...prev,
+            [isWallet ? 'wallet' : 'order']: {
+                success: paymentStatus === 'success',
+                failed: paymentStatus === 'failed',
+                pending: paymentStatus === 'pending',
+            },
+        }));
     }, [query]);
-
-    useEffect(() => {
-        if (showOrderSuccess) {
-            console.log("Order Placed Successfully");
-        } else if (showOrderFailed) {
-            console.log("Order Failed");
-        } else if (showOrderPending) {
-            console.log("Order Pending");
-        }
-    }, [showOrderSuccess, showOrderFailed, showOrderPending])
-
-    useEffect(() => {
-        if (showWalletSuccess) {
-            console.log("Wallet Transaction Successfull");
-        } else if (showWalletFailed) {
-            console.log("Wallet Transaction Failed");
-        } else if (showWalletPending) {
-            console.log("Wallet Transaction Pending");
-        }
-    }, [showWalletSuccess, showWalletFailed, showWalletPending])
-
-    // useEffect(() => {
-    //     // Ensure the query is populated before proceeding
-    //     if (!query || Object.keys(query).length === 0) return;
-    //     console.log("query from useEffect", query)
-    //     if (
-    //         query?.status === "success" ||
-    //         query?.status === "PAYMENT_SUCCESS" ||
-    //         query?.transaction_status === "capture"
-    //     ) {
-    //         setShowOrderSuccess(true);
-    //     } else {
-    //         setShowOrderFailed(true);
-    //     }
-    // }, [query]);
-
-    // useEffect(() => {
-    //     if (showOrderSuccess) {
-    //         setTimeout(() => {
-    //             handlePaymentClose();
-    //         }, 5000)
-    //     } else {
-    //         setTimeout(() => {
-    //             handleFailedOrder();
-    //         }, 5000)
-    //     }
-    // }, [showOrderSuccess, showOrderFailed])
-
-    // http://localhost:3000/web-payment-status?status=success&type=order&payment_method=Cashfree
-    // https://devegrocer.thewrteam.in/web-payment-status?status=success&type=order&payment_method=Cashfree
-
-    // https://devegrocer.thewrteam.in/web-payment-status?order_id=order-217-107&status_code=200&transaction_status=capture
-
-
-    // https://devegrocer.thewrteam.in/web-payment-status?order_id=order-213-107&status_code=201&transaction_status=pending&action=back
-
-    // https://devegrocer.thewrteam.in/web-payment-status?status=PAYMENT_SUCCESS&type=order&payment_method=Phonepe
-    // https://devegrocer.thewrteam.in/web-payment-status?status=&type=order&payment_method=Paytabs&order_id=215
 
     const handlePaymentClose = async () => {
         try {
             const response = await api.deleteCart();
-            if (response.status == 1) {
-                dispatch(setCart({ data: [] }))
-                dispatch(clearCartPromo())
-                dispatch(setCartProducts({ data: [] }))
-                dispatch(clearCheckout())
-                setShowOrderSuccess(false)
-                router.replace("/")
+            if (response.status === 1) {
+                dispatch(setCart({ data: [] }));
+                dispatch(clearCartPromo());
+                dispatch(setCartProducts({ data: [] }));
+                dispatch(clearCheckout());
+                router.replace("/");
             } else {
-                console.log("Error", response)
+                console.error("Error clearing cart", response);
             }
         } catch (error) {
-            console.log("Error", error)
+            console.error("Error", error);
         }
-    }
+    };
 
     const extractOrderNumber = (orderId) => {
         if (!orderId) return null;
@@ -181,92 +71,75 @@ const PaymentStatus = () => {
         return match ? match[1] : /^\d+$/.test(orderId) ? orderId : null;
     };
 
-
     const handleFailedOrder = async () => {
         if (!query || Object.keys(query).length === 0) return;
-        const extractOrderId = extractOrderNumber(query?.order_id)
+        const orderId = extractOrderNumber(query.order_id);
         try {
-            const response = await api.deleteOrder({ orderId: extractOrderId })
-            setShowOrderFailed(false)
-            dispatch(clearCheckout())
-            router.push("/")
+            await api.deleteOrder({ orderId });
+            dispatch(clearCheckout());
+            router.push("/");
         } catch (error) {
-            console.log("Error", error)
+            console.error("Error", error);
         }
-    }
+    };
 
-    const handleViewOrder = () => {
-        const orderId = extractOrderNumber(query?.order_id)
-        router.push(`/order-detail/${orderId}`)
-    }
+    const handleViewOrder = async () => {
+        const orderId = extractOrderNumber(query?.order_id);
+        await handlePaymentClose()
+        router.push(`/order-detail/${orderId}`);
+    };
 
-    return (
-        <section className='min-h-[600px]  flex items-center'>
-            <div className='container'>
-                {/* {showOrderSuccess == true ? <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> : <OrderFailedModal showOrderFailed={showOrderFailed} handleFailedOrder={handleFailedOrder} />} */}
-                {showOrderSuccess == true ?
-                    <div className="flex flex-col items-center gap-8 ">
-                        {/* Lottie animations */}
-                        <div className="relative h-44">
-                            <Lottie
-                                className="h-44"
-                                animationData={animationTwo}
-                                loop={false}
-                            />
-                            <Lottie
-                                className="h-44 absolute z-60 -left-5 top-0"
-                                animationData={animationOne}
-                                loop={true}
-                            />
-                            <Lottie
-                                className="h-44 absolute z-60 -right-5 top-0"
-                                animationData={animationOne}
-                                loop={true}
-                            />
-                        </div>
-                        <div className="text-center mt-8">
-                            <h1 className="text-2xl">{t("order_placed_description")}</h1>
-                            <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
-                                <button
-                                    className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl"
-                                    onClick={handlePaymentClose}
-                                >
-                                    {t("home")}
-                                </button>
-                                <button
-                                    className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl"
-                                    onClick={handleViewOrder}
-                                >
-                                    {t("view_order_details")}
-                                </button>
-                            </div>
-                        </div>
+    const renderContent = () => {
+        const { success, failed } = status.order;
+
+        if (success) {
+            return (
+                <div className="flex flex-col items-center gap-8">
+                    <div className="relative h-44">
+                        <Lottie className="h-44" animationData={animationTwo} loop={false} />
+                        <Lottie className="h-44 absolute z-60 -left-5 top-0" animationData={animationOne} loop={true} />
+                        <Lottie className="h-44 absolute z-60 -right-5 top-0" animationData={animationOne} loop={true} />
                     </div>
-                    :
-                    <div className="flex flex-col relative gap-8">
-                        {/* Lottie animations */}
-
-                        <Lottie
-                            className="h-44"
-                            animationData={AnimationOne}
-                            loop={false}
-                        />
-
-                        <div className="text-center mt-8">
-                            <h1 className="text-2xl">{t("order_failed_description")}</h1>
-                            <button
-                                className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl"
-                                onClick={handleFailedOrder}
-                            >
+                    <div className="text-center mt-8">
+                        <h1 className="text-2xl">{t("order_placed_description")}</h1>
+                        <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
+                            <button className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl" onClick={handlePaymentClose}>
                                 {t("home")}
                             </button>
+                            {(query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
+                                {t("view_order_details")}
+                            </button>}
+
                         </div>
                     </div>
+                </div>
+            );
+        }
 
-                }
+        if (failed) {
+            return (
+                <div className="flex flex-col relative gap-8">
+                    <Lottie className="h-44" animationData={animationFailed} loop={false} />
+                    <div className="text-center mt-8">
+                        <h1 className="text-2xl">{t("order_failed_description")}</h1>
+                        <button className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl" onClick={handleFailedOrder}>
+                            {t("home")}
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return null;
+    };
+
+    return (
+        <section className="min-h-[600px] flex items-center">
+            <div className="container">
+                {renderContent()}
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default PaymentStatus
+export default PaymentStatus;

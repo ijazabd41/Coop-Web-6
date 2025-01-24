@@ -386,7 +386,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setIsOTP(false);
         setShowLogin(false);
         setShowRegister(false);
-      } else {
+      } else if (res.message == "user_exist_with_email") {
+        toast.error(t("user_exist_with_email"))
+      }
+      else {
         setUserAuthType(type);
         setEmail(user?.providerData?.[0]?.email);
         setUserName(user?.providerData?.[0]?.displayName);
@@ -439,7 +442,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const credentials = GoogleAuthProvider.credentialFromResult(result);
       const user = result?.user;
       dispatch(setAuthType({ data: "google" }));
-      await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
+      const response = await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
     } catch (error) {
       console.log("error", error);
     }

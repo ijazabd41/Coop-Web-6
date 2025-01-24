@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 const SimilarProducts = ({ slug, tag_names }) => {
 
     const city = useSelector(state => state.City.city)
+    const language = useSelector(state => state.Language.selectedLanguage)
 
     const [similarProducts, setSimilarProducts] = useState([])
     const [totalSimilarProducts, setTotalSimilarProducts] = useState(0)
@@ -43,8 +44,8 @@ const SimilarProducts = ({ slug, tag_names }) => {
     return (
         similarProducts?.length > 0 ?
             <section className='backgroundColor'>
-                <div className='container py-12 px-2'>
-                    <div className='flex flex-col gap-2'>
+                <div className='container py-12 px-2' dir={language?.type}>
+                    <div className={`flex flex-col gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`} >
                         <div className='font-bold text-xl   rounded-sm my-2'>
                             <h2>{t("related_product")}</h2>
                         </div>
