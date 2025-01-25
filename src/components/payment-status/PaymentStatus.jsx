@@ -18,32 +18,28 @@ const PaymentStatus = () => {
     const router = useRouter();
     const { query } = router;
 
-    const [status, setStatus] = useState({
-        order: { success: false, failed: false, pending: false },
-        wallet: { success: false, failed: false, pending: false }
-    });
+    const [status, setStatus] = useState("");
+    const [type, setType] = useState("")
 
     const checkPaymentStatus = ({ status, status_code, transaction_status }) => {
         if (status === 'pending' || transaction_status === 'pending') return 'pending';
         if (status === 'success' || status === 'PAYMENT_SUCCESS' || (status_code === '200' && transaction_status === 'capture')) return 'success';
         return 'failed';
     };
-
+    // http://localhost:3000/web-payment-status?type=wallet&status_code=200&status=success
     const isWalletTransaction = ({ type, order_id }) => type === 'wallet' || order_id?.startsWith('wallet-');
 
     useEffect(() => {
         if (!query || Object.keys(query).length === 0) return;
         const paymentStatus = checkPaymentStatus(query);
         const isWallet = isWalletTransaction(query);
-        setStatus((prev) => ({
-            ...prev,
-            [isWallet ? 'wallet' : 'order']: {
-                success: paymentStatus === 'success',
-                failed: paymentStatus === 'failed',
-                pending: paymentStatus === 'pending',
-            },
-        }));
+        setType(isWallet ? 'wallet' : 'order')
+        setStatus(paymentStatus)
     }, [query]);
+
+    const handleWalletClose = () => {
+        router.replace("/");
+    }
 
     const handlePaymentClose = async () => {
         try {
@@ -93,9 +89,9 @@ const PaymentStatus = () => {
     };
 
     const renderContent = () => {
-        const { success, failed } = status.order;
 
-        if (success) {
+
+        if (status == "success") {
             return (
                 <div className="flex flex-col items-center gap-8">
                     <div className="relative h-44">
@@ -106,26 +102,25 @@ const PaymentStatus = () => {
                     <div className="text-center mt-8">
                         <h1 className="text-2xl">{t("order_placed_description")}</h1>
                         <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
-                            <button className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl" onClick={handlePaymentClose}>
+                            <button className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl" onClick={type == "wallet" ? handleWalletClose : handlePaymentClose}>
                                 {t("home")}
                             </button>
-                            {(query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
+                            {(type == "order") ? (query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
                                 {t("view_order_details")}
-                            </button>}
-
+                            </button> : <></>}
                         </div>
                     </div>
                 </div>
             );
         }
 
-        if (failed) {
+        if (status == "failed") {
             return (
                 <div className="flex flex-col relative gap-8">
                     <Lottie className="h-44" animationData={animationFailed} loop={false} />
                     <div className="text-center mt-8">
                         <h1 className="text-2xl">{t("order_failed_description")}</h1>
-                        <button className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl" onClick={handleFailedOrder}>
+                        <button className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl" onClick={type == "wallet" ? handleWalletClose : handleFailedOrder}>
                             {t("home")}
                         </button>
                     </div>

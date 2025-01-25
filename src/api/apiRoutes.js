@@ -384,7 +384,9 @@ export const initiateTrasaction = async ({ orderId, paymentMethod, type, walletA
 
 export const addTransaction = async ({ orderId, transactionId, paymentMethod, type, walletAmount = 0 }) => {
     const formData = new FormData();
-    formData.append("order_id", orderId)
+    if (orderId) {
+        formData.append("order_id", orderId)
+    }
     if (walletAmount != 0) {
         formData.append("wallet_amount", walletAmount);
     }

@@ -447,6 +447,9 @@ const Checkout = () => {
                     if (checkout?.selectedPaymentMethod == "razorpay") {
                         handleRozarpayPayment(currentOrderID, response?.data?.transaction_id, checkout?.checkoutTotal, capilizePaymeneMethod)
                     } else if (checkout?.selectedPaymentMethod == "stripe") {
+                        setStripeOrderId(currentOrderID)
+                        setStripeClientSecret(response?.data?.client_secret)
+                        setStripeTransactionId(response?.data?.id)
                         setShowStripe(true)
                     }
                     else {
@@ -590,7 +593,7 @@ const Checkout = () => {
 
                 </div>
                 <NewAddressModal fetchAddress={fetchAddress} showAddAddres={showAddAddres} setShowAddAddres={setShowAddAddres} isAddressSelected={isAddressSelected} />
-                <StripeModal showStripe={showStripe} setShowStripe={setShowStripe} />
+                <StripeModal showStripe={showStripe} setShowStripe={setShowStripe} amount={checkout?.checkoutTotal} clientSecret={stripeClientSecret} stripeTransId={stripeTransactionId} stripeOrderId={stripeOrderId} />
                 {/* <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> */}
             </section>
     )

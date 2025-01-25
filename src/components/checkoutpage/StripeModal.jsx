@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { t } from '@/utils/translation';
 import * as api from '@/api/apiRoutes'
 import { addUserBalance } from '@/redux/slices/userSlice';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
 const CARD_OPTIONS = {
@@ -30,7 +29,7 @@ const CARD_OPTIONS = {
         }
     }
 };
-const CheckoutForm = ({ clientSecret, setShowStripe, amount, transactionId, setWalletModal }) => {
+const CheckoutForm = ({ clientSecret, setShowStripe, amount, transactionId, setWalletModal, stripeOrderId }) => {
     const dispatch = useDispatch();
     const user = useSelector(state => state?.User?.user)
     const router = useRouter()
@@ -38,7 +37,7 @@ const CheckoutForm = ({ clientSecret, setShowStripe, amount, transactionId, setW
     const stripe = useStripe();
     const elements = useElements();
     const [isLoading, setIsLoading] = useState(false)
-
+    const type = stripeOrderId ? "order" : "wallet"
     const handleOnSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true)
@@ -60,37 +59,49 @@ const CheckoutForm = ({ clientSecret, setShowStripe, amount, transactionId, setW
                             state: 'CA',
                             country: 'US',
                         },
-
                     },
                 },
             },);
-            console.log("Payment Intent", paymentIntent);
             if (paymentIntent?.status === 'succeeded') {
-                console.log("Payment Success")
-                await handleAddWalletPayment({ transactionId, amount })
+                await handleAddPayment()
             } else {
                 setShowStripe(false)
                 setWalletModal(false)
-                router.push("/web-payment-status?type=wallet&status=failed")
+                const urlOptions = {
+                    type: type,
+                    status: "failed",
+                }
+                if (stripeOrderId) {
+                    urlOptions.order_id = stripeOrderId
+                }
+                router.push({ pathname: `/web-payment-status`, query: urlOptions })
             }
-
         } catch (error) {
             console.log("Error", error)
         }
         setIsLoading(false);
     }
 
-    const handleAddWalletPayment = async ({ transactionId, amount }) => {
+
+
+    const handleAddPayment = async () => {
+        const orderId = stripeOrderId ? stripeOrderId : null
         try {
-            const result = await api.addTransaction({ transactionId, walletAmount: amount, type: "wallet", paymentMethod: "Stripe" })
-            console.log("Wallet Recharge Amount:", amount)
-            console.log("TransactionId :", transactionId)
-            console.log(result?.data);
-            dispatch(addUserBalance({ data: amount }));
-            // toast.success(t("wallet_recharge_successfull"));
+            const result = await api.addTransaction({ orderId: orderId, transactionId: transactionId, walletAmount: amount, type: type, paymentMethod: "Stripe" })
+            if (type == "wallet") {
+                dispatch(addUserBalance({ data: amount }));
+                setWalletModal(false)
+            }
             setShowStripe(false)
-            setWalletModal(false)
-            router.push("/web-payment-status?type=wallet&status_code=200&status=success")
+            const urlOptions = {
+                type: type,
+                status_code: 200,
+                status: 'success'
+            }
+            if (stripeOrderId) {
+                urlOptions.order_id = stripeOrderId
+            }
+            router.push({ pathname: `/web-payment-status`, query: urlOptions })
         } catch (err) {
             console.log("Error: ", err?.message)
         }
@@ -113,25 +124,26 @@ const CheckoutForm = ({ clientSecret, setShowStripe, amount, transactionId, setW
 
 }
 
-const InjectedCheckoutForm = (props) => {
+const InjectedCheckoutForm = ({ clientSecret, transactionId, setShowStripe, amount, setWalletModal, stripeOrderId }) => {
     return (
         <ElementsConsumer>
             {({ elements, stripe }) => (
                 <CheckoutForm
                     elements={elements}
                     stripe={stripe}
-                    clientSecret={props.clientSecret}
-                    transactionId={props.transactionId}
-                    setShowStripe={props.setShowStripe}
-                    amount={props.amount}
-                    setWalletModal={props.setWalletModal}
+                    clientSecret={clientSecret}
+                    transactionId={transactionId}
+                    setShowStripe={setShowStripe}
+                    amount={amount}
+                    setWalletModal={setWalletModal}
+                    stripeOrderId={stripeOrderId}
                 />
             )}
         </ElementsConsumer>
     );
 };
 
-const StripeModal = ({ showStripe, setShowStripe, clientSecret, stripeTransId, amount, setWalletModal }) => {
+const StripeModal = ({ showStripe, setShowStripe, clientSecret, stripeTransId, amount, setWalletModal, stripeOrderId }) => {
 
     const setting = useSelector(state => state.Setting)
 
@@ -159,6 +171,7 @@ const StripeModal = ({ showStripe, setShowStripe, clientSecret, stripeTransId, a
                             transactionId={stripeTransId}
                             amount={amount}
                             setWalletModal={setWalletModal}
+                            stripeOrderId={stripeOrderId}
                         />
                     </Elements>
                 </div>
