@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { setCheckoutTotal } from "@/redux/slices/checkoutSlice";
 import { useDispatch } from "react-redux";
 
-const OrderSummaryCard = ({ checkoutData, handlePlaceOrder }) => {
+const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder }) => {
 
     const dispatch = useDispatch()
     const setting = useSelector(state => state.Setting.setting)
@@ -64,7 +64,7 @@ const OrderSummaryCard = ({ checkoutData, handlePlaceOrder }) => {
                 <span className="text-lg font-bold ">{setting?.currency} {checkout?.checkoutTotal?.toFixed(2)}</span>
             </div>
 
-            <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  " onClick={handlePlaceOrder}>
+            <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  " disabled={step !== 3} onClick={handlePlaceOrder}>
                 {t("place_order")}
             </button>
 

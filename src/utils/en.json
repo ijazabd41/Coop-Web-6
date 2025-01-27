@@ -483,5 +483,6 @@
     "reorder": "Reorder",
     "reOrder_warning": "Only items currently in stock can be added to your cart.",
     "items_added_to_cart": "Items Added To Cart",
-    "view_order_details" : "View Order Details"
+    "view_order_details" : "View Order Details",
+    "fssai_license_no":"License No. :"
 }

@@ -491,103 +491,103 @@ const Checkout = () => {
                         <div className='flex w-full lg:w-1/2'>
                             <Stepper currentStep={checkout?.currentStep} />
                         </div>
-                        <div className='w-full '>
-                            {/* step 1 */}
-                            {
-                                checkout?.currentStep == 1 &&
-                                <div className='flex flex-col cardBorder rounded-sm mb-4'>
-                                    <div className='flex  justify-between backgroundColor py-4 px-2 '>
-                                        <span className='font-bold text-base md:text-xl'>{t("choose_delivery_address")}</span>
-                                        {address?.allAddresses?.length > 0 && <button className='flex  items-center text-sm' onClick={handleShowAddress}><GoPlus />{t("add_address")}</button>}
-                                    </div>
-                                    {address?.allAddresses?.length > 0 ? <> <div className='flex flex-col overflow-y-auto h-96'>
-                                        {address?.allAddresses?.map((address) => {
-                                            return (
-                                                <div key={address?.id}>  <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} /></div>
-                                            )
-                                        })}
-                                    </div>
-                                        <div className='flex justify-end m-4'>
-                                            <button onClick={handleFirstStep} className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' >{t("continue")}</button>
-                                        </div></> : <div className=' flex justify-center  my-2 cursor-pointer' onClick={() => setShowAddAddres(true)}>
-                                        <div className='border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl'>
-                                            <GoPlusCircle /> {t("add_address")}
-                                        </div>
-                                    </div>}
-
-                                </div>
-                            }
-                            {/* step 2 */}
-                            {
-                                checkout?.currentStep == 2 &&
-                                <div className='flex flex-col cardBorder rounded-sm mb-4 w-full'>
-                                    <div className='flex  justify-between backgroundColor p-4'>
-                                        <span className='font-bold text-xl'>{t("preferred_day_and_time")}</span>
-                                    </div>
-                                    <div className="flex flex-col p-4 gap-6">
-                                        <div className='grid grid-cols-12 items-center gap-4'>
-                                            <div className='col-span-12  md:col-span-6 flex flex-col gap-1 '>
-                                                <span className='text-base font-bold'>{t("preferred_delivery_day")}</span>
-                                                <Popover>
-                                                    <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between '>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
-                                                    <PopoverContent className="w-full p-0">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={checkout?.selectedDate}
-                                                            onSelect={handleSelectedDate}
-                                                            className="rounded-md w-full"
-                                                            fromDate={new Date()}
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                        <div className='w-full'>
+                            <div className='grid grid-cols-12 gap-2 md:gap-6'>
+                                {/* step 1 */}
+                                {checkout?.currentStep == 1 &&
+                                    <div className="col-span-12 md:col-span-8 lg:col-span-9">
+                                        <div className='flex flex-col cardBorder rounded-sm mb-4'>
+                                            <div className='flex justify-between backgroundColor py-4 px-2 '>
+                                                <span className='font-bold text-base md:text-xl'>{t("choose_delivery_address")}</span>
+                                                {address?.allAddresses?.length > 0 && <button className='flex  items-center text-sm' onClick={handleShowAddress}><GoPlus />{t("add_address")}</button>}
                                             </div>
-                                            {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
-                                                <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
-                                                <Select onValueChange={handleTimeSlotChange} value={selectedTimeSlot}>
-                                                    <SelectTrigger className="w-full py-5 cardBorder">
-                                                        <SelectValue placeholder="Select a timezone">
-                                                            {checkout?.timeSlot?.title}
-                                                        </SelectValue>
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {availabeleTimeSlot?.map((slot) => {
-                                                            return (
-                                                                <div key={slot?.id}>
-                                                                    <SelectItem disabled={slot?.isDisabled} value={slot} >{slot?.title}
-                                                                    </SelectItem>
-                                                                </div>
-                                                            )
-                                                        })}
-                                                    </SelectContent>
-                                                </Select>
+                                            {address?.allAddresses?.length > 0 ? <> <div className='flex flex-col h-full'>
+                                                {address?.allAddresses?.map((address) => {
+                                                    return (
+                                                        <div key={address?.id}>  <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} /></div>
+                                                    )
+                                                })}
+                                            </div>
+                                                <div className='flex justify-end m-4'>
+                                                    <button onClick={handleFirstStep} className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' >{t("continue")}</button>
+                                                </div></> : <div className=' flex justify-center  my-2 cursor-pointer' onClick={() => setShowAddAddres(true)}>
+                                                <div className='border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl'>
+                                                    <GoPlusCircle /> {t("add_address")}
+                                                </div>
                                             </div>}
-
-                                        </div>
-                                        <div className='flex flex-col'>
-                                            <span className='text-base font-bold '>{t("order_note_title")}</span>
-                                            <textarea name="" id="" className='cardBorder rounded-sm w-full p-2 outline-none' value={checkout?.orderNote} onChange={(e) => handleChangeOrderNote(e)} placeholder={t("order_note")}></textarea>
-                                        </div>
-
-                                        <div className='flex justify-end gap-4'>
-                                            <button className='cardBorder px-4 py-2 rounded-sm text-xl font-normal' onClick={() => dispatch(setCurrentStep({ data: 1 }))}>{t("previous")}</button>
-                                            <button className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' onClick={handleSecondStep}>{t("continue")}</button>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                            {/* step 3 */}
-                            {
-                                checkout?.currentStep == 3 &&
-                                <div className='grid grid-cols-12  gap-2 md:gap-6'>
+                                }
+                                {/* step 2 */}
+                                {
+                                    checkout?.currentStep == 2 &&
+                                    <div className="col-span-12 md:col-span-8 lg:col-span-9">
+                                        <div className='flex flex-col cardBorder rounded-sm mb-4 w-full'>
+                                            <div className='flex  justify-between backgroundColor p-4'>
+                                                <span className='font-bold text-xl'>{t("preferred_day_and_time")}</span>
+                                            </div>
+                                            <div className="flex flex-col p-4 gap-6">
+                                                <div className='grid grid-cols-12 items-center gap-4'>
+                                                    <div className='col-span-12  md:col-span-6 flex flex-col gap-1 '>
+                                                        <span className='text-base font-bold'>{t("preferred_delivery_day")}</span>
+                                                        <Popover>
+                                                            <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between '>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
+                                                            <PopoverContent className="w-full p-0">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={checkout?.selectedDate}
+                                                                    onSelect={handleSelectedDate}
+                                                                    className="rounded-md w-full"
+                                                                    fromDate={new Date()}
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    </div>
+                                                    {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
+                                                        <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
+                                                        <Select onValueChange={handleTimeSlotChange} value={selectedTimeSlot}>
+                                                            <SelectTrigger className="w-full py-5 cardBorder">
+                                                                <SelectValue placeholder="Select a timezone">
+                                                                    {checkout?.timeSlot?.title}
+                                                                </SelectValue>
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {availabeleTimeSlot?.map((slot) => {
+                                                                    return (
+                                                                        <div key={slot?.id}>
+                                                                            <SelectItem disabled={slot?.isDisabled} value={slot} >{slot?.title}
+                                                                            </SelectItem>
+                                                                        </div>
+                                                                    )
+                                                                })}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>}
+                                                </div>
+                                                <div className='flex flex-col'>
+                                                    <span className='text-base font-bold '>{t("order_note_title")}</span>
+                                                    <textarea name="" id="" className='cardBorder rounded-sm w-full p-2 outline-none' value={checkout?.orderNote} onChange={(e) => handleChangeOrderNote(e)} placeholder={t("order_note")}></textarea>
+                                                </div>
+                                                <div className='flex justify-end gap-4'>
+                                                    <button className='cardBorder px-4 py-2 rounded-sm text-xl font-normal' onClick={() => dispatch(setCurrentStep({ data: 1 }))}>{t("previous")}</button>
+                                                    <button className='text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal' onClick={handleSecondStep}>{t("continue")}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                {/* step 3 */}
+                                {
+                                    checkout?.currentStep == 3 &&
                                     <div className='md:col-span-8 lg:col-span-9 col-span-12'>
                                         <CheckoutPayment checkoutData={checkoutData} selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} setCurrentStep={setCurrentStep} />
                                     </div>
-                                    <div className=' md:col-span-4 lg:col-span-3 col-span-12'>
-                                        <OrderSummaryCard checkoutData={checkoutData} handlePlaceOrder={handlePlaceOrder} />
-                                    </div>
 
+                                }
+                                <div className=' md:col-span-4 lg:col-span-3 col-span-12'>
+                                    <OrderSummaryCard step={checkout?.currentStep} checkoutData={checkoutData} handlePlaceOrder={handlePlaceOrder} />
                                 </div>
-                            }
+                            </div>
                         </div>
                     </div>}
 

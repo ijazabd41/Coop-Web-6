@@ -3,7 +3,7 @@ import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder
 
 const BrandCard = ({ brand }) => {
     return (
-        <div className="backgroundColor  rounded-sm text-center flex flex-col items-center px-4 py-6 gap-2 hover:bg-transparent hover:cardBorder hover:cursor-pointer">
+        <div className="rounded-sm text-center flex flex-col items-center px-4 py-6 gap-2 border border-transparent headerBackgroundColor hover:cardBorder hover:textPrimaryColor hover:cursor-pointer">
             <div className='h-28 w-28  '>
                 <ImageWithPlaceholder src={brand?.image_url} alt={brand?.name} className="rounded-sm mx-auto h-full w-full object-cover mb-2" />
             </div>

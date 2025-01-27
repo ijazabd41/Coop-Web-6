@@ -8,6 +8,7 @@ import { t } from '@/utils/translation';
 import Image from 'next/image';
 import LogoutModal from '../logoutmodal/LogoutModal';
 import DeleteModal from '../deleteModal/DeleteModal';
+import { BiCartAlt, BiCog, BiUserCircle, BiWallet } from 'react-icons/bi';
 
 
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
@@ -49,7 +50,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <div className=''>
                     <div className=" ">
                         <h3 className="text-base font-semibold textColor flex items-center cardBorder p-4">
-                            <FaUserCircle className="mr-2 textColor" size={20} /> {t("account_manage")}
+                            <BiUserCircle className="mr-2 textColor" size={20} /> {t("account_manage")}
                         </h3>
                         <ul>
                             <Link href={`/profile`}>
@@ -70,7 +71,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     {/* Orders & Wishlist Manage Section */}
                     <div className="">
                         <h3 className="text-base font-semibold textColor  flex items-center  p-4 cardBorder">
-                            <FaShoppingCart className="mr-2 textColor" size={20} />{`${t("orders")} & ${t("wishlist")} ${t("manage")}`}
+                            <BiCartAlt className="mr-2 textColor" size={20} />{`${t("orders")} & ${t("wishlist")} ${t("manage")}`}
 
                         </h3>
                         <ul>
@@ -97,7 +98,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     {/* Payment Manage Section */}
                     <div className="">
                         <h3 className="text-base font-semibold textColor flex items-center  p-4 cardBorder">
-                            <FaWallet className="mr-2 textColor" size={20} /> {`${t("payment")} ${t("manage")}`}
+                            <BiWallet className="mr-2 textColor" size={20} /> {`${t("payment")} ${t("manage")}`}
                         </h3>
                         <ul>
                             <li className="flex justify-between items-center p-4 rounded  textColor" >
@@ -124,7 +125,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     {/* Other Settings Section */}
                     <div className=''>
                         <h3 className="text-base font-semibold textColor  flex items-center  p-4 cardBorder">
-                            <FaCog className="mr-2 textColor" size={20} /> {`${t("address_type_other")} ${t("setting")}`}
+                            <BiCog className="mr-2 textColor" size={20} /> {`${t("address_type_other")} ${t("setting")}`}
                         </h3>
                         <ul>
                             <Link href={`/profile/notifications`}>

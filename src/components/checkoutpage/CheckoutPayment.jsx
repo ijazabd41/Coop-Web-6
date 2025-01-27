@@ -120,7 +120,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                     </div>}
                     {checkout?.selectedPaymentMethod == "wallet" ? <></> : <div className="flex flex-col gap-3">
                         <h1 className="text-base font-bold">{t("payment_method")}</h1>
-                        <div ref={methodsContainerRef} className="flex flex-col gap-2 h-80 overflow-y-auto">
+                        <div ref={methodsContainerRef} className="flex flex-col gap-2 h-full">
                             {checkoutData?.cod_allowed == "1" && (
                                 <div
                                     data-method="COD"

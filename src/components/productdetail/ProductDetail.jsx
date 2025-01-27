@@ -324,10 +324,25 @@ const ProductDetail = () => {
                                                     </div>
                                                     : null}
                                             </div>
-                                            {product?.seller_name !== null && <div className='flex text-xs'>
-                                                <span>{t("seller")}:<span className='font-bold'>{product?.seller_name}</span></span>
+                                            {product?.seller_name !== null && <div className="px-2 py-1">
+                                                <div className='flex text-xs'>
+                                                    <span>{t("seller")}:<span className='font-bold'>{product?.seller_name}</span></span>
+                                                </div>
                                             </div>}
+                                            {product?.fssai_lic_no !== "" && (
+                                                <div
+                                                    className="text-gray-200 border-l-2 border-gray-200 h-6"
+                                                ></div>
+                                            )}
+                                            {product?.fssai_lic_no !== "" &&
+                                                <div className='flex items-center gap-3'>
+                                                    <div className='text-xs'>
+                                                        {product?.fssai_lic_img && <Image width={0} height={0} src={product?.fssai_lic_img} className="w-9 h-9 object-contain" alt="fssaiImage" />}
+                                                    </div>
+                                                    {console.log(product)}
+                                                    <div className='text-xs'>{t("fssai_license_no")} {product?.fssai_lic_no}</div>
 
+                                                </div>}
 
                                         </div>
                                     </div>
@@ -341,15 +356,15 @@ const ProductDetail = () => {
                                     </div> */}
                                     <div className='flex flex-col'>
                                         <p className='font-normal text-base'>{t("chooseVariant")}</p>
-                                        <div className=' flex-col grid grid-cols-12'>
+                                        <div className=' grid grid-cols-12'>
                                             {
                                                 product?.variants?.map((variant) => {
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
                                                         <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mr-2 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
-                                                            <p className='font-bold text-base'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
-                                                            <span className='flex gap-1'><p>{currency}{discountPrice != 0 ? discountPrice : price}</p>{discountPrice != 0 ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
+                                                            <p className='font-bold text-sm'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
+                                                            <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 ? discountPrice : price}</p>{discountPrice != 0 ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
                                                     )
                                                 })
@@ -358,13 +373,13 @@ const ProductDetail = () => {
                                     </div>
                                     <div className='flex gap-4 flex-col lg:flex-row '>
                                         <div className='flex gap-4 items-center '>
-                                            <div className='flex border-2 rounded-sm p-1 lg:py-[10px] items-center w-1/2'>
+                                            <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-1/3'>
                                                 <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
                                                 <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
                                                 <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
                                             </div>
                                             <div>
-                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-2 md:px-4 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
+                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-5 md:px-5 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
                                             </div>
                                         </div>
 
@@ -379,13 +394,13 @@ const ProductDetail = () => {
                                     </div>
                                     <div className='backgroundColor rounded-sm p-4 flex flex-col gap-4'>
                                         {product?.indicator ? product?.indicator == 1 ? <div className='flex gap-4 items-center'>
-                                            <div className='h-[40px] w-[40px] relative object-cover'>
+                                            <div className='h-[28px] w-[28px] relative object-cover'>
                                                 <Image src={VegIcon} fill alt={product?.name} className='h-full w-full ' />
                                             </div>
                                             <p> {t("vegetarian")}</p>
                                         </div> :
                                             <div className='flex gap-4 items-center'>
-                                                <div className='h-[40px] w-[40px] relative object-cover'>
+                                                <div className='h-[32px] w-[32px] relative object-cover'>
                                                     <Image src={NonVegIcon} fill alt={product?.name} className='h-full w-full ' />
                                                 </div>
                                                 <p> {t("non-vegetarian")}</p>
@@ -394,7 +409,7 @@ const ProductDetail = () => {
                                         }
                                         {product?.cancelable_status == 1 ?
                                             <div className='flex items-center  gap-2'>
-                                                <div className='h-[40px] w-[40px] relative object-cover'>
+                                                <div className='h-[32px] w-[32px] relative object-cover'>
 
                                                     <Image fill src={Cancelable} alt='cancelableIcon' className='h-full w-full' />
                                                 </div>
@@ -429,7 +444,7 @@ const ProductDetail = () => {
                                             </div>
                                             :
                                             <div className='flex items-center gap-2'>
-                                                <div className='h-[40px] w-[40px] relative object-cover'>
+                                                <div className='h-[32px] w-[32px] relative object-cover'>
                                                     <Image src={NonCancelable} alt='cancelableIcon' className='h-full w-full' fill />
                                                 </div>
                                                 <span className='font-semibold text-base'>{t("non-cancelable")}</span>
@@ -438,14 +453,14 @@ const ProductDetail = () => {
 
                                         {product?.return_status == 1 ?
                                             <div className='flex items-center gap-2'>
-                                                <div className='h-[40px] w-[40px] relative object-cover'>
+                                                <div className='h-[32px] w-[32px] relative object-cover'>
                                                     <Image fill src={Returnable} alt='returnableIcon' className='h-full w-full' />
                                                 </div>
                                                 <span className='font-semibold text-base'>{t("returnable")} {product?.return_days} {t("days")}</span>
                                             </div>
                                             :
                                             <div className='flex items-center gap-2'>
-                                                <div className='h-[40px] w-[40px] relative object-cover'>
+                                                <div className='h-[32px] w-[32px] relative object-cover'>
                                                     <Image fill src={NotReturnable} alt='nonReturnableIcon' className='h-full w-full' />
                                                 </div>
                                                 <span className='font-semibold text-base'>{t("non-returnable")}</span>
@@ -459,18 +474,18 @@ const ProductDetail = () => {
                                         <span className='text-sm font-normal'>{t("shareProduct")}:</span>
                                         <div className='flex gap-3'>
                                             <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
-                                                <WhatsappIcon className='h-10 w-10 rounded-full' />
+                                                <WhatsappIcon className='h-8 w-8 rounded-full' />
                                             </WhatsappShareButton>
                                             <TwitterShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
-                                                <TwitterIcon className='h-10 w-10 rounded-full' />
+                                                <TwitterIcon className='h-8 w-8 rounded-full' />
                                             </TwitterShareButton>
                                             <FacebookShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
-                                                <FacebookIcon className='h-10 w-10 rounded-full' />
+                                                <FacebookIcon className='h-8 w-8 rounded-full' />
                                             </FacebookShareButton>
                                             {/* <InstapaperShareButton>
                                             <InstapaperIcon className='h-10 w-10 rounded-full' />
                                         </InstapaperShareButton> */}
-                                            <FaLink className='h-10 w-10 rounded-full bg-gray-400 p-2 hover:cursor-pointer' onClick={handleCopyToClipboard} />
+                                            <FaLink className='h-8 w-8 rounded-full bg-gray-400 p-2 hover:cursor-pointer' onClick={handleCopyToClipboard} />
                                         </div>
                                     </div>
                                 </div>
