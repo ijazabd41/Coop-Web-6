@@ -14,7 +14,7 @@ export const registerUser = async ({ name, email, mobile, type, fcm, country_cod
     if (type == "email") {
         formData.append("password", password);
     }
-    if (type === "phone" || (type === "email" && mobile)) {
+    if (type === "phone" || (type === "email" || "google" && mobile)) {
         formData.append("mobile", mobile);
     }
     if ((type === "email" || type === "google") || (type === "phone" && email)) {

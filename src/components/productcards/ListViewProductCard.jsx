@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import { BiHeart, BiSolidHeart } from 'react-icons/bi'
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
+import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
 
 const ListViewProductCard = ({ product }) => {
 
@@ -25,7 +26,7 @@ const ListViewProductCard = ({ product }) => {
   const [selectedVariant, setSelectedVariant] = useState([])
   const [showVariants, setShowVariants] = useState(false)
   const [showProductDetail, setShowProductDetail] = useState(false)
-
+  const [showSingleSellerModal, setSingleSellerModal] = useState(false)
 
   useEffect(() => {
     const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
@@ -74,6 +75,8 @@ const ListViewProductCard = ({ product }) => {
           dispatch(setCartProducts({ data: updatedProducts }));
           dispatch(setCartSubTotal({ data: response?.sub_total }));
         }
+      } else {
+        setSingleSellerModal(true)
       }
     } catch (error) {
       console.log("error", error)
@@ -320,7 +323,7 @@ const ListViewProductCard = ({ product }) => {
         <div className='col-span-6 md:col-span-2'>
           <div className='relative h-1/2 w-full  object-cover'>
             <ImageWithPlaceholder src={product.image_url} alt={product.name} className='w-full h-full aspect-square rounded-sm' />
-            {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+            {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
               {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(0)}% {t("off")}
             </span> : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
@@ -351,7 +354,7 @@ const ListViewProductCard = ({ product }) => {
               </div>
               : null}
             <div className='flex'>
-              {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>{setting?.currency}{selectedVariant?.discounted_price}</p>
+              {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <>  <p className=' text-base font-bold'>{setting?.currency}{selectedVariant?.discounted_price}</p>
                 <p className=' text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className=' text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
             </div>
           </div>
@@ -377,6 +380,7 @@ const ListViewProductCard = ({ product }) => {
       </div>
       <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
       <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
+      <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectedVariant} />
     </div>
   )
 }

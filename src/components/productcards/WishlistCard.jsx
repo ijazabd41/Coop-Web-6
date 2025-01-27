@@ -9,6 +9,7 @@ import { setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSl
 import { toast } from 'react-toastify'
 import { t } from "@/utils/translation"
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
+import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal'
 
 const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal }) => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
     const cart = useSelector(state => state.Cart)
 
     const [showVariants, setShowVariants] = useState(false)
+    const [showSingleSellerModal, setSingleSellerModal] = useState(false)
 
     const getProductQuantities = (products) => {
         return Object.entries(products?.reduce((quantities, product) => {
@@ -35,7 +37,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
                 setTotal((prevTotal) => Math.max(prevTotal - 1, 0));
             } else {
                 console.log(response.message)
-            } s
+            }
         } catch (error) {
             console.log("Error", error)
         }
@@ -117,6 +119,8 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
                     dispatch(setCartProducts({ data: updatedProducts }));
                     dispatch(setCartSubTotal({ data: response?.sub_total }));
                 }
+            } else {
+                setSingleSellerModal(true)
             }
         } catch (error) {
             console.log("error", error)
@@ -219,6 +223,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
             </div>
             {/* Variants Modal */}
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
+            <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectVariant} />
         </div>
     )
 }

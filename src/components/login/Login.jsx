@@ -54,6 +54,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
+  const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in"
+
   const [userName, setUserName] = useState("");
   const [showNewUser, setShowNewUser] = useState(false);
   const [isOTP, setIsOTP] = useState(false);
@@ -83,8 +85,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE);
+    setCountryCode(process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE);
   }, []);
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
+      setInputType("number")
+      setPhoneNumber(`+919876543210`)
+      setCountryCode(defaultCountry)
+      setPhoneNumberWithoutCountryCode("9876543210")
+      setOtp("123456")
+    }
+  }, [showLogin])
 
   useEffect(() => {
     let interval;
@@ -116,7 +128,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     };
   }, [showLogin]);
 
-
   const recaptchaClear = async () => {
     const recaptchaContainer = document.getElementById("recaptcha-container");
     if (window.recaptchaVerifier) {
@@ -132,7 +143,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       console.log("ReCAPTCHA container cleared");
     }
   };
-
 
   const generateRecaptcha = async () => {
     await recaptchaClear();
@@ -162,6 +172,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const handleShowRegister = () => {
     setShowRegister(true);
   };
+
   const handleInputChange = (value, data) => {
     const emailRegexPattern =
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -679,10 +690,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             <>
                               <PhoneInput
                                 inputStyle={{ direction: language?.type }}
-
                                 country={
-                                  process.env
-                                    .NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE
+                                  "in"
                                 }
                                 value={phoneNumber}
                                 onChange={(phone, data) =>
@@ -788,7 +797,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                         <form onSubmit={handleSendOTP}>
                           <PhoneInput
                             country={
-                              process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE
+                              defaultCountry
                             }
                             value={phoneNumber}
                             onChange={(phone, data) =>

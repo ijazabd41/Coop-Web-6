@@ -11,12 +11,17 @@ import { FiMinus, FiPlus } from 'react-icons/fi'
 import { addGuestCartTotal, addtoGuestCart, setCart, setCartProducts, setCartSubTotal, subGuestCartTotal } from '@/redux/slices/cartSlice'
 import { toast } from 'react-toastify'
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
+import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal"
+import { useState } from "react"
 
 
 const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting)
     const cart = useSelector(state => state.Cart)
+
+    const [selectedVariant, setSelectedVariant] = useState([])
+    const [showSingleSellerModal, setSingleSellerModal] = useState(false)
 
     const handleHideVariantModal = () => {
         setShowVariants(false)
@@ -36,15 +41,12 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
 
         )
     }
+
     const isVariantAvailable = (variant) => {
         return (
-            (variant?.is_unlimited_stock == 0 && variant?.stock <= 0)
+            ((variant?.is_unlimited_stock == 0 && variant?.stock <= 0))
         )
     }
-
-
-
-
 
     const getProductQuantities = (products) => {
         return Object.entries(products?.reduce((quantities, product) => {
@@ -58,6 +60,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
 
     // cart functionality
     const addToCart = async (productId, variant, qty) => {
+        setSelectedVariant(variant)
         try {
             const response = await api.addToCart({ product_id: productId, product_variant_id: variant.id, qty: qty })
             if (response.status === 1) {
@@ -79,6 +82,8 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                     dispatch(setCartProducts({ data: updatedProducts }));
                     dispatch(setCartSubTotal({ data: response?.sub_total }));
                 }
+            } else {
+                setSingleSellerModal(true)
             }
         } catch (error) {
             console.log("error", error)
@@ -163,25 +168,35 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     };
     const handleAddNewProductGuest = (productQuantity, product, variant) => {
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty
-        if (variant?.is_unlimited_stock == 0 && variant?.stock == 0) {
+        if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
+            toast.error(t("max_cart_limit_error"));
+        } else if (variant?.is_unlimited_stock == 0 && variant?.stock == 0) {
             toast.error(t("out_of_stock_message"));
         }
-        else if (Number(productQty || 0) < Number(product.total_allowed_quantity)) {
+        else if (Number(product.is_unlimited_stock)) {
+
             AddToGuestCart(product, product.id, variant, 1, 0, "add");
         } else {
-            toast.error(t("out_of_stock_message"));
+            console.log("variant?.status", variant?.status)
+            if (variant?.status) {
+
+                AddToGuestCart(product, product.id, variant, 1, 0, "add");
+            } else {
+                toast.error('Oops, Limited Stock Available');
+            }
         }
     };
     const handleValidateAddNewProduct = (productQuantity, product, variant) => {
         const productQty = productQuantity?.find(prdct => prdct?.product_id == product?.id)?.qty
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
-            toast.error('Oops, Limited Stock Available');
+            toast.error(t("max_cart_limit_error"));
         } else if (variant?.is_unlimited_stock == 0 && variant?.stock == 0) {
             toast.error(t("out_of_stock_message"));
         }
         else if (Number(product.is_unlimited_stock)) {
             addToCart(product.id, variant, 1);
         } else {
+            console.log("variant?.status", variant?.status)
             if (variant?.status) {
                 addToCart(product.id, variant, 1);
             } else {
@@ -192,12 +207,10 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     };
     const handleIntialAddToCart = (e, variant) => {
         e.preventDefault();
-        e.stopPropagation();
+        const quantity = getProductQuantities(cart?.cartProducts)
         if (cart?.isGuest) {
-            const quantity = getProductQuantities(cart?.cartProducts)
             handleAddNewProductGuest(quantity, product, variant)
         } else {
-            const quantity = getProductQuantities(cart?.cartProducts)
             handleValidateAddNewProduct(quantity, product, variant)
         }
     }
@@ -299,6 +312,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                     </div>
                 </DialogContent>
             </Dialog>
+            <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectedVariant} />
         </>
     )
 }

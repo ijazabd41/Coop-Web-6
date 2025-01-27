@@ -12,6 +12,7 @@ import { MdArrowDropDown } from "react-icons/md";
 import { BiHeart, BiMinus, BiPlus, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
+import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal'
 
 const HorizontalProductCard = ({ product }) => {
 
@@ -25,6 +26,7 @@ const HorizontalProductCard = ({ product }) => {
     const [selectedVariant, setSelectedVariant] = useState([])
     const [showVariants, setShowVariants] = useState(false)
     const [showProductDetail, setShowProductDetail] = useState(false)
+    const [showSingleSellerModal, setSingleSellerModal] = useState(false)
 
     useEffect(() => {
         const inStockVariant = product?.variants?.find((variant) => variant?.is_unlimited_stock === 0 && variant?.stock > 0)
@@ -74,6 +76,8 @@ const HorizontalProductCard = ({ product }) => {
                     dispatch(setCartProducts({ data: updatedProducts }));
                     dispatch(setCartSubTotal({ data: response?.sub_total }));
                 }
+            } else {
+                setSingleSellerModal(true)
             }
         } catch (error) {
             console.log("error", error)
@@ -324,7 +328,7 @@ const HorizontalProductCard = ({ product }) => {
                 <div className='col-span-6'>
                     <div className='aspect-square w-full h-full relative'>
                         <ImageWithPlaceholder className='object-cover aspect-square h-full w-full rounded-sm' alt={product.name} src={product.image_url} />
-                        {selectedVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+                        {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
                         <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
@@ -356,7 +360,7 @@ const HorizontalProductCard = ({ product }) => {
                                 </div>
                                 : null}
                             <div className='flex'>
-                                {selectedVariant?.discounted_price !== 0 ? <>  <p className=' text-base font-bold'>{setting?.currency}{product?.variants?.[0]?.discounted_price}</p>
+                                {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <>  <p className=' text-base font-bold'>{setting?.currency}{product?.variants?.[0]?.discounted_price}</p>
                                     <p className='text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className='text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
                             </div>
                         </div>
@@ -376,6 +380,7 @@ const HorizontalProductCard = ({ product }) => {
             </Link>
             <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
+            <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectedVariant} />
         </div>
     )
 }

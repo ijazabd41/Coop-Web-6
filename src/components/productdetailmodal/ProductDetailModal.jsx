@@ -28,6 +28,7 @@ import { BiHeart, BiSolidHeart } from 'react-icons/bi'
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import Loader from '../loader/Loader'
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
+import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal'
 
 
 
@@ -48,6 +49,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const [productImages, setProductImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState("");
     const [loading, setLoading] = useState(false)
+    const [showSingleSellerModal, setSingleSellerModal] = useState(false)
 
     const calculateDiscount = (discountPrice, actualPrice) => {
         const difference = actualPrice - discountPrice;
@@ -179,6 +181,9 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                         dispatch(setCart({ data: response }))
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         toast.success(t("product_added_successfully"))
+                    } else {
+                        setSingleSellerModal(true)
+
                     }
                 }
             } catch (error) {
@@ -306,7 +311,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                                     <div className='relative aspect-square h-auto w-full'>
                                         <ImageWithPlaceholder src={selectedImage} alt={productDetails.name} className='h-full w-full aspect-square rounded-sm' />
-                                        {selectVariant?.discounted_price !== 0 ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
+                                        {selectVariant?.discounted_price !== 0 && selectVariant?.discounted_price !== selectVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                                             {calculateDiscount(selectVariant?.discounted_price, selectVariant?.price).toFixed(2)}% {t("off")}
                                         </span> : null}
                                     </div>
@@ -344,7 +349,11 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                     </div>
                                 </div>
                                 <div className=' col-span-12 md:col-span-7 flex flex-col gap-6'>
-                                    <div className='flex items-center gap-1'><h2 className='font-bold text-3xl primaryColor'>{currency}{selectVariant?.price}</h2><h3 className='line-through font-bold text-base text-[#141A1F]'>{currency}{selectVariant?.discounted_price}</h3></div>
+                                    <div className='flex items-center gap-1'>
+                                        {selectVariant?.discounted_price !== 0 && selectVariant?.discounted_price !== selectVariant?.price ? <>
+                                            <h2 className='font-bold text-3xl primaryColor'>{currency}{selectVariant?.discounted_price}</h2><h3 className='line-through font-bold text-base '>{currency}{selectVariant?.price}</h3>
+                                        </> : <> <h2 className='font-bold text-3xl primaryColor'>{currency}{selectVariant?.price}</h2></>}
+                                    </div>
                                     <div className='flex flex-col'>
                                         <p className='font-normal text-base'>{t("chooseVariant")}</p>
                                         <div className=' flex-col grid grid-cols-12'>
@@ -355,7 +364,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                     return (
                                                         <div className={`flex flex-col col-span-6 md:col-span-4 lg:col-span-3 mr-2 my-1 text-center rounded-sm   justify-center items-center cursor-pointer ${selectVariant.id == variant.id ? "primaryBorder" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
                                                             <p className='font-bold text-sm'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
-                                                            <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 ? discountPrice : price}</p>{discountPrice != 0 ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
+                                                            <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 && discountPrice !== price ? discountPrice : price}</p>{discountPrice != 0 && discountPrice !== price ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
                                                     )
                                                 })
@@ -489,6 +498,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                     </div>
                 </DialogContent>
+                <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectVariant} />
             </Dialog>
         </>
     )
