@@ -391,6 +391,7 @@
     "return_rejected": "Return Rejected",
     "continue_with_google": "Continue with google",
     "continue_with_email": "Continue with email",
+    "continue_with_phone": "Continue with phone",
     "cashfree": "Cashfree",
     "something_went_wrong": "Something went wrong",
     "custom_send_sms_error_message": "It seems there is some error in sms gateway.Please try again later!",

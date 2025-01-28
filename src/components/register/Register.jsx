@@ -136,6 +136,18 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
         }
     }
 
+    const handleCloseRegister = () => {
+        setShowRegister(false);
+        setPassword("")
+        setName("")
+        setConfirmPassword("")
+        setPhoneNumber("")
+        setPhoneNumberWithoutCountryCode("")
+        setError("")
+        setErrorType("")
+
+    }
+
     return (
         <Dialog open={showRegister} >
             <DialogContent className="">
@@ -194,7 +206,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
                         <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button>
-                        <span className='text-base font-medium'>{t("alreadyHaveAnAccount")} {t("signIn")}</span>
+                        <span className=' text-base font-medium  ml-[2px] ' onClick={handleCloseRegister}>{t("alreadyHaveAnAccount")} <span className='primaryColor underline cursor-pointer'>{t("signIn")}</span></span>
                     </div>
                     <div className="flex items-center justify-between my-4 gap-2">
                         <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
