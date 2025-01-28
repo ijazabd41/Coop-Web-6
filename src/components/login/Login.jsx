@@ -9,8 +9,6 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg";
-import EmailLogo from "@/assets/Email.svg";
-import PhoneLogo from "@/assets/Phone.svg";
 import OtpInput from "react-otp-input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -67,7 +65,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const [countryCode, setCountryCode] = useState(null);
   const [inputValue, setInputValue] = useState(null);
   const [inputType, setInputType] = useState("");
-  console.log(inputType)
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState("");
   const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] =
@@ -86,14 +83,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       inputRef.current.focus();
     }
   }, [inputType]);
-
-  useEffect(() => {
-    if (setting?.phone_login == 1) {
-      setInputType("phone")
-    } else if (setting?.email_login == 1) {
-      setInputType("email");
-    }
-  }, [showLogin])
 
   useEffect(() => {
     setCountryCode(process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE);
@@ -197,7 +186,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       setCountryCode("");
       dispatch(setAuthType({ data: "email" }));
     } else if (containsOnlyDigits) {
-      // setInputType("number");
+      setInputType("number");
       dispatch(setAuthType({ data: "phone" }));
       const dialCode = data?.dialCode || "";
       const phoneWithoutDialCode = value.startsWith(dialCode)
@@ -207,6 +196,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
       setCountryCode("+" + dialCode);
       setOtp("");
+    } else {
+      setInputType("");
     }
   };
 
@@ -574,10 +565,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
   };
 
-  const changeLoginType = (type) => {
-    setInputType(type);
-  }
-
   return (
     <>
       <Dialog open={showLogin}>
@@ -685,11 +672,126 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   {" "}
                   <div
                     className="my-4 flex flex-col gap-2 "
-                  // onSubmit={
-                  //   inputType == "email" ? handleEmailLogin : handleSendOTP
-                  // }
+                    onSubmit={
+                      inputType == "email" ? handleEmailLogin : handleSendOTP
+                    }
                   >
-                    {setting?.phone_login == 1 && inputType === "phone" ? (
+                    {setting?.email_login == 1 && setting?.phone_login == 1 ? (
+                      <form>
+                        {inputType == "number" ? (
+                          <>
+                            {error ? (
+                              <p className="text-center text-xs text-red-">
+                                {error}
+                              </p>
+                            ) : (
+                              <></>
+                            )}
+                            <>
+                              <PhoneInput
+                                inputStyle={{ direction: language?.type }}
+                                country={
+                                  "in"
+                                }
+                                value={phoneNumber}
+                                onChange={(phone, data) =>
+                                  handleInputChange(phone, data)
+                                }
+                                onCountryChange={(code) => setCountryCode(code)}
+                                inputProps={{
+                                  name: "phone",
+                                  required: true,
+                                  autoFocus: true,
+                                }}
+                              />
+                            </>
+                          </>
+                        ) : inputType == "email" ? (
+                          <>
+                            {error ? (
+                              <p className="text-center text-xs text-red-500 my-2 font-semibold">
+                                {error}
+                              </p>
+                            ) : (
+                              <></>
+                            )}
+                            <div className="relative">
+                              <input
+                                value={inputValue}
+                                onChange={(e) =>
+                                  handleInputChange(e.target.value, {})
+                                }
+                                className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
+                                placeholder={t("loginBoxMessage")}
+                                ref={inputRef}
+                              />
+
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4"
+                                placeholder={t("passwordMessage")}
+                              />
+                              <div
+                                className="absolute right-[10px] top-[72px]"
+                                onClick={handlePasswordShow}
+                              >
+                                {showPassword ? (
+                                  <FaRegEyeSlash />
+                                ) : (
+                                  <FaRegEye />
+                                )}
+                              </div>
+                              <div className="text-base font-medium leading-6 mt-2 text-right">
+                                <p
+                                  className="cursor-pointer"
+                                  onClick={handleShowForgotPassword}
+                                >
+                                  {t("forget_password_?")}
+                                </p>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {" "}
+                            <label
+                              htmlFor="email"
+                              className="text-base font-bold"
+                            >
+                              {t("loginBoxMessage")}
+                            </label>
+                            <input
+                              type="text"
+                              value={inputValue}
+                              onChange={(e) =>
+                                handleInputChange(e.target.value, {})
+                              }
+                              placeholder={t("loginBoxMessage")}
+                              className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm"
+                            />
+                          </>
+                        )}
+
+                        <button
+                          disabled={loading}
+                          type="submit"
+                          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
+                        >
+                          {loading ? t("loading") : t("continue")}
+                        </button>
+                        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">
+                          {t("registerMsg")}
+                          <p
+                            onClick={handleShowRegister}
+                            className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
+                          >
+                            {t("registerNow")}
+                          </p>
+                        </h2>
+                      </form>
+                    ) : setting?.phone_login == 1 ? (
                       <>
                         {error ? <p>{error}</p> : <></>}
                         <form onSubmit={handleSendOTP}>
@@ -709,7 +811,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             }}
                           />
                           <button
-                            disabled={loading || phoneNumberWithoutCountryCode == ""}
+                            disabled={loading}
                             type="submit"
                             className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
                           >
@@ -717,9 +819,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           </button>
                         </form>
                       </>
-                    ) : setting?.email_login == 1 && inputType === "email" ? (
+                    ) : setting?.email_login == 1 ? (
                       <>
-                        {error ? <p className="text-center text-red-600">{error}</p> : <></>}
+                        {error ? <p>{error}</p> : <></>}
 
                         <form className="relative" onSubmit={handleEmailLogin}>
                           <input
@@ -806,41 +908,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       </div>
                     </>
                   )}
-                  {setting?.email_login == 1 && inputType === "phone" && (
-                    <div className="my-4">
-                      <button
-                        onClick={() => changeLoginType("email")}
-                        className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
-                      >
-                        <Image
-                          height={30}
-                          width={30}
-                          src={EmailLogo}
-                          alt="Email logo"
-                          className="h-[30px] w-[30px] object-cover "
-                        />{" "}
-                        {t("continue_with_email")}
-                      </button>
-                    </div>
-                  )}
-                  {setting?.phone_login == 1 && inputType === "email" && (
-                    <div className="my-4">
-                      <button
-                        onClick={() => changeLoginType("phone")}
-                        className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
-                      >
-                        <Image
-                          height={30}
-                          width={30}
-                          src={PhoneLogo}
-                          alt="Phone logo"
-                          className="h-[30px] w-[30px] object-cover "
-                        />{" "}
-                        {t("continue_with_phone")}
-                      </button>
-                    </div>
-                  )
-                  }
                   <div className="py-6 flex items-center justify-center">
                     <p className=" text-center ">
                       {t("agreement_updated_message")} {setting?.web_setting?.site_title} {t("terms_of_service")} {t("and")} {t("privacy_policy")}

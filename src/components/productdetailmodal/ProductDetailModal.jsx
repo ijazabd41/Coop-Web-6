@@ -300,6 +300,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                         <div className='text-xs'>
                                             {productDetails?.fssai_lic_img && <Image width={0} height={0} src={productDetails?.fssai_lic_img} className="w-9 h-9 object-contain" alt="fssaiImage" />}
                                         </div>
+                                        {console.log(product)}
                                         <div className="text-xs">{t("fssai_license_no")} {productDetails?.fssai_lic_no}</div>
                                     </div>}
 
