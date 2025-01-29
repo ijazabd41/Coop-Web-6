@@ -5,21 +5,22 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import { isRtl } from '@/lib/utils';
 
 
 
 
 const HomePageSlider = ({ slider }) => {
-
     const language = useSelector(state => state.Language.selectedLanguage)
-
+    const rtl = isRtl()
     return (
         <div className="w-full mx-auto h-full backgroundColor mb-6">
             <Swiper
+                key={rtl}
                 dir={language?.type}
                 modules={[Pagination, Autoplay]}
-                slidesPerView={1.2} // Show 1.5 slides at a time
-                centeredSlides={true} // Center the active slide
+                slidesPerView={1.2}
+                centeredSlides={true}
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 2000, disableOnInteraction: false }}
                 className="homePageSwiper relative"

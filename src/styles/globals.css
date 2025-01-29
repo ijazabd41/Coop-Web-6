@@ -45,6 +45,8 @@
     background-color: var(--font-color);
   }
 
+
+
   .headerBackgroundColor {
     background-color: var(--bs-body-bg);
   }
@@ -101,6 +103,10 @@
 
   .cardBorder {
     border: 1px solid var(--border-color);
+  }
+
+  .fontColorBorder {
+    border: 1px solid var(--font-color);
   }
 
   .textColor {

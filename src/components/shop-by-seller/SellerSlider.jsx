@@ -11,12 +11,14 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
 import { useSelector } from 'react-redux';
+import { isRtl } from '@/lib/utils';
+
 
 const SellerSlider = ({ sellers }) => {
-
+    const rtl = isRtl();
     const language = useSelector(state => state.Language.selectedLanguage)
 
-    const router  = useRouter()
+    const router = useRouter()
     const dispatch = useDispatch()
 
     const handleSellerClick = (seller) => {
@@ -39,6 +41,7 @@ const SellerSlider = ({ sellers }) => {
                     </div>
                     <div className=''>
                         <Swiper
+                            key={rtl}
                             spaceBetween={20}
                             modules={[Navigation]}
                             navigation={{
@@ -55,7 +58,7 @@ const SellerSlider = ({ sellers }) => {
                             }}
                         >
                             {sellers?.sellers?.map((seller, index) => (
-                                <SwiperSlide key={seller.id} onClick={()=> handleSellerClick(seller)} >
+                                <SwiperSlide key={seller.id} onClick={() => handleSellerClick(seller)} >
                                     <Seller seller={seller} />
                                 </SwiperSlide>
                             ))}

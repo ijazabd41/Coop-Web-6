@@ -29,10 +29,11 @@ import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice'
 import Loader from '../loader/Loader'
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal'
-
+import { isRtl } from '@/lib/utils'
 
 
 const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) => {
+    const rtl = isRtl()
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting)
     const city = useSelector(state => state.City.city)
@@ -181,9 +182,11 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                         dispatch(setCart({ data: response }))
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         toast.success(t("product_added_successfully"))
-                    } else {
+                    } else if (response?.data?.one_seller_error_code == 1) {
                         setSingleSellerModal(true)
-
+                    }
+                    else {
+                        toast.error(response.message)
                     }
                 }
             } catch (error) {
@@ -316,6 +319,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                     </div>
                                     <div className='mt-[10px]'>
                                         <Swiper
+                                            key={rtl}
                                             spaceBetween={10}
                                             modules={[Navigation]}
                                             className="brand-swiper"

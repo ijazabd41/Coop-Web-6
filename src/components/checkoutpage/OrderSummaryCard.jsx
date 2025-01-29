@@ -64,7 +64,7 @@ const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder }) => {
                 <span className="text-lg font-bold ">{setting?.currency} {checkout?.checkoutTotal?.toFixed(2)}</span>
             </div>
 
-            <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  " disabled={step !== 3} onClick={handlePlaceOrder}>
+            <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor" disabled={step !== 3} onClick={handlePlaceOrder}>
                 {t("place_order")}
             </button>
 

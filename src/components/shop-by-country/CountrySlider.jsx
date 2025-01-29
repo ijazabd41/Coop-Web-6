@@ -10,9 +10,11 @@ import { t } from '@/utils/translation';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import { isRtl } from '@/lib/utils';
 
 const CountrySlider = ({ countries }) => {
     const router = useRouter()
+    const rtl = isRtl();
     const dispatch = useDispatch()
     const handleCountryClick = (country) => {
         dispatch(setFilterByCountry({ data: country?.id }));
@@ -37,6 +39,7 @@ const CountrySlider = ({ countries }) => {
                     </div>
                     <div className=''>
                         <Swiper
+                            key={rtl}
                             spaceBetween={20}
                             modules={[Navigation]}
                             className="brand-swiper"
@@ -53,7 +56,7 @@ const CountrySlider = ({ countries }) => {
                             }}
                         >
                             {countries?.countries?.map((country, index) => (
-                                <SwiperSlide key={country.id} onClick={()=> handleCountryClick(country)}>
+                                <SwiperSlide key={country.id} onClick={() => handleCountryClick(country)}>
                                     <Country country={country} />
                                 </SwiperSlide>
                             ))}

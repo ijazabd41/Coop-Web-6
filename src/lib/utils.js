@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { store } from "@/redux/store"
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -24,4 +25,10 @@ export function formatCustomDate(dateString) {
   const ampm = isPM ? 'PM' : 'AM';
 
   return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
+}
+
+export const isRtl = () => {
+  const state = store.getState();
+  const isLangRtl = state.Language.selectedLanguage.type == "RTL" ? true : false
+  return isLangRtl
 }

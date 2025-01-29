@@ -12,10 +12,12 @@ import { useDispatch } from 'react-redux';
 import { setFilterSection } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/router';
 import { t } from '@/utils/translation';
+import { isRtl } from '@/lib/utils';
 
 const HorizontalProductSwiper = ({ section, index }) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const rtl = isRtl()
     const shop = useSelector(state => state.Shop.shop);
     const theme = useSelector(state => state.Theme.theme)
     const language = useSelector(state => state.Language.selectedLanguage)
@@ -51,13 +53,14 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                         <button onClick={handleViewAll} >{t("see_all")}</button>
                                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`} >
-                                            <button className={`textColor cardBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
-                                            <button className={`textColor cardBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
+                                            <button className={`textColor fontColorBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
+                                            <button className={`textColor fontColorBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
                                         </div>
                                     </div>
                                 </div>
                                 <div className='mt-[10px]'>
                                     <Swiper
+                                        key={rtl}
                                         spaceBetween={20}
                                         modules={[Navigation]}
                                         className="brand-swiper"

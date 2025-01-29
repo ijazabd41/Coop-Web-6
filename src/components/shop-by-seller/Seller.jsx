@@ -1,10 +1,12 @@
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
+import { isRtl } from '@/lib/utils';
 
 const Seller = ({ seller }) => {
+    const rtl = isRtl();
     return (
-        <div className='group relative flex items-center bg-white p-4 rounded-md flex-col md:flex-row overflow-hidden hover:text-white backgroundColor hover:cursor-pointer '>
+        <div className={`group relative flex items-center bg-white p-4 rounded-md flex-col md:flex-row overflow-hidden hover:text-white backgroundColor hover:cursor-pointer `}>
             {/* Hover overlay with transition */}
-            <div className='absolute inset-0  bg-[#55AE7B] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out' />
+            <div className={`absolute inset-0  bg-[#55AE7B] ${rtl ? 'translate-x-full' : '-translate-x-full'} group-hover:translate-x-0 transition-transform duration-500 ease-in-out`} />
 
             <div className='relative h-[80px] w-[80px]'>
                 <ImageWithPlaceholder

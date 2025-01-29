@@ -68,6 +68,7 @@ const Checkout = () => {
     const [checkOutError, setCheckOutError] = useState(false)
     // step 2 Variables
     // const [selectedDate, setSelectedDate] = useState(null)
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false)
     const [timeSlotsData, setTimeSlotsData] = useState(null)
     const [timeSlots, setTimeSlots] = useState([])
 
@@ -133,6 +134,7 @@ const Checkout = () => {
             toast.info("Please select a valid date")
         }
         dispatch(setSelectedDate({ data: date }))
+        setIsPopoverOpen(false)
     }
 
     const formatDate = (date) => {
@@ -530,18 +532,21 @@ const Checkout = () => {
                                                 <div className='grid grid-cols-12 items-center gap-4'>
                                                     <div className='col-span-12  md:col-span-6 flex flex-col gap-1 '>
                                                         <span className='text-base font-bold'>{t("preferred_delivery_day")}</span>
-                                                        <Popover>
-                                                            <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between '>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
-                                                            <PopoverContent className="w-full p-0">
+                                                        <Popover open={isPopoverOpen} >
+                                                            <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between ' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
+                                                            <PopoverContent className="w-full p-0" >
+                                                                {console.log("allow time", timeSlotsData)}
                                                                 <Calendar
                                                                     mode="single"
                                                                     selected={checkout?.selectedDate}
                                                                     onSelect={handleSelectedDate}
                                                                     className="rounded-md w-full"
                                                                     fromDate={new Date()}
-                                                                    toDate={timeSlots?.time_slots_allowed_days
-                                                                        ? new Date(new Date().setDate(new Date().getDate() + (Number(timeSlots.time_slots_allowed_days) - 1)))
-                                                                        : null}
+                                                                    toDate={(() => {
+                                                                        let date = new Date();
+                                                                        date.setDate(date.getDate() + 15); // Add 15 days to today
+                                                                        return date;
+                                                                    })()}
                                                                 />
                                                             </PopoverContent>
                                                         </Popover>

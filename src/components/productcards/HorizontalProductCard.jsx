@@ -76,8 +76,11 @@ const HorizontalProductCard = ({ product }) => {
                     dispatch(setCartProducts({ data: updatedProducts }));
                     dispatch(setCartSubTotal({ data: response?.sub_total }));
                 }
-            } else {
+            } else if (response?.data?.one_seller_error_code == 1) {
                 setSingleSellerModal(true)
+            }
+            else {
+                toast.error(response.message)
             }
         } catch (error) {
             console.log("error", error)

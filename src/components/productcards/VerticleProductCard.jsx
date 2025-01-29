@@ -36,13 +36,11 @@ const VerticleProductCard = ({ product }) => {
             setSelectedVariant(inStockVariant)
         }
     }, [])
-
     const calculateDiscount = (discountPrice, actualPrice) => {
         const difference = actualPrice - discountPrice;
         const actualDiscountPrice = (difference / actualPrice)
         return actualDiscountPrice * 100;
     }
-
     const getProductQuantities = (products) => {
         return Object.entries(products?.reduce((quantities, product) => {
             const existingQty = quantities[product.product_id] || 0;
@@ -52,7 +50,6 @@ const VerticleProductCard = ({ product }) => {
             qty
         }));
     }
-
     // cart functionality
     const addToCart = async (productId, productVId, qty) => {
         try {
@@ -76,14 +73,16 @@ const VerticleProductCard = ({ product }) => {
                     dispatch(setCartProducts({ data: updatedProducts }));
                     dispatch(setCartSubTotal({ data: response?.sub_total }));
                 }
-            } else {
+            } else if (response?.data?.one_seller_error_code == 1) {
                 setSingleSellerModal(true)
+            }
+            else {
+                toast.error(response.message)
             }
         } catch (error) {
             console.log("error", error)
         }
     }
-
     const removeFromCart = async (productId, variantId) => {
         try {
             const response = await api.removeFromCart({ product_id: productId, product_variant_id: variantId })

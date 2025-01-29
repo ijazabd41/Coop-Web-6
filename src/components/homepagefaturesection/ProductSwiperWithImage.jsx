@@ -13,9 +13,11 @@ import { t } from '@/utils/translation'
 import { useDispatch } from 'react-redux'
 import { setFilterSection } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/navigation'
+import { isRtl } from '@/lib/utils'
 
 const ProductSwiperWithImage = ({ section }) => {
     const router = useRouter();
+    const rtl = isRtl()
     const dispatch = useDispatch();
     const language = useSelector(state => state.Language.selectedLanguage)
     const theme = useSelector(state => state.Theme.theme)
@@ -48,8 +50,8 @@ const ProductSwiperWithImage = ({ section }) => {
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll}>{t("see_all")}</button>
                                 <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                    <button className={`cardBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
-                                    <button className={`cardBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
+                                    <button className={`fontColorBorder rounded-full p-2 prev-btn-${section?.id}`}><IoMdArrowBack className='textColor' size={20} /></button>
+                                    <button className={`fontColorBorder rounded-full p-2 next-btn-${section?.id}`}><IoMdArrowForward className='textColor' size={20} /></button>
                                 </div>
                             </div>
                         </div>
@@ -64,6 +66,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             {/* Swiper Section */}
                             <div className='md:col-span-9'>
                                 <Swiper
+                                    key={rtl}
                                     spaceBetween={20}
                                     modules={[Navigation]}
                                     navigation={

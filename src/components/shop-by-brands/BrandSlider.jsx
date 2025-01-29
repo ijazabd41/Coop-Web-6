@@ -10,7 +10,9 @@ import { t } from "@/utils/translation"
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterBrands } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/router';
+import { isRtl } from '@/lib/utils';
 const BrandSlider = ({ brands }) => {
+    const rtl = isRtl();
     const dispatch = useDispatch()
     const router = useRouter()
     const language = useSelector(state => state.Language.selectedLanguage)
@@ -34,6 +36,7 @@ const BrandSlider = ({ brands }) => {
                 </div>
                 <div >
                     <Swiper
+                        key={rtl}
                         slidesPerView={1.5}
                         spaceBetween={20}
                         modules={[Navigation]}

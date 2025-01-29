@@ -11,9 +11,10 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
 import { setSelectedCategories } from '@/redux/slices/productFilterSlice';
+import { isRtl } from '@/lib/utils';
 
 const CategoriesContainer = ({ categories }) => {
-
+    const rtl = isRtl();
     const dispatch = useDispatch();
     const router = useRouter();
     const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
@@ -59,7 +60,7 @@ const CategoriesContainer = ({ categories }) => {
 
                 <div className='flex'>
                     <Swiper
-
+                        key={rtl}
                         modules={[Navigation]}
                         spaceBetween={20}
                         slidesPerView={1.5}

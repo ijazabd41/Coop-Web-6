@@ -7,9 +7,10 @@ import { t } from '@/utils/translation';
 import VerticleProductCard from '../productcards/VerticleProductCard';
 import * as api from "@/api/apiRoutes"
 import { useSelector } from 'react-redux';
+import { isRtl } from '@/lib/utils';
 
 const SimilarProducts = ({ slug, tag_names }) => {
-
+    const rtl = isRtl()
     const city = useSelector(state => state.City.city)
     const language = useSelector(state => state.Language.selectedLanguage)
 
@@ -51,6 +52,7 @@ const SimilarProducts = ({ slug, tag_names }) => {
                         </div>
                         <div>
                             <Swiper
+                                key={rtl}
                                 spaceBetween={20}
                                 modules={[Navigation]}
                                 className="brand-swiper"
