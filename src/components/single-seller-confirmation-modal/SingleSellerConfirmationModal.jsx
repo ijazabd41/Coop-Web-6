@@ -14,11 +14,7 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
         setSingleSellerModal(false)
     }
 
-    // const handleDeleteCart = async () => {
-    //     else {
-    //         console.log("err", response.message)
-    //     }
-    // }
+
 
     const handleAddToCart = async () => {
         try {
@@ -30,7 +26,6 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
                 dispatch(setCartProducts({ data: [] }));
                 const response = await api.addToCart({ product_id: product?.id, product_variant_id: selectedVariant?.id, qty: 1 })
                 if (response.status === 1) {
-                    console.log("cart products", cart?.cartProducts)
                     if (cart?.cartProducts?.find((prdct) => ((prdct?.product_id == product?.id) && (prdct?.product_variant_id == selectedVariant?.id)))?.qty == undefined) {
                         dispatch(setCart({ data: response }));
                         const cartProduct = {

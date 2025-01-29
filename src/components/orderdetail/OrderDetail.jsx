@@ -103,7 +103,7 @@ const OrderDetail = () => {
                         </div>
 
                         {/* Right Column */}
-                        <div className="col-span-12 md:col-span-4 flex flex-col gap-6">
+                        <div className="col-span-12 md:col-span-4 flex flex-col gap-6 mt-4 md:mt-0">
                             {orderDetail?.status?.length > 0 && (
                                 <div className="flex flex-col gap-3">
                                     <h1 className="font-bold text-2xl">{t("track_order")}</h1>

@@ -539,6 +539,9 @@ const Checkout = () => {
                                                                     onSelect={handleSelectedDate}
                                                                     className="rounded-md w-full"
                                                                     fromDate={new Date()}
+                                                                    toDate={timeSlots?.time_slots_allowed_days
+                                                                        ? new Date(new Date().setDate(new Date().getDate() + (Number(timeSlots.time_slots_allowed_days) - 1)))
+                                                                        : null}
                                                                 />
                                                             </PopoverContent>
                                                         </Popover>

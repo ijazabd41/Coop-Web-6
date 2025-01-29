@@ -94,7 +94,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
         // console.count("useEffect Demo Mode");
         setInputType("number");
-        setPhoneNumber(`+919876543210`);
+        dispatch(setAuthType({ data: "number" }))
+      setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
         setOtp("123456");
