@@ -9,6 +9,8 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg";
+import EmailLogo from "@/assets/Email.svg";
+import PhoneLogo from "@/assets/Phone.svg";
 import OtpInput from "react-otp-input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -47,14 +49,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
-  const language = useSelector(state => state.Language.selectedLanguage)
+  const language = useSelector(state => state.Language.selectedLanguage);
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
 
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in"
+  const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in";
 
   const [userName, setUserName] = useState("");
   const [showNewUser, setShowNewUser] = useState(false);
@@ -87,16 +89,24 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   useEffect(() => {
     setCountryCode(process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE);
   }, []);
-
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
-      setInputType("number")
-      setPhoneNumber(`+919876543210`)
-      setCountryCode(defaultCountry)
-      setPhoneNumberWithoutCountryCode("9876543210")
-      setOtp("123456")
+    if (showLogin === true && showRegister === false) {
+      if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
+        // console.count("useEffect Demo Mode");
+        setInputType("number");
+        setPhoneNumber(`+919876543210`);
+        setCountryCode(defaultCountry);
+        setPhoneNumberWithoutCountryCode("9876543210");
+        setOtp("123456");
+      }
     }
-  }, [showLogin])
+    if (setting?.phone_login == 1) {
+      setInputType("number");
+    }
+    else if (setting?.email_login == 1) {
+      setInputType("email");
+    }
+  }, [showLogin]);
 
   useEffect(() => {
     let interval;
@@ -199,6 +209,28 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     } else {
       setInputType("");
     }
+  };
+
+  const handleEmailChange = (value, data) => {
+    setInputType("email");
+    setEmail(value);
+    setOtp("");
+    setPhoneNumber("");
+    setCountryCode("");
+  };
+
+  const handlePhoneNoChange = (value, data) => {
+    setInputValue(value);
+    setInputType("number");
+    dispatch(setAuthType({ data: "phone" }));
+    const dialCode = data?.dialCode || "";
+    const phoneWithoutDialCode = value.startsWith(dialCode)
+      ? value.slice(dialCode.length)
+      : value;
+    setPhoneNumber(`+${value}`);
+    setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
+    setCountryCode("+" + dialCode);
+    setOtp("");
   };
 
   const handleSendOTP = async (e) => {
@@ -398,7 +430,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setShowLogin(false);
         setShowRegister(false);
       } else if (res.message == "user_exist_with_email") {
-        toast.error(t("user_exist_with_email"))
+        toast.error(t("user_exist_with_email"));
       }
       else {
         setUserAuthType(type);
@@ -443,7 +475,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setInputType("");
     setLoading(false);
     setMobileActiveKey(1);
-
+    setEmail("");
+    setPassword("");
   };
 
   const handleGoogleLogin = async () => {
@@ -498,6 +531,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         if (res.message == "email_not_verified") {
           setIsOTP(true);
           toast.error(t("email_not_verified"));
+          setOtp("");
         } else if (res.message == "user_does_not_exist") {
           setError(t("user_does_not_exist"));
           // setInputValue("")
@@ -593,7 +627,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     <span className="flex flex-col text-start item-start ">
                       {t("otp_send_message")}
                       <p className="font-weight-bold py-2">
-                        {authType == "email" ? (
+                        {inputType == "email" ? (
                           <div className="flex gap-2">{t('email')}: {email}</div>
                         ) : (
                           <div className="flex gap-2">{t("phone")}: {phoneNumber}</div>
@@ -619,7 +653,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
               {isOTP ? (
                 <form
                   onSubmit={
-                    authType == "email"
+                    inputType == "email"
                       ? handleEmailVerify
                       : handleOtpVerification
                   }
@@ -652,7 +686,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {loading == true ? t("loading") : t("login")}
                     </button>
                   </div>
-                  {authType == "phone" && <div className="mt-2 text-center">
+                  {inputType == "number" && <div className="mt-2 text-center">
                     <div className="text-base font-medium flex gap-1 justify-center my-2">
                       <button onClick={handleSendOTP} disabled={otpDisabled}>
                         {timer === 0 ? (
@@ -695,7 +729,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                                 }
                                 value={phoneNumber}
                                 onChange={(phone, data) =>
-                                  handleInputChange(phone, data)
+                                  handlePhoneNoChange(phone, data)
                                 }
                                 onCountryChange={(code) => setCountryCode(code)}
                                 inputProps={{
@@ -717,9 +751,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             )}
                             <div className="relative">
                               <input
-                                value={inputValue}
+                                value={email}
                                 onChange={(e) =>
-                                  handleInputChange(e.target.value, {})
+                                  handleEmailChange(e.target.value, {})
                                 }
                                 className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
                                 placeholder={t("loginBoxMessage")}
@@ -766,7 +800,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                               type="text"
                               value={inputValue}
                               onChange={(e) =>
-                                handleInputChange(e.target.value, {})
+                                handleEmailChange(e.target.value, {})
                               }
                               placeholder={t("loginBoxMessage")}
                               className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm"
@@ -801,7 +835,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             }
                             value={phoneNumber}
                             onChange={(phone, data) =>
-                              handleInputChange(phone, data)
+                              handlePhoneNoChange(phone, data)
                             }
                             onCountryChange={(code) => setCountryCode(code)}
                             inputProps={{
@@ -825,9 +859,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
                         <form className="relative" onSubmit={handleEmailLogin}>
                           <input
-                            value={inputValue}
+                            value={email}
                             onChange={(e) =>
-                              handleInputChange(e.target.value, {})
+                              handleEmailChange(e.target.value, {})
                             }
                             className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
                             placeholder={t("loginBoxMessage")}
@@ -908,6 +942,50 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       </div>
                     </>
                   )}
+                  {setting?.email_login == 1 && inputType == "number" && (
+                    <>
+                      <div className="my-4">
+                        <button
+                          onClick={() => setInputType("email")}
+                          // onClick={handleGoogleLogin}
+                          className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
+                        >
+                          <Image
+                            src={EmailLogo}
+                            alt="Email logo"
+                            height={30}
+                            width={30}
+                            className="h-[30px] w-[30px] object-cover "
+                          />{" "}
+                          {t("continue_with_email")}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  {setting?.phone_login == 1 && inputType == "email" && (
+                    <>
+                      <div className="my-4">
+                        <button
+                          onClick={() => {
+                            setInputType("number");
+                            setEmail("");
+                            setPassword("");
+                          }}
+                          // onClick={handleGoogleLogin}
+                          className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
+                        >
+                          <Image
+                            src={PhoneLogo}
+                            alt="Phone logo"
+                            height={30}
+                            width={30}
+                            className="h-[30px] w-[30px] object-cover "
+                          />{" "}
+                          {t("continue_with_phone")}
+                        </button>
+                      </div>
+                    </>
+                  )}
                   <div className="py-6 flex items-center justify-center">
                     <p className=" text-center ">
                       {t("agreement_updated_message")} {setting?.web_setting?.site_title} {t("terms_of_service")} {t("and")} {t("privacy_policy")}
@@ -938,6 +1016,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setIsOTP={setIsOTP}
         email={email}
         setEmail={setEmail}
+        setOtp={setOtp}
       />
       <ForgetPasswordModal
         showForgetPassword={showForgetPassword}

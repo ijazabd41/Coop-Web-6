@@ -343,7 +343,6 @@ const ProductDetail = () => {
                                                     <div className='text-xs'>
                                                         {product?.fssai_lic_img && <Image width={0} height={0} src={product?.fssai_lic_img} className="w-9 h-9 object-contain" alt="fssaiImage" />}
                                                     </div>
-                                                    {console.log(product)}
                                                     <div className='text-xs'>{t("fssai_license_no")} {product?.fssai_lic_no}</div>
 
                                                 </div>}

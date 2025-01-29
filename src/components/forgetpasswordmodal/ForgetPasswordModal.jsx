@@ -150,7 +150,7 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword }) => {
                                     </div>
                                 </div>
                                 <button className='primaryBackColor rounded-sm text-white font-medium text-base py-2' onClick={handleResetPassword} disabled={loading}>
-                                    {loading ? t("reset_password") : t("loading")}
+                                    {loading ? t("loading") : t("reset_password")}
                                 </button>
                             </div>
                         </div>

@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthType } from '@/redux/slices/userSlice';
 
 
-const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) => {
+const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail,setOtp }) => {
 
     const dispatch = useDispatch();
 
@@ -113,6 +113,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     setShowRegister(false);
                     toast.success(t(res?.message));
                     setIsOTP(true);
+                    setOtp("")
                     // setTimer(90)
                     setPassword("")
                     setName("")
@@ -194,7 +195,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail }) 
                     </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
                         <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button>
-                        <span className='text-base font-medium'>{t("alreadyHaveAnAccount")} {t("signIn")}</span>
+                        <span className='text-base font-medium'>{t("alreadyHaveAnAccount")} <span className='primaryColor underline ml-[2px] cursor-pointer' onClick={() => setShowRegister(false)}>{t("signIn")}</span></span>
                     </div>
                     <div className="flex items-center justify-between my-4 gap-2">
                         <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
