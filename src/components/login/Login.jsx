@@ -95,7 +95,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         // console.count("useEffect Demo Mode");
         setInputType("number");
         dispatch(setAuthType({ data: "number" }))
-      setPhoneNumber(`+919876543210`);
+        setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
         setOtp("123456");
@@ -182,6 +182,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   const handleShowRegister = () => {
     setShowRegister(true);
+    setInputType("email");
+    setError("")
   };
 
   const handleInputChange = (value, data) => {
@@ -262,6 +264,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
+          setIsOTP(false);
         }
       } else if (setting?.custom_sms_gateway_otp_based == 1) {
         try {
@@ -858,7 +861,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       <>
                         {error ? <p>{error}</p> : <></>}
 
-                        <form className="relative" onSubmit={handleEmailLogin}>
+                        <form className="relative" >
                           <input
                             value={email}
                             onChange={(e) =>
@@ -965,6 +968,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   )}
                   {setting?.phone_login == 1 && inputType == "email" && (
                     <>
+                      {console.log("inputType", inputType)}
                       <div className="my-4">
                         <button
                           onClick={() => {

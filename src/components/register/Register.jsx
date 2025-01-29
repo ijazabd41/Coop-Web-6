@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthType } from '@/redux/slices/userSlice';
 
 
-const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail,setOtp }) => {
+const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, setOtp }) => {
 
     const dispatch = useDispatch();
 
