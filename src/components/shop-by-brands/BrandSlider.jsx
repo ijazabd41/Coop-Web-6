@@ -29,8 +29,8 @@ const BrandSlider = ({ brands }) => {
                     <div className={`flex items-center gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                         <Link href={"/brands"} >{t("see_all")}</Link>
                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                            <button className='cardBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                            <button className='cardBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                            <button className='fontColorBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                            <button className='fontColorBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
                         </div>
                     </div>
                 </div>

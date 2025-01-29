@@ -32,8 +32,8 @@ const CountrySlider = ({ countries }) => {
                         <div className='flex gap-4 items-center flex-col md:flex-row text-nowrap'>
                             <Link href={"/countries"} >{t("see_all")}</Link>
                             <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className='cardBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                                <button className='cardBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                                <button className='fontColorBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                                <button className='fontColorBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
                             </div>
                         </div>
                     </div>

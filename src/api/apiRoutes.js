@@ -305,7 +305,7 @@ export const deleteAddress = async ({ id }) => {
 
 // wishlists api
 export const getFavorite = async ({ latitude, longitude, limit, offset }) => {
-    const params = { latitude: latitude, longitude: longitude };
+    const params = { latitude: latitude, longitude: longitude, limit: limit, offset: offset };
     const response = await api.get(apiEndPoints.getFavorite, { params })
     return response.data
 }

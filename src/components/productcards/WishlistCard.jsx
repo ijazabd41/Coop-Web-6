@@ -11,7 +11,7 @@ import { t } from "@/utils/translation"
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder'
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal'
 
-const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal }) => {
+const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal, handleFetchLikedProducts }) => {
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting.setting)
     const cart = useSelector(state => state.Cart)
@@ -28,13 +28,15 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
             qty
         }));
     }
+
     const handleRemoveFromWishlist = async (prdctId) => {
         try {
             const response = await api.removeFromFavorite({ product_id: prdctId })
             if (response.status == 1) {
                 const updateProducts = wishlistProducts?.filter((prdct) => prdct?.id != prdctId)
                 setWishlistProducts(updateProducts)
-                setTotal((prevTotal) => Math.max(prevTotal - 1, 0));
+                setTotal((prevTotal) => prevTotal - 1);
+                await handleFetchLikedProducts()
             } else {
                 console.log(response.message)
             }
@@ -42,6 +44,8 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
             console.log("Error", error)
         }
     }
+
+
 
     const handleShowVariatModal = () => {
         if (product?.variants?.length > 0) {
@@ -218,7 +222,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
                 <div className="col-span-2 text-center">
                     <button
                         className="text-red-600 hover:text-red-800"
-                        onClick={handleRemoveFromWishlist}
+                        onClick={() => handleRemoveFromWishlist(product?.id)}
                     >
                         <RiDeleteBin6Line size={26} />
                     </button>
@@ -226,7 +230,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
             </div>
             {/* Variants Modal */}
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
-            <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectVariant} />
+            <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={product?.variants[0]} />
         </div>
     )
 }

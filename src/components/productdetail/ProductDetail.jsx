@@ -28,10 +28,8 @@ import SimilarProducts from '../productslist/SimilarProducts';
 import { usePathname } from 'next/navigation';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
-import { isRtl } from '@/lib/utils';
 
 const ProductDetail = () => {
-    const rtl = isRtl();
     const dispatch = useDispatch();
     const router = useRouter();
     const { slug } = router.query;
@@ -199,11 +197,8 @@ const ProductDetail = () => {
                         dispatch(setCart({ data: response }))
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         toast.success(t("product_added_successfully"))
-                    } else if (response?.data?.one_seller_error_code == 1) {
+                    } else {
                         setSingleSellerModal(true)
-                    }
-                    else {
-                        toast.error(response.message)
                     }
                 }
             } catch (error) {
@@ -276,7 +271,6 @@ const ProductDetail = () => {
                                     </div>
                                     <div dir={language?.type} className={`mt-[10px] ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
                                         <Swiper
-                                            key={rtl}
                                             spaceBetween={10}
                                             modules={[Navigation]}
                                             className="brand-swiper"

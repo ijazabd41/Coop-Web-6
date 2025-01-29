@@ -19,14 +19,15 @@ const Wishlist = () => {
 
     useEffect(() => {
         handleFetchLikedProducts();
-    }, [offset])
+    }, [])
 
-    const handleFetchLikedProducts = async () => {
+
+    const handleFetchLikedProducts = async (isAppend = false) => {
         setLoading(true)
         try {
             const response = await api.getFavorite({ latitude: city?.latitude, longitude: city.longitude, limit: itemPerPage, offset: offset })
             if (response.status == 1) {
-                setWishlistProducts(state => [...state, ...response.data])
+                setWishlistProducts(isAppend ? state => [...state, ...response.data] : response.data)
                 setLoading(false)
                 setTotal(response.total)
             } else {
@@ -42,8 +43,12 @@ const Wishlist = () => {
 
 
     const handleLoadMore = () => {
+
+        handleFetchLikedProducts(true)
         setOffset(offset => offset + itemPerPage);
     }
+
+
 
     return (
 
@@ -61,7 +66,7 @@ const Wishlist = () => {
                     : wishlistProducts?.length > 0 ? wishlistProducts?.map((prdct) => {
                         return (
                             <div key={prdct?.id}>
-                                <WishlistCard product={prdct} setWishlistProducts={setWishlistProducts} wishlistProducts={wishlistProducts} setTotal={setTotal} />
+                                <WishlistCard product={prdct} setWishlistProducts={setWishlistProducts} wishlistProducts={wishlistProducts} setTotal={setTotal} handleFetchLikedProducts={handleFetchLikedProducts} />
                             </div>
                         )
                     }) : <div className=' col-span-12 h-full w-full flex items-center justify-center flex-col gap-2 p-2'>

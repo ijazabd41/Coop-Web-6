@@ -28,7 +28,7 @@ export default {
 			},
 			animation: {
 				rotation: 'rotation 1s linear infinite',
-				reverseRotation: 'rotation 0.5s linear infinite reverse',
+				reverseRotation: 'rotation 1s linear infinite reverse',
 			},
 			colors: {
 				secondary: '#FF3D00', // Adjust this to your desired secondary color
