@@ -16,7 +16,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { t } from "@/utils/translation"
-import { setFilterCategory } from '@/redux/slices/productFilterSlice'
+import { setFilterCategory, setFilterSearch } from '@/redux/slices/productFilterSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import SearchProductCard from '../cards/SearchProductCard'
@@ -28,6 +28,12 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
     const router = useRouter()
     const categories = useSelector(state => state.Shop?.shop)
     const filter = useSelector(state => state.ProductFilter)
+
+    const handleSearchItemClick = async () => {
+
+        dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+        router.push("/products");
+    }
 
     return (
         <>
@@ -55,8 +61,8 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                         className="justify-center gap-1 px-4 py-2   h-full flex items-center rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow
                         md:p-[20px]  text-whiterounded order-2"
                         onClick={() => {
-                            router.push("/products");
-                            dispatch(setFilterCategory({ data: filter?.searchedCategory }))
+                            handleSearchItemClick()
+
                         }}
                     >
                         <FaSearch />

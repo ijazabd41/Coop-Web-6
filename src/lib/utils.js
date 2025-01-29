@@ -29,6 +29,6 @@ export function formatCustomDate(dateString) {
 
 export const isRtl = () => {
   const state = store.getState();
-  const isLangRtl = state.Language.selectedLanguage.type == "RTL" ? true : false
+  const isLangRtl = state?.Language?.selectedLanguage?.type == "RTL" ? true : false
   return isLangRtl
 }
