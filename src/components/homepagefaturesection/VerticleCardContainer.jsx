@@ -30,7 +30,7 @@ const VerticleCardContainer = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='py-6 container px-2'>
+                <div className='py-3 md:py-6 container px-2'>
                     <div className='flex justify-between items-center mb-3'>
                         <div>
                             <h2 className='text-2xl font-bold'>{section?.title}</h2>

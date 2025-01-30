@@ -59,7 +59,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
-                            <div className='py-6  relative px-2' key={offer?.id}>
+                            <div className='py-3 md:py-6  relative px-2' key={offer?.id}>
                                 <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                             </div>
                         )
@@ -82,7 +82,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowCategory && BelowCategory?.map((offer) => {
                         return (
-                            <div className='py-6  relative px-2' key={offer?.id}>
+                            <div className='py-3 md:py-6  relative px-2' key={offer?.id}>
                                 <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                             </div>
                         )
