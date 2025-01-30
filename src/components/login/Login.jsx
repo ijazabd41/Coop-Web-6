@@ -53,7 +53,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const language = useSelector(state => state.Language.selectedLanguage);
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
-  console.log("FCM: ", fcmToken)
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
@@ -965,7 +964,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   )}
                   {setting?.phone_login == 1 && inputType == "email" && (
                     <>
-                      {console.log("inputType", inputType)}
                       <div className="my-4">
                         <button
                           onClick={() => {
