@@ -26,7 +26,8 @@ import {
   setAuthType,
   setCurrentUser,
 } from "@/redux/slices/userSlice";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaRegEnvelope } from "react-icons/fa";
+import { FiPhone } from "react-icons/fi";
 import { toast } from "react-toastify";
 import {
   signInWithPhoneNumber,
@@ -52,7 +53,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const language = useSelector(state => state.Language.selectedLanguage);
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
-
+  console.log("FCM: ", fcmToken)
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
@@ -506,6 +507,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         id: email,
         type: "email",
         password: password,
+        fcm: fcmToken
       });
       if (res.status === 1) {
         const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
@@ -954,13 +956,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
-                          <Image
-                            src={EmailLogo}
-                            alt="Email logo"
-                            height={30}
-                            width={30}
-                            className="h-[30px] w-[30px] object-cover "
-                          />{" "}
+                          <FaRegEnvelope size={30} className="h-[30px] w-[30px]" />
+                          {" "}
                           {t("continue_with_email")}
                         </button>
                       </div>
@@ -979,13 +976,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
-                          <Image
-                            src={PhoneLogo}
-                            alt="Phone logo"
-                            height={30}
-                            width={30}
-                            className="h-[30px] w-[30px] object-cover "
-                          />{" "}
+                          <FiPhone size={30} className="h-[30px] w-[30px]" />
+                          {" "}
                           {t("continue_with_phone")}
                         </button>
                       </div>

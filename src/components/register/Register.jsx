@@ -25,7 +25,7 @@ import { setAuthType } from '@/redux/slices/userSlice';
 const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, setOtp }) => {
 
     const dispatch = useDispatch();
-
+    const fcmToken = useSelector(state => state.User?.fcm_token)
     const setting = useSelector(state => state.Setting.setting)
     const language = useSelector(state => state.Language.selectedLanguage)
 
@@ -106,7 +106,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, se
                 return;
             } else {
                 setIsLoading(true);
-                const res = await api.registerUser({ id: email, name: name, email: email, mobile: phoneNumberWithoutCountryCode, type: 'email', country_code: countryCode, password: password })
+                const res = await api.registerUser({ id: email, name: name, email: email, mobile: phoneNumberWithoutCountryCode, type: 'email', country_code: countryCode, password: password, fcm: fcmToken })
                 if (res.status == 1) {
                     setIsLoading(false)
                     dispatch(setAuthType({ data: "email" }))
