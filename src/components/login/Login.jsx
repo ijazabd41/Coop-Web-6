@@ -493,6 +493,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const response = await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
     } catch (error) {
       console.log("error", error);
+      if (error?.message?.includes("auth/popup-closed-by-user")) {
+        toast.error(t("popup_closed_by_user"))
+      }
     }
   };
 

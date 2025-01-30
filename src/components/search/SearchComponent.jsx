@@ -22,8 +22,10 @@ import { useRouter } from 'next/router'
 import SearchProductCard from '../cards/SearchProductCard'
 import { FaSearch } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
+import { isRtl } from '@/lib/utils'
 
 const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearchCategory, handleSearch, isSuggLoading }) => {
+    const rtl = isRtl();
     const dispatch = useDispatch()
     const router = useRouter()
     const categories = useSelector(state => state.Shop?.shop)
@@ -38,9 +40,9 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
     return (
         <>
             <div className={`flex w-full h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}>
-                <Select value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)}>
+                <Select dir={rtl ? "rtl" : "ltr"} value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)}>
                     <SelectTrigger className={`w-full h-full buttonBackground cardBorder  focus:ring-0 rounded-t-sm rounded-b-none md:rounded-l-sm md:rounded-r-none md:w-[152px] md:border-none md:min-w-[152px]`}>
-                        <SelectValue placeholder="All Categories" />
+                        <SelectValue placeholder={t("all_categories")} />
                     </SelectTrigger>
                     <SelectContent className="w-full h-full z-50 md:w-[152px]">
                         <SelectItem value="all categories">{t("all_categories")}</SelectItem>

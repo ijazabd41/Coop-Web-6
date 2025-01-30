@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Link from 'next/link';
+import { isRtl } from '@/lib/utils';
 
 const notFoundRoute = [
     "/order-detail",
 ]
 
 const BreadCrumb = () => {
+    const rtl = isRtl();
     const router = useRouter();
     const [breadcrumbs, setBreadcrumbs] = useState([]);
     // const { slug } = router.query;
@@ -64,7 +66,7 @@ const BreadCrumb = () => {
 
                         {breadcrumbs.map((crumb, index) => (
                             <div key={crumb.href} className="flex items-center gap-1 max-w-[150px]">
-                                <FaChevronRight size={14} />
+                                {rtl ? <FaChevronLeft size={14} /> : <FaChevronRight size={14} />}
                                 {index === breadcrumbs.length - 1 ? (
                                     <span
                                         className="text-sm font-bold capitalize cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
