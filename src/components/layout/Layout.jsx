@@ -14,6 +14,7 @@ import PushNotification from "../firebasenotification/PushNotification";
 import LangFile from "@/utils/en.json"
 import { setAvailableLanguages, setSelectedLanguage } from "@/redux/slices/languageSlice";
 import { useRouter } from "next/router";
+import MaintanceMode from "../error/MaintanceMode";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -111,21 +112,23 @@ const Layout = ({ children }) => {
 
 
 
-
+  console.log("setting", setting?.setting)
   return (
     <section>
       {loading ? <Loader screen="full" /> :
-        <PushNotification>
-          <Header />
-          {children}
-          <Footer />
-          <ToastContainer
-            theme={theme}
-            key="toastContainer"
-            bodyClassName={"toast-body"}
-            toastClassName="toast-container-className"
-          />
-        </PushNotification>
+        setting?.setting?.web_settings?.website_mode == 1 ? <MaintanceMode message={setting?.web_setting?.website_mode_remark} /> :
+          <PushNotification>
+
+            <Header />
+            {children}
+            <Footer />
+            <ToastContainer
+              theme={theme}
+              key="toastContainer"
+              bodyClassName={"toast-body"}
+              toastClassName="toast-container-className"
+            />
+          </PushNotification>
 
       }
       {/* <Location showLocation={showLocation} setShowLocation={setShowLocation} /> */}
