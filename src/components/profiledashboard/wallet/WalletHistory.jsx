@@ -15,7 +15,7 @@ const WalletHistory = () => {
         fetchWalletTransaction();
     }, [offset])
 
-    const transactionPerPage = 10;
+    const transactionPerPage = 9;
 
     const fetchWalletTransaction = async () => {
         setLoading(true)

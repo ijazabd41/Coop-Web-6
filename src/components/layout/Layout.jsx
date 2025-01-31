@@ -43,6 +43,30 @@ const Layout = ({ children }) => {
       const response = await api.getSystemLanguages({ id: 0, isDefault: 0, systemType: 3 })
       if (response.status == 1) {
         if (response.data !== undefined) {
+          if (response?.data?.length == 1) {
+            try {
+              const langRes = await api.getSystemLanguages({ id: response?.data?.[0]?.id, isDefault: 1, systemType: 3 })
+              if (langRes.status == 1) {
+                document.documentElement.dir = langRes?.data?.type
+                dispatch(setSelectedLanguage({ data: langRes?.data }))
+              } else {
+                const language = {
+                  "id": 15,
+                  "name": "English",
+                  "code": "en",
+                  "type": "LTR",
+                  "system_type": 3,
+                  "is_default": 1,
+                  "json_data": LangFile,
+                  "display_name": "English",
+                  "system_type_name": "Website"
+                }
+                dispatch(setSelectedLanguage({ data: language }))
+              }
+            } catch (error) {
+              console.log("error")
+            }
+          }
           dispatch(setAvailableLanguages({ data: response.data }))
         } else {
           const language = {
