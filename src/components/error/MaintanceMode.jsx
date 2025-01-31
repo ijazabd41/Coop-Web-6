@@ -1,18 +1,15 @@
 import React from 'react'
 import MaitanceImage from "@/assets/under_maintenance.svg"
 import Image from 'next/image'
+import { t } from '@/utils/translation'
+import Link from 'next/link'
 
 const MaintanceMode = ({ message }) => {
     return (
-        <section>
-            <div className='container'>
-                <div className='w-1/2 flex items-center justify-center flex-col my-10'>
-                    <div className='h-full w-full'>
-                        <Image src={MaitanceImage} alt='Maintance Mode image' height={0} width={0} className='h-full w-full' />
-                    </div>
-                    <h1>Maintance mode on</h1>
-                    <button>Home</button>
-                </div>
+        <section className="h-screen w-screen flex items-center justify-center">
+            <div className='flex flex-col items-center justify-center gap-2 text-center md:w-1/3 w-full'>
+                <Image src={MaitanceImage} alt='Page Not found image' height={0} width={0} className='h-full w-full' />
+                <h2 className='text-3xl font-bold'>{message}</h2>
             </div>
         </section>
     )

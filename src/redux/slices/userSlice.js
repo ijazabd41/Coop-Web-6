@@ -5,7 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     status: "loading",
     user: null,
-    fcm_token: null,
+    fcm_token: "",
     authId: "",
     jwtToken: "",
     authType: ""

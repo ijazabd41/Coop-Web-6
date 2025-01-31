@@ -112,11 +112,10 @@ const Layout = ({ children }) => {
 
 
 
-  console.log("setting", setting?.setting)
   return (
     <section>
       {loading ? <Loader screen="full" /> :
-        setting?.setting?.web_settings?.website_mode == 1 ? <MaintanceMode message={setting?.web_setting?.website_mode_remark} /> :
+        setting?.setting?.web_settings?.website_mode == 1 ? <MaintanceMode message={setting?.setting?.web_settings?.website_mode_remark} /> :
           <PushNotification>
 
             <Header />
