@@ -5,14 +5,13 @@ import { useSelector } from "react-redux";
 import { setCheckoutTotal } from "@/redux/slices/checkoutSlice";
 import { useDispatch } from "react-redux";
 
-const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder }) => {
-
+const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder, checkOutError }) => {
+    console.log("checkOutError", checkOutError)
     const dispatch = useDispatch()
     const setting = useSelector(state => state.Setting.setting)
     const user = useSelector(state => state.User)
     const checkout = useSelector((state) => state.Checkout)
     const cart = useSelector(state => state.Cart)
-
 
     useEffect(() => {
         // Calculate new total amount based on wallet balance usage
@@ -31,15 +30,20 @@ const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder }) => {
         <div className="w-full mx-auto cardBorder rounded-lg p-6 ">
             <div className="flex justify-between items-center mb-2">
                 <span className="font-bold ">{t("sub_total")}</span>
-                <span className="font-semibold ">{setting?.currency} {checkoutData?.sub_total?.toFixed(2)}</span>
-            </div>
+                {checkOutError == false ? <span className="font-semibold ">{setting?.currency} {checkoutData?.sub_total?.toFixed(2)}</span> :
+                    <span className="font-semibold ">{setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}</span>
+                }
 
-            <div className="flex justify-between items-center mb-2">
-                <span className="">{t("delivery_charge")}</span>
-                <span className="">{setting?.currency} {checkoutData?.delivery_charge?.total_delivery_charge}</span>
             </div>
+            {checkOutError == false &&
+                <div className="flex justify-between items-center mb-2">
+                    <span className="">{t("delivery_charge")}</span>
+                    <span className="">{setting?.currency} {checkoutData?.delivery_charge?.total_delivery_charge}</span>
+                </div>
+            }
 
-            {checkoutData?.promocode_details && (
+
+            {(checkoutData?.promocode_details && checkOutError == false) && (
                 <div className="flex justify-between items-center mb-2">
                     <a href="#" className="">
                         {t("promoDiscount")}
@@ -61,7 +65,9 @@ const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder }) => {
 
             <div className="flex justify-between items-center mb-6 backgroundColor p-3 rounded-sm">
                 <span className="text-lg font-bold ">{t("total")}</span>
-                <span className="text-lg font-bold ">{setting?.currency} {checkout?.checkoutTotal?.toFixed(2)}</span>
+                {checkOutError == false ? <span className="font-semibold ">{setting?.currency} {checkoutData?.total_amount?.toFixed(2)}</span> :
+                    <span className="font-semibold ">{setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}</span>
+                }
             </div>
 
             <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor" disabled={step !== 3} onClick={handlePlaceOrder}>

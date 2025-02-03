@@ -485,8 +485,10 @@
     "reOrder_warning": "Only items currently in stock can be added to your cart.",
     "items_added_to_cart": "Items Added To Cart",
     "view_order_details": "View Order Details",
-    "fssai_license_no":"License No. :",
+    "fssai_license_no": "License No. :",
     "single_seller_warning": "Item is not belonging to the seller, You can add item of the same seller only, To add item you need to clear the cart first.",
     "clear_cart_warning": "You want to clear cart?",
-    "popup_closed_by_user":"Popup closed by user"
+    "popup_closed_by_user": "Popup closed by user",
+    "sorry_we_are_not_delivering_on_selected_address": "Sorry We are not delivering on selected address",
+    "all_cart_products_have_not_same_seller": "Not all cart products have the same seller."
 }

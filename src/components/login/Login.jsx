@@ -92,7 +92,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
       if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
-        // console.count("useEffect Demo Mode");
         setInputType("number");
         dispatch(setAuthType({ data: "number" }))
         setPhoneNumber(`+919876543210`);
@@ -144,7 +143,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     if (window.recaptchaVerifier) {
       try {
         window.recaptchaVerifier.clear();
-        window.recaptchaVerifier = null;
+        window.recaptchaVerifier = undefined;
       } catch (error) {
         console.error("Error clearing ReCAPTCHA verifier:", error);
       }
@@ -162,7 +161,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       console.error("Container element 'recaptcha-container' not found.");
       return null;
     }
-
     try {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
@@ -171,8 +169,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           size: "invisible",
         }
       );
-
-      // window.recaptchaVerifier.render();
       return window.recaptchaVerifier;
     } catch (error) {
       console.error("Error initializing RecaptchaVerifier:", error.message);
@@ -184,34 +180,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setShowRegister(true);
     setInputType("email");
     setError("")
-  };
-
-  const handleInputChange = (value, data) => {
-    const emailRegexPattern =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const containsOnlyDigits = /^\d+$/.test(value);
-    setInputValue(value);
-    if (emailRegexPattern.test(value)) {
-      setInputType("email");
-      setEmail(value);
-      setOtp("");
-      setPhoneNumber("");
-      setCountryCode("");
-      dispatch(setAuthType({ data: "email" }));
-    } else if (containsOnlyDigits) {
-      setInputType("number");
-      dispatch(setAuthType({ data: "phone" }));
-      const dialCode = data?.dialCode || "";
-      const phoneWithoutDialCode = value.startsWith(dialCode)
-        ? value.slice(dialCode.length)
-        : value;
-      setPhoneNumber(`+${value}`);
-      setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
-      setCountryCode("+" + dialCode);
-      setOtp("");
-    } else {
-      setInputType("");
-    }
   };
 
   const handleEmailChange = (value, data) => {
@@ -235,7 +203,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setCountryCode("+" + dialCode);
     setOtp("");
   };
-
   const handleSendOTP = async (e) => {
     setLoading(true);
     setOtpDisabled(true);
@@ -492,7 +459,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       dispatch(setAuthType({ data: "google" }));
       const response = await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
     } catch (error) {
-      console.log("error", error);
       if (error?.message?.includes("auth/popup-closed-by-user")) {
         toast.error(t("popup_closed_by_user"))
       }
@@ -993,9 +959,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
               )}
             </div>
           </div>
+          <div id="recaptcha-container" style={{ display: "none" }}></div>
         </DialogContent>
       </Dialog>
-      <div id="recaptcha-container"></div>
       <NewUserModal
         showNewUser={showNewUser}
         setShowNewUser={setShowNewUser}

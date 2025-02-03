@@ -66,6 +66,7 @@ const Checkout = () => {
     const [isAddressSelected, setIsAddressSelected] = useState(false)
     const [showAddAddres, setShowAddAddres] = useState(false)
     const [checkOutError, setCheckOutError] = useState(false)
+    const [checkOutErrorMsg, setCheckOutErrorMsg] = useState("")
     // step 2 Variables
     // const [selectedDate, setSelectedDate] = useState(null)
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
@@ -100,8 +101,7 @@ const Checkout = () => {
 
     useEffect(() => {
         handleFetchCheckout();
-    }, [cart?.promo_code, cart?.cart, checkout?.address])
-
+    }, [cart?.promo_code, cart?.cart, checkout?.address, cart?.cartProducts])
 
 
     useEffect(() => {
@@ -120,6 +120,7 @@ const Checkout = () => {
             } else {
                 console.log("Error", response)
                 setCheckOutError(true)
+                setCheckOutErrorMsg(response?.message)
             }
         } catch (error) {
             console.log("Error", error)
@@ -218,7 +219,7 @@ const Checkout = () => {
 
     const handleFirstStep = () => {
         if (checkOutError) {
-            toast.error(t("address_not_deliverable"))
+            toast.error(checkOutErrorMsg)
             return
         } else {
             dispatch(setCurrentStep({ data: 2 }))
@@ -593,7 +594,7 @@ const Checkout = () => {
 
                                 }
                                 <div className=' md:col-span-4 lg:col-span-3 col-span-12'>
-                                    <OrderSummaryCard step={checkout?.currentStep} checkoutData={checkoutData} handlePlaceOrder={handlePlaceOrder} />
+                                    <OrderSummaryCard step={checkout?.currentStep} checkoutData={checkoutData} handlePlaceOrder={handlePlaceOrder} checkOutError={checkOutError} />
                                 </div>
                             </div>
                         </div>

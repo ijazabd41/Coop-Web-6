@@ -3,7 +3,7 @@ import { IoClose } from 'react-icons/io5'
 import { TiMinus, TiPlus } from "react-icons/ti";
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
-import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { addtoGuestCart, clearCartPromo, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
@@ -22,6 +22,9 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                 setCartProductsData(updatedProducts)
                 dispatch(setCartProducts({ data: remainItems }))
                 dispatch(setCartSubTotal({ data: response?.sub_total }))
+                if (updatedProducts?.length <= 0) {
+                    dispatch(clearCartPromo())
+                }
                 // toast.success(response.message)
             } else {
                 toast.error(response.message)

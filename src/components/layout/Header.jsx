@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
 import * as api from "@/api/apiRoutes";
-import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoHomeOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoHomeOutline, IoSearchOutline, IoLanguage } from 'react-icons/io5';
 import { FaPhoneVolume } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from '../cart/CartDrawer';
@@ -267,7 +267,7 @@ const Header = () => {
                             </DropdownMenu>
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
-                                    {language?.selectedLanguage ? language?.selectedLanguage?.name : "English"}
+                                    <IoLanguage /> {language?.selectedLanguage ? language?.selectedLanguage?.name : "English"}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-[100px] ">
                                     {language?.availableLanguages && language?.availableLanguages?.map((language) => {
