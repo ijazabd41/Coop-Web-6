@@ -24,6 +24,5 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.data.body,
     icon: payload.data.icon,
   };
-
   self.registration.showNotification(notificationTitle, notificationOptions);
 });

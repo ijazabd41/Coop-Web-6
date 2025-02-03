@@ -10,19 +10,7 @@ import StatusEight from "@/assets/statusIcons/status_icon_returned.svg"
 import Image from "next/image";
 import { t } from "@/utils/translation"
 
-const statuses = [
-    {
-        icon: "📥",
-        label: "Your order has been Received",
-        timestamp: "25 Jan 2024, 08:05 AM",
-    },
-    {
-        icon: "📥",
-        label: "Your order has been Received",
-        timestamp: "25 Jan 2024, 08:05 AM",
-    },
 
-];
 
 const OrderStepper = ({ orderDetail }) => {
 
