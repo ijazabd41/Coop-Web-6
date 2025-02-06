@@ -13,6 +13,9 @@ const CartCouponCard = ({ setShowCouponCode }) => {
     const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting?.setting)
 
+    const validateCouponCode = async () => {
+
+    }
 
     const handleClearPromo = () => {
         dispatch(clearCartPromo())
@@ -26,9 +29,11 @@ const CartCouponCard = ({ setShowCouponCode }) => {
         router.push('/products')
     }
 
+    const cartTotlaWithDiscount = (cart?.cartSubTotal?.toFixed(2) - cart?.promo_code?.discount?.toFixed(2))
+
     return (
         <div className="max-w-sm p-4  border  rounded-md cardBorder">
-            {user?.jwtToken &&  <div className="flex justify-between items-center mb-4">
+            {user?.jwtToken && <div className="flex justify-between items-center mb-4">
                 <h3 className="text-sm font-medium ">{t("have_coupon")}</h3>
                 <button className="px-3 py-1 text-sm font-medium border rounded hover:primaryBackColor hover:text-white" onClick={() => setShowCouponCode(true)}>
                     {t("view_coupon")}
@@ -49,7 +54,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
                             <span className="primaryColor"><MdOutlineCelebration className="primaryColor" size={20} /></span>
                             <p className="text-base font-bold primaryColor">{cart?.promo_code?.promo_code}</p>
                         </div>
-                        <p className="text-base font-bold primaryColor">{setting?.currency}{cart?.promo_code?.discount}</p>
+                        <p className="text-base font-bold primaryColor">{setting?.currency}{cart?.promo_code?.discount?.toFixed(2)}</p>
                     </div>
                 </div>
             )}
@@ -60,13 +65,13 @@ const CartCouponCard = ({ setShowCouponCode }) => {
             <div className="mb-4  ">
                 <div className="flex justify-between  mt-3 font-bold text-base">
                     <p className=''>{t("sub_total")}</p>
-                    <p>{setting?.currency}{cart?.cartSubTotal}</p>
+                    <p>{setting?.currency}{cart?.cartSubTotal?.toFixed(2)}</p>
                 </div>
                 {
                     cart?.promo_code && (
                         <div className="flex justify-between  mt-3 font-bold text-base">
                             <p className=''>{t("promoDiscount")}</p>
-                            <p className=''>{setting?.currency}{cart?.promo_code?.discount?.toFixed(setting?.decimal_point)}</p>
+                            <p className=''>{setting?.currency}{cart?.promo_code?.discount?.toFixed(2)}</p>
                         </div>
                     )
                 }
@@ -78,7 +83,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
 
             <div className="flex flex-wrap justify-between gap-2 items-center mb-4 backgroundColor p-3 rounded">
                 <p className="text-lg font-bold ">{t("total")}</p>
-                <p className="text-lg font-bold">{setting?.currency} {cart?.promo_code ? (cart?.cartSubTotal?.toFixed(setting?.decimal_point) - cart?.promo_code?.discount) : cart?.cartSubTotal?.toFixed(setting?.decimal_point)}</p>
+                <p className="text-lg font-bold">{setting?.currency} {cart?.promo_code ? cartTotlaWithDiscount?.toFixed(2) : cart?.cartSubTotal?.toFixed(2)}</p>
             </div>
 
             <button className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded " onClick={handleToCheckOut}>

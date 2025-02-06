@@ -576,7 +576,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   return (
     <>
       <Dialog open={showLogin}>
-        <DialogContent className="">
+        <DialogContent >
           <DialogHeader className="flex justify-between items-center flex-row">
             <div className="relative aspect-square object-cover h-[68px] w-[72px]">
               <Image
@@ -789,7 +789,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                         >
                           {loading ? t("loading") : t("continue")}
                         </button>
-                        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">
+                        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
                           {t("registerMsg")}
                           <p
                             onClick={handleShowRegister}
@@ -870,7 +870,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           >
                             {loading ? t("loading") : t("continue")}
                           </button>
-                          <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium">
+                          <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
                             {t("registerMsg")}
                             <p
                               onClick={handleShowRegister}

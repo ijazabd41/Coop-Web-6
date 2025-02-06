@@ -7,11 +7,13 @@ import Image from "next/image";
 import CardSkeleton from "../skeleton/CardSkeleton";
 
 const Notifications = ({ selectedTab, setSelectedTab }) => {
+  const total_notifications_per_page = 7;
+
   const [notifications, setNotifications] = useState([]);
   const [currPage, setCurrPage] = useState(1)
-  const total_notifications_per_page = 7;
   const [offset, setoffset] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [totalNotications, setTotalNotifications] = useState(null)
 
   useEffect(() => {
     if (selectedTab === "notifications") {
@@ -23,6 +25,7 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
     setIsLoading(true);
     try {
       const response = await api.getNotifications({ limit: total_notifications_per_page, offset });
+      setTotalNotifications(response.total)
       setNotifications([...notifications, ...response?.data]);
       setIsLoading(false);
     } catch (error) {
@@ -58,7 +61,7 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
             <CardSkeleton height={100} padding='p-1' />
           </div>
         ))}
-        {notifications?.length > 0 &&
+        {notifications?.length < totalNotications &&
           <div className="flex justify-center py-4">
             <button className='px-4 py-2 h-full flex  items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'
               onClick={() => handleLoadMore(currPage + 1)}

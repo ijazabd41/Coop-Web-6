@@ -19,6 +19,7 @@ export default {
 				'2xl': '1320px',
 			},
 		},
+
 		extend: {
 			keyframes: {
 				rotation: {
@@ -26,6 +27,7 @@ export default {
 					'100%': { transform: 'rotate(360deg)' },
 				},
 			},
+
 			animation: {
 				rotation: 'rotation 1s linear infinite',
 				reverseRotation: 'rotation 1s linear infinite reverse',

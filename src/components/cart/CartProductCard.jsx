@@ -86,7 +86,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             const cartProductQty = cart.cartProducts.find(prdct => prdct?.product_id == product?.product_id && prdct?.product_variant_id == product?.product_variant_id)
             if (product?.is_unlimited_stock !== 0) {
                 if (productQty >= Number(product?.total_allowed_quantity)) {
-                    toast.error('Apologies, maximum product quantity limit reached');
+                    toast.error(t("max_cart_limit_error"));
                 } else {
                     if (cart.isGuest) {
                         let updatedProducts = cart?.guestCart?.map((cartProduct) => {
@@ -122,10 +122,10 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             }
             else {
                 if (productQty >= Number(product?.stock)) {
-                    toast.error('Oops, Limited Stock Available');
+                              toast.error(t("out_of_stock_message"));
                 }
                 else if (productQty >= Number(product?.total_allowed_quantity)) {
-                    toast.error('Apologies, maximum cart quantity limit reached');
+                    toast.error(t("max_cart_limit_error"));
                 }
                 else {
                     if (cart.isGuest) {

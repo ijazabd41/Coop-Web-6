@@ -29,6 +29,8 @@ const NotificationCard = ({ notification }) => {
             src={notification?.image_url}
             alt="notificationImg"
             loading="lazy"
+            height={0}
+            width={0}
           />
         ) : (
           <FaRegBell className="text-white" size={30} />

@@ -255,7 +255,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     return (
         <>
             <Dialog open={showDetailModal} >
-                <DialogContent className="max-w-4xl lg:max-w-screen-lg overflow-y-scroll max-h-screen">
+                <DialogContent className="max-w-xl lg:max-w-screen-lg overflow-y-scroll max-h-screen">
                     <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end"> <div>
                         <IoIosCloseCircle size={32} onClick={handleHideDetailModal} />
                     </div>
@@ -264,7 +264,8 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                         {loading ? <Loader /> : <div className='flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto'>
                             <div className='pb-6 border-b-2'>
                                 <h2 className='font-bold text-2xl break-all'>{productDetails?.name}</h2>
-                                <div className='flex items-center gap-1'>
+                                <div className='flex items-center gap-1 flex-wrap'>
+
                                     <div className='flex gap-4'>
                                         {ratingData?.average_rating > 0 ?
                                             <div className='border-r-2 px-2'>
@@ -286,17 +287,18 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                                 </div>
                                             </div>
                                             : null}
+
+                                        {productDetails?.seller_name !== null && <div className="px-2 py-1 ">
+                                            <div className='flex text-xs'>
+                                                <span>{t("seller")}:<span className='font-bold'>{productDetails?.seller_name}</span></span>
+                                            </div>
+                                        </div>
+                                        }
                                     </div>
 
-                                    {productDetails?.seller_name !== null && <div className="px-2 py-1 ">
-                                        <div className='flex text-xs'>
-                                            <span>{t("seller")}:<span className='font-bold'>{productDetails?.seller_name}</span></span>
-                                        </div>
-                                    </div>
-                                    }
                                     {productDetails?.fssai_lic_no !== "" && (
                                         <div
-                                            className="text-gray-200 border-l-2 border-gray-200 h-6"
+                                            className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"
                                         ></div>
                                     )}
                                     {productDetails?.fssai_lic_no !== "" && <div className='flex items-center gap-3 '>
@@ -344,7 +346,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             {productImages?.map((image, index) => (
                                                 <SwiperSlide key={productDetails.id} >
                                                     <div className='h-auto relative w-full aspect-square' key={index}>
-                                                        <ImageWithPlaceholder src={image} alt={productDetails.name} className='h-full w-full aspect-square rounded-sm' onClick={() => handleChangeCoverImage(image)} />
+                                                        <ImageWithPlaceholder src={image} alt={productDetails.name} className='h-full w-full aspect-square rounded-sm' handleOnClick={() => handleChangeCoverImage(image)} />
                                                     </div>
                                                 </SwiperSlide>
                                             ))}

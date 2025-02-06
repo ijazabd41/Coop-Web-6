@@ -41,9 +41,9 @@ const HorizontalProductSwiper = ({ section, index }) => {
         <div>
             {
                 section?.products?.length > 0 ?
-                    <section className='py-6 px-2' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
+                    <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
 
-                        <div className='container' >
+                        <div className='container py-6 px-2' >
                             <div dir={language?.type}>
                                 <div className='flex justify-between items-center mb-3 '>
                                     <div className='w-1/2'>
@@ -60,6 +60,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                 </div>
                                 <div className='mt-[10px]'>
                                     <Swiper
+
                                         key={rtl}
                                         spaceBetween={20}
                                         modules={[Navigation]}
@@ -95,7 +96,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                         }}
                                     >
                                         {section?.products?.map((product, index) => (
-                                            <SwiperSlide key={product.id} >
+                                            <SwiperSlide key={product.id} className='h-auto'>
                                                 <VerticleProductCard product={product} />
                                             </SwiperSlide>
                                         ))}
@@ -106,15 +107,15 @@ const HorizontalProductSwiper = ({ section, index }) => {
                     </section>
                     : null
             }
-            <div className='container mb-6'>
-                {promotionImage && promotionImage?.map((offer) => {
-                    return (
+            {promotionImage && promotionImage?.map((offer) => {
+                return (
+                    <div className='container mb-6'>
                         <div className='relative' key={offer?.id}>
                             <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                         </div>
-                    )
-                })}
-            </div>
+                    </div>
+                )
+            })}
         </div>
 
 

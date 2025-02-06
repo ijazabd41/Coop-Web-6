@@ -143,7 +143,7 @@ const VerticleProductCard = ({ product }) => {
         if (Number(product.is_unlimited_stock !== 0)) {
 
             if (productQty >= Number(product?.total_allowed_quantity)) {
-                toast.error('Apologies, maximum product quantity limit reached');
+                toast.error(t("max_cart_limit_error"));
             }
             else {
                 AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -151,10 +151,10 @@ const VerticleProductCard = ({ product }) => {
         }
         else {
             if (productQty >= Number(selectedVariant?.stock)) {
-                toast.error('Oops, Limited Stock Available');
+                toast.error(t("out_of_stock_message"));
             }
             else if (productQty >= Number(product?.total_allowed_quantity)) {
-                toast.error('Apologies, maximum cart quantity limit reached');
+                toast.error(t("max_cart_limit_error"));
             }
             else {
                 AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -177,7 +177,7 @@ const VerticleProductCard = ({ product }) => {
 
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
 
-            toast.error('Oops, Limited Stock Available');
+            toast.error(t("out_of_stock_message"));
         } else if (selectedVariant?.is_unlimited_stock == 0 && selectedVariant?.stock <= 0) {
             toast.error(t("out_of_stock_message"));
         }
@@ -188,7 +188,7 @@ const VerticleProductCard = ({ product }) => {
                 addToCart(product.id, selectedVariant?.id, 1);
             } else {
 
-                toast.error('Oops, Limited Stock Available');
+                toast.error(t("out_of_stock_message"));
             }
         }
 
@@ -319,14 +319,12 @@ const VerticleProductCard = ({ product }) => {
 
     const isProductAvailabel = ((product?.variants?.length <= 1 && product?.variants?.[0]?.is_unlimited_stock == 0 && product?.variants?.[0]?.stock == 0) || (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) || (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0))
 
-
-
     return (
         <div>
             <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
-                    <div className='relative aspect-square w-full '>
-                        <ImageWithPlaceholder className='rounded-lg object-cover h-full w-full' alt={product.name} src={product.image_url} />
+                    <div className='relative aspect-square w-full h-60   '>
+                        <ImageWithPlaceholder className='rounded-lg object-fill h-full w-full' alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}

@@ -256,10 +256,10 @@ const ProductDetail = () => {
         <section>
             {isLoading ? <div className='h-[100vh]'><Loader screen="full" /></div> : <>
                 <BreadCrumb />
-                <div className='container px-2 md:px-0'>
+                <div className='container px-2 '>
 
                     <div className='mt-1'>
-                        <div className='flex flex-col p-1 md:p-6 justify-center  '>
+                        <div className='flex flex-col justify-center  '>
 
                             <div className='grid  grid-cols-1 md:grid-cols-12   mt-2 gap-4 items-start  '>
                                 <div className='col-span-12 md:col-span-4 '>
@@ -305,7 +305,7 @@ const ProductDetail = () => {
                                 <div className='col-span-12 md:col-span-8 flex flex-col gap-6'>
                                     <div className='pb-6 border-b-2 flex flex-col gap-2'>
                                         <h2 className='font-bold text-2xl break-all'>{product?.name}</h2>
-                                        <div className='flex gap-4 items-center'>
+                                        <div className='flex gap-4 items-center flex-wrap'>
                                             <div className='flex gap-4'>
                                                 {ratingData?.average_rating > 0 ?
                                                     <div className='border-r-2 px-2'>
@@ -335,7 +335,7 @@ const ProductDetail = () => {
                                             </div>}
                                             {product?.fssai_lic_no !== "" && (
                                                 <div
-                                                    className="text-gray-200 border-l-2 border-gray-200 h-6"
+                                                    className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"
                                                 ></div>
                                             )}
                                             {product?.fssai_lic_no !== "" &&

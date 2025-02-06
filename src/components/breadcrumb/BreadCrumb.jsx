@@ -54,7 +54,7 @@ const BreadCrumb = () => {
 
     return (
         <section className="p-3 md:p-6 breadCrumbBg">
-            <div className=" container">
+            <div className=" container px-2">
                 <div className='flex justify-between flex-col gap-1 md:flex-row'>
                     <p className="text-xl font-bold capitalize">
                         {breadcrumbs.length ? handleCheckBreadCrumb() : 'Home'}

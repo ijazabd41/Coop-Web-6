@@ -6,7 +6,6 @@ import { setCheckoutTotal } from "@/redux/slices/checkoutSlice";
 import { useDispatch } from "react-redux";
 
 const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder, checkOutError }) => {
-    console.log("checkOutError", checkOutError)
     const dispatch = useDispatch()
     const setting = useSelector(state => state.Setting.setting)
     const user = useSelector(state => state.User)

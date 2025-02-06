@@ -65,7 +65,7 @@ const OrderDetail = () => {
     return (
         <section>
             <BreadCrumb />
-            <div className='container my-12'>
+            <div className='container my-12 px-2'>
                 <div className='flex flex-col gap-12'>
                     <div className='flex flex-col md:flex-row justify-between backgroundColor p-4 rounded-md'>
                         <div>

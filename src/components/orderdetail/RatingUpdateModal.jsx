@@ -11,7 +11,7 @@ import Image from 'next/image';
 const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, handleFetchOrderDetail }) => {
 
     const fileInputRef = useRef(null);
-
+    const buttonRef = useRef(null);
     const [rating, setRating] = useState(null)
     const [review, setReview] = useState(null)
     const [oldRatingImages, setOldRatingImages] = useState([])
@@ -65,6 +65,9 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
 
     const handleUpdateRating = async () => {
         try {
+            if (buttonRef.current) {
+                buttonRef.current.disabled = true;
+            }
             const response = await api.updateReviewProduct({ ratingId: ratingId, rating: rating, review: review, deleteImages: deletedImages, images: newRatingImages })
             if (response.status == 1) {
                 toast.success(response.message)
@@ -166,6 +169,7 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
                                         name="image-upload"
                                         ref={fileInputRef}
                                         onChange={handleFileChange}
+
                                     />
                                     <TbCameraPlus
                                         size={32}
@@ -178,7 +182,7 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
 
                         </div>
                         <div className='flex justify-end'>
-                            <button className='primaryBackColor px-4 font-semibold text-base py-2 text-white rounded-sm' onClick={handleUpdateRating}>{t("submit")}</button>
+                            <button className='primaryBackColor px-4 font-semibold text-base py-2 text-white rounded-sm disabled:bg-gray-500' onClick={handleUpdateRating} ref={buttonRef}>{t("submit")}</button>
                         </div>
                     </div>
                 </div>

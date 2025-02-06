@@ -87,14 +87,14 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
             if (productQty < Number(product?.total_allowed_quantity)) {
                 addToCart(product.id, product?.variants[0]?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.variants[0]?.id)?.qty + 1);
             } else {
-                toast.error('Apologies, maximum product quantity limit reached!');
+                toast.error(t("max_cart_limit_error"));
             }
         } else {
             if (productQty >= Number(product?.variants[0].stock)) {
                 toast.error(t("out_of_stock_message"));
             }
             else if (Number(productQty) >= Number(product.total_allowed_quantity)) {
-                toast.error('Apologies, maximum product quantity limit reached');
+                toast.error(t("max_cart_limit_error"));
             } else {
                 addToCart(product.id, product?.variants[0]?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.variants[0]?.id)?.qty + 1);
             }
@@ -139,7 +139,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
 
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
 
-            toast.error('Oops, Limited Stock Available');
+            toast.error(t("out_of_stock_message"));
         }
         else if (Number(product.is_unlimited_stock)) {
             addToCart(product.id, product?.variants[0].id, 1);
@@ -148,7 +148,7 @@ const WishlistCard = ({ product, setWishlistProducts, wishlistProducts, setTotal
                 addToCart(product.id, product?.variants[0]?.id, 1);
             } else {
 
-                toast.error('Oops, Limited Stock Available');
+                toast.error(t("out_of_stock_message"));
             }
         }
 

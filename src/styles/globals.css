@@ -36,6 +36,10 @@
   --shimmer-highlight-color: #363e48;
 }
 
+/* .container {
+  @apply border border-red-500 border-2;
+} */
+
 * {
   font-family: var(--font-family);
 }

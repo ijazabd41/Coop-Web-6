@@ -203,7 +203,7 @@ const Products = () => {
                                             productResult?.map((product) => {
                                                 return (
                                                     filter?.grid_view ?
-                                                        <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={product?.id}>
+                                                        <div className=' col-span-6 md:col-span-4 lg:col-span-3 ' key={product?.id}>
                                                             <VerticleProductCard product={product} />
                                                         </div>
                                                         :

@@ -46,7 +46,7 @@ const PrevOrderCard = ({ order }) => {
                                     {orderFirstItem?.image_url && <ImageWithPlaceholder src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
                                 </div>
                                 <div>
-                                    <p className='font-bold text-base'>{orderFirstItem?.product_name}</p>
+                                    <p className='font-bold text-base sm:w-24 text-ellipsis overflow-hidden'>{orderFirstItem?.product_name}</p>
                                     <p className='text-sm font-normal'>{orderFirstItem?.variant_name}</p>
                                 </div>
                             </div>
@@ -60,12 +60,12 @@ const PrevOrderCard = ({ order }) => {
 
                     </div>
                     <div className='backgroundColor'>
-                        <div className='flex justify-between p-4'>
+                        <div className='flex justify-between p-4 flex-col md:flex-row'>
                             <div className='flex flex-col'>
                                 <span>{`${t("total")} ${t("Credit")}`} </span>
                                 <span className='font-bold text-lg'>{setting?.setting?.currency}{order?.final_total}</span>
                             </div>
-                            <div className="flex gap-2 items-center justify-center">
+                            <div className="flex gap-2 items-center justify-start md:justify-center">
                                 <div className="">
                                     <button className="cardBorder py-2 px-3 rounded-sm font-medium text-base hover:primaryBackColor hover:text-white" onClick={handleReoder}>{t("reorder")}</button>
                                 </div>

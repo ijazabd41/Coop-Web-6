@@ -147,7 +147,7 @@ const HorizontalProductCard = ({ product }) => {
         if (Number(product.is_unlimited_stock !== 0)) {
 
             if (productQty >= Number(product?.total_allowed_quantity)) {
-                toast.error('Apologies, maximum product quantity limit reached');
+              toast.error(t("max_cart_limit_error"));
             }
             else {
                 AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -156,10 +156,10 @@ const HorizontalProductCard = ({ product }) => {
         else {
 
             if (productQty >= Number(selectedVariant?.stock)) {
-                toast.error('Oops, Limited Stock Available');
+                toast.error(t("out_of_stock_message"));
             }
             else if (productQty >= Number(product?.total_allowed_quantity)) {
-                toast.error('Apologies, maximum cart quantity limit reached');
+                toast.error(t("max_cart_limit_error"));
             }
             else {
                 AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -182,7 +182,7 @@ const HorizontalProductCard = ({ product }) => {
 
         if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
 
-            toast.error('Oops, Limited Stock Available');
+            toast.error(t("out_of_stock_message"));
         }
         else if (Number(product.is_unlimited_stock)) {
             addToCart(product.id, selectedVariant.id, 1);
@@ -191,7 +191,7 @@ const HorizontalProductCard = ({ product }) => {
                 addToCart(product.id, selectedVariant?.id, 1);
             } else {
 
-                toast.error('Oops, Limited Stock Available');
+                toast.error(t("out_of_stock_message"));
             }
         }
 
@@ -229,14 +229,14 @@ const HorizontalProductCard = ({ product }) => {
             if (productQty < Number(product?.total_allowed_quantity)) {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             } else {
-                toast.error('Apologies, maximum product quantity limit reached!');
+              toast.error(t("max_cart_limit_error"));
             }
         } else {
             if (productQty >= Number(selectedVariant.stock)) {
                 toast.error(t("out_of_stock_message"));
             }
             else if (Number(productQty) >= Number(product.total_allowed_quantity)) {
-                toast.error('Apologies, maximum product quantity limit reached');
+toast.error(t("max_cart_limit_error"));
             } else {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             }

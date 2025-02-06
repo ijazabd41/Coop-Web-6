@@ -328,7 +328,7 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
 
     return (
         <Dialog open={showAddAddres} >
-            <DialogContent className="max-w-5xl overflow-scroll h-full">
+            <DialogContent className="max-w-5xl overflow-y-scroll h-full">
                 <DialogHeader>
                     <div className='flex flex-row justify-between items-center'>
                         <h2 className='font-bold text-xl'>{t("new_address")}</h2>

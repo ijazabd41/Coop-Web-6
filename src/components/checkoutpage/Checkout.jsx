@@ -88,6 +88,13 @@ const Checkout = () => {
         getCurrentUser()
     }, [])
 
+    useEffect(() => {
+        validateCouponCode();
+    }, [cart?.cart, checkout?.address, cart?.cartProducts])
+
+    useEffect(() => {
+        handleFetchCheckout();
+    }, [cart?.cart, cart?.promo_code, checkout?.address, cart?.cartProducts])
 
     const getCurrentUser = async () => {
         try {
@@ -99,10 +106,18 @@ const Checkout = () => {
     };
 
 
-    useEffect(() => {
-        handleFetchCheckout();
-    }, [cart?.promo_code, cart?.cart, checkout?.address, cart?.cartProducts])
-
+    const validateCouponCode = async () => {
+        try {
+            const response = await api.setPromoCode({ promoCodeName: cart?.promo_code?.promo_code, amount: cart?.cartSubTotal })
+            if (response.status == 1) {
+                dispatch(setCartPromo({ data: response.data }))
+            } else {
+                dispatch(clearCartPromo())
+            }
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
 
     useEffect(() => {
         handleFilterTimeSlots();
@@ -118,7 +133,6 @@ const Checkout = () => {
                 setCheckoutData(response?.data)
                 setCheckOutError(false)
             } else {
-                console.log("Error", response)
                 setCheckOutError(true)
                 setCheckOutErrorMsg(response?.message)
             }
@@ -219,7 +233,7 @@ const Checkout = () => {
 
     const handleFirstStep = () => {
         if (checkOutError) {
-            toast.error(checkOutErrorMsg)
+            toast.error(t(checkOutErrorMsg))
             return
         } else {
             dispatch(setCurrentStep({ data: 2 }))
@@ -536,7 +550,6 @@ const Checkout = () => {
                                                         <Popover open={isPopoverOpen} >
                                                             <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between ' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
                                                             <PopoverContent className="w-full p-0" >
-                                                                {console.log("allow time", timeSlotsData)}
                                                                 <Calendar
                                                                     mode="single"
                                                                     selected={checkout?.selectedDate}
@@ -545,7 +558,8 @@ const Checkout = () => {
                                                                     fromDate={new Date()}
                                                                     toDate={(() => {
                                                                         let date = new Date();
-                                                                        date.setDate(date.getDate() + 15); // Add 15 days to today
+                                                                        let allowedDays = parseInt(setting?.setting?.time_slots_allowed_days) || 15;
+                                                                        date.setDate(date.getDate() + allowedDays);
                                                                         return date;
                                                                     })()}
                                                                 />

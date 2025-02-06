@@ -39,8 +39,8 @@ const ProductSwiperWithImage = ({ section }) => {
 
     return (
         <div>
-            {section?.products?.length > 0 ? <section className='py-6' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container px-2 '>
+            {section?.products?.length > 0 ? <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
+                <div className='container py-6 px-2 '>
                     <div dir={language?.type}>
                         <div className='flex justify-between items-center mb-3'>
                             <div>
@@ -100,7 +100,7 @@ const ProductSwiperWithImage = ({ section }) => {
                                     }}
                                 >
                                     {section?.products?.map((product, index) => (
-                                        <SwiperSlide key={product.id}>
+                                        <SwiperSlide key={product.id} className='h-auto'>
                                             <VerticleProductCard product={product} />
                                         </SwiperSlide>
                                     ))}
@@ -111,15 +111,15 @@ const ProductSwiperWithImage = ({ section }) => {
                     </div>
                 </div>
             </section> : null}
-            <div className='container mb-6'>
-                {promotionImage && promotionImage?.map((offer) => {
-                    return (
-                        <div className='relative' key={offer?.id}>
+            {promotionImage && promotionImage?.map((offer) => {
+                return (
+                    <div className='container mb-6'>
+                        <div div className='relative' key={offer?.id}>
                             <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                         </div>
-                    )
-                })}
-            </div>
+                    </div>
+                )
+            })}
         </div>
 
 

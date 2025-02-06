@@ -55,8 +55,8 @@ const HomeAllProducts = () => {
 
     return (
         <section>
-            <div className='container'>
-                <div className='flex flex-col gap-3 px-2'>
+            <div className='py-3 md:py-6 container px-2 '>
+                <div className='flex flex-col gap-3 '>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{t("allProducts")}</h2>
                     <div className='grid grid-cols-12 gap-2'>
                         {loading ?

@@ -44,6 +44,8 @@ import MobileNavSidebar from '../mobile-nav-sidebar/MobileNavSidebar';
 
 
 import { setAvailableLanguages } from "@/redux/slices/languageSlice";
+import { CiSun } from 'react-icons/ci';
+import { FiMoon } from 'react-icons/fi';
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
@@ -225,7 +227,7 @@ const Header = () => {
         <>
             <section className='border-b-2'>
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
-                    <div className="container  flex justify-between items-center h-[40px]">
+                    <div className="container  flex justify-between items-center h-[40px] px-2">
                         {setting?.setting?.social_media?.length > 0 && <div className="flex items-center">
                             <p>{t("follow_us")}</p>
                             <div className="flex">
@@ -288,8 +290,8 @@ const Header = () => {
                     </div>
                 </div>
                 <div className='headerBackgroundColor pb-3 relative'>
-                    <div className='center-header headerBackgroundColor '>
-                        <div className='container  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2'>
+                    <div className='center-header headerBackgroundColor container'>
+                        <div className='  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2'>
                             <div className=' aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]'>
                                 <Link href={"/"}>{setting?.setting?.web_settings?.web_logo && <Image src={setting?.setting?.web_settings?.web_logo} alt='Logo' width={0} height={0} className='h-full lg:full w-full lg:w-full object-contain' priority={true} />}</Link>
                             </div>
@@ -410,8 +412,8 @@ const Header = () => {
 
                             </div>
                             <div className='flex  md:hidden gap-2 order-3 items-center'>
-                                <div >{themes?.theme == "light" ? <FaSun onClick={() => handleChangeTheme('dark')} /> : <FaMoon onClick={() => handleChangeTheme('light')} />}</div>
-                                <div onClick={handleCartOpen}><IoCartOutline size={20} /> {
+                                <div >{themes?.theme == "light" ? <CiSun onClick={() => handleChangeTheme('dark')} size={24} /> : <FiMoon onClick={() => handleChangeTheme('light')} size={24} />}</div>
+                                <div onClick={handleCartOpen}><IoCartOutline size={24} /> {
                                     cart.isGuest == true ? <p className={cart?.guestCart
                                         ?.length != 0 ? "flex absolute top-1.5 right-0.5  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-semibold text-xs" : "none"}> {cart?.guestCart
                                             ?.length != 0 ? cart?.guestCart
@@ -423,7 +425,7 @@ const Header = () => {
 
                     </div>
                     <div className="bottom-header ">
-                        <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 px-2">
+                        <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 px-2 ">
                             {/* First column: col-3 equivalent */}
                             <div className="col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer" onClick={handleOpenLocation}>
                                 <span className="p-3 iconBackgroundColor  rounded-full">
