@@ -109,8 +109,8 @@ const HorizontalProductSwiper = ({ section, index }) => {
             }
             {promotionImage && promotionImage?.map((offer) => {
                 return (
-                    <div className='container mb-6'>
-                        <div className='relative' key={offer?.id}>
+                    <div className='container mb-6' key={offer?.id}>
+                        <div className='relative' >
                             <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                         </div>
                     </div>
