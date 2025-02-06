@@ -56,9 +56,9 @@ const VerticleCardContainer = ({ section }) => {
                 </div>
             </section> : null
             }
-            {promotionImage && promotionImage?.map((offer) => {
+            {promotionImage && promotionImage?.map((offer, index) => {
                 return (
-                    <div className='container mb-6'>
+                    <div className='container mb-6' key={index}>
                         <div className='relative' key={offer?.id}>
                             <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
                         </div>
