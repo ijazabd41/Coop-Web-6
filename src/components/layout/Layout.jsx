@@ -38,6 +38,9 @@ const Layout = ({ children }) => {
     fetchPaymentSetting();
     fetchLanguage();
   }, []);
+
+
+
   const fetchLanguage = async () => {
     try {
       const response = await api.getSystemLanguages({ id: 0, isDefault: 0, systemType: 3 })
@@ -45,7 +48,6 @@ const Layout = ({ children }) => {
         if (response.data !== undefined) {
           if (response?.data?.length == 1) {
             try {
-
               const langRes = await api.getSystemLanguages({ id: response?.data?.[0]?.id, isDefault: 1, systemType: 3 })
               if (langRes.status == 1) {
                 document.documentElement.dir = langRes?.data?.type
@@ -67,7 +69,7 @@ const Layout = ({ children }) => {
             } catch (error) {
               console.log("error")
             }
-          } else {
+          } else if (language == null) {
             const langId = response?.data?.find((lang) => lang?.is_default == 1)?.id;
             const langRes = await api.getSystemLanguages({ id: langId, isDefault: 1, systemType: 3 })
             document.documentElement.dir = langRes?.data?.type
