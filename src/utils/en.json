@@ -492,5 +492,6 @@
     "all_cart_products_have_not_same_seller": "All cart products have not same seller",
     "sorry_we_are_not_delivering_on_selected_address": "Sorry We are not delivering on selected address",
     "is_from_disabled_seller": "is from disabled seller",
-    "no_items_found_in_users_cart": "No Items found in cart"
+    "no_items_found_in_users_cart": "No Items found in cart",
+    "maximum_products_quantity_limit_reached_message": "Apologies, maximum product quantity limit reached!"
 }
