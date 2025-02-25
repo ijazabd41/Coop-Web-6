@@ -140,7 +140,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                         {(Number(product?.active_status) === 6 && product?.return_requested === null) ?
                                             userRating ?
                                                 <div className='flex items-center flex-col px-1 cursor-pointer' onClick={() => handleShowUpdateRating(product)} >
-                                                    {t("you_rated")}<span className='font-bold flex items-center '><IoMdStar size={20} />{userRating?.rate}</span>
+                                                    {t("you_rated")}<span className='font-bold flex items-center '><IoMdStar size={20} fill='#ffd700' />{userRating?.rate}</span>
                                                 </div>
                                                 :
                                                 <div>

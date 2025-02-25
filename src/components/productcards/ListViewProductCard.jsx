@@ -157,7 +157,7 @@ const ListViewProductCard = ({ product }) => {
         toast.error(t("out_of_stock_message"));
       }
       else if (productQty >= Number(product?.total_allowed_quantity)) {
-         toast.error(t("max_cart_limit_error"));
+        toast.error(t("max_cart_limit_error"));
       }
       else {
         AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -211,7 +211,7 @@ const ListViewProductCard = ({ product }) => {
       if (productQty < Number(product?.total_allowed_quantity)) {
         addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
       } else {
-       toast.error(t("max_cart_limit_error"));
+        toast.error(t("max_cart_limit_error"));
       }
     } else {
       if (productQty >= Number(selectedVariant.stock)) {
@@ -322,7 +322,7 @@ const ListViewProductCard = ({ product }) => {
 
   return (
     <div >
-      <div className='grid grid-cols-12 items-center w-full p-3 group border-2 headerBackgroundColor rounded-md'>
+      <Link href={`/product/${product?.slug}`} className='grid grid-cols-12 items-center w-full p-3 group border-2 headerBackgroundColor rounded-md'>
         <div className='col-span-6 md:col-span-2'>
           <div className='relative h-1/2 w-full  object-cover'>
             <ImageWithPlaceholder src={product.image_url} alt={product.name} className='w-full h-full aspect-square rounded-sm' />
@@ -380,7 +380,7 @@ const ListViewProductCard = ({ product }) => {
             </div>
             : <div className='  w-full flex items-center  justify-center text-center h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
         </div>
-      </div>
+      </Link>
       <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
       <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
       <SingleSellerConfirmationModal showSingleSellerModal={showSingleSellerModal} setSingleSellerModal={setSingleSellerModal} product={product} selectedVariant={selectedVariant} />

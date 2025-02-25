@@ -100,7 +100,7 @@ const PaymentStatus = () => {
                         <Lottie className="h-44 absolute z-60 -right-5 top-0" animationData={animationOne} loop={true} />
                     </div>
                     <div className="text-center mt-8">
-                        <h1 className="text-2xl">{t("order_placed_description")}</h1>
+                        <h1 className="text-2xl font-semibold">{type == "wallet" ? t("wallet_add_description") : t("order_placed_description")}</h1>
                         <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
                             <button className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl" onClick={type == "wallet" ? handleWalletClose : handlePaymentClose}>
                                 {t("home")}

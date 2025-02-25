@@ -88,17 +88,17 @@ const DeleteModal = ({ showDelete, setShowDelete }) => {
           <h1 className="font-bold">{t("delete_user_message")}</h1>
           <div className="flex gap-2 mt-3">
             <button
-              className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
-              onClick={handleDelete}
-            >
-              {t("Ok")}
-            </button>
-            <button
               className="px-4 py-1 bg-red-700 text-white font-bold rounded-sm"
               onClick={handleHideDelete}
             >
               {" "}
               {t("cancel")}
+            </button>
+            <button
+              className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+              onClick={handleDelete}
+            >
+              {t("Ok")}
             </button>
           </div>
         </div>

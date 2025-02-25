@@ -31,13 +31,17 @@ const SellerSlider = ({ sellers }) => {
                 <div className='flex flex-col gap-3 ' dir={language?.type}>
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("sellers")} </h2>
-                        <div className='flex gap-4 items-center flex-col md:flex-row'>
-                            <Link href={"/sellers"} >{t("see_all")}</Link>
-                            <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className='cardBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                                <button className='cardBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                        {sellers?.sellers?.length > 4 &&
+                            <div className='flex gap-4 items-center flex-col md:flex-row'>
+
+                                <Link href={"/sellers"} >{t("see_all")}</Link>
+                                <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
+                                    <button className='cardBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
+                                    <button className='cardBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     </div>
                     <div className=''>
                         <Swiper

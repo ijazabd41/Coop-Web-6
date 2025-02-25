@@ -82,6 +82,7 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
             }
         } catch (error) {
             console.log("error", error)
+            buttonRef.current.disabled = false;
         }
     }
 

@@ -43,11 +43,12 @@ const ProductReviewCard = ({ review }) => {
                         <span className="font-bold text-base ">{review?.user?.name}</span>
                         <div className="flex items-center">
                             {/* Star Ratings */}
-                            <div className="flex text-yellow-400">
-                                {Array.from({ length: 4 }).map((_, index) => (
-                                    <span key={index}>★</span>
+                            <div className="flex ">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    index < review?.rate ? <span key={index} className='text-yellow-400'>★</span> : <span key={index} className="text-gray-400">★</span>
+
                                 ))}
-                                <span className="text-gray-400">★</span>
+
                             </div>
                             <span className="ml-1 = text-sm">{review?.rate}</span>
                         </div>

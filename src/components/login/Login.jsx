@@ -7,10 +7,8 @@ import Logo from "/public/logo.png";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import Link from "next/link";
 import GoogleLogo from "@/assets/googleLogin.svg";
-import EmailLogo from "@/assets/Email.svg";
-import PhoneLogo from "@/assets/Phone.svg";
+
 import OtpInput from "react-otp-input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -467,8 +465,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   const handleEmailLogin = async (e) => {
     setLoading(true);
+
     if (e != undefined) {
       e.preventDefault();
+    }
+    if (!email || !password) {
+      setError(t("email_password_mandatory"))
+      setLoading(false);
+      return
     }
     try {
       const res = await api.login({
@@ -576,7 +580,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   return (
     <>
       <Dialog open={showLogin}>
-        <DialogContent >
+        <DialogContent className="overflow-y-auto overflow-x-hidden">
           <DialogHeader className="flex justify-between items-center flex-row">
             <div className="relative aspect-square object-cover h-[68px] w-[72px]">
               <Image
@@ -633,7 +637,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   }
                 >
                   <div className="overflow-auto p-0 flex items-center justify-center flex-col ">
-                    {error ? <p>{error}</p> : <></>}
+                    {error ? <p className="text-center text-xs text-red-500">{error}</p> : <></>}
                     <OtpInput
                       className=" mx-auto items-center flex flex-wrap justify-center p-0"
                       value={otp}
@@ -689,7 +693,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                         {inputType == "number" ? (
                           <>
                             {error ? (
-                              <p className="text-center text-xs text-red-">
+                              <p className="text-center text-xs text-red-500">
                                 {error}
                               </p>
                             ) : (
@@ -804,6 +808,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                         {error ? <p>{error}</p> : <></>}
                         <form onSubmit={handleSendOTP}>
                           <PhoneInput
+                            inputStyle={{ direction: language?.type }}
                             country={
                               defaultCountry
                             }

@@ -215,6 +215,8 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
         cart?.cartProducts?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
         : cart?.guestCart?.find(prdct => prdct?.product_variant_id == product?.product_variant_id)?.qty
 
+
+
     return (
         <div>
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
@@ -242,9 +244,8 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                                 <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><TiPlus /></button>
                             </div>
                             <div className='flex gap-1 items-center'>
-                                {product?.discounted_price == 0 ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
-                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.discounted_price}</h2>}
-
+                                {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
+                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.discounted_price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
                             </div>
                         </div>
                     </div>

@@ -133,6 +133,7 @@ const Products = () => {
 
     const sortProduct = async (value) => {
         setProductResult([])
+        setOffset(0)
         dispatch(setFilterSort({ data: value }));
     }
 

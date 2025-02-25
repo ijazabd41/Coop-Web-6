@@ -148,6 +148,7 @@ const Checkout = () => {
         if (date < finalDate) {
             toast.info("Please select a valid date")
         }
+
         dispatch(setSelectedDate({ data: date }))
         setIsPopoverOpen(false)
     }
@@ -244,7 +245,7 @@ const Checkout = () => {
         if (checkout?.selectedDate == null) {
             toast.error(t("please_select_date"))
             return
-        } else if (timeSlotsData?.time_slots_is_enabled == "true" && (checkout?.timeSlot == null || selectedTimeSlot == null)) {
+        } else if (timeSlotsData?.time_slots_is_enabled == "true" && (checkout?.timeSlot == null)) {
             toast.error(t("please_select_time_slot"))
             return
         }
@@ -488,8 +489,8 @@ const Checkout = () => {
                         }
                     }
                 } else {
-                    setIsOrderPlaced(false)
-                    api.deleteOrder({ orderId: orderId })
+                    // setIsOrderPlaced(false)
+                    await api.deleteOrder({ orderId: orderId })
                 }
             }
         } catch (error) {

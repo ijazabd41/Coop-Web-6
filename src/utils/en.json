@@ -232,6 +232,7 @@
     "preferred_delivery_time": "Preferred Delivery Time",
     "use_my_current_location": "Use my current location",
     "order_placed_description": "Your Order has been successfully placed.",
+    "wallet_add_description": "Money added successfully to your wallet!",
     "order_failed_description": "Payment Failed",
     "profile_info_description": "This is an initial information of you, don't worry you can change it anytime.",
     "select_delivery_location": "Select Your Delivery Location",
@@ -285,12 +286,13 @@
     "please_enter_new_password": "Please enter new password",
     "please_enter_confirm_password": "Please enter confirm password",
     "confirm_password_message": "Password and confirm password should be same",
+    "email_password_mandatory": "Email and Password are mandatory",
     "user_name": "Username",
     "email_address": "Email Address",
     "delete_address": "Delete Address ?",
     "delete_address_message": "Do you really want to delete address ?",
     "please_select_date": "Please Select Date",
-    "please_select_time_slot": "Please Select Time Slot",
+    "please_select_time_slot": "Please Select Delivery Time",
     "order_placed": "Order Placed",
     "order_id": "Order Id",
     "item": "item",
@@ -493,5 +495,6 @@
     "sorry_we_are_not_delivering_on_selected_address": "Sorry We are not delivering on selected address",
     "is_from_disabled_seller": "is from disabled seller",
     "no_items_found_in_users_cart": "No Items found in cart",
-    "maximum_products_quantity_limit_reached_message": "Apologies, maximum product quantity limit reached!"
+    "maximum_products_quantity_limit_reached_message": "Apologies, maximum product quantity limit reached!",
+    "the_mobile_must_be_a_number": "The mobile must be a number"
 }

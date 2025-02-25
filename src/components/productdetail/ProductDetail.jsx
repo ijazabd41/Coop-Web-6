@@ -351,8 +351,8 @@ const ProductDetail = () => {
                                     </div>
                                     <div className='flex items-center gap-1'>
                                         {selectVariant?.discounted_price !== 0 && selectVariant?.discounted_price !== selectVariant?.price ? <>
-                                            <h2 className='font-bold text-3xl primaryColor'>{currency}{selectVariant?.discounted_price}</h2><h3 className='line-through font-bold text-base '>{currency}{selectVariant?.price}</h3>
-                                        </> : <> <h2 className='font-bold text-3xl primaryColor'>{currency}{selectVariant?.price}</h2></>}
+                                            <h2 className='font-bold text-3xl '>{currency}{selectVariant?.discounted_price}</h2><h3 className='line-through font-bold text-base text-gray-500'>{currency}{selectVariant?.price}</h3>
+                                        </> : <> <h2 className='font-bold text-3xl '>{currency}{selectVariant?.price}</h2></>}
                                     </div>
                                     {/* <div dangerouslySetInnerHTML={{ __html: product?.description }}>
 
@@ -365,7 +365,7 @@ const ProductDetail = () => {
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
-                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mr-2 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
+                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mr-2 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder addToCartColor" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
                                                             <p className='font-bold text-sm'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
                                                             <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 && discountPrice !== price ? discountPrice : price}</p>{discountPrice != 0 && discountPrice !== price ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
