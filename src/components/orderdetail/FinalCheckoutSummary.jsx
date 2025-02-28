@@ -29,6 +29,10 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
                         <span className="">{t("delivery_charge")}</span>
                         <span className='font-semibold'>{setting?.currency}{orderDetail?.delivery_charge}</span>
                     </div>
+                    {orderDetail?.promo_discount != 0 && <div className="flex justify-between items-center">
+                        <span className="">{t("promoDiscount")}</span>
+                        <span className='font-semibold'>- {setting?.currency}{orderDetail?.promo_discount?.toFixed(2)}</span>
+                    </div>}
 
                     <div className="pt-4 border-t ">
                         <div className="flex justify-between items-center">

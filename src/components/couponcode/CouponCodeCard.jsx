@@ -41,7 +41,7 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
                         </div>
                     </div>
                 </div>
-                <p className="text-sm mt-3 p-1 border-t-2">{`${t("you_will_save")} ${coupon?.discounted_amount?.toFixed(2)}  ${t("on_this_coupon")}`}</p>
+                <p className="text-sm mt-3 p-1 border-t-2">{`${t("you_will_save")} ${cart?.cartSubTotal - coupon?.discounted_amount?.toFixed(2)}  ${t("on_this_coupon")}`}</p>
             </div>
 
         </div>

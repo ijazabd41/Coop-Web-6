@@ -9,7 +9,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { t } from '@/utils/translation';
 
 
-const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAddress, finalOrderAddress }) => {
+const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAddress, finalOrderAddress, fromAddress }) => {
     const dispatch = useDispatch();
 
     const checkout = useSelector((state) => state.Checkout)
@@ -49,7 +49,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                     <h2 className="font-semibold text-lg">
                         {t("delivery_to")}: <span className="font-bold">{address?.name}</span>
                     </h2>
-                    <div className="flex items-center">
+                    {!fromAddress && <div className="flex items-center">
                         {!finalOrderAddress &&
                             <input
                                 type="checkbox"
@@ -66,7 +66,8 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                         >
                             {address?.type}
                         </label>
-                    </div>
+                    </div>}
+
                 </div>
                 {(address?.is_default === 1 && !finalOrderAddress) && (
                     <p className="text-sm mb-2">{t('default_address_msg')}</p>

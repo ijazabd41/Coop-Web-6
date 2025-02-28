@@ -68,7 +68,7 @@ const Address = () => {
                 }) : addresses?.allAddresses?.length > 0 ? addresses?.allAddresses && addresses?.allAddresses?.map((address) => {
                     return (
                         <div key={address?.id}>
-                            <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} />
+                            <AddressCard address={address} setShowAddAddres={setShowAddAddres} setIsAddressSelected={setIsAddressSelected} fetchAddress={fetchAddress} fromAddress={true} />
                         </div>
                     )
                 }) : <div className=' flex justify-center  my-2 cursor-pointer' onClick={() => setShowAddAddres(true)}>

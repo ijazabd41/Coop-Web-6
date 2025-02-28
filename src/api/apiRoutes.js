@@ -73,12 +73,9 @@ export const forgotPassword = async ({ otp, email, password, confirmPassword }) 
 export const updateProfile = async ({ image, name, email, mobileNumber, type }) => {
     const formData = new FormData();
     formData.append("profile", image)
-    if (type == "phone") {
-        formData.append("name", name)
-        formData.append("email", email)
-    } else if (type == "google" || type == "email") {
-        formData.append("mobile", mobileNumber)
-    }
+    formData.append("name", name)
+    formData.append("email", email)
+    formData.append("mobile", mobileNumber)
     const response = await api.post(apiEndPoints.editProfile, formData)
     return response.data
 }

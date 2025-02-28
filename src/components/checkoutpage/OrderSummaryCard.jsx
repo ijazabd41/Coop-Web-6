@@ -64,7 +64,10 @@ const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder, checkOutError 
 
             <div className="flex justify-between items-center mb-6 backgroundColor p-3 rounded-sm">
                 <span className="text-lg font-bold ">{t("total")}</span>
-                {checkOutError == false ? <span className="font-semibold ">{setting?.currency} {checkoutData?.total_amount?.toFixed(2)}</span> :
+                {checkOutError == false ?
+
+                    <span className="font-semibold ">{setting?.currency} {checkout?.isWalletChecked ? (checkoutData?.total_amount - checkout?.usedWalletBalance) : checkoutData?.total_amount?.toFixed(2)}</span>
+                    :
                     <span className="font-semibold ">{setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}</span>
                 }
             </div>

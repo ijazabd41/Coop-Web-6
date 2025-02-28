@@ -156,10 +156,6 @@ const Header = () => {
         router.push("/")
     }
 
-    const handleSearchClick = () => {
-        setMobileActiveKey(2)
-    }
-
     const handleProfileClick = () => {
         setMobileActiveKey(3)
         if (user?.jwtToken) {
@@ -228,23 +224,26 @@ const Header = () => {
             <section className='border-b-2'>
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
                     <div className="container  flex justify-between items-center h-[40px] px-2">
-                        {setting?.setting?.social_media?.length > 0 && <div className="flex items-center">
-                            <p>{t("follow_us")}</p>
-                            <div className="flex">
-                                <ul className="flex gap-0 px-[16px] py-[8px]">
-                                    {setting?.setting?.social_media && setting?.setting?.social_media?.slice(0, 5)?.map((social, index) => {
-                                        return (
-                                            <Link key={social?.id} href={social?.link || "#"} target='_blank'>
-                                                <li className="border-r-[2px] p-3 border-white">
-                                                    <i className={`${social?.icon}`}></i>
-                                                </li>
-                                            </Link>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                        </div>}
-                        <div className="flex gap-[8px]">
+                        <div className='w-[40%]'>
+                            {setting?.setting?.social_media?.length > 0 && <div className="flex items-center">
+                                <p>{t("follow_us")}</p>
+                                <div className="flex">
+                                    <ul className="flex gap-0 px-[16px] py-[8px]">
+                                        {setting?.setting?.social_media && setting?.setting?.social_media?.slice(0, 5)?.map((social, index) => {
+                                            return (
+                                                <Link key={social?.id} href={social?.link || "#"} target='_blank'>
+                                                    <li className="border-r-[2px] p-3 border-white">
+                                                        <i className={`${social?.icon}`}></i>
+                                                    </li>
+                                                </Link>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            </div>}
+                        </div>
+
+                        <div className="flex gap-[8px] flex-last">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
                                     {themes?.theme == "light" ? <FaSun /> : <FaMoon />}

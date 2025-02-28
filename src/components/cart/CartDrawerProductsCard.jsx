@@ -6,6 +6,7 @@ import * as api from "@/api/apiRoutes"
 import { addtoGuestCart, clearCartPromo, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
+import { t } from '@/utils/translation';
 
 
 const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData }) => {
