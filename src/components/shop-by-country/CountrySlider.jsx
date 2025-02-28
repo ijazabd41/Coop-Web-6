@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { isRtl } from '@/lib/utils';
+import { setFilterByCountry } from '@/redux/slices/productFilterSlice';
 
 const CountrySlider = ({ countries }) => {
     const router = useRouter()

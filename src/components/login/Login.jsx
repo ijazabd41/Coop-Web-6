@@ -734,7 +734,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                                   handleEmailChange(e.target.value, {})
                                 }
                                 className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
-                                placeholder={t("loginBoxMessage")}
+                                placeholder={t("email_placeholder")}
                                 ref={inputRef}
                               />
 
@@ -772,7 +772,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                               htmlFor="email"
                               className="text-base font-bold"
                             >
-                              {t("loginBoxMessage")}
+                              {t("email_placeholder")}
                             </label>
                             <input
                               type="text"
@@ -780,7 +780,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                               onChange={(e) =>
                                 handleEmailChange(e.target.value, {})
                               }
-                              placeholder={t("loginBoxMessage")}
+                              placeholder={t("email_placeholder")}
                               className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm"
                             />
                           </>
@@ -843,7 +843,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                               handleEmailChange(e.target.value, {})
                             }
                             className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
-                            placeholder={t("loginBoxMessage")}
+                            placeholder={t("email_placeholder")}
                             ref={inputRef}
                           />
 

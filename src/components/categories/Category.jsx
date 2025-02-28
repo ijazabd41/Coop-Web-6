@@ -24,9 +24,6 @@ const Category = () => {
     }, [])
 
     const fetchCategories = async (Slug = "") => {
-        console.log("slug", Slug)
-        // let catSlug = slug == "all" ? "" : Slug
-        console.log(Slug)
         setIsLoading(true)
         try {
             const result = await api.getCategories({ limit: categoryPerPage, slug: Slug })

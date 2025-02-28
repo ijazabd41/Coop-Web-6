@@ -460,8 +460,8 @@ const Header = () => {
                                     handleSearch={handleSearch}
                                 />
                             </div>
-                            {setting?.setting?.support_number && <div className="col-span-3 hidden order-3 justify-end lg:flex h-full">
-                                <Link href={`tel:${setting?.support_number}`} className="p-[10px] w-44 flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 primaryBackColor gap-2 text-xl">
+                            {setting?.setting?.support_number && <div className="col-span-3 hidden order-3 justify-end lg:flex  h-full">
+                                <Link href={`tel:${setting?.support_number}`} className="p-[10px]   flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 primaryBackColor gap-2 text-xl">
                                     <FaPhoneVolume size={18} /> {setting?.setting?.support_number}
                                 </Link>
                             </div>}

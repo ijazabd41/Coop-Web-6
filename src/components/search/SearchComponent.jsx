@@ -1,13 +1,5 @@
 'use client'
-import React from 'react'
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"
+import React, { useEffect, useState } from 'react'
 import {
     Select,
     SelectContent,
@@ -23,16 +15,30 @@ import SearchProductCard from '../cards/SearchProductCard'
 import { FaSearch } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import { isRtl } from '@/lib/utils'
+import * as api from "@/api/apiRoutes"
 
 const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearchCategory, handleSearch, isSuggLoading }) => {
     const rtl = isRtl();
     const dispatch = useDispatch()
     const router = useRouter()
-    const categories = useSelector(state => state.Shop?.shop)
+    const [categories, setCategories] = useState([])
     const filter = useSelector(state => state.ProductFilter)
 
-    const handleSearchItemClick = async () => {
+    useEffect(() => {
+        fetchCategories();
+    }, [])
 
+    const fetchCategories = async () => {
+
+        try {
+            const categories = await api.getCategories()
+            setCategories(categories.data)
+        } catch (error) {
+            console.log("erorr", error)
+        }
+    }
+
+    const handleSearchItemClick = async () => {
         dispatch(setFilterCategory({ data: filter?.searchedCategory }))
         router.push("/products");
     }
@@ -46,7 +52,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                     </SelectTrigger>
                     <SelectContent className="w-full h-full z-50 md:w-[152px]">
                         <SelectItem value="all categories">{t("all_categories")}</SelectItem>
-                        {categories?.categories?.map((category) => (
+                        {categories?.map((category) => (
                             <SelectItem key={category?.id} value={`${category?.id}`}>{category?.name}</SelectItem>
                         ))}
                     </SelectContent>
@@ -70,7 +76,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                         <FaSearch />
                         {t("search")}
                     </button>
-                    <div className="md:w-[calc(100%-126px)] mt-1 flex flex-wrap flex-col col-span-4  bodyBackgroundColor gap-5 order-2 md:order-2 md:absolute 
+                    <div className="md:w-[calc(100%-126px)] mt-1 flex flex-wrap flex-col col-span-4  bodyBackgroundColor gap-1 order-2 md:order-2 md:absolute 
                       md:z-10 md:bodyBackgroundColor md:top-12 md:left-0
                     ">
                         {router?.pathname !== "/products" && filter?.search_product?.map((product, idx) => (

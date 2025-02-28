@@ -108,7 +108,7 @@ export const getShop = async ({ latitude, longitude }) => {
     return response.data
 }
 
-export const getCategories = async ({ slug = "", id = "", limit = 10, offset = 0 } = {}) => {
+export const getCategories = async ({ slug = "", id = "", limit, offset } = {}) => {
     const params = {
         limit,
         offset,

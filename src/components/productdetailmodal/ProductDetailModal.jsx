@@ -50,7 +50,8 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
     const [productImages, setProductImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState("");
     const [loading, setLoading] = useState(false)
-    const [showSingleSellerModal, setSingleSellerModal] = useState(false)
+    const [showSingleSellerModal, setSingleSellerModal] = useState(false);
+    const [isVariantAvailable, setIsVariantAvailable] = useState(false)
 
     const calculateDiscount = (discountPrice, actualPrice) => {
         const difference = actualPrice - discountPrice;
@@ -64,6 +65,11 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
             fetchRatings()
         }
     }, [showDetailModal, product.id, product.slug])
+
+
+    useEffect(() => {
+        handleIsVariantAvailable()
+    }, [selectVariant])
 
     const fetchProductById = async () => {
         setLoading(true)
@@ -82,6 +88,15 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
             setLoading(true)
             console.log("error", error)
         }
+    }
+
+    const handleIsVariantAvailable = () => {
+        if (product?.is_unlimited_stock == 0 && selectVariant?.stock <= 0) {
+            setIsVariantAvailable(false)
+        } else {
+            setIsVariantAvailable(true)
+        }
+
     }
 
     const handleChangeVariant = (variant) => {
@@ -377,7 +392,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                         </div>
                                     </div>
                                     <div className='flex gap-4 flex-col lg:flex-row'>
-                                        <div className='flex gap-6 md:gap-4 items-center'>
+                                        {isVariantAvailable ? <div className='flex gap-6 md:gap-4 items-center'>
                                             <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-1/3'>
                                                 <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
                                                 <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
@@ -386,7 +401,8 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                             <div>
                                                 <button className='primaryBackColor flex gap-2 text-white py-[6px] px-5 md:px-5 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
                                             </div>
-                                        </div>
+                                        </div> : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
+
 
                                         <div className='flex gap-2 items-center'>
                                             <span className='rounded-full border-2 p-2' onClick={handleProductLikes}>

@@ -14,6 +14,7 @@ import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
 
+
 const VerticleProductCard = ({ product }) => {
 
     const dispatch = useDispatch();
@@ -323,8 +324,8 @@ const VerticleProductCard = ({ product }) => {
         <div>
             <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
-                    <div className='relative aspect-square w-full h-60   '>
-                        <ImageWithPlaceholder className='rounded-lg object-fill h-full w-full' alt={product.name} src={product.image_url} />
+                    <div className='relative aspect-square w-full h-44   '>
+                        <ImageWithPlaceholder className='rounded-lg object-cover h-full w-full' alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
@@ -332,6 +333,9 @@ const VerticleProductCard = ({ product }) => {
                             <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
                             <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><div onClick={handleShowDetailModal} ><FaRegEye size={18} className='fontColor' /></div></li>
                         </ul>
+                        {/* <div className='absolute right-1 bottom-1'>
+                            <ImageWithPlaceholder src={VegIcon} alt="Veg Icon" className="h-full w-full" />
+                        </div> */}
                     </div>
                 </div>
                 <div className='h-[100px] flex flex-col justify-between '>
