@@ -36,6 +36,7 @@ const Products = () => {
     const [totalProducts, settotalProducts] = useState(null)
     const [isGridView, setIsGridView] = useState(true)
     const [loading, setLoading] = useState(false)
+    const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
 
 
@@ -66,9 +67,15 @@ const Products = () => {
             section_id: filter?.section_id
         });
     }, [filter.search, filter.category_id, filter.brand_ids, filter.sort_filter, filter?.search_sizes, filter?.price_filter, offset, city?.city])
+
     const filterProductsFromApi = async (filter) => {
         try {
-            setLoading(true);
+            if (offset === 0) {
+                setLoading(true);
+            } else {
+                setIsLoadMoreLoading(true);
+            }
+            // setLoading(true);
             const result = await api.getProductByFilter({ latitude: city.city.latitude, longitude: city.city.longitude, filters: filter })
             if (result.status === 1) {
                 if (filter?.search) {
@@ -88,12 +95,14 @@ const Products = () => {
                 settotalProducts(result.total);
                 // setShowPriceFilter(true);÷
                 setLoading(false);
+                setIsLoadMoreLoading(false);
             } else {
                 setProductResult([]);
                 settotalProducts(0);
                 setSizes([]);
                 // setShowPriceFilter(false);
                 setLoading(false);
+                setIsLoadMoreLoading(false);
             }
         } catch (error) {
             const regex = /Failed to fetch/g;
@@ -212,7 +221,14 @@ const Products = () => {
                                                 )
                                             })}
 
+                                    {isLoadMoreLoading ? placeholderItems.map(index => {
+                                        return (
+                                            filter?.grid_view ? <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3' key={index}>
+                                                <CardSkeleton height={300} />
+                                            </div> : <div className='col-span-12'><CardSkeleton height={200} /></div>
 
+                                        )
+                                    }) : <></>}
                                     <div className='col-span-12 mt-6 w-full flex justify-center mx-auto'>
                                         {(totalProducts > productResult?.length) ?
                                             <button className='bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3' onClick={handleFetchMore}>{t("load_more")}</button>
