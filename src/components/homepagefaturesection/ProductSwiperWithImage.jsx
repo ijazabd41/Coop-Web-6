@@ -55,7 +55,7 @@ const ProductSwiperWithImage = ({ section }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='grid grid-cols-1  md:grid-cols-12 gap-4 md:gap-0'>
+                        <div className='grid grid-cols-1  md:grid-cols-12 gap-4 md:gap-0 image-card'>
                             {/* Image Section */}
                             <div className='md:col-span-3'>
                                 <div className='aspect-square w-full h-full relative'>
@@ -64,7 +64,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             </div>
 
                             {/* Swiper Section */}
-                            <div className='md:col-span-9'>
+                            <div className='md:col-span-9 '>
                                 <Swiper
                                     key={rtl}
                                     spaceBetween={0}

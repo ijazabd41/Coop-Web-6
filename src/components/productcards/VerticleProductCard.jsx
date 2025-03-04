@@ -322,7 +322,7 @@ const VerticleProductCard = ({ product }) => {
 
     return (
         <div>
-            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.cardBorder_&]:rounded-none rounded-md'>
+            <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.image-card_&]:rounded-none [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
                     <div className='relative aspect-square w-full h-44   '>
                         <ImageWithPlaceholder className='rounded-lg object-cover h-full w-full' alt={product.name} src={product.image_url} />
