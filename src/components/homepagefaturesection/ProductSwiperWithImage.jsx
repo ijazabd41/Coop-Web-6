@@ -67,7 +67,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             <div className='md:col-span-9'>
                                 <Swiper
                                     key={rtl}
-                                    spaceBetween={20}
+                                    spaceBetween={0}
                                     modules={[Navigation]}
                                     navigation={
                                         {
@@ -78,24 +78,24 @@ const ProductSwiperWithImage = ({ section }) => {
                                     className="brand-swiper"
                                     breakpoints={{
                                         1200: {
-                                            slidesPerView: 3.7,
-                                            spaceBetween: 10
+                                            slidesPerView: 4,
+                                            // spaceBetween: 10
                                         },
                                         1024: {
-                                            slidesPerView: 3.55,
-                                            spaceBetween: 10
+                                            slidesPerView: 3,
+                                            // spaceBetween: 10
                                         },
                                         768: {
-                                            slidesPerView: 2.3,
-                                            spaceBetween: 10
+                                            slidesPerView: 2,
+                                            // spaceBetween: 10
                                         },
                                         500: {
                                             slidesPerView: 2,
-                                            spaceBetween: 10
+                                            // spaceBetween: 10
                                         },
                                         300: {
                                             slidesPerView: 1.5,
-                                            spaceBetween: 10
+                                            // spaceBetween: 10
                                         },
                                     }}
                                 >
