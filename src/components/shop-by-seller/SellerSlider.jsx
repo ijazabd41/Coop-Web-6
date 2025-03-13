@@ -36,8 +36,8 @@ const SellerSlider = ({ sellers }) => {
 
                                 <Link href={"/sellers"} >{t("see_all")}</Link>
                                 <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                    <button className='cardBorder textColor rounded-full p-2 seller-slider-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                                    <button className='cardBorder textColor rounded-full p-2 seller-slider-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                                    <button className=' seller-slider-prev cardBorder textColor rounded-full p-2 '><IoMdArrowBack className='textColor' size={20} /></button>
+                                    <button className='seller-slider-next cardBorder textColor rounded-full p-2 '><IoMdArrowForward className='textColor' size={20} /></button>
                                 </div>
                             </div>
                         }

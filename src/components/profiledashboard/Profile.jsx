@@ -34,13 +34,7 @@ const Profile = () => {
     const onImageChange = (event) => {
         const file = event.target.files?.[0];
         if (file) {
-            // const fileTypes = ["image/png", "image/jpeg"];
-            // if (!fileTypes.includes(file.type)) {
-            //     alert("Please upload a valid image file (PNG or JPEG)");
-            //     return;
-            // }
             setProfileImage(file);
-
         }
     };
 

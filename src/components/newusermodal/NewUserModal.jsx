@@ -15,6 +15,7 @@ import { setAuthType, setCurrentUser } from '@/redux/slices/userSlice';
 import { addtoGuestCart, setCart, setCartProducts, setCartSubTotal, setGuestCartTotal, setIsGuest } from '@/redux/slices/cartSlice';
 import { setSetting } from '@/redux/slices/settingSlice';
 import { setTokenThunk } from '@/redux/thunk/loginthunk';
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumberWithoutCountryCode, setEmail, userName, email, phoneNumberWithoutCountryCode, countryCode, setIsOTP }) => {
   const dispatch = useDispatch()
@@ -139,7 +140,7 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
       <DialogContent className="">
         <DialogHeader className="flex flex-row justify-between items-center">
           <div className="relative aspect-square object-cover h-[68px] w-[72px]">
-            <Image src={Logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
+            <ImageWithPlaceholder src={setting?.web_settings?.web_logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
           </div>
           <div>
             <IoIosCloseCircle size={32} onClick={() => setShowNewUser(false)} />

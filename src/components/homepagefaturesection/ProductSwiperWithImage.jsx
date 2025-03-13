@@ -58,11 +58,10 @@ const ProductSwiperWithImage = ({ section }) => {
                         <div className='grid grid-cols-1  md:grid-cols-12 gap-4 md:gap-0 image-card'>
                             {/* Image Section */}
                             <div className='md:col-span-3'>
-                                <div className='aspect-square w-full h-full relative'>
-                                    <Image src={section?.banner_web_url} height={0} width={0} alt='Logo' className='object-cover h-full w-full' />
+                                <div className='aspect-square w-full h-full relative '>
+                                    <Image src={section?.banner_web_url} height={0} width={0} alt='Logo' className='object-cover h-full w-full rounded-tl-md rounded-bl-md' />
                                 </div>
                             </div>
-
                             {/* Swiper Section */}
                             <div className='md:col-span-9 '>
                                 <Swiper

@@ -33,9 +33,9 @@ const PrevOrderCard = ({ order }) => {
                             <p className='font-normal text-sm'>{t("orderDate")}</p>
                             <p className='font-bold text-sm'>{formatCustomDate(order?.date)}</p>
                         </div>
-                        <div className='col-span-5 flex flex-col items-start'>
+                        <div className='col-span-6 flex flex-col items-end'>
                             <p className='font-normal text-sm'>{t("orderStatus")}</p>
-                            <span className='font-bold text-base'>{t("order_delivered_on")}{formatCustomDate(deliveryDate?.[1])}</span>
+                            <span className='font-bold text-base'>{formatCustomDate(deliveryDate?.[1])}</span>
                         </div>
                     </div>
                     <div className='p-4'>

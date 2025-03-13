@@ -67,6 +67,27 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                     <div className='max-w-full overflow-hidden'>
                                         <h2 className="font-bold truncate">{product?.name}</h2>
                                         <p className="text-sm ">{`${product?.variant_name} x ${product?.quantity}`}</p>
+                                        {Number(product?.return_requested) === 1 && (
+                                            <button
+                                                className="text-[#DB9305]"
+                                            >
+                                                {t("return_requested")}
+                                            </button>
+                                        )}
+                                        {Number(product?.active_status) === 8 && (
+                                            <button
+                                                className="text-[#DB3D26]"
+                                            >
+                                                {t("returned")}
+                                            </button>
+                                        )}
+                                        {Number(product?.return_requested) === 3 && (
+                                            <button
+                                                className=" text-red-500 "
+                                            >
+                                                {t("return_rejected")}
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                                 <td className="p-4">
@@ -80,8 +101,18 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                 </td>
                                 <td className="p-4 font-bold">{setting?.currency}{product?.sub_total?.toFixed(2)}</td>
                                 <td className="p-4 ">
-                                    <div className='flex gap-2'>
+                                    <div className='flex gap-2 flex-col items-center'>
+                                        {
+                                            userRating ?
+                                                <div className='flex rounded-md items-center cursor-pointer px-4 py-2 bg-[#DB93051F] w-3/4' onClick={() => handleShowUpdateRating(product)} >
+                                                    {t("edit_review")} | <span className='font-bold flex items-center '><IoMdStar size={20} fill='#ffd700' />{userRating?.rate}</span>
+                                                </div>
+                                                :
+                                                <div>
+                                                    <button className='px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base' onClick={() => handleShowRating(product)}><MdOutlineStar size={20} />{t("write_review")}</button>
+                                                </div>}
                                         <div className=''>
+
                                             {Number(product?.active_status) <= 6 &&
                                                 Number(product?.active_status) < Number(product?.till_status) &&
                                                 Number(product?.cancelable_status) === 1 && (
@@ -97,7 +128,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                                 Number(product?.return_status) === 1 &&
                                                 product?.return_requested === null && (
                                                     <button
-                                                        className="px-4 py-2 text-orange-500 bg-[#ffc1071f] rounded-md hover:bg-[#eacd761f]"
+                                                        className="text-[#DB3D26] underline"
                                                         onClick={() => handleReturn(product)}
                                                     >
                                                         {t("return")}
@@ -113,39 +144,13 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                                 </button>
                                             )}
 
-                                            {Number(product?.active_status) === 8 && (
-                                                <button
-                                                    className="px-4 py-2 text-orange-500 bg-[#ffc1071f] rounded-md "
-                                                >
-                                                    {t("returned")}
-                                                </button>
-                                            )}
 
-                                            {Number(product?.return_requested) === 1 && (
-                                                <button
-                                                    className="px-4 py-2 text-orange-500 bg-[#ffc1071f] rounded-md "
-                                                >
-                                                    {t("return_requested")}
-                                                </button>
-                                            )}
 
-                                            {Number(product?.return_requested) === 3 && (
-                                                <button
-                                                    className="px-4 py-2 text-red-500 bg-[#ffc1071f] rounded-md "
-                                                >
-                                                    {t("return_rejected")}
-                                                </button>
-                                            )}
+
+
+
                                         </div>
-                                        {(Number(product?.active_status) === 6 && product?.return_requested === null) ?
-                                            userRating ?
-                                                <div className='flex items-center flex-col px-1 cursor-pointer' onClick={() => handleShowUpdateRating(product)} >
-                                                    {t("you_rated")}<span className='font-bold flex items-center '><IoMdStar size={20} fill='#ffd700' />{userRating?.rate}</span>
-                                                </div>
-                                                :
-                                                <div>
-                                                    <button className='px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base' onClick={() => handleShowRating(product)}><MdOutlineStar size={20} />{t("rate")}</button>
-                                                </div> : <></>}
+
 
                                     </div>
 

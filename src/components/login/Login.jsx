@@ -1,14 +1,11 @@
 "use client";
 import react, { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import Image from "next/image";
-import Logo from "/public/logo.png";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import GoogleLogo from "@/assets/googleLogin.svg";
-
 import OtpInput from "react-otp-input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -36,7 +33,6 @@ import {
 import FirebaseData from "@/utils/firebase";
 import * as api from "@/api/apiRoutes";
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
-import Loader from "../loader/Loader";
 import NewUserModal from "../newusermodal/NewUserModal";
 import { IoIosCloseCircle } from "react-icons/io";
 import Register from "../register/Register";
@@ -44,7 +40,6 @@ import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
 
 export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
-  const authType = useSelector((state) => state.User.authType);
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
@@ -77,6 +72,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const [userAuthType, setUserAuthType] = useState("");
   const [showRegister, setShowRegister] = useState(false);
   const [showForgetPassword, setShowForgetPassword] = useState(false);
+  const [phonePassword, setPhonePassword] = useState("")
+  const [forgotPasswordType, setForgotPasswordType] = useState("");
+  const [isErrorMessage, setIsErrorMessage] = useState(false)
 
   useEffect(() => {
     if (inputRef.current) {
@@ -174,9 +172,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
   };
 
-  const handleShowRegister = () => {
+  const handleShowRegister = (type) => {
     setShowRegister(true);
-    setInputType("email");
+    setInputType(type);
     setError("")
   };
 
@@ -225,7 +223,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(true);
           setLoading(false);
         } catch (error) {
-          console.log("error from send otp", error);
+
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
@@ -233,8 +231,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         }
       } else if (setting?.custom_sms_gateway_otp_based == 1) {
         try {
-          const res = await newApi.sendSms({
-            mobile: phoneNumberWithoutSpaces,
+          const res = await api.sendSms({
+            mobile: phoneNumberWithoutSpaces
           });
           if (res?.status == 1) {
             setTimer(90);
@@ -374,7 +372,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const loginApiCall = async (user, id, fcm, type) => {
     try {
       dispatch(setAuthId({ data: Uid, type }));
-      const res = await api.login({ id: id, fcm, type });
+      const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
+      const res = await api.login({ id: id, fcm, type, phoneAuthType: isPhoneAuthPassword, password: phonePassword });
       if (res.status === 1) {
         const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
         await getCurrentUser();
@@ -400,6 +399,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setShowRegister(false);
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
+      } else if (res.message == "user_exist_password_blank") {
+        setIsErrorMessage(t("forget_password_note"))
+        handleShowForgotPassword("phone")
+      } else if (res.message == "invalid_password") {
+        setError(t("password_not_valid"));
+      } else if (res.message == "user_not_exist") {
+        setError(t("user_not_exist"))
       }
       else {
         setUserAuthType(type);
@@ -430,8 +436,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setShowPassword(!showPassword);
   };
 
-  const handleShowForgotPassword = () => {
-    setShowLogin(false);
+  const handleShowForgotPassword = (type) => {
+    setPhonePassword("")
+    // setShowLogin(false);
+    setForgotPasswordType(type);
     setShowForgetPassword(true);
   };
 
@@ -577,6 +585,140 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
   };
 
+  const handlePhoneLogin = async (e) => {
+    e.preventDefault();
+    if (setting?.phone_auth_password == 1) {
+      loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+    } else {
+      handleSendOTP(e)
+    }
+  }
+
+  const renderPhoneInput = () => (
+    <>
+      {error ? <p className="text-center text-xs text-red-500 my-2 font-semibold">{error}</p> : <></>
+      }
+      <form onSubmit={handlePhoneLogin}>
+        <div className="flex flex-col gap-4">
+          <PhoneInput
+            inputStyle={{ direction: language?.type }}
+            country={
+              defaultCountry
+            }
+            value={phoneNumber}
+            onChange={(phone, data) =>
+              handlePhoneNoChange(phone, data)
+            }
+            onCountryChange={(code) => setCountryCode(code)}
+            inputProps={{
+              name: "phone",
+              required: true,
+              autoFocus: true,
+            }}
+          />
+          {setting?.phone_auth_password == 1 && (
+            <form className="flex flex-col relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={phonePassword}
+                onChange={(e) => setPhonePassword(e.target.value)}
+                className="border-[#CACACA] border-[1px] py-2 px-4 rounded-sm w-full "
+                placeholder={t("passwordMessage")}
+              />
+              <div
+                className="absolute right-[10px] top-[12px]"
+                onClick={handlePasswordShow}
+              >
+                {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              </div>
+              <div className="text-base font-medium leading-6 mt-2 text-right">
+                <p
+                  className="cursor-pointer"
+                  onClick={(e) => handleShowForgotPassword("phone")}
+                >
+                  {t("forget_password_?")}
+                </p>
+              </div>
+            </form>)}
+        </div>
+        <button
+          disabled={loading}
+          type="submit"
+          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
+        >
+          {loading ? t("loading") : t("continue")}
+        </button>
+        {setting?.phone_auth_password == 1 &&
+          <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
+            {t("registerMsg")}
+            <p
+              onClick={() => handleShowRegister('number')}
+              className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
+            >
+              {t("registerNow")}
+            </p>
+          </h2>
+        }
+      </form>
+    </>
+  )
+
+  const renderEmailInput = () => (
+    <>
+      {error ? <p className="text-center text-xs text-red-500 my-2 font-semibold">{error}</p> : <></>}
+
+      <form className="relative" onSubmit={handleEmailLogin}>
+        <input
+          value={email}
+          onChange={(e) =>
+            handleEmailChange(e.target.value, {})
+          }
+          className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
+          placeholder={t("email_placeholder")}
+          ref={inputRef}
+        />
+
+        <input
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4"
+          placeholder={t("passwordMessage")}
+        />
+        <div
+          className="absolute right-[10px] top-[72px]"
+          onClick={handlePasswordShow}
+        >
+          {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+        </div>
+        <div className="text-base font-medium leading-6 mt-2 text-right">
+          <p
+            className="cursor-pointer"
+            onClick={(e) => handleShowForgotPassword("email")}
+          >
+            {t("forget_password_?")}
+          </p>
+        </div>
+        <button
+          disabled={loading}
+          type="submit"
+          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
+        >
+          {loading ? t("loading") : t("continue")}
+        </button>
+        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
+          {t("registerMsg")}
+          <p
+            onClick={() => handleShowRegister('email')}
+            className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
+          >
+            {t("registerNow")}
+          </p>
+        </h2>
+      </form>
+    </>
+  )
+
   return (
     <>
       <Dialog open={showLogin}>
@@ -584,10 +726,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           <DialogHeader className="flex justify-between items-center flex-row">
             <div className="relative aspect-square object-cover h-[68px] w-[72px]">
               <Image
-                src={Logo}
+                src={setting?.web_settings?.web_logo}
                 alt="logo"
                 fill
-                className=" aspect-square w-full h-full object-cover"
+                className="aspect-square w-full h-full object-cover"
               />
             </div>
             <div>
@@ -681,215 +823,25 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                 </form>
               ) : (
                 <>
-                  {" "}
                   <div
                     className="my-4 flex flex-col gap-2 "
-                    onSubmit={
-                      inputType == "email" ? handleEmailLogin : handleSendOTP
-                    }
                   >
                     {setting?.email_login == 1 && setting?.phone_login == 1 ? (
-                      <form>
-                        {inputType == "number" ? (
-                          <>
-                            {error ? (
-                              <p className="text-center text-xs text-red-500">
-                                {error}
-                              </p>
-                            ) : (
-                              <></>
-                            )}
-                            <>
-                              <PhoneInput
-                                inputStyle={{ direction: language?.type }}
-                                country={
-                                  "in"
-                                }
-                                value={phoneNumber}
-                                onChange={(phone, data) =>
-                                  handlePhoneNoChange(phone, data)
-                                }
-                                onCountryChange={(code) => setCountryCode(code)}
-                                inputProps={{
-                                  name: "phone",
-                                  required: true,
-                                  autoFocus: true,
-                                }}
-                              />
-                            </>
-                          </>
-                        ) : inputType == "email" ? (
-                          <>
-                            {error ? (
-                              <p className="text-center text-xs text-red-500 my-2 font-semibold">
-                                {error}
-                              </p>
-                            ) : (
-                              <></>
-                            )}
-                            <div className="relative">
-                              <input
-                                value={email}
-                                onChange={(e) =>
-                                  handleEmailChange(e.target.value, {})
-                                }
-                                className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
-                                placeholder={t("email_placeholder")}
-                                ref={inputRef}
-                              />
-
-                              <input
-                                type={showPassword ? "text" : "password"}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4"
-                                placeholder={t("passwordMessage")}
-                              />
-                              <div
-                                className="absolute right-[10px] top-[72px]"
-                                onClick={handlePasswordShow}
-                              >
-                                {showPassword ? (
-                                  <FaRegEyeSlash />
-                                ) : (
-                                  <FaRegEye />
-                                )}
-                              </div>
-                              <div className="text-base font-medium leading-6 mt-2 text-right">
-                                <p
-                                  className="cursor-pointer"
-                                  onClick={handleShowForgotPassword}
-                                >
-                                  {t("forget_password_?")}
-                                </p>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            {" "}
-                            <label
-                              htmlFor="email"
-                              className="text-base font-bold"
-                            >
-                              {t("email_placeholder")}
-                            </label>
-                            <input
-                              type="text"
-                              value={inputValue}
-                              onChange={(e) =>
-                                handleEmailChange(e.target.value, {})
-                              }
-                              placeholder={t("email_placeholder")}
-                              className="w-full cardBorder px-4 py-2 text-base outline-none rounded-sm"
-                            />
-                          </>
-                        )}
-
-                        <button
-                          disabled={loading}
-                          type="submit"
-                          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
-                        >
-                          {loading ? t("loading") : t("continue")}
-                        </button>
-                        <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
-                          {t("registerMsg")}
-                          <p
-                            onClick={handleShowRegister}
-                            className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
-                          >
-                            {t("registerNow")}
-                          </p>
-                        </h2>
-                      </form>
+                      inputType == "number" ?
+                        renderPhoneInput()
+                        :
+                        renderEmailInput()
                     ) : setting?.phone_login == 1 ? (
-                      <>
-                        {error ? <p>{error}</p> : <></>}
-                        <form onSubmit={handleSendOTP}>
-                          <PhoneInput
-                            inputStyle={{ direction: language?.type }}
-                            country={
-                              defaultCountry
-                            }
-                            value={phoneNumber}
-                            onChange={(phone, data) =>
-                              handlePhoneNoChange(phone, data)
-                            }
-                            onCountryChange={(code) => setCountryCode(code)}
-                            inputProps={{
-                              name: "phone",
-                              required: true,
-                              autoFocus: true,
-                            }}
-                          />
-                          <button
-                            disabled={loading}
-                            type="submit"
-                            className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
-                          >
-                            {loading ? t("loading") : t("continue")}
-                          </button>
-                        </form>
-                      </>
+                      renderPhoneInput()
                     ) : setting?.email_login == 1 ? (
-                      <>
-                        {error ? <p>{error}</p> : <></>}
-
-                        <form className="relative" >
-                          <input
-                            value={email}
-                            onChange={(e) =>
-                              handleEmailChange(e.target.value, {})
-                            }
-                            className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
-                            placeholder={t("email_placeholder")}
-                            ref={inputRef}
-                          />
-
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="border-black border-[1px] py-2 px-4 rounded-sm w-full mt-4"
-                            placeholder={t("passwordMessage")}
-                          />
-                          <div
-                            className="absolute right-[10px] top-[72px]"
-                            onClick={handlePasswordShow}
-                          >
-                            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                          </div>
-                          <div className="text-base font-medium leading-6 mt-2 text-right">
-                            <p
-                              className="cursor-pointer"
-                              onClick={handleShowForgotPassword}
-                            >
-                              {t("forget_password_?")}
-                            </p>
-                          </div>
-                          <button
-                            disabled={loading}
-                            type="submit"
-                            className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
-                          >
-                            {loading ? t("loading") : t("continue")}
-                          </button>
-                          <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
-                            {t("registerMsg")}
-                            <p
-                              onClick={handleShowRegister}
-                              className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
-                            >
-                              {t("registerNow")}
-                            </p>
-                          </h2>
-                        </form>
-                      </>
+                      renderEmailInput()
                     ) : (
                       <></>
                     )}
                   </div>
+
+
+
                   {setting?.google_login == 1 &&
                     (setting?.email_login == 1 || setting?.phone_login == 1) ? (
                     <div className="flex items-center justify-between my-4 gap-2">
@@ -925,7 +877,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     <>
                       <div className="my-4">
                         <button
-                          onClick={() => setInputType("email")}
+                          onClick={() => {
+                            setError("")
+                            setInputType("email")
+                          }}
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
@@ -944,6 +899,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             setInputType("number");
                             setEmail("");
                             setPassword("");
+                            setError("");
                           }}
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
@@ -965,8 +921,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             </div>
           </div>
           <div id="recaptcha-container" style={{ display: "none" }}></div>
-        </DialogContent>
-      </Dialog>
+        </DialogContent >
+      </Dialog >
       <NewUserModal
         showNewUser={showNewUser}
         setShowNewUser={setShowNewUser}
@@ -986,10 +942,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         email={email}
         setEmail={setEmail}
         setOtp={setOtp}
+        inputType={inputType}
+        setTimer={setTimer}
       />
       <ForgetPasswordModal
         showForgetPassword={showForgetPassword}
         setShowForgetPassword={setShowForgetPassword}
+        forgotPasswordType={forgotPasswordType}
+        isErrorMessage={isErrorMessage}
       />
     </>
   );

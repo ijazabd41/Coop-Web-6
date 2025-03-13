@@ -4,14 +4,14 @@ import * as apiEndPoints from "./apiEndpoints"
 
 
 // Authentication API's
-export const registerUser = async ({ name, email, mobile, type, fcm, country_code, password }) => {
+export const registerUser = async ({ name, email, mobile, type, fcm, country_code, password, phoneAuthType = false }) => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("country_code", country_code)
     formData.append("type", type)
     formData.append("fcm_token", fcm);
     formData.append("platform", "web");
-    if (type == "email") {
+    if (type == "email" || (type == "phone" && phoneAuthType == true)) {
         formData.append("password", password);
     }
     if (type === "phone" || ((type === "email" || "google") && (mobile !== null && mobile !== ""))) {
@@ -24,17 +24,31 @@ export const registerUser = async ({ name, email, mobile, type, fcm, country_cod
     return response.data
 }
 
-export const login = async ({ id, fcm, type, password }) => {
+export const login = async ({ id, fcm, type, password, phoneAuthType }) => {
     const formData = new FormData();
     formData.append("id", id);
     formData.append("fcm_token", fcm);
     formData.append("type", type);
     formData.append("platform", "web");
-    if (type == "email") {
+    if (type == "phone") {
+        if (phoneAuthType == true) {
+            formData.append("phone_auth_type", 'phone_auth_password')
+        } else {
+            formData.append("phone_auth_type", 'phone_auth_otp')
+        }
+    }
+    if (type == "email" || (type == "phone" && phoneAuthType == true)) {
         formData.append("password", password);
     }
     const response = await api.post(apiEndPoints.login, formData)
     return response.data
+}
+
+export const sendSms = async ({ mobile }) => {
+    const formData = new FormData();
+    formData.append("phone", mobile);
+    const response = await api.post(apiEndPoints.sendSms, formData)
+    return response.data;
 }
 
 export const verifyOTP = async ({ mobile, otp, country_code }) => {
@@ -61,12 +75,24 @@ export const forgotPasswordOTP = async ({ email }) => {
     const response = await api.post(apiEndPoints.forgotPasswordOtp, formData)
     return response.data;
 }
-export const forgotPassword = async ({ otp, email, password, confirmPassword }) => {
+export const forgotPassword = async ({ phone, otp, email, password, confirmPassword, type, otpMethod }) => {
     const formData = new FormData();
-    formData.append("otp", otp)
-    formData.append("email", email)
+    if (type == "email" || (type == "phone" && otpMethod == "twilio")) {
+        formData.append("otp", otp)
+    }
+    if (type == "email") {
+        formData.append("email", email)
+    }
+    if (type == "phone") {
+        formData.append("mobile", phone)
+
+    }
     formData.append("password", password)
     formData.append("password_confirmation", confirmPassword)
+    formData.append("type", type)
+    if (type == "phone") {
+        formData.append("otp_verify_method", otpMethod)
+    }
     const response = await api.post(apiEndPoints.forgotPassword, formData)
     return response.data
 }
@@ -514,4 +540,12 @@ export const getCountries = async ({ limit, offset, latitude, longitude }) => {
     }
     const response = await api.get(`${apiEndPoints.getShopByCountries}`, { params })
     return response.data;
-} 
+}
+export const verifyUserByPhoneNum = async ({ mobile, countryCode, type }) => {
+    const formData = new FormData();
+    formData.append("mobile", mobile)
+    formData.append("country_code", countryCode)
+    formData.append("type", type)
+    const response = await api.post(`${apiEndPoints.verifyUserByPhoneNum}`, formData)
+    return response.data;
+}

@@ -50,6 +50,7 @@ export const checkUserExists = "verify_user"
 export const sendSms = "send_sms"
 export const verifyContact = "verify_user"
 export const liveTracking = "live_tracking"
+export const verifyUserByPhoneNum = "verify_user_exist"
 
 export const remove = "remove"
 export const add = "add"

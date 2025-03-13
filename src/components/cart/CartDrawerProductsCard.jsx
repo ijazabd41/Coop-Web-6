@@ -245,8 +245,8 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                                 <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><TiPlus /></button>
                             </div>
                             <div className='flex gap-1 items-center'>
-                                {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.price}</h2>
-                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.discounted_price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
+                                {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.discounted_price}</h2>
+                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
                             </div>
                         </div>
                     </div>

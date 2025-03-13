@@ -58,6 +58,7 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
                     <div className='flex flex-col gap-2 font-bold'><span>{t("single_seller_warning")}</span><span>{t("clear_cart_warning")}</span></div>
                     <div className='flex gap-2 mt-2'>
 
+
                         <button
                             className="px-4 py-1 bg-red-700 text-white font-bold rounded-sm"
                             onClick={handleHideSingleSeller}

@@ -1,8 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js');
-// Initialize the Firebase app in the service worker by passing in
-// your app's Firebase config object.
-// https://firebase.google.com/docs/web/setup#config-object
+
 firebase.initializeApp({
   apiKey: "AIzaSyBT3LL_VaQavGOX8hV8kRSLpWrkbBKX8io",
   authDomain: "egrocer-457a9.firebaseapp.com",
@@ -13,8 +11,6 @@ firebase.initializeApp({
   measurementId: "G-CZXY4LTFRH",
 });
 
-// Retrieve an instance of Firebase Messaging so that it can handle background
-// messages.
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {

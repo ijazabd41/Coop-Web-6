@@ -14,6 +14,7 @@ import { BiCartAlt, BiCog, BiUserCircle, BiWallet } from 'react-icons/bi';
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     const router = useRouter()
     const user = useSelector(state => state.User.user)
+    const authType = useSelector(state => state.User.authType)
     const setting = useSelector(state => state?.Setting?.setting);
 
     const [addWalletModal, setAddWalletModal] = useState(false)
@@ -58,6 +59,13 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                                     <span className="font-medium">{t("editProfile")}</span>
                                 </li>
                             </Link>
+                            {authType == "email" || (authType == "phone" && setting?.phone_auth_password == 1) && <Link href={`/profile/resetpassword`}>
+                                <li className={`p-4  cursor-pointer   ${activeTab == "resetpassword" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("profile")}>
+                                    <span className="font-medium">{t("resetPassword")}</span>
+                                </li>
+                            </Link>}
+
+
 
                             <Link href={`/profile/address`}>
                                 <li className={`p-4  cursor-pointer   ${activeTab == "address" ? 'bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor' : 'hover:primaryBackColor hover:text-white'}`} onClick={() => handleTabChange("address")}>

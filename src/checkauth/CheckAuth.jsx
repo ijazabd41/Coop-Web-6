@@ -1,9 +1,7 @@
-import { useDebugValue, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { useSelector } from "react-redux";
-import Loader from "@/components/loader/Loader"; 0
-import { toast } from "react-toastify";
-import { t } from "@/utils/translation";
+import Loader from "@/components/loader/Loader";
 
 const withAuth = (WrappedComponent) => {
     const Wrapper = (props) => {

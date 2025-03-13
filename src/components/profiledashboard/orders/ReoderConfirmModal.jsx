@@ -65,18 +65,19 @@ const ReoderConfirmModal = ({ showReoderModal, setShowReorderModal, order }) => 
                     <h1 className="font-bold">{t("reorder")}</h1>
                     <h1 className="font-bold">{t("reOrder_warning")}</h1>
                     <div className="flex gap-2 mt-3">
-                        <button
-                            className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
-                            onClick={handleReoder}
-                        >
-                            {t("Ok")}
-                        </button>
+
                         <button
                             className="px-4 py-1 bg-red-700 text-white font-bold rounded-sm"
                             onClick={handleHideReorder}
                         >
                             {" "}
                             {t("cancel")}
+                        </button>
+                        <button
+                            className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+                            onClick={handleReoder}
+                        >
+                            {t("Ok")}
                         </button>
                     </div>
                 </div>
