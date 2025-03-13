@@ -168,7 +168,6 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                     setIsLoading(false);
                     setIsPhoneOtp(true);
                 } catch (error) {
-                    // setPhoneNumber();
                     setError(error.message);
                     console.log("error", error)
                     setIsLoading(false);
@@ -229,36 +228,11 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                     res?.message ==
                     "OTP is valid, but no user found with this phone number."
                 ) {
-                    setShowNewUser(true);
-                    setShowLogin(false);
-                    dispatch(setAuthType({ data: "phone" }));
-                    setPhoneNumber(mobileNo);
-                    setUserName("");
-                    setEmail("");
+                    return false;
                 } else if (response?.status == 1) {
-                    const tokenSet = await dispatch(
-                        setTokenThunk(res?.data?.access_token)
-                    );
-                    await getCurrentUser();
-                    dispatch(setAuthType({ data: "phone" }));
-                    if (res?.data?.user?.status == 1) {
-                        dispatch(setIsGuest({ data: false }));
-                    }
-                    await handleFetchSetting();
-                    if (
-                        cart?.isGuest === true &&
-                        cart?.guestCart?.length !== 0 &&
-                        res?.data?.user?.status == 1
-                    ) {
-                        await addToBulkCart(res?.data.access_token);
-                    }
-                    await fetchCart();
-                    setError("");
-                    setOtp("");
-                    setPhoneNumber("");
-                    setLoading(false);
-                    setIsOTP(false);
-                    setShowLogin(false);
+                    return true;
+                } else {
+                    return false;
                 }
             } catch (error) {
                 console.log("error", error);

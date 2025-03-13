@@ -100,12 +100,13 @@ const Layout = ({ children }) => {
     setLoading(true);
     try {
       const res = await api.getSetting();
-      dispatch(setSetting({ data: res?.data }));
+      const setting = JSON.parse(atob(res.data))
+      dispatch(setSetting({ data: setting }));
       dispatch(
-        setFavoriteProductIds({ data: res?.data?.favorite_product_ids })
+        setFavoriteProductIds({ data: setting?.favorite_product_ids })
       );
-      document.documentElement.style.setProperty("--primary-color", res?.data?.web_settings?.color);
-      document.documentElement.style.setProperty("--light-primary-color", res?.data?.web_settings?.light_color);
+      document.documentElement.style.setProperty("--primary-color", setting?.web_settings?.color);
+      document.documentElement.style.setProperty("--light-primary-color", setting?.web_settings?.light_color);
       setLoading(false);
     } catch (error) {
       setLoading(false);

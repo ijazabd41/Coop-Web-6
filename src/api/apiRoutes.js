@@ -96,6 +96,14 @@ export const forgotPassword = async ({ phone, otp, email, password, confirmPassw
     const response = await api.post(apiEndPoints.forgotPassword, formData)
     return response.data
 }
+export const resetPassword = async ({ password, newPassword, confirmPassword }) => {
+    const formData = new FormData();
+    formData.append("old_password", password)
+    formData.append("new_password", newPassword)
+    formData.append("new_password_confirmation", confirmPassword)
+    const response = await api.post(apiEndPoints.resetPassword, formData)
+    return response.data
+}
 export const updateProfile = async ({ image, name, email, mobileNumber, type }) => {
     const formData = new FormData();
     formData.append("profile", image)

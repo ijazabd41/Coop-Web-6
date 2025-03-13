@@ -150,17 +150,10 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgot
             setLoading(true);
             try {
                 const user = await window.confirmationResult.confirm(otp);
-                console.log("user", user)
-                // dispatch(setAuthId({ data: user.user.id }));
-                // setUid(user.user.id);
-                // const loginResponse = await loginApiCall(
-                //     user.user,
-                //     phoneNumberWithoutCountryCode,
-                //     fcmToken,
-                //     "phone"
-                // );
                 setLoading(false);
+                return true;
             } catch (error) {
+                return false;
                 setLoading(false);
                 toast.error(t("invalid_otp"));
             }
@@ -177,36 +170,11 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgot
                     res?.message ==
                     "OTP is valid, but no user found with this phone number."
                 ) {
-                    setShowNewUser(true);
-                    setShowLogin(false);
-                    dispatch(setAuthType({ data: "phone" }));
-                    setPhoneNumber(mobileNo);
-                    setUserName("");
-                    setEmail("");
+                    return false;
                 } else if (response?.status == 1) {
-                    const tokenSet = await dispatch(
-                        setTokenThunk(res?.data?.access_token)
-                    );
-                    await getCurrentUser();
-                    dispatch(setAuthType({ data: "phone" }));
-                    if (res?.data?.user?.status == 1) {
-                        dispatch(setIsGuest({ data: false }));
-                    }
-                    await handleFetchSetting();
-                    if (
-                        cart?.isGuest === true &&
-                        cart?.guestCart?.length !== 0 &&
-                        res?.data?.user?.status == 1
-                    ) {
-                        await addToBulkCart(res?.data.access_token);
-                    }
-                    await fetchCart();
-                    setError("");
-                    setOtp("");
-                    setPhoneNumber("");
-                    setLoading(false);
-                    setIsOTP(false);
-                    setShowLogin(false);
+                    return true;
+                } else {
+                    return false;
                 }
             } catch (error) {
                 console.log("error", error);
@@ -280,7 +248,10 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgot
                 setLoading(false)
                 return
             }
-            await handleOtpVerification(e);
+            const otpRes = await handleOtpVerification(e);
+            if (otpRes == false) {
+                toast.error(t("invalid_otp"))
+            }
             const res = await api.forgotPassword({ phone: phoneNumberWithoutCountryCode, otpMethod: "firebase", type: forgotPasswordType, password: password, confirmPassword })
             if (res.status == 1) {
                 toast.success(res.message)
