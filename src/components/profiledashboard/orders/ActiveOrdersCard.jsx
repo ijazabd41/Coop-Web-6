@@ -81,8 +81,15 @@ const ActiveOrdersCard = ({ order }) => {
                                 </div>
                             </div>
                             <div className='flex flex-col mr-16'>
-                                <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price != 0 ? orderFirstItem?.discounted_price : orderFirstItem?.price}</p>
-                                {orderFirstItem?.discounted_price !== 0 && <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>}
+                                {orderFirstItem?.discounted_price != 0 ?
+                                    <div className="flex gap-1">
+                                        <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price}</p>
+                                        <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                    </div>
+                                    :
+                                    <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+
+                                }
                             </div>
 
                         </div>

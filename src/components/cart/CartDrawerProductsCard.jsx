@@ -3,7 +3,7 @@ import { IoClose } from 'react-icons/io5'
 import { TiMinus, TiPlus } from "react-icons/ti";
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
-import { addtoGuestCart, clearCartPromo, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { addtoGuestCart, clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import { t } from '@/utils/translation';
@@ -13,6 +13,8 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
     const dispatch = useDispatch();
     const setting = useSelector(state => state.Setting.setting)
     const cart = useSelector(state => state.Cart)
+    const coupon = useSelector(state => state.Cart.promo_code)
+
 
     const handleRemoveFromCart = async () => {
         try {
@@ -107,9 +109,9 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                                         return cartProduct;
                                     }
                                 });
-
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+                                await handleApplyCoupon(response.sub_total)
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -149,6 +151,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                                 });
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+                                await handleApplyCoupon(response.sub_total)
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -157,6 +160,18 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                 }
             }
 
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    // Calling this function on every increament decreament so total adjust with coupon card
+    const handleApplyCoupon = async (total) => {
+        try {
+            const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: total })
+            if (response.status == 1) {
+                dispatch(setCartPromo({ data: response.data }))
+            }
         } catch (error) {
             console.log("Error", error)
         }
@@ -202,6 +217,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                         });
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         dispatch(setCartProducts({ data: updatedProducts }))
+                        await handleApplyCoupon(response.sub_total)
                     }
                 } catch (error) {
                     console.log("Error", error)

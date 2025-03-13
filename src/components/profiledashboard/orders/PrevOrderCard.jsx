@@ -51,9 +51,15 @@ const PrevOrderCard = ({ order }) => {
                                 </div>
                             </div>
                             <div className='flex flex-col mr-16'>
-                                <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price != 0 ? orderFirstItem?.discounted_price : orderFirstItem?.price}</p>
-                                {orderFirstItem?.discounted_price !== 0 && <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>}
+                                {setting?.setting?.currency}{orderFirstItem?.discounted_price != 0 ?
+                                    <div className="flex">
+                                        <p className='text-base font-bold'>{orderFirstItem?.discounted_price}</p>
+                                        <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                    </div>
+                                    :
+                                    <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
 
+                                }
                             </div>
                         </div>
                         {order?.items?.length > 1 && <button className='rounded-full py-2 px-3 bg-[#12141814] font-medium text-base'>{order?.items?.length - 1} {t("moteItems")}</button>}

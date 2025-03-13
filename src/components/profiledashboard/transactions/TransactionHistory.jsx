@@ -23,10 +23,9 @@ const TransactionHistory = () => {
         try {
             const response = await api.getUserTransactions({ limit: transactionPerPage, offset: offset, type: "transactions" })
             if (response.status == 1) {
-                setTransaction(response.data)
+                setTransaction((trnscn) => [...trnscn, ...response.data])
                 setTotal(response.total)
                 setLoading(false)
-                console.log("response", response?.data)
             } else {
                 setLoading(false)
                 console.log("Error", response.message)

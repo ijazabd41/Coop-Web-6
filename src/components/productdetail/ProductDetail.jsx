@@ -83,7 +83,7 @@ const ProductDetail = () => {
     }
 
     const handleIsVariantAvailable = () => {
-        if (product?.is_unlimited_stock == 0 && selectVariant?.stock <= 0) {
+        if (((product?.is_unlimited_stock == 0 && selectVariant?.stock <= 0) || selectVariant?.status == 0)) {
             setIsVariantAvailable(false)
         } else {
             setIsVariantAvailable(true)
@@ -261,6 +261,8 @@ const ProductDetail = () => {
         navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`)
         toast.success(t("link_copied_to_clipboard"))
     }
+
+
 
 
     return (

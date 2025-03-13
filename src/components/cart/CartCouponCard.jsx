@@ -1,9 +1,10 @@
 import { t } from '@/utils/translation'
-import React from 'react'
+import React, { useState } from 'react'
 import { MdOutlineCelebration } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux'
 import { clearCartPromo } from '@/redux/slices/cartSlice';
 import { useRouter } from 'next/router';
+import Login from '../login/Login';
 
 const CartCouponCard = ({ setShowCouponCode }) => {
     const router = useRouter();
@@ -13,16 +14,20 @@ const CartCouponCard = ({ setShowCouponCode }) => {
     const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting?.setting)
 
-    const validateCouponCode = async () => {
+    const [showLogin, setShowLogin] = useState(false)
 
-    }
+
 
     const handleClearPromo = () => {
         dispatch(clearCartPromo())
     }
 
     const handleToCheckOut = () => {
-        router.push('/checkout')
+        if (user?.jwtToken) {
+            router.push('/checkout')
+        } else {
+            setShowLogin(true)
+        }
     }
 
     const handleToProducts = () => {
@@ -92,6 +97,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
             <button className="w-full py-2 rounded-sm text-sm font-medium  hover:primaryBackColor hover:text-white" onClick={handleToProducts}>
                 {t("continue_shopping")}
             </button>
+            {/* <Login showLogin={showLogin} setShowLogin={setShowLogin} /> */}
         </div>
     )
 }

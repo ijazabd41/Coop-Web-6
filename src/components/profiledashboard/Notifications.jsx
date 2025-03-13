@@ -45,6 +45,11 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
         <div className="backgroundColor flex justify-between p-4 items-center">
           <h2 className="font-bold text-xl">{t("notification")}</h2>
         </div>
+        {isLoading && Array.from({ length: total_notifications_per_page }).map((_, idx) => (
+          <div key={idx} className='w-full'>
+            <CardSkeleton height={100} padding='p-1' />
+          </div>
+        ))}
         {notifications?.length > 0 ?
           notifications?.map((notification, idx) => (
             <NotificationCard
@@ -56,11 +61,7 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
             <Image src={NoNotificationImage} alt='Notification Not found' height={0} width={0} className='h-3/4 w-3/4' />
             <h2 className='text-2xl font-bold'>{t("empty_notification_list_message")}</h2>
           </div>}
-        {isLoading && Array.from({ length: total_notifications_per_page }).map((_, idx) => (
-          <div key={idx} className='w-full'>
-            <CardSkeleton height={100} padding='p-1' />
-          </div>
-        ))}
+
         {notifications?.length < totalNotications &&
           <div className="flex justify-center py-4">
             <button className='px-4 py-2 h-full flex  items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'

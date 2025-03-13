@@ -21,7 +21,9 @@ const SimilarProducts = ({ slug, tag_names }) => {
     const productPerPage = 10;
 
     useEffect(() => {
-        handleFetchSimilarProducts()
+        if (tag_names !== null) {
+            handleFetchSimilarProducts()
+        }
     }, [offset])
 
     const handleFetchSimilarProducts = async () => {

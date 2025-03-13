@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
-import { addtoGuestCart, setCartProducts, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { addtoGuestCart, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaMinus, FaPlus } from 'react-icons/fa';
@@ -12,7 +12,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
     const setting = useSelector(state => state.Setting.setting)
 
     const cart = useSelector(state => state.Cart)
-
+    const coupon = useSelector(state => state.Cart.promo_code)
     const [totalPrice, setTotalPrice] = useState()
 
 
@@ -112,6 +112,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
 
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+                                await handleApplyCoupon(response.sub_total)
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -122,7 +123,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             }
             else {
                 if (productQty >= Number(product?.stock)) {
-                              toast.error(t("out_of_stock_message"));
+                    toast.error(t("out_of_stock_message"));
                 }
                 else if (productQty >= Number(product?.total_allowed_quantity)) {
                     toast.error(t("max_cart_limit_error"));
@@ -151,6 +152,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
                                 });
                                 dispatch(setCartSubTotal({ data: response.sub_total }))
                                 dispatch(setCartProducts({ data: updatedProducts }))
+                                await handleApplyCoupon(response.sub_total)
                             }
                         } catch (error) {
                             console.log("Error", error)
@@ -159,6 +161,18 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
                 }
             }
 
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+
+    // Calling this function on every increament decreament so total adjust with coupon card
+    const handleApplyCoupon = async (total) => {
+        try {
+            const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: total })
+            if (response.status == 1) {
+                dispatch(setCartPromo({ data: response.data }))
+            }
         } catch (error) {
             console.log("Error", error)
         }
@@ -204,6 +218,7 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
                         });
                         dispatch(setCartSubTotal({ data: response.sub_total }))
                         dispatch(setCartProducts({ data: updatedProducts }))
+                        await handleApplyCoupon(response.sub_total)
                     }
                 } catch (error) {
                     console.log("Error", error)
