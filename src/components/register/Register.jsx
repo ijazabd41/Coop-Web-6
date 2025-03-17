@@ -28,7 +28,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
     const language = useSelector(state => state.Language.selectedLanguage)
 
     useEffect(() => {
-        setCountryCode(process.env.NEXT_PUBLIC_APP_COUNTRY_DIAL_CODE)
+        setCountryCode(process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE)
     }, [])
     const [name, setName] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
@@ -79,6 +79,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
     const handleUserRegister = async (e) => {
         const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         e.preventDefault();
+
         try {
             if (!name) {
                 setError(t("please_enter_name"))
@@ -260,7 +261,8 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                 setPhoneNumber("")
             } else {
                 setIsLoading(false)
-                toast.error(t(res.message))
+                // For failed to send verification email
+                toast.error(res.message)
                 setShowRegister(false);
                 setPassword("")
                 setName("")
@@ -320,7 +322,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                             <span className='font-bold text-base'>{t("mobileNumber")}<span className='text-red-500'>*</span></span>
                             <PhoneInput
                                 inputStyle={{ direction: language?.type }}
-                                country={process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE}
+                                country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
                                 value={phoneNumber}
                                 onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
                                 onCountryChange={(code) => setCountryCode(code)}

@@ -7,8 +7,10 @@ import ProductReviewCard from './ProductReviewCard';
 import RatingImagesModal from './RatingImagesModal';
 import RatingLightBox from './RatingLightBox';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
+import { isRtl } from '@/lib/utils';
 
 const ProductDescription = ({ product, ratingData }) => {
+    const rtl = isRtl();
     const [selectedTab, setSelectedTab] = useState(0)
     const [ratingImages, setRatingImages] = useState([])
     const [showImagesModal, setShowImagesModal] = useState(false)
@@ -63,6 +65,8 @@ const ProductDescription = ({ product, ratingData }) => {
         ratings.reduce((sum, { stars, count }) => sum + stars * count, 0) / totalRatings
     ).toFixed(1);
 
+
+
     return (
         <div>
             <div className=' rounded-sm my-2 cardBorder '>
@@ -70,9 +74,9 @@ const ProductDescription = ({ product, ratingData }) => {
                     <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 0 ? "bg-[#29363F] w-fit text-white" : " "}`} onClick={handleProductDescSelect}>{t("product_desc_title")}</span>
                     <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""}`} onClick={handleProductReviewSelect}>{t("rating_and_reviews")}</span>
                 </div>
-                <div className=' '>
+                <div className=' ' >
                     {selectedTab == 0 ?
-                        product?.description !== "" ? <div className='p-4'>
+                        product?.description !== "" ? <div className='p-4' >
                             <div className='overflow-x-auto md:overflow-hidden' dangerouslySetInnerHTML={{ __html: product?.description }} />
                         </div> : <p>{t("no_product_description")}</p> : <></>
                     }

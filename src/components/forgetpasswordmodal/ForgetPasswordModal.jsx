@@ -21,7 +21,7 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgot
     const { auth, app, messaging } = FirebaseData();
 
     const language = useSelector(state => state.Language.selectedLanguage);
-    const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in";
+    const defaultCountry = process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in";
     const setting = useSelector((state) => state.Setting.setting);
     const [stage, setStage] = useState(0)
     const [email, setEmail] = useState('')

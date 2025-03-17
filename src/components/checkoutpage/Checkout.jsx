@@ -440,6 +440,8 @@ const Checkout = () => {
                         setOrderId(response?.data?.order_id);
                         await handleInitiateTransaction(response?.data?.order_id, capilizePaymeneMethod)
                     }
+                } else {
+                    toast.error(response?.message)
                 }
             }
         } catch (error) {

@@ -5,7 +5,7 @@ const MetaData = ({
     title = process.env.NEXT_PUBLIC_META_TITLE,
     description = process.env.NEXT_PUBLIC_META_DESCRIPTION,
     keywords = process.env.NEXT_PUBLIC_META_KEYWORDS,
-    author = process.env.NEXT_PUBLIC_APP_WEB_NAME, // Using app name as author
+    author = process.env.NEXT_PUBLIC_WEB_NAME, // Using app name as author
     language = 'en',
     pageName = '', // To append to base URL
 
@@ -13,7 +13,7 @@ const MetaData = ({
     ogTitle = title,
     ogDescription = description,
     ogImage = '/favicon.ico', // Using favicon as default OG image
-    ogUrl = `${process.env.NEXT_PUBLIC_APP_BASE_URL}${pageName}`,
+    ogUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${pageName}`,
     siteName = process.env.NEXT_PUBLIC_META_TITLE,
 
     // Twitter - Using same as OG for consistency

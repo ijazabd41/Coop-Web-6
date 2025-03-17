@@ -16,7 +16,7 @@ const Seller = ({ seller }) => {
                 />
             </div>
 
-            <div className="relative whitespace-nowrap text-base font-bold ml-4 overflow-hidden text-ellipsis">
+            <div className="relative whitespace-nowrap text-base font-bold mx-4 overflow-hidden text-ellipsis">
                 {seller.name}
             </div>
         </div>

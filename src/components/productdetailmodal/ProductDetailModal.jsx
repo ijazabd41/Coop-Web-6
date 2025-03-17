@@ -263,7 +263,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
         setSelectedImage(image)
     }
     const handleCopyToClipboard = () => {
-        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`)
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/product/${product?.slug}`)
         toast.success(t("link_copied_to_clipboard"))
     }
 
@@ -495,13 +495,13 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                                         <span className='text-sm font-normal'>{t("shareProduct")}:</span>
                                         <div className='flex gap-3'>
-                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
+                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}/product/${product?.slug}`}>
                                                 <WhatsappIcon className='h-8 w-8 rounded-full' />
                                             </WhatsappShareButton>
-                                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
+                                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}/product/${product?.slug}`}>
                                                 <TwitterIcon className='h-8 w-8 rounded-full' />
                                             </TwitterShareButton>
-                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/product/${product?.slug}`}>
+                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}/product/${product?.slug}`}>
                                                 <FacebookIcon className='h-8 w-8 rounded-full' />
                                             </FacebookShareButton>
                                             {/* <InstapaperShareButton>

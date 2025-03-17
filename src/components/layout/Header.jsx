@@ -224,7 +224,7 @@ const Header = () => {
             <section className='border-b-2'>
                 <div className="w-full primaryBackColor top-header text-white  md:block hidden">
                     <div className="container  flex justify-between items-center h-[40px] px-2">
-                        <div className='w-[40%]'>
+                        <div className='w-[50%]'>
                             {setting?.setting?.social_media?.length > 0 && <div className="flex items-center">
                                 <p>{t("follow_us")}</p>
                                 <div className="flex">

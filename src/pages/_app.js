@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
-  const googleMapApikey = process.env.NEXT_PUBLIC_APP_MAP_API
+  const googleMapApikey = process.env.NEXT_PUBLIC_MAP_API
   return (
     <div >
       {/* <Head>

@@ -13,10 +13,11 @@ import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
+import { isRtl } from '@/lib/utils';
 
 
 const VerticleProductCard = ({ product }) => {
-
+    const isLtr = isRtl()
     const dispatch = useDispatch();
 
     const cart = useSelector(state => state.Cart)
@@ -333,9 +334,6 @@ const VerticleProductCard = ({ product }) => {
                             <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
                             <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><div onClick={handleShowDetailModal} ><FaRegEye size={18} className='fontColor' /></div></li>
                         </ul>
-                        {/* <div className='absolute right-1 bottom-1'>
-                            <ImageWithPlaceholder src={VegIcon} alt="Veg Icon" className="h-full w-full" />
-                        </div> */}
                     </div>
                 </div>
                 <div className='h-[100px] flex flex-col justify-between '>
@@ -373,7 +371,7 @@ const VerticleProductCard = ({ product }) => {
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
                             <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
                         </div>
-                        : <button className='w-full md:w-1/2 flex gap-1 text-base my-[5px] items-center  justify-center rounded-[4px] p-[5px] text-white addToCartColor primaryColor ' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
+                        : <button className={`w-full md:w-1/2 flex gap-1 text-base ${isLtr ? 'p-0' : 'p-[5px]'}  items-center  justify-center rounded-[4px]  text-white addToCartColor primaryColor `} onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                 </div> : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
 

@@ -4,8 +4,8 @@ import { store } from "@/redux/store"
 const access_key_param = 'x-access-key';
 const access_key = "903361";
 
-const url = process.env.NEXT_PUBLIC_APP_API_URL
-const subUrl = process.env.NEXT_PUBLIC_APP_API_SUBURL
+const url = process.env.NEXT_PUBLIC_API_URL
+const subUrl = process.env.NEXT_PUBLIC_API_SUBURL
 const api = axios.create({
     baseURL: `${url}${subUrl}/`
 })

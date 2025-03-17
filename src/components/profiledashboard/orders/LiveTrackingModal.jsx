@@ -73,7 +73,7 @@ const LiveTrackingModal = ({ showLiveTracking, setShowLiveTracking, order }) => 
     }
     // const { isLoaded } = useJsApiLoader({
     //     id: 'google-map-script',
-    //     googleMapsApiKey: process.env.NEXT_PUBLIC_APP_MAP_API
+    //     googleMapsApiKey: process.env.NEXT_PUBLIC_MAP_API
     // })
 
     const GOOGLE_MAPS_LIBRARIES = ["places", "geometry"];

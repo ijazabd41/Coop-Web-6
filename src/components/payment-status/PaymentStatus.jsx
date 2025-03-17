@@ -30,6 +30,19 @@ const PaymentStatus = () => {
     const isWalletTransaction = ({ type, order_id }) => type === 'wallet' || order_id?.startsWith('wallet-');
 
     useEffect(() => {
+        setTimeout(() => {
+            if (type == "wallet") {
+                handleWalletClose
+            } else {
+
+                handlePaymentClose()
+            }
+        }, 3000)
+    }, [])
+
+
+
+    useEffect(() => {
         if (!query || Object.keys(query).length === 0) return;
         const paymentStatus = checkPaymentStatus(query);
         const isWallet = isWalletTransaction(query);

@@ -45,7 +45,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
 
     return (
         <>
-            <div className={`flex w-full h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}>
+            <div className={`flex w-full  h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}>
                 <Select dir={rtl ? "rtl" : "ltr"} value={filter?.searchedCategory} onValueChange={(value) => handleSearchCategory(value)}>
                     <SelectTrigger className={`w-full h-full buttonBackground cardBorder  focus:ring-0 rounded-t-sm rounded-b-none md:rounded-l-sm md:rounded-r-none md:w-[152px] md:border-none md:min-w-[152px]`}>
                         <SelectValue placeholder={t("all_categories")} />
@@ -77,7 +77,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                         {t("search")}
                     </button>
                     <div className="md:w-[calc(100%-126px)] mt-1 flex flex-wrap flex-col col-span-4  bodyBackgroundColor gap-1 order-2 md:order-2 md:absolute 
-                      md:z-10 md:bodyBackgroundColor md:top-12 md:left-0
+                      md:z-10 md:bodyBackgroundColor md:top-12 md:left-0 shadow-[0_0_16px_gray]
                     ">
                         {router?.pathname !== "/products" && filter?.search_product?.map((product, idx) => (
                             <SearchProductCard key={idx} product={product} />

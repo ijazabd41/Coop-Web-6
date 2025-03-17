@@ -287,7 +287,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         });
         if (
           response?.status == 1 &&
-          res?.message ==
+          response?.message ==
           "OTP is valid, but no user found with this phone number."
         ) {
           setShowNewUser(true);
@@ -321,6 +321,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setLoading(false);
           setIsOTP(false);
           setShowLogin(false);
+        } else {
+          toast.error()
         }
       } catch (error) {
         console.log("error", error);

@@ -258,7 +258,7 @@ const ProductDetail = () => {
     }
 
     const handleCopyToClipboard = () => {
-        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`)
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`)
         toast.success(t("link_copied_to_clipboard"))
     }
 
@@ -376,7 +376,7 @@ const ProductDetail = () => {
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
-                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mr-2 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder addToCartColor" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
+                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder addToCartColor" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
                                                             <p className='font-bold text-sm'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
                                                             <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 && discountPrice !== price ? discountPrice : price}</p>{discountPrice != 0 && discountPrice !== price ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
@@ -488,13 +488,13 @@ const ProductDetail = () => {
                                     <div className='flex justify-between items-center my-2 md:my-0'>
                                         <span className='text-sm font-normal'>{t("shareProduct")}:</span>
                                         <div className='flex gap-3'>
-                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
+                                            <WhatsappShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}>
                                                 <WhatsappIcon className='h-8 w-8 rounded-full' />
                                             </WhatsappShareButton>
-                                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
+                                            <TwitterShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}>
                                                 <TwitterIcon className='h-8 w-8 rounded-full' />
                                             </TwitterShareButton>
-                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_APP_BASE_URL}${pathname}`}>
+                                            <FacebookShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}>
                                                 <FacebookIcon className='h-8 w-8 rounded-full' />
                                             </FacebookShareButton>
                                             {/* <InstapaperShareButton>
