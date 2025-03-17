@@ -330,8 +330,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   const handleFetchSetting = async () => {
     try {
-      const setting = await api.getSetting();
-      dispatch(setSetting({ data: setting?.data }));
+      const res = await api.getSetting();
+      const parsedSetting = JSON.parse(atob(res.data))
+      dispatch(setSetting({ data: parsedSetting }));
     } catch (error) {
       console.log("error", error);
     }
@@ -370,6 +371,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   };
 
   const loginApiCall = async (user, id, fcm, type) => {
+    setLoading(true)
     try {
       dispatch(setAuthId({ data: Uid, type }));
       const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
@@ -399,13 +401,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setShowRegister(false);
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
+        setLoading(false)
       } else if (res.message == "user_exist_password_blank") {
         setIsErrorMessage(t("forget_password_note"))
         handleShowForgotPassword("phone")
+        setLoading(false)
       } else if (res.message == "invalid_password") {
         setError(t("password_not_valid"));
+        setPhonePassword("")
+        setLoading(false)
       } else if (res.message == "user_not_exist") {
         setError(t("user_not_exist"))
+        setLoading(false)
       }
       else {
         setUserAuthType(type);
@@ -414,8 +421,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumber(user?.providerData?.[0]?.phoneNumber);
         setShowNewUser(true);
         setShowLogin(false);
+        setLoading(false)
       }
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.error("error", error);
       setLoading(false);
