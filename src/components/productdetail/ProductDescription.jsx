@@ -74,7 +74,7 @@ const ProductDescription = ({ product, ratingData }) => {
                     <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 0 ? "bg-[#29363F] w-fit text-white" : " "}`} onClick={handleProductDescSelect}>{t("product_desc_title")}</span>
                     <span className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""}`} onClick={handleProductReviewSelect}>{t("rating_and_reviews")}</span>
                 </div>
-                <div className=' ' >
+                <div className=' '>
                     {selectedTab == 0 ?
                         product?.description !== "" ? <div className='p-4' >
                             <div className='overflow-x-auto md:overflow-hidden' dangerouslySetInnerHTML={{ __html: product?.description }} />

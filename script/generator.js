@@ -65,7 +65,6 @@ const generateSitemap = async () => {
     .replace(/FIREBASE_APP_ID/g, firebaseConfig.appId)
     .replace(/FIREBASE_MEASUREMENT_ID/g, firebaseConfig.measurementId);
 
-  console.log("messaging file", messagingFile)
 
   fs.writeFileSync("./public/firebase-messaging-sw.js", messagingFile);
 
