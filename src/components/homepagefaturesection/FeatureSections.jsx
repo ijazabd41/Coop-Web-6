@@ -38,7 +38,9 @@ const FeatureSections = () => {
                 <div className='container'>
                     {aboveHomeSlider && aboveHomeSlider?.map((offer) => {
                         return (
-                            <HomeOfferSection offer={offer} />
+                            <div key={offer?.id}>
+                                <HomeOfferSection offer={offer} />
+                            </div>
                         )
                     })}
                 </div>
@@ -59,8 +61,8 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
-                            <div className='py-3 md:py-6  relative px-2' key={offer?.id}>
-                                <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                            <div key={offer?.id}>
+                                <HomeOfferSection offer={offer} />
                             </div>
                         )
                     })}
@@ -82,8 +84,8 @@ const FeatureSections = () => {
                 <div className='container'>
                     {BelowCategory && BelowCategory?.map((offer) => {
                         return (
-                            <div className='py-3 md:py-6  relative px-2' key={offer?.id}>
-                                <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                            <div key={offer?.id}>
+                                <HomeOfferSection offer={offer} />
                             </div>
                         )
                     })}
