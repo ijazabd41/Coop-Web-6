@@ -379,6 +379,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
       const res = await api.login({ id: id, fcm, type, phoneAuthType: isPhoneAuthPassword, password: phonePassword });
       if (res.status === 1) {
+        // if (res?.data?.user?.status == 1) {
+        // } else {
         const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
         await getCurrentUser();
         dispatch(setAuthType({ data: type }));
@@ -401,6 +403,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setIsOTP(false);
         setShowLogin(false);
         setShowRegister(false);
+        // }
+
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
         setLoading(false)

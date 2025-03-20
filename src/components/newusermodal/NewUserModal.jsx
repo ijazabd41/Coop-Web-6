@@ -49,9 +49,9 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
         const tokenSet = await dispatch(setTokenThunk(result?.data?.access_token))
         await getCurrentUser()
         dispatch(setAuthType({ data: authType }))
-        if (result?.data?.user?.status == 1) {
-          dispatch(setIsGuest({ data: false }));
-        }
+        // if (result?.data?.user?.status == 1) {
+        dispatch(setIsGuest({ data: false }));
+        // }
         await handleFetchSetting();
         if (cart?.isGuest === true && cart?.guestCart?.length !== 0 && result?.data?.user?.status == 1) {
           await addToBulkCart(result?.data.access_token);

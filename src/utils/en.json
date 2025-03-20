@@ -508,5 +508,7 @@
     "verify_user": "Verify User",
     "verify": "Verify",
     "succesfull_register_message": "Your registration was successful. You can log in now",
-    "user_already_exist": "User already exist. Please login"
+    "user_already_exist": "User already exist. Please login",
+    "not_allowed_to_add_to_cart_as_your_account_is_de_activated": "You can't add to cart because Your account is deactivated",
+    "items_not_available": "Items not available"
 }

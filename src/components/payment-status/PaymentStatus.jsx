@@ -91,19 +91,17 @@ const PaymentStatus = () => {
         }
     };
 
-    const handleViewOrder = async () => {
-        const orderId = extractOrderNumber(query?.order_id);
-        dispatch(setCart({ data: [] }));
-        dispatch(clearCartPromo());
-        dispatch(setCartSubTotal({ data: 0 }));
-        dispatch(setCartProducts({ data: [] }));
-        dispatch(clearCheckout());
-        router.push(`/order-detail/${orderId}`);
-    };
+    // const handleViewOrder = async () => {
+    //     const orderId = extractOrderNumber(query?.order_id);
+    //     dispatch(setCart({ data: [] }));
+    //     dispatch(clearCartPromo());
+    //     dispatch(setCartSubTotal({ data: 0 }));
+    //     dispatch(setCartProducts({ data: [] }));
+    //     dispatch(clearCheckout());
+    //     router.push(`/order-detail/${orderId}`);
+    // };
 
     const renderContent = () => {
-
-
         if (status == "success") {
             return (
                 <div className="flex flex-col items-center gap-8">
@@ -118,9 +116,9 @@ const PaymentStatus = () => {
                             <button className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl" onClick={type == "wallet" ? handleWalletClose : handlePaymentClose}>
                                 {t("home")}
                             </button>
-                            {(type == "order") ? (query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
+                            {/* {(type == "order") ? (query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
                                 {t("view_order_details")}
-                            </button> : <></>}
+                            </button> : <></>} */}
                         </div>
                     </div>
                 </div>

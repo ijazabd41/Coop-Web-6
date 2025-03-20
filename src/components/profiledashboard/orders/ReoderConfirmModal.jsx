@@ -25,7 +25,8 @@ const ReoderConfirmModal = ({ showReoderModal, setShowReorderModal, order }) => 
                 setShowReorderModal(false)
                 await fetchCart();
             } else {
-                console.log("error", response)
+                toast.error(t(response?.message))
+                setShowReorderModal(false)
             }
         } catch (error) {
             console.log("Error", error)
