@@ -549,7 +549,7 @@ const Checkout = () => {
                                             <div className="flex flex-col p-4 gap-6">
                                                 <div className='grid grid-cols-12 items-center gap-4'>
                                                     <div className='col-span-12  md:col-span-6 flex flex-col gap-1 '>
-                                                        <span className='text-base font-bold'>{t("preferred_delivery_day")}</span>
+                                                        <span className='text-base font-bold'>{t("preferred_delivery_day")}<span className='text-red-500'>*</span></span>
                                                         <Popover open={isPopoverOpen} >
                                                             <PopoverTrigger className='cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between ' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>{formatDate(checkout?.selectedDate)}<FaRegCalendarAlt /></PopoverTrigger>
                                                             <PopoverContent className="w-full p-0" >
@@ -570,7 +570,7 @@ const Checkout = () => {
                                                         </Popover>
                                                     </div>
                                                     {timeSlotsData?.time_slots_is_enabled == "true" && <div className='col-span-12 md:col-span-6  flex flex-col gap-1'>
-                                                        <span className='text-base font-bold '>{t("preferred_delivery_time")}</span>
+                                                        <span className='text-base font-bold '>{t("preferred_delivery_time")}<span className='text-red-500'>*</span></span>
                                                         <Select onValueChange={handleTimeSlotChange} value={selectedTimeSlot}>
                                                             <SelectTrigger className="w-full py-5 cardBorder">
                                                                 <SelectValue placeholder="Select a timezone">

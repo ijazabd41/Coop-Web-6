@@ -229,7 +229,7 @@ const Header = () => {
                                 <p>{t("follow_us")}</p>
                                 <div className="flex">
                                     <ul className="flex gap-0 px-[16px] py-[8px]">
-                                        {setting?.setting?.social_media && setting?.setting?.social_media?.slice(0, 5)?.map((social, index) => {
+                                        {setting?.setting?.social_media && setting?.setting?.social_media?.map((social, index) => {
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                                     <li className="border-r-[2px] p-3 border-white">

@@ -57,7 +57,7 @@ const Brands = () => {
                         <div key={index} className='col-span-1'>
                             <CardSkeleton height={150} />
                         </div>
-                    )) 
+                    ))
                     }
                 </div>
 

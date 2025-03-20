@@ -9,7 +9,9 @@ import Categories from '../categories/CategoriesContainer';
 import BrandSlider from '../shop-by-brands/BrandSlider';
 import CountrySlider from '../shop-by-country/CountrySlider';
 import SellerSlider from '../shop-by-seller/SellerSlider';
-import Image from 'next/image';
+
+import HomeOfferSection from './HomeOfferSection';
+
 const FeatureSections = () => {
 
     const shop = useSelector(state => state.Shop.shop)
@@ -36,9 +38,7 @@ const FeatureSections = () => {
                 <div className='container'>
                     {aboveHomeSlider && aboveHomeSlider?.map((offer) => {
                         return (
-                            <div className='py-6  relative' key={offer?.id}>
-                                <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
-                            </div>
+                            <HomeOfferSection offer={offer} />
                         )
                     })}
                 </div>

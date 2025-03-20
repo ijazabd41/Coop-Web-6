@@ -314,12 +314,12 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                             {error && errorType == "name" && <span className='text-xs text-red-500'>{error}</span>}
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <span className='font-bold text-base'>{t("email")}<span className='text-red-500'>*</span></span>
+                            <span className='font-bold text-base'>{t("email")}{inputType == "email" ? <span className='text-red-500'>*</span> : <></>}</span>
                             <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_email")} value={email} onChange={handleEmailChange} />
                             {error && errorType == "email" && <span className='text-xs text-red-500'>{error}</span>}
                         </div>
                         <div className='flex flex-col gap-1 pl-0'>
-                            <span className='font-bold text-base'>{t("mobileNumber")}<span className='text-red-500'>*</span></span>
+                            <span className='font-bold text-base'>{t("mobileNumber")}{inputType == "number" ? <span className='text-red-500'>*</span> : <></>}</span>
                             <PhoneInput
                                 inputStyle={{ direction: language?.type }}
                                 country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}

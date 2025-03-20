@@ -100,7 +100,7 @@ const Footer = () => {
                             <div className='flex flex-col'>
                                 <p className="font-bold ">{t("follow_us")}</p>
                                 <div className='flex gap-4 mt-1 iconBackgroundColor p-3 w-fit rounded-[8px]'>
-                                    {setting?.social_media?.slice(0, 5)?.map((social, idx) => (
+                                    {setting?.social_media?.map((social, idx) => (
                                         <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                             <i className={`${social?.icon}`}></i>
                                         </Link>
