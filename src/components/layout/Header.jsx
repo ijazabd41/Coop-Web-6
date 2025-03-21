@@ -233,7 +233,12 @@ const Header = () => {
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                                     <li className="border-r-[2px] p-3 border-white">
-                                                        <i className={`${social?.icon}`}></i>
+                                                        {social?.icon.toLowerCase().includes('wechat') ? (
+                                                            // Special handling for WeChat icon
+                                                            <i className="fab fa-weixin"></i>
+                                                        ) : (
+                                                            <i className={`${social?.icon}`}></i>
+                                                        )}
                                                     </li>
                                                 </Link>
                                             );

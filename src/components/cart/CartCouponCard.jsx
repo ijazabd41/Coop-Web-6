@@ -4,6 +4,7 @@ import { MdOutlineCelebration } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux'
 import { clearCartPromo } from '@/redux/slices/cartSlice';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const CartCouponCard = ({ setShowCouponCode }) => {
     const router = useRouter();
@@ -23,6 +24,8 @@ const CartCouponCard = ({ setShowCouponCode }) => {
     const handleToCheckOut = () => {
         if (user?.jwtToken) {
             router.push('/checkout')
+        } else {
+            toast.error(t("login_to_access_checkout_page"))
         }
     }
 
