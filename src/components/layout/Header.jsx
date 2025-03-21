@@ -123,6 +123,7 @@ const Header = () => {
     const fetchCity = async () => {
         try {
             if (setting?.setting?.default_city && city?.city == null) {
+
                 const latitude = parseFloat(setting.setting.default_city?.latitude)
                 const longitude = parseFloat(setting.setting.default_city?.longitude)
                 const response = await api.getCity({ latitude: latitude, longitude: longitude })
@@ -132,6 +133,7 @@ const Header = () => {
                     setLocModal(true);
                 }
             } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
+
                 setShowLocation(true);
             }
         } catch (error) {

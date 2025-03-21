@@ -379,31 +379,35 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
       const res = await api.login({ id: id, fcm, type, phoneAuthType: isPhoneAuthPassword, password: phonePassword });
       if (res.status === 1) {
-        // if (res?.data?.user?.status == 1) {
-        // } else {
-        const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
-        await getCurrentUser();
-        dispatch(setAuthType({ data: type }));
-        if (res?.data?.user?.status == 1) {
-          dispatch(setIsGuest({ data: false }));
+        if (res?.status == 1 && res?.message == "user_deactivated") {
+          toast.error(t("user_deactivated"))
+          setLoading(false);
+          setShowLogin(false)
+          return;
+        } else {
+          const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
+          await getCurrentUser();
+          dispatch(setAuthType({ data: type }));
+          if (res?.data?.user?.status == 1) {
+            dispatch(setIsGuest({ data: false }));
+          }
+          await handleFetchSetting();
+          if (
+            cart?.isGuest === true &&
+            cart?.guestCart?.length !== 0 &&
+            res?.data?.user?.status == 1
+          ) {
+            await addToBulkCart(res?.data.access_token);
+          }
+          await fetchCart();
+          setError("");
+          setOtp("");
+          setPhoneNumber("");
+          setLoading(false);
+          setIsOTP(false);
+          setShowLogin(false);
+          setShowRegister(false);
         }
-        await handleFetchSetting();
-        if (
-          cart?.isGuest === true &&
-          cart?.guestCart?.length !== 0 &&
-          res?.data?.user?.status == 1
-        ) {
-          await addToBulkCart(res?.data.access_token);
-        }
-        await fetchCart();
-        setError("");
-        setOtp("");
-        setPhoneNumber("");
-        setLoading(false);
-        setIsOTP(false);
-        setShowLogin(false);
-        setShowRegister(false);
-        // }
 
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
@@ -504,28 +508,36 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         fcm: fcmToken
       });
       if (res.status === 1) {
-        const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
-        await getCurrentUser();
-        dispatch(setAuthType({ data: "email" }));
-        if (res?.data?.user?.status == 1) {
-          dispatch(setIsGuest({ data: false }));
+        if (res?.status == 1 && res?.message == "user_deactivated") {
+          toast.error(t("user_deactivated"))
+          setLoading(false)
+          setShowLogin(false)
+          return;
+        } else {
+          const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
+          await getCurrentUser();
+          dispatch(setAuthType({ data: "email" }));
+          if (res?.data?.user?.status == 1) {
+            dispatch(setIsGuest({ data: false }));
+          }
+          await handleFetchSetting();
+          if (
+            cart?.isGuest === true &&
+            cart?.guestCart?.length !== 0 &&
+            res?.data?.user?.status == 1
+          ) {
+            await addToBulkCart(res?.data.access_token);
+          }
+          await fetchCart();
+          setError("");
+          setOtp("");
+          setPhoneNumber("");
+          setLoading(false);
+          setIsOTP(false);
+          setShowRegister(false);
+          setShowLogin(false);
         }
-        await handleFetchSetting();
-        if (
-          cart?.isGuest === true &&
-          cart?.guestCart?.length !== 0 &&
-          res?.data?.user?.status == 1
-        ) {
-          await addToBulkCart(res?.data.access_token);
-        }
-        await fetchCart();
-        setError("");
-        setOtp("");
-        setPhoneNumber("");
-        setLoading(false);
-        setIsOTP(false);
-        setShowRegister(false);
-        setShowLogin(false);
+
       } else {
         setLoading(false);
         if (res.message == "email_not_verified") {

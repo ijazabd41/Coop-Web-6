@@ -179,10 +179,12 @@ export const getProductByFilter = async ({ latitude, longitude, filters = undefi
     return response.data
 }
 
-export const getBrands = async ({ limit, offset }) => {
+export const getBrands = async ({ limit, offset, latitude, longitude }) => {
     let params = {
         limit: limit,
-        offset: offset
+        offset: offset,
+        latitude: latitude,
+        longitude: longitude
     };
     const response = await api.get(apiEndPoints.getBrands, { params })
     return response.data

@@ -13,7 +13,7 @@ import PhoneInput from "react-phone-input-2";
 import { useSelector } from 'react-redux'
 import { signInWithPhoneNumber } from 'firebase/auth'
 import FirebaseData from '@/utils/firebase'
-import { setSetting } from '@/redux/slices/settingSlice'
+
 
 
 const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgotPasswordType, isErrorMessage }) => {
@@ -251,6 +251,10 @@ const ForgetPasswordModal = ({ showForgetPassword, setShowForgetPassword, forgot
             const otpRes = await handleOtpVerification(e);
             if (otpRes == false) {
                 toast.error(t("invalid_otp"))
+                setLoading(false)
+                setPassword("")
+                setConfirmPassword("")
+                return;
             }
             const res = await api.forgotPassword({ phone: phoneNumberWithoutCountryCode, otpMethod: "firebase", type: forgotPasswordType, password: password, confirmPassword })
             if (res.status == 1) {

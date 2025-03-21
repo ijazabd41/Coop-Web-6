@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import * as api from "@/api/apiRoutes"
 import BrandCard from './BrandCard';
@@ -10,6 +10,7 @@ const Brands = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const brandsPerPage = 12;
+    const city = useSelector(state => state.City)
 
     const [brands, setBrands] = useState([])
     const [isLoading, setIsLoading] = useState(false);
@@ -19,10 +20,11 @@ const Brands = () => {
     }, [])
 
 
+    console.log("city", city)
     const fetchBrands = async () => {
         setIsLoading(true)
         try {
-            const response = await api.getBrands({ limit: brandsPerPage, offset: 0 });
+            const response = await api.getBrands({ limit: brandsPerPage, offset: 0, latitude: city?.city?.latitude, longitude: city?.city?.longitude });
             // console.log(response.data);
             setBrands(response.data);
         } catch (error) {

@@ -56,8 +56,10 @@ const ProductDetail = () => {
     const ratingsCount = 10;
 
     useEffect(() => {
-        handleFetchBySlug()
-    }, [slug])
+        if (city) {
+            handleFetchBySlug()
+        }
+    }, [slug, city])
 
     useEffect(() => {
         handleIsVariantAvailable()

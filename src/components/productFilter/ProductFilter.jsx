@@ -18,6 +18,7 @@ const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
     const setting = useSelector(state => state?.Setting?.setting)
+    const city = useSelector(state => state.City)
     const dispatch = useDispatch();
     const [categories, setCategories] = useState(null)
     const [treeData, setTreeData] = useState([]);
@@ -71,7 +72,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
     const fetchBrands = async (bOffset) => {
         try {
-            const result = await api.getBrands({ limit: brandLimit, offset: bOffset });
+            const result = await api.getBrands({ limit: brandLimit, offset: bOffset, latitude: city?.city?.latitude, longitude: city?.city?.longitude });
             if (result.status === 1) {
                 if (brands == null) {
                     setbrands(result?.data)

@@ -20,7 +20,9 @@ const CountryListing = () => {
         try {
             const response = await api.getCountries({
                 limit: countriesPerPage,
-                offset: 0
+                offset: 0,
+                latitude: city?.latitude,
+                longitude: city?.longitude
             })
             console.log(response?.data);
             setCountries(response?.data);
