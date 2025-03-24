@@ -41,12 +41,11 @@ const VerticleCardContainer = ({ section }) => {
                             <button onClick={handleViewAll}>{t("see_all")}</button>
                         </div>
                     </div>
-                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4 cardBorder rounded-md'>
+                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4 cardBorder rounded-md verticle-card'>
                         {section?.products?.map((product, index) => {
                             return (
-                                <div className='col-span-3 ' key={index}>
+                                <div className='col-span-3' key={index}>
                                     <VerticleProductCard product={product}
-
                                     />
                                 </div>
                             )

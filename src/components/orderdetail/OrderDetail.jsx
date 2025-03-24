@@ -11,6 +11,7 @@ import FinalCheckoutSummary from './FinalCheckoutSummary';
 import BreadCrumb from '../breadcrumb/BreadCrumb';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import ProductDetail from '../productdetail/ProductDetail';
+import Loader from '../loader/Loader';
 
 
 const OrderDetail = () => {
@@ -29,15 +30,19 @@ const OrderDetail = () => {
 
 
     const handleFetchOrderDetail = async () => {
+        setLoading(true)
         try {
             const response = await api.getOrders({ orderId: orderid })
             if (response?.status == 1) {
                 setOrderDetail(response.data[0])
+                setLoading(false)
             } else {
                 console.log("Error", response)
+                setLoading(false)
             }
         } catch (error) {
             console.log("Error", error)
+            setLoading(false)
         }
     }
 
@@ -66,7 +71,7 @@ const OrderDetail = () => {
         <section>
             <BreadCrumb />
             <div className='container my-12 px-2'>
-                <div className='flex flex-col gap-12'>
+                {loading ? <><Loader /></> : <div className='flex flex-col gap-12'>
                     <div className='flex flex-col md:flex-row justify-between backgroundColor p-4 rounded-md'>
                         <div>
                             <span className='font-normal text-base'>{t("orderNumber")}:</span>
@@ -116,7 +121,7 @@ const OrderDetail = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         </section>
     )

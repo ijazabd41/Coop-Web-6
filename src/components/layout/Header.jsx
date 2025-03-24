@@ -49,8 +49,9 @@ import { FiMoon } from 'react-icons/fi';
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
-    const dispatch = useDispatch();
     const router = useRouter();
+    const dispatch = useDispatch();
+
     const themes = useSelector(state => state.Theme)
     const cart = useSelector(state => state.Cart)
     const setting = useSelector(state => state.Setting);
@@ -142,7 +143,11 @@ const Header = () => {
     }
 
     const handleCartOpen = () => {
-        setShowCart(true)
+        if (router.pathname == "/checkout") {
+            router.push("/cart")
+        } else {
+            setShowCart(true)
+        }
     }
 
     const handleLoginOpen = () => {

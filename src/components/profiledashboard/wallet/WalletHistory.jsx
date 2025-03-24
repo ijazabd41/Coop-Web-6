@@ -11,34 +11,44 @@ const WalletHistory = () => {
     const [offset, setOffset] = useState(0)
     const [total, setTotal] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [loadingMore, setLoadingMore] = useState(false)
     useEffect(() => {
-        fetchWalletTransaction();
-    }, [offset])
+        fetchWalletTransaction(false, 0);
+    }, [])
 
     const transactionPerPage = 9;
 
-    const fetchWalletTransaction = async () => {
-        setLoading(true)
+    const fetchWalletTransaction = async (isLoadMore = false, newOffset) => {
+        if (isLoadMore) {
+            setLoadingMore(true)
+        } else {
+            setLoading(true)
+        }
         try {
-            const response = await api.getUserTransactions({ limit: transactionPerPage, offset, type: 'wallet' })
+            const response = await api.getUserTransactions({ limit: transactionPerPage, offset: newOffset, type: 'wallet' })
             if (response.status == 1) {
                 setTransactions((trnscn) => [...trnscn, ...response.data])
                 setTotal(response?.total)
                 setLoading(false)
+                setLoadingMore(false)
             } else {
                 setTransactions([])
                 setTotal(0)
                 setLoading(false)
+                setLoadingMore(false)
             }
 
         } catch (error) {
             setLoading(false)
+            setLoadingMore(false)
             console.log("Error", error)
         }
     }
 
     const handleFetchMore = async () => {
-        setOffset(offSet => offSet + transactionPerPage)
+        const newOffset = offset + transactionPerPage
+        setOffset(newOffset)
+        fetchWalletTransaction(true, newOffset)
     }
 
     return (
@@ -65,6 +75,14 @@ const WalletHistory = () => {
                             <Image src={NoTransactionFound} alt='Transactions Not found' height={0} width={0} className='h-3/4 w-3/4' />
                             <h2 className='text-2xl font-bold'>{t("no_transaction")}</h2>
                         </div>}
+                        {loadingMore ?
+                            Array?.from({ length: 6 })?.map((_, index) => {
+                                return (
+                                    <div className='col-span-12  md:col-span-6 lg:col-span-4' key={index}>
+                                        <CardSkeleton height={200} padding='p-4' />
+                                    </div>
+                                )
+                            }) : <></>}
 
                     </div>
                     {total > transactions?.length && <div className='flex justify-center'>

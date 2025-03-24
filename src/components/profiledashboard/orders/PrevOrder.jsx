@@ -13,33 +13,43 @@ const PrevOrder = () => {
     const [offset, setOffset] = useState(0)
     const [prevOrders, setPrevOrders] = useState([])
     const [totalOrders, setTotalOrders] = useState(null)
+    const [loadingMore, setLoadingMore] = useState(false)
     useEffect(() => {
-        handleFetchPrevOrders()
-    }, [offset])
+        handleFetchPrevOrders(false, 0)
+    }, [])
 
     const ordersPerPage = 10;
 
-    const handleFetchPrevOrders = async () => {
-        setLoading(true)
+    const handleFetchPrevOrders = async (isLoadMore = false, newOffset) => {
+        if (isLoadMore) {
+            setLoadingMore(true)
+        } else {
+            setLoading(true)
+        }
         try {
-            const response = await api.getOrders({ limit: ordersPerPage, offset: offset, type: 0 })
+            const response = await api.getOrders({ limit: ordersPerPage, offset: newOffset, type: 0 })
             if (response?.status == 1) {
                 setPrevOrders((ord) => [...ord, ...response?.data])
                 setTotalOrders(response.total)
                 setLoading(false)
+                setLoadingMore(false)
             } else {
                 setLoading(false)
                 setPrevOrders([])
+                setLoadingMore(false)
                 console.log("Error", response)
             }
         } catch (error) {
             setLoading(false)
+            setLoadingMore(false)
             console.log("Error", error)
         }
     }
 
     const handleFetchMore = async () => {
-        setOffset(offSet => offSet + ordersPerPage)
+        const newOffset = offset + ordersPerPage
+        setOffset(newOffset)
+        handleFetchPrevOrders(true, newOffset)
     }
 
 
@@ -61,6 +71,15 @@ const PrevOrder = () => {
                         <PrevOrderCard order={order} key={order?.id} />
                     )
                 })}
+                {
+                    loadingMore ?
+                        Array?.from({ length: 6 })?.map((_, index) => {
+                            return (
+                                <CardSkeleton height={200} padding="p-4" key={index} />
+                            )
+                        })
+                        : <></>
+                }
             </div>
             {totalOrders > prevOrders?.length && <div className='flex justify-center p-4'>
                 <button className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal' onClick={handleFetchMore}>{t("load_more")}</button>

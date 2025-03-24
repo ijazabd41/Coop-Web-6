@@ -11,32 +11,43 @@ const ActiveOrders = () => {
     const [activeOrders, setActiveOrders] = useState([])
     const [offset, setOffset] = useState(0)
     const [totalOrders, setTotalOrders] = useState(null)
+    const [loadingMore, setLoadingMore] = useState(false)
     useEffect(() => {
-        handleFetchActiveOrders();
-    }, [offset])
+        handleFetchActiveOrders(false, 0);
+    }, [])
 
     const ordersPerPage = 10;
 
-    const handleFetchActiveOrders = async () => {
-        setLoading(true)
+    const handleFetchActiveOrders = async (isLoadMore = false, newOffset) => {
+        if (isLoadMore) {
+            setLoadingMore(true)
+        } else {
+            setLoading(true)
+        }
         try {
-            const response = await api.getOrders({ limit: ordersPerPage, offset: offset, type: 1 })
+            const response = await api.getOrders({ limit: ordersPerPage, offset: newOffset, type: 1 })
             if (response.status == 1) {
                 setActiveOrders((ord) => [...ord, ...response.data])
                 setTotalOrders(response.total)
                 setLoading(false)
+                setLoadingMore(false)
             } else {
                 setActiveOrders([])
                 setLoading(false)
+                setLoadingMore(false)
             }
 
         } catch (error) {
             console.log("Error", error)
             setLoading(false)
+            setLoadingMore(false)
         }
     }
     const handleFetchMore = async () => {
-        setOffset(offSet => offSet + ordersPerPage)
+        setLoadingMore(true)
+        const newOffset = offset + ordersPerPage
+        setOffset(newOffset)
+        handleFetchActiveOrders(true, newOffset)
     }
 
 
@@ -63,6 +74,13 @@ const ActiveOrders = () => {
                                 <ActiveOrdersCard order={order} key={order?.id} />
                             )
                         })}
+                {loadingMore ?
+                    Array?.from({ length: 6 })?.map((_, index) => {
+                        return (
+                            <CardSkeleton height={200} padding="p-4" key={index} />
+                        )
+                    })
+                    : <></>}
             </div>
             {totalOrders > activeOrders?.length && <div className='flex justify-center p-4'>
                 <button className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal' onClick={handleFetchMore}>{t("load_more")}</button>

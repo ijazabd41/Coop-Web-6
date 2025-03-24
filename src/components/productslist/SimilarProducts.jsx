@@ -83,8 +83,11 @@ const SimilarProducts = ({ slug, tag_names }) => {
                                     },
                                 }}
                             >
-                                {similarProducts?.map((product) => (
-                                    <SwiperSlide key={product.id} >
+                                {similarProducts?.map((product, index) => (
+                                    <SwiperSlide
+                                        key={product.id}
+                                        className={index === similarProducts.length - 1 ? 'last-slide' : ''}
+                                    >
                                         <VerticleProductCard product={product} />
                                     </SwiperSlide>
                                 ))}

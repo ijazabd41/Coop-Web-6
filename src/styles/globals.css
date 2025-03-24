@@ -373,6 +373,12 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
+@layer components {
+  .last-slide .rounded-md {
+    @apply rounded-tr-md rounded-br-md;
+  }
+}
+
 span.react-loading-skeleton {
   --highlight-color: var(--shimmer-highlight-color) !important;
 }

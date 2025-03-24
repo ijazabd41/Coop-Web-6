@@ -77,7 +77,7 @@ const ProductSwiperWithImage = ({ section }) => {
                                     className="brand-swiper"
                                     breakpoints={{
                                         1200: {
-                                            slidesPerView: 4,
+                                            slidesPerView: 3,
                                             // spaceBetween: 10
                                         },
                                         1024: {

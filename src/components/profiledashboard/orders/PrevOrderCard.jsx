@@ -33,37 +33,37 @@ const PrevOrderCard = ({ order }) => {
                             <p className='font-normal text-sm'>{t("orderDate")}</p>
                             <p className='font-bold text-sm'>{formatCustomDate(order?.date)}</p>
                         </div>
-                        <div className='col-span-6 flex flex-col items-end'>
+                        <div className='col-span-6 flex flex-col items-start md:items-end'>
                             <p className='font-normal text-sm'>{t("orderStatus")}</p>
                             <span className='font-bold text-base'>{formatCustomDate(deliveryDate?.[1])}</span>
                         </div>
                     </div>
                     <div className='p-4'>
-                        <div className='flex justify-between mb-4 gap-3 md:gap-0'>
-                            <div className='flex items-center gap-2'>
-                                <div className='h-[64px] w-[64px] relative aspect-square '>
-                                    {/* condition rendering for prevent TypeError: Cannot read properties of null (reading 'default') error */}
+                        <div className='flex justify-between gap-2 md:gap-0 mb-4 w-full'>
+                            <div className='flex items-start gap-2 w-full'>
+                                <div className='h-[64px] w-[64px] relative aspect-square shrink-0'>
                                     {orderFirstItem?.image_url && <ImageWithPlaceholder src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
                                 </div>
-                                <div>
-                                    <p className='font-bold text-base sm:w-24 text-ellipsis overflow-hidden'>{orderFirstItem?.product_name}</p>
-                                    <p className='text-sm font-normal'>{orderFirstItem?.variant_name}</p>
-                                </div>
-                            </div>
-                            <div className='flex flex-col mr-16'>
-                                {setting?.setting?.currency}{orderFirstItem?.discounted_price != 0 ?
-                                    <div className="flex">
-                                        <p className='text-base font-bold'>{orderFirstItem?.discounted_price}</p>
-                                        <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                <div className='flex flex-col md:flex-row justify-between w-full'>
+                                    <div className='flex-grow'>
+                                        <p className='font-bold text-base text-ellipsis overflow-hidden w-32'>{orderFirstItem?.name}</p>
+                                        <p className='text-sm font-normal'>{orderFirstItem?.variant_name}</p>
                                     </div>
-                                    :
-                                    <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
 
-                                }
+                                    <div className='md:ml-auto md:mt-0'>
+                                        {orderFirstItem?.discounted_price != 0 ?
+                                            <div className="flex gap-1">
+                                                <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price}</p>
+                                                <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                            </div>
+                                            :
+                                            <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {order?.items?.length > 1 && <button className='rounded-full py-2 px-3 bg-[#12141814] font-medium text-base'>{order?.items?.length - 1} {t("moteItems")}</button>}
-
                     </div>
                     <div className='backgroundColor'>
                         <div className='flex justify-between p-4 flex-col md:flex-row'>

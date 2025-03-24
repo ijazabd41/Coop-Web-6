@@ -15,6 +15,7 @@ import {
   setCartProducts,
   setCartSubTotal,
   setIsGuest,
+  clearCartPromo,
 } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -34,12 +35,33 @@ const DeleteModal = ({ showDelete, setShowDelete }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await api.deleteUser({ uid: user?.authId });
-      if (response.status == 1) {
-        if (user?.authType == "phone" || user?.authType == "google") {
-          const user = auth.currentUser;
-          try {
-            const res = await user.delete();
+      const user = auth.currentUser;
+      const res = await user.delete();
+      // console.log("res", res);
+      if (res) {
+        // console.log("res", res);
+        const response = await api.deleteUser({ uid: user?.authId });
+        if (response.status == 1) {
+          if (user?.authType == "phone" || user?.authType == "google") {
+            const user = auth.currentUser;
+            try {
+              const res = await user.delete();
+              dispatch(clearAllFilter());
+              dispatch(logoutAuth());
+              dispatch(setJWTToken({ data: "" }));
+              dispatch(setCurrentUser({ data: null }));
+              dispatch(setCart({ data: [] }));
+              dispatch(setCartProducts({ data: [] }));
+              dispatch(setCartSubTotal({ data: 0 }));
+              dispatch(setCartProducts({ data: [] }));
+              dispatch(setIsGuest({ data: true }));
+              router.push("/");
+              setShowDelete(false);
+              toast.success(response.message);
+            } catch (error) {
+              console.log("error", error);
+            }
+          } else {
             dispatch(clearAllFilter());
             dispatch(logoutAuth());
             dispatch(setJWTToken({ data: "" }));
@@ -52,27 +74,31 @@ const DeleteModal = ({ showDelete, setShowDelete }) => {
             router.push("/");
             setShowDelete(false);
             toast.success(response.message);
-          } catch (error) {
-            console.log("error", error);
           }
         } else {
-          dispatch(clearAllFilter());
-          dispatch(logoutAuth());
-          dispatch(setJWTToken({ data: "" }));
-          dispatch(setCurrentUser({ data: null }));
-          dispatch(setCart({ data: [] }));
-          dispatch(setCartProducts({ data: [] }));
-          dispatch(setCartSubTotal({ data: 0 }));
-          dispatch(setCartProducts({ data: [] }));
-          dispatch(setIsGuest({ data: true }));
-          router.push("/");
-          setShowDelete(false);
-          toast.success(response.message);
+          toast.error(response.message);
         }
       } else {
-        toast.error(response.message);
+        // console.log("else");
+        const response = await api.logout();
+        if (response.status == 1) {
+          dispatch(clearAllFilter())
+          dispatch(logoutAuth())
+          dispatch(setJWTToken({ data: "" }))
+          dispatch(setCurrentUser({ data: null }))
+          dispatch(setCart({ data: [] }))
+          dispatch(setCartProducts({ data: [] }))
+          dispatch(setCartSubTotal({ data: 0 }))
+          dispatch(setCartProducts({ data: [] }))
+          dispatch(clearCartPromo())
+          dispatch(setIsGuest({ data: true }))
+          router.push("/")
+          setShowLogout(false)
+          toast.success(response.message)
+        }
       }
     } catch (error) {
+      console.log("error", error.errors);
       console.log("Error", error);
     }
   };

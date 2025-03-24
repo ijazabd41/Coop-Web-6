@@ -12,32 +12,42 @@ const TransactionHistory = () => {
     const [offset, setOffset] = useState(0)
     const [total, setTotal] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [loadingMore, setLoadingMore] = useState(false)
 
     const transactionPerPage = 9;
     useEffect(() => {
-        handleFetchTransactions();
-    }, [offset])
+        handleFetchTransactions(false, 0);
+    }, [])
 
-    const handleFetchTransactions = async () => {
-        setLoading(true)
+    const handleFetchTransactions = async (isLoadMore = false, newOffset) => {
+        if (isLoadMore) {
+            setLoadingMore(true)
+        } else {
+            setLoading(true)
+        }
         try {
-            const response = await api.getUserTransactions({ limit: transactionPerPage, offset: offset, type: "transactions" })
+            const response = await api.getUserTransactions({ limit: transactionPerPage, offset: newOffset, type: "transactions" })
             if (response.status == 1) {
                 setTransaction((trnscn) => [...trnscn, ...response.data])
                 setTotal(response.total)
                 setLoading(false)
+                setLoadingMore(false)
             } else {
                 setLoading(false)
+                setLoadingMore(false)
                 console.log("Error", response.message)
             }
         } catch (error) {
             setLoading(false)
+            setLoadingMore(false)
             console.log("Error", error)
         }
     }
 
     const handleFetchMore = () => {
-        setOffset(offset => offset + transactionPerPage)
+        const newOffset = offset + transactionPerPage
+        setOffset(newOffset)
+        handleFetchTransactions(true, newOffset)
     }
 
     return (
@@ -66,6 +76,15 @@ const TransactionHistory = () => {
                                     <h2 className='text-2xl font-bold'>{t("no_transaction")}</h2>
                                 </div>
                         }
+                        {loadingMore ?
+                            Array?.from({ length: 6 })?.map((_, index) => {
+                                return (
+                                    <div className='col-span-12  md:col-span-6 lg:col-span-4' key={index}>
+                                        <CardSkeleton height={200} padding="2px" key={index} />
+                                    </div>
+                                )
+                            }) : <></>}
+
                     </div>
                 </div>
 

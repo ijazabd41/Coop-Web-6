@@ -247,7 +247,8 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
                     />
                 </div>
                 <div>
-                    <h3 className="text-base font-bold">{product?.name}</h3>
+                    <h3 className="text-base font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[170px]">{product?.name}</h3>
+
                     <p className="text-xs font-normal">
                         {product?.measurement} {product?.unit_code}
                     </p>

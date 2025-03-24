@@ -50,7 +50,7 @@ const ResetPassword = () => {
                 <h2 className="text-2xl font-semibold  p-4">{t("resetPassword")}</h2>
             </div>
             <div className='  items-center flex  flex-col py-12'>
-                <form className='w-3/5 md:w-1/2' onSubmit={handleResetPassword}>
+                <form className='w-[90%] md:w-1/2' onSubmit={handleResetPassword}>
                     <div>
                         <div className="mb-4 relative">
                             <label

@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import Link from 'next/link'
 import LiveTrackingModal from './LiveTrackingModal'
 import ReoderConfirmModal from './ReoderConfirmModal'
+import ImageWithPlaceholder from '@/components/image-with-placeholder/ImageWithPlaceholder'
 
 
 const ActiveOrdersCard = ({ order }) => {
@@ -70,30 +71,31 @@ const ActiveOrdersCard = ({ order }) => {
                         </div>
                     </div>
                     <div className='p-4'>
-                        <div className='flex justify-between gap-2 md:gap-0 mb-4'>
-                            <div className='flex items-start gap-2'>
-                                <div className='h-[64px] w-[64px] relative aspect-square '>
-                                    {orderFirstItem?.image_url && <Image src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
+                        <div className='flex justify-between gap-2 md:gap-0 mb-4 w-full'>
+                            <div className='flex items-start gap-2 w-full'>
+                                <div className={`relative aspect-square shrink-0 ${orderFirstItem?.image_url ? 'h-[64px] w-[64px]' : 'h-[44px] w-[44px]'}`}>
+                                    {orderFirstItem?.image_url && <ImageWithPlaceholder src={orderFirstItem?.image_url} alt='demo image' fill className='h-full w-full rounded-sm' />}
                                 </div>
-                                <div>
-                                    <p className='font-bold text-base sm:w-24 text-ellipsis overflow-hidden'>{orderFirstItem?.name}</p>
-                                    <p className='text-sm font-normal'>{orderFirstItem?.variant_name}</p>
-                                </div>
-                            </div>
-                            <div className='flex flex-col mr-16'>
-                                {orderFirstItem?.discounted_price != 0 ?
-                                    <div className="flex gap-1">
-                                        <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price}</p>
-                                        <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                <div className='flex flex-col md:flex-row justify-between w-full'>
+                                    <div className='flex-grow'>
+                                        <p className='font-bold text-base text-ellipsis overflow-hidden w-32'>{orderFirstItem?.name}</p>
+                                        <p className='text-sm font-normal'>{orderFirstItem?.variant_name}</p>
                                     </div>
-                                    :
-                                    <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
 
-                                }
+                                    <div className='md:ml-auto md:mt-0'>
+                                        {orderFirstItem?.discounted_price != 0 ?
+                                            <div className="flex gap-1">
+                                                <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.discounted_price}</p>
+                                                <p className='text-base font-normal line-through'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                            </div>
+                                            :
+                                            <p className='text-base font-bold'>{setting?.setting?.currency}{orderFirstItem?.price}</p>
+                                        }
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
-                        {order?.items?.length > 1 && <button className='rounded-full py-2  px-3 bg-[#12141814] font-medium text-base'>+{order?.items?.length - 1} {t("moteItems")}</button>}
+                        {order?.items?.length > 1 && <button className='rounded-full py-2 px-3 bg-[#12141814] font-medium text-base'>+{order?.items?.length - 1} {t("moteItems")}</button>}
                     </div>
                     <div className='backgroundColor'>
                         <div className={`flex justify-between p-4 flex-col md:flex-row gap-1 md:gap-0`}>
@@ -101,9 +103,9 @@ const ActiveOrdersCard = ({ order }) => {
                                 <span>{t("total")} {t("Credit")} </span>
                                 <span className='font-bold text-lg'> {setting?.setting?.currency}{order?.final_total}</span>
                             </div>
-                            <div className='flex items-center gap-2'>
-                                <Link href={`/order-detail/${order?.id}`} className='py-1 px-1 md:py-2 md:px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
-                                {order?.active_status == "5" ? <button className='py-1 px-1 md:py-2 md:px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
+                            <div className='flex items-center gap-2 flex-wrap'>
+                                <Link href={`/order-detail/${order?.id}`} className='py-2 px-3 hover:primaryBackColor hover:text-white rounded-sm'>{t("view_details")}</Link>
+                                {order?.active_status == "5" ? <button className='py-2 px-3 primaryBackColor text-white rounded-sm flex  items-center gap-1 text-base font-medium' onClick={handleShowLiveTracking}>{t("track_order")} <IoIosArrowRoundForward size={20} className='p-0 m-0' /></button> : null}
                                 <button className="cardBorder py-2 px-3 rounded-sm font-medium text-base hover:primaryBackColor hover:text-white" onClick={handleReoder}>{t("reorder")}</button>
                             </div>
                         </div>
