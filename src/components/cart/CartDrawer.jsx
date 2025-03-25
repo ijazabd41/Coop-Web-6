@@ -29,6 +29,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     const user = useSelector(state => state.User)
     const setting = useSelector(state => state.Setting.setting)
     const language = useSelector(state => state.Language.selectedLanguage)
+    const coupon = useSelector(state => state.Cart.promo_code)
 
     const [showLogin, setShowLogin] = useState(false)
     const [cartProductsData, setCartProductsData] = useState([])
@@ -60,6 +61,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                 setCartProductsData(cartData?.data?.cart)
                 dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
                 setCartData(cartData?.data)
+                await handleApplyCoupon();
                 const productsData = cartData?.data?.cart?.map((product) => {
                     return {
                         product_id: product?.product_id,
@@ -67,6 +69,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                         qty: product?.qty
                     };
                 });
+
                 dispatch(setCartProducts({ data: productsData }));
                 setLoading(false)
             } else {
@@ -81,6 +84,20 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
         } catch (error) {
             setLoading(false)
             console.log("error", error)
+        }
+    }
+
+    const handleApplyCoupon = async () => {
+        try {
+            const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: cart?.cartSubTotal })
+            if (response.status == 1) {
+                dispatch(setCartPromo({ data: response.data }))
+                setShowCouponCode(false)
+            } else {
+                await handleRemoveCoupon()
+            }
+        } catch (error) {
+            console.log("Error", error)
         }
     }
 
@@ -159,7 +176,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                                             <div className='flex p-2  items-center gap-2'>
                                                 <RiCoupon3Line size={32} className='primaryColor' />
                                                 <div className='w-3/4'>
-                                                    <p className="font-bold text-wrap text-ellipsis overflow-hidden whitespace-nowrap w-1/2">{cart?.promo_code?.promo_code}</p>
+                                                    <p className="font-bold text-wrap text-ellipsis overflow-hidden whitespace-nowrap w-3/4 max-h-12">{cart?.promo_code?.promo_code}</p>
                                                     <p className='text-sm font-bold w-full'>{t("promoCodeSuccess")}</p>
                                                 </div>
                                                 <div className='flex flex-col justify-start'>

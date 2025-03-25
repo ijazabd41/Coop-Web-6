@@ -28,6 +28,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                 if (updatedProducts?.length <= 0) {
                     dispatch(clearCartPromo())
                 }
+                await handleApplyCoupon()
                 // toast.success(response.message)
             } else {
                 toast.error(response.message)
@@ -171,10 +172,17 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
             const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: total })
             if (response.status == 1) {
                 dispatch(setCartPromo({ data: response.data }))
+            } else {
+                await handleRemoveCoupon()
             }
         } catch (error) {
             console.log("Error", error)
         }
+    }
+
+
+    const handleRemoveCoupon = async () => {
+        dispatch(clearCartPromo())
     }
 
     const handleQuantityDecrease = async () => {

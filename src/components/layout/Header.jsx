@@ -131,10 +131,9 @@ const Header = () => {
                 if (response.status === 1) {
                     dispatch(setCity({ data: response.data }));
                 } else {
-                    setLocModal(true);
+                    setShowLocation(true);
                 }
             } else if (setting?.setting && setting.setting?.default_city == null && city?.city == null) {
-
                 setShowLocation(true);
             }
         } catch (error) {

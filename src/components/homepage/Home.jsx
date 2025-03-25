@@ -20,6 +20,7 @@ const HomePage = () => {
                 {setting?.setting == null ? <Loader /> :
                     <>
                         <FeatureSections />
+
                         <HomeAllProducts />
                         {setting.setting && setting?.setting?.popup_enabled === "1" &&
                             <HomeOfferModal />

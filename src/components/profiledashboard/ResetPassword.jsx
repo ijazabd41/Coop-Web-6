@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify'
+import { isRtl } from '@/lib/utils'
+
 
 const ResetPassword = () => {
 
+    const rtl = isRtl();
     const [showPassword, setShowPassword] = useState(false)
     const [showNewPassword, setShowNewPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -70,7 +73,7 @@ const ResetPassword = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <div
-                                className="absolute right-[12px] top-[36px]"
+                                className={`absolute ${rtl ? "left-[12px]" : "right-[12px]"} top-[36px]`}
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -94,7 +97,7 @@ const ResetPassword = () => {
                                 onChange={(e) => setNewPassword(e.target.value)}
                             />
                             <div
-                                className="absolute right-[12px] top-[36px]"
+                                className={`absolute ${rtl ? "left-[12px]" : "right-[12px]"} top-[36px]`}
                                 onClick={() => setShowNewPassword(!showNewPassword)}
                             >
                                 {showNewPassword ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -118,7 +121,7 @@ const ResetPassword = () => {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <div
-                                className="absolute right-[12px] top-[36px]"
+                                className={`absolute ${rtl ? "left-[12px]" : "right-[12px]"} top-[36px]`}
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
                                 {showConfirmPassword ? <FaRegEyeSlash /> : <FaRegEye />}

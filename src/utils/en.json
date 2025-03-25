@@ -511,5 +511,6 @@
     "user_already_exist": "User already exist. Please login",
     "not_allowed_to_add_to_cart_as_your_account_is_de_activated": "You can't add to cart because Your account is deactivated",
     "items_not_available": "Items not available",
-    "user_deactivated": "Your account has been deactivated. Please contact the admin for more details."
+    "user_deactivated": "Your account has been deactivated. Please contact the admin for more details.",
+    "go_back": "Go Back"
 }

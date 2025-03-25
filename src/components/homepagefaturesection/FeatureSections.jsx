@@ -56,8 +56,7 @@ const FeatureSections = () => {
                     }
 
                 })}
-                {shop?.sliders && <HomePageSlider slider={shop} />}
-
+                {shop?.sliders?.length > 0 && <HomePageSlider slider={shop} />}
                 <div className='container'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
@@ -79,7 +78,7 @@ const FeatureSections = () => {
                     }
 
                 })}
-                {shop?.categories && <Categories categories={shop} />}
+                {shop?.categories?.length > 0 && <Categories categories={shop} />}
 
                 <div className='container'>
                     {BelowCategory && BelowCategory?.map((offer) => {
@@ -102,7 +101,7 @@ const FeatureSections = () => {
                     }
 
                 })}
-                {shop?.brands && <BrandSlider brands={shop} />}
+                {shop?.brands?.length > 0 && <BrandSlider brands={shop} />}
 
                 {belowBrandsSection && belowBrandsSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
@@ -116,7 +115,7 @@ const FeatureSections = () => {
                     }
 
                 })}
-                {shop?.sellers && <SellerSlider sellers={shop} />}
+                {shop?.sellers?.length > 0 && <SellerSlider sellers={shop} />}
 
                 {belowShopSellerSection && belowShopSellerSection?.map((section, index) => {
                     if (section?.style_web == "style_1") {
@@ -130,7 +129,7 @@ const FeatureSections = () => {
                     }
 
                 })}
-                {shop?.countries && <CountrySlider countries={shop} />}
+                {shop?.countries?.length > 0 && <CountrySlider countries={shop} />}
 
                 {belowCoutrySection && belowCoutrySection?.map((section, index) => {
                     if (section?.style_web == "style_1") {

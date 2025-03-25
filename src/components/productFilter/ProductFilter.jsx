@@ -157,38 +157,38 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-
-                <Collapsible open={activeKey.includes("2")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("2")}>
-                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                        <div className="text-base font-medium textColor">{t("brands")}</div>
-                        <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
-                            <FaChevronDown />
-                        </div>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        <div className='filter-row px-2 pb-4 md:px-2 lg:px-4'>
-                            {brands?.map((brand, index) => {
-                                const isChecked = filter.brand_ids.includes(brand.id);
-                                return (
-                                    <div key={brand.id} className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2">
-                                        <Checkbox
-                                            className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
-                                            checked={isChecked}
-                                            onCheckedChange={() => {
-                                                setProductResult([])
-                                                filterbyBrands(brand)
-                                            }}
-                                        />
-                                        <span className="text-sm font-normal textColor">{brand.name}</span>
-                                    </div>
-                                );
-                            })
-                            }
-                            {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
-                        </div>
-                    </CollapsibleContent>
-                </Collapsible>
-
+                {brands && brands?.length > 0 &&
+                    <Collapsible open={activeKey.includes("2")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("2")}>
+                        <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                            <div className="text-base font-medium textColor">{t("brands")}</div>
+                            <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
+                                <FaChevronDown />
+                            </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                            <div className='filter-row px-2 pb-4 md:px-2 lg:px-4'>
+                                {brands?.map((brand, index) => {
+                                    const isChecked = filter.brand_ids.includes(brand.id);
+                                    return (
+                                        <div key={brand.id} className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2">
+                                            <Checkbox
+                                                className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
+                                                checked={isChecked}
+                                                onCheckedChange={() => {
+                                                    setProductResult([])
+                                                    filterbyBrands(brand)
+                                                }}
+                                            />
+                                            <span className="text-sm font-normal textColor">{brand.name}</span>
+                                        </div>
+                                    );
+                                })
+                                }
+                                {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                }
 
                 <Collapsible open={activeKey.includes("3")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("3")}>
                     <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">

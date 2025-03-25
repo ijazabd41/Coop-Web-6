@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
-import { addtoGuestCart, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
+import { addtoGuestCart, clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaMinus, FaPlus } from 'react-icons/fa';
@@ -172,6 +172,8 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
             const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: total })
             if (response.status == 1) {
                 dispatch(setCartPromo({ data: response.data }))
+            } else {
+                await handleRemoveCoupon()
             }
         } catch (error) {
             console.log("Error", error)
@@ -229,6 +231,9 @@ const CartProductCard = ({ product, cartProductsData, setCartProductsData }) => 
         }
     }
 
+    const handleRemoveCoupon = async () => {
+        dispatch(clearCartPromo())
+    }
 
 
     const addedQuantity = cart.isGuest === false ?

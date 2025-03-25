@@ -1,5 +1,6 @@
 const fs = require('fs');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
@@ -18,8 +19,6 @@ const addPage = (page) => {
 
   const route = path === '/index' ? '' : path;
   const cleanRoute = route.endsWith('/') ? route.slice(0, -1) : route;
-
-
 
   return `  <url>
     <loc>${`${process.env.NEXT_PUBLIC_BASE_URL}/${cleanRoute}`}</loc>
@@ -65,10 +64,23 @@ const generateSitemap = async () => {
     .replace(/FIREBASE_APP_ID/g, firebaseConfig.appId)
     .replace(/FIREBASE_MEASUREMENT_ID/g, firebaseConfig.measurementId);
 
-
   fs.writeFileSync("./public/firebase-messaging-sw.js", messagingFile);
 
-};
+  // Copy .htaccess to out folder
+  try {
+    const htaccessContent = fs.readFileSync('.htaccess', 'utf-8');
+    const outDir = path.join(process.cwd(), 'out');
 
+    // Create out directory if it doesn't exist
+    if (!fs.existsSync(outDir)) {
+      fs.mkdirSync(outDir, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(outDir, '.htaccess'), htaccessContent);
+    console.log('Successfully copied .htaccess to out folder');
+  } catch (error) {
+    console.error('Error copying .htaccess:', error);
+  }
+};
 
 generateSitemap();

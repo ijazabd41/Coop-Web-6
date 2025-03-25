@@ -17,12 +17,14 @@ import Loader from '../loader/Loader';
 import { setAllAddresses, setSelectedAddres } from '@/redux/slices/addressSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { darkThemeStyles } from '@/utils/mapColor'
 
 
 const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, fetchAddress }) => {
     const dispatch = useDispatch();
     const addresses = useSelector(state => state.Addresses)
     const city = useSelector(state => state.City.city)
+    const theme = useSelector(state => state.Theme.theme)
     const [addressLoading, setAddressLoading] = useState("")
     const [loading, setLoading] = useState(false)
     const [center, setCenter] = useState()
@@ -342,7 +344,8 @@ const NewAddressModal = ({ showAddAddres, setShowAddAddres, isAddressSelected, f
                                 <BiCurrentLocation size={20} className=' ' />
                             </div>
                             <GoogleMap streetViewControl={false} tilt={true} options={{
-                                streetViewControl: false
+                                streetViewControl: false,
+                                styles: theme == "dark" ? darkThemeStyles : []
                             }} zoom={11} center={center} mapContainerStyle={mapContainerStyle} className="h-full">
                                 <MarkerF position={center} draggable={true} onDragStart={onMarkerDragStart} onDragEnd={onMarkerDragEnd} />
                             </GoogleMap>

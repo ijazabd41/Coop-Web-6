@@ -11,9 +11,11 @@ import { setAllAddresses } from '@/redux/slices/addressSlice';
 import CardSkeleton from '../skeleton/CardSkeleton';
 import { GoPlusCircle } from 'react-icons/go';
 
+
 const Address = () => {
 
     const dispatch = useDispatch();
+
     const addresses = useSelector(state => state.Addresses)
     const [showAddAddres, setShowAddAddres] = useState(false)
     const [isAddressSelected, setIsAddressSelected] = useState(false)

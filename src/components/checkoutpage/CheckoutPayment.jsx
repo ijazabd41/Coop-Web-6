@@ -84,7 +84,10 @@ const CheckoutPayment = ({ checkoutData }) => {
             }
         } else {
             dispatch(setPaymentMethod({ data: null }))
-            if (user?.user?.balance >= checkout?.checkoutTotal) {
+            if (walletBalance == 0) {
+                setWalletBalance(user?.user?.balance)
+            }
+            else if (user?.user?.balance >= checkout?.checkoutTotal) {
                 setWalletBalance(walletBalance + checkoutData?.total_amount)
             } else {
                 setWalletBalance(user?.user?.balance)

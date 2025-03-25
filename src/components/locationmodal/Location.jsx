@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux'
 import { setShop } from '@/redux/slices/shopSlice'
 import Loader from '../loader/Loader'
 import { IoIosCloseCircle } from 'react-icons/io'
+import { darkThemeStyles } from '@/utils/mapColor'
+
 
 
 const Location = ({ showLocation, setShowLocation }) => {
@@ -335,7 +337,8 @@ const Location = ({ showLocation, setShowLocation }) => {
                                 <div className='flex flex-col gap-3 w-full'>
                                     <div className='w-full'>
                                         <GoogleMap streetViewControl={false} tilt={true} options={{
-                                            streetViewControl: false
+                                            streetViewControl: false,
+                                            styles: theme == "dark" ? darkThemeStyles : []
                                         }} zoom={11} center={center} mapContainerStyle={{ height: "400px" }}>
                                             <MarkerF position={center} draggable={true} onDragStart={onMarkerDragStart} onDragEnd={handleDragEnd} />
                                         </GoogleMap>
@@ -345,6 +348,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                                         <p className='text-center font-semibold text-base'><b>{t("address")} : </b>{addressLoading ? "...." : localLocation.formatted_address}</p>
                                     </div>
                                     <button onClick={handleConfirmLocation} className='w-full primaryBorder p-1 rounded-lg' >{t("confirm")}</button>
+                                    <button onClick={() => setMapView(false)} className='w-full ' >{t("go_back")}</button>
                                 </div>
                         }
                     </div>

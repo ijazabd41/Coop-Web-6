@@ -65,49 +65,50 @@ const HomeAllProducts = () => {
     const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
     return (
-        <section>
-            <div className='py-3 md:py-6 container px-2 '>
-                <div className='flex flex-col gap-3 '>
-                    <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{t("allProducts")}</h2>
-                    <div className='grid grid-cols-12 gap-2'>
-                        {loading ?
-                            placeholderItems.map(index => {
+        allProducts?.length > 0 ?
+            <section>
+                <div className='py-3 md:py-6 container px-2 '>
+                    <div className='flex flex-col gap-3 '>
+                        <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{t("allProducts")}</h2>
+                        <div className='grid grid-cols-12 gap-2'>
+                            {loading ?
+                                placeholderItems.map(index => {
+                                    return (
+                                        <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2' key={index}>
+                                            <CardSkeleton height={300} />
+                                        </div>
+
+                                    )
+                                })
+                                :
+                                allProducts?.map((product) => {
+                                    return (
+                                        <div key={product?.id} className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'>
+                                            <VerticleProductCard product={product} />
+                                        </div>
+                                    )
+                                })
+
+                            }
+                            {loadmoreLoading ? placeholderItems.map(index => {
                                 return (
                                     <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2' key={index}>
                                         <CardSkeleton height={300} />
                                     </div>
 
                                 )
-                            })
-                            :
-                            allProducts?.map((product) => {
-                                return (
-                                    <div key={product?.id} className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'>
-                                        <VerticleProductCard product={product} />
-                                    </div>
-                                )
-                            })
-
-                        }
-                        {loadmoreLoading ? placeholderItems.map(index => {
-                            return (
-                                <div className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2' key={index}>
-                                    <CardSkeleton height={300} />
-                                </div>
-
-                            )
-                        }) : <></>}
-                        <div className='col-span-12 my-3 w-full flex justify-center mx-auto'>
-                            {(totalProducts > allProducts?.length) ?
-                                <button className='bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3' onClick={() => handleFetchProduct(true)}>{t("load_more")}</button>
-                                : null
-                            }
+                            }) : <></>}
+                            <div className='col-span-12 my-3 w-full flex justify-center mx-auto'>
+                                {(totalProducts > allProducts?.length) ?
+                                    <button className='bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3' onClick={() => handleFetchProduct(true)}>{t("load_more")}</button>
+                                    : null
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
-        </section>
+                </div>
+            </section> : <></>
     )
 }
 
