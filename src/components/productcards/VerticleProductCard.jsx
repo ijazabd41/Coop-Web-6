@@ -362,17 +362,17 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
                             <p className='textColor text-[14px] font-normal leading-[17px] m-1 line-through'>{setting?.currency}{selectedVariant?.price}</p></> : <p className='textColor text-base font-bold'>{setting?.currency}{selectedVariant?.price}</p>}
                     </div>
                 </div>
-                {!isProductAvailabel ? <div className='flex gap-0 md:gap-3 h-[80px] md:h-[38px] w-full flex-col md:flex-row'>
+                {!isProductAvailabel ? <div className='flex gap-0 md:gap-3 h-[80px] md:h-[44px] w-full flex-col md:flex-row'>
                     <button onClick={(e) => handleShowVariantModal(e, product)} className='md:w-1/2 w-full flex items-center my-[5px] justify-between  rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap' >{`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}{productsVariants?.length > 1 ? <div><MdArrowDropDown size={16} /></div> : <></>}</button>
                     {isProductAlreadyAdded ?
                         <div className='md:w-1/2 w-full cardBorder flex justify-between rounded-sm my-1'>
-                            <button className=' md:px-0.5 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-7 rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
+                            <button className=' md:px-0.5 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-[34px] rounded-[2px]' onClick={handleQuantityDecrease}><FaMinus /></button>
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
-                            <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-7' onClick={handleQuantityIncrease}><FaPlus /></button>
+                            <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-[34px] ' onClick={handleQuantityIncrease}><FaPlus /></button>
                         </div>
-                        : <button className={`w-full md:w-1/2 flex gap-1 text-base ${isLtr ? 'my-0' : 'my-[5px]'} p-1 md:p-0 items-center  justify-center rounded-[4px]  text-white addToCartColor primaryColor `} onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
+                        : <button className={`w-full md:w-1/2 flex gap-1 text-base  my-[5px] p-1 md:p-0 items-center  justify-center rounded-[4px]  text-white addToCartColor primaryColor `} onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
-                </div> : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
+                </div> : <div className='flex items-center h-[80px] md:h-[44px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
             </Link>
             <ProductDetailModal product={product} showDetailModal={showProductDetail} setShowDetailModal={setShowProductDetail} />
             <VariantsModal product={product} showVariants={showVariants} setShowVariants={setShowVariants} />
