@@ -26,8 +26,6 @@ const ProductReviewCard = ({ review }) => {
         setShowLightbox(true)
     }
 
-
-
     return (
         <div className='flex flex-col gap-4'>
             <div className="flex gap-4 p-4 border-b-2   max-w-full">
@@ -40,7 +38,7 @@ const ProductReviewCard = ({ review }) => {
                 <div className="flex-1">
                     {/* User Info */}
                     <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-base ">{review?.user?.name}</span>
+                        <span className="font-bold text-base ">{review?.user?.name || "Anonymous"}</span>
                         <div className="flex items-center">
                             {/* Star Ratings */}
                             <div className="flex ">
@@ -53,18 +51,12 @@ const ProductReviewCard = ({ review }) => {
                             <span className="ml-1 = text-sm">{review?.rate}</span>
                         </div>
                     </div>
-
-
                     <p className=" text-base font-medium mb-2">
                         {review?.review}
                     </p>
-
-
                     <div className="flex items-center  text-sm font-normal mb-2">
                         <span className="mr-2 flex items-center"><FaCalendarAlt size={16} /></span> {formatDate(review?.updated_at)}
                     </div>
-
-
                     <div className="flex gap-2 flex-wrap">
                         {review?.images?.map((image, index) => {
                             return (<div className="w-16 h-16 rounded" key={index}>

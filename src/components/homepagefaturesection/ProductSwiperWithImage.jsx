@@ -1,16 +1,15 @@
 import Image from 'next/image'
-import Link from 'next/link'
+
 import React, { useEffect, useState } from 'react'
 import { IoMdArrowBack, IoMdArrowForward } from 'react-icons/io'
-import Demo from "/public/demo.png"
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import VerticleProductCard from '../productcards/VerticleProductCard';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { t } from '@/utils/translation'
-import { useDispatch } from 'react-redux'
 import { setFilterSection } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/navigation'
 import { isRtl } from '@/lib/utils'

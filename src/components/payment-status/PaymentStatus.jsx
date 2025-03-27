@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
 import { useDispatch } from 'react-redux';
 import * as api from "@/api/apiRoutes";
-import { clearCartPromo, setCart, setCartProducts, setCartPromo, setCartSubTotal } from '@/redux/slices/cartSlice';
+import { clearCartPromo, setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
 import { clearCheckout } from '@/redux/slices/checkoutSlice';
 import { t } from "@/utils/translation";
 
@@ -26,7 +26,6 @@ const PaymentStatus = () => {
         if (status === 'success' || status === 'PAYMENT_SUCCESS' || (status_code === '200' && transaction_status === 'capture')) return 'success';
         return 'failed';
     };
-    // http://localhost:3000/web-payment-status?type=wallet&status_code=200&status=success
     const isWalletTransaction = ({ type, order_id }) => type === 'wallet' || order_id?.startsWith('wallet-');
 
     useEffect(() => {
@@ -56,16 +55,20 @@ const PaymentStatus = () => {
 
     const handlePaymentClose = async () => {
         try {
-            const response = await api.deleteCart();
-            if (response.status === 1) {
-                dispatch(setCart({ data: [] }));
-                dispatch(clearCartPromo());
-                dispatch(setCartSubTotal({ data: 0 }));
-                dispatch(setCartProducts({ data: [] }));
-                dispatch(clearCheckout());
-                router.replace("/");
+            if (type == "order") {
+                const response = await api.deleteCart();
+                if (response.status === 1) {
+                    dispatch(setCart({ data: [] }));
+                    dispatch(clearCartPromo());
+                    dispatch(setCartSubTotal({ data: 0 }));
+                    dispatch(setCartProducts({ data: [] }));
+                    dispatch(clearCheckout());
+                    router.replace("/");
+                } else {
+                    console.error("Error clearing cart", response);
+                }
             } else {
-                console.error("Error clearing cart", response);
+                router.replace("/");
             }
         } catch (error) {
             console.error("Error", error);

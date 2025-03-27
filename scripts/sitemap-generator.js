@@ -65,22 +65,6 @@ const generateSitemap = async () => {
     .replace(/FIREBASE_MEASUREMENT_ID/g, firebaseConfig.measurementId);
 
   fs.writeFileSync("./public/firebase-messaging-sw.js", messagingFile);
-
-  // Copy .htaccess to out folder
-  try {
-    const htaccessContent = fs.readFileSync('.htaccess', 'utf-8');
-    const outDir = path.join(process.cwd(), 'out');
-
-    // Create out directory if it doesn't exist
-    if (!fs.existsSync(outDir)) {
-      fs.mkdirSync(outDir, { recursive: true });
-    }
-
-    fs.writeFileSync(path.join(outDir, '.htaccess'), htaccessContent);
-    console.log('Successfully copied .htaccess to out folder');
-  } catch (error) {
-    console.error('Error copying .htaccess:', error);
-  }
 };
 
 generateSitemap();

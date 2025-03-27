@@ -52,28 +52,26 @@ const OrderSummaryCard = ({ step, checkoutData, handlePlaceOrder, checkOutError 
             )}
             {checkout?.isWalletChecked && (
                 <div className="flex justify-between items-center mb-2">
-                    <a href="#" className="">
-                        {t("wallet_balance_used")}
-                    </a>
+
+                    {t("wallet_balance_used")}
+
                     <span className="">- {setting?.currency} {checkout?.usedWalletBalance?.toFixed(2)}</span>
                 </div>
             )}
-
-
             <hr className="border-gray-300 mb-4" />
             <div className="flex justify-between items-center mb-6 backgroundColor p-3 rounded-sm">
                 <span className="text-lg font-bold ">{t("total")}</span>
                 {checkOutError == false ?
-                    <span className="font-semibold ">{setting?.currency} {checkout?.isWalletChecked ? (checkoutData?.total_amount?.toFixed(2) - checkout?.usedWalletBalance?.toFixed(2)) : checkoutData?.total_amount?.toFixed(2)}</span>
+                    <span className="font-semibold ">{setting?.currency} {(checkout?.isWalletChecked ?
+                        (Number(checkoutData?.total_amount) - Number(checkout?.usedWalletBalance)).toFixed(2) :
+                        checkoutData?.total_amount?.toFixed(2))}</span>
                     :
                     <span className="font-semibold ">{setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}</span>
                 }
             </div>
-
             <button className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor" disabled={step !== 3} onClick={handlePlaceOrder}>
                 {t("place_order")}
             </button>
-
             <div className="text-center rounded w-full hover:primaryBackColor hover:text-white p-2 mt-2">
                 <Link href="/cart" className=" underline font-medium  w-full ">
                     {t("backToCart")}

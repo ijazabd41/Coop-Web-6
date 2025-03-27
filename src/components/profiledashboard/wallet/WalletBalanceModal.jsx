@@ -81,17 +81,23 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
         }
     }, [addWalletModal])
 
-    // const handleSuccessWalletAdd = () => {
-    //     setTimeout(() => {
-    //         router.push("/")
-    //     }, 1500);
-    // }
-
+  
     const handleSubmit = async () => {
-        if (amount === null || amount <= 0 || selectedPaymentMethod === undefined) {
-            toast.error(t(amount === null ? "wallet_amount_required" : amount <= 0 ? "wallet_amount_must_be_greater_than_zero" : "wallet_payment_method_required"));
+        console.log("amount", amount % 1 !== 0)
+        if (amount === null) {
+            toast.error(t("wallet_amount_required"));
+            return;
+        } else if (amount <= 0) {
+            toast.error(t("wallet_amount_must_be_greater_than_zero"));
+            return;
+        } else if (selectedPaymentMethod === undefined) {
+            toast.error(t("wallet_payment_method_required"));
+            return;
+        } else if (amount % 1 !== 0) {
+            toast.error(t("wallet_amount_cannot_be_decimal"));
             return;
         }
+
         const capitalizedPaymentMethod = selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1);
         if (capitalizedPaymentMethod !== "Paystack") {
             const result = await api.initiateTrasaction({ paymentMethod: capitalizedPaymentMethod, type: "wallet", walletAmount: amount });

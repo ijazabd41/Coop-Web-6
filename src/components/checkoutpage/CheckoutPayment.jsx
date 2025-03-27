@@ -36,7 +36,12 @@ const CheckoutPayment = ({ checkoutData }) => {
     const [walletBalance, setWalletBalance] = useState(null)
 
     useEffect(() => {
-        setWalletBalance(user?.user?.balance)
+        if (checkout?.isWalletChecked) {
+            setWalletBalance(checkout?.usedWalletBalance - user?.user?.balance)
+        } else {
+            setWalletBalance(user?.user?.balance)
+
+        }
     }, [user])
 
     const handleSelectedPaymentMethod = (value) => {
@@ -69,7 +74,6 @@ const CheckoutPayment = ({ checkoutData }) => {
             scrollToSelectedMethod();
         }
     }, [checkout?.selectedPaymentMethod]);
-
 
 
     const handleWalletCheck = async () => {

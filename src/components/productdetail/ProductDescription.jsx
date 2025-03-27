@@ -116,7 +116,7 @@ const ProductDescription = ({ product, ratingData }) => {
                                                         );
                                                     })}
                                                 </div>
-                                                <div className='flex flex-col gap-2'>
+                                                {ratingImages?.length > 0 && <div className='flex flex-col gap-2'>
                                                     <p className='font-bold text-base'>{t("customer_photos")}</p>
                                                     <div className='flex flex-wrap gap-4'>
                                                         {ratingImages?.slice(0, 6)?.map((image, index) => {
@@ -138,7 +138,8 @@ const ProductDescription = ({ product, ratingData }) => {
                                                         })}
                                                     </div>
 
-                                                </div>
+                                                </div>}
+
                                             </div>
 
                                             {/* Section 2 */}
