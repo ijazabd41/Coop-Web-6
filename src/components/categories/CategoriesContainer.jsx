@@ -29,8 +29,6 @@ const CategoriesContainer = ({ categories }) => {
             router.push(`/products`)
         }
     }
-
-
     return (
         <section>
             <div className='container py-3 md:py-6 px-2' dir={language?.type}>
@@ -45,10 +43,10 @@ const CategoriesContainer = ({ categories }) => {
                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
                             <Link className="text-nowrap" href="/categories/all">{t('see_all')}</Link>
                             <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className="category-button-next fontColorBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
+                                <button className="category-button-next fontColorBorder rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
                                     <IoMdArrowBack className='textColor' size={20} />
                                 </button>
-                                <button className=" category-button-prev fontColorBorder rounded-full text-[#888] opacity-70 !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
+                                <button className=" category-button-prev fontColorBorder rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-300 ease-linear visibility-visible z-10 ">
                                     <IoMdArrowForward className='textColor' size={20} />
                                 </button>
                             </div>
