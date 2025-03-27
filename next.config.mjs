@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export',
   images: {
     remotePatterns: [
       {
