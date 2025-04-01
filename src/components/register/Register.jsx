@@ -286,7 +286,10 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
     }
 
     const handleOtpChange = (e) => {
-        setOtp(e.target.value)
+        const input = e.target.value;
+        // Only allow digits, remove any special characters and limit to 6 characters
+        const cleanedInput = input.replace(/[^0-9]/g, '').slice(0, 6);
+        setOtp(cleanedInput);
     }
 
     const handleCloseRegister = (e) => {
@@ -322,7 +325,16 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                         isPhoneOtp ? <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("otp")}<span className='text-red-500'>*</span></span>
                             <div className=''>
-                                <input type="number" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("otpPlaceholder")} value={otp} onChange={handleOtpChange} />
+                                <input
+                                    type="text"
+                                    className='py-2 px-4 cardBorder outline-none rounded-sm w-full'
+                                    placeholder={t("otpPlaceholder")}
+                                    value={otp}
+                                    onChange={handleOtpChange}
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    maxLength="6"
+                                />
                             </div>
                         </div> : <div className='mt-8 flex flex-col gap-2'>
                             <div className='flex flex-col gap-1'>
