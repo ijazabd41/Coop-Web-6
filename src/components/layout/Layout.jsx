@@ -101,6 +101,7 @@ const Layout = ({ children }) => {
     try {
       const res = await api.getSetting();
       const setting = JSON.parse(atob(res.data))
+      console.log("setting", setting)
       dispatch(setSetting({ data: setting }));
       dispatch(
         setFavoriteProductIds({ data: setting?.favorite_product_ids })

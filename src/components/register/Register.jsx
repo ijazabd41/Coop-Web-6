@@ -19,7 +19,7 @@ import FirebaseData from '@/utils/firebase';
 import { signInWithPhoneNumber } from 'firebase/auth';
 
 
-const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, inputType, setTimer }) => {
+const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, inputType, setTimer, setShowLogin }) => {
 
     const { auth, app, messaging } = FirebaseData();
     const dispatch = useDispatch();
@@ -139,7 +139,16 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                 setIsLoading(false);
             } else {
                 setIsLoading(false);
-                toast.error(res?.message)
+                toast.error(t(res?.message))
+                setShowRegister(false);
+                setIsPhoneOtp(false);
+                setOtp(null)
+                setPassword("")
+                setConfirmPassword("")
+                setPhoneNumber("")
+                setPhoneNumberWithoutCountryCode("")
+                setName("")
+                setEmail("")
             }
         } catch (error) {
             console.log("error", error)
@@ -168,6 +177,7 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                     window.confirmationResult = confirmationResult;
                     setIsLoading(false);
                     setIsPhoneOtp(true);
+                    setShowLogin(false);
                 } catch (error) {
                     setError(error.message);
                     console.log("error", error)
@@ -295,8 +305,9 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
         <Dialog open={showRegister} >
             <DialogContent className="overflow-y-auto">
                 <DialogHeader className="flex justify-between flex-row items-center">
-                    <div className="relative aspect-square object-cover h-[68px] w-[72px]">
-                        <Image src={setting?.web_settings?.web_logo} alt="logo" fill className="aspect-square w-full h-full object-cover" />
+                    <div className="">
+                        <h1 className='text-3xl font-bold'>{t("register")}</h1>
+                        {/* <Image src={setting?.web_settings?.web_logo} alt="logo" fill className="aspect-square w-full h-full object-cover" /> */}
                     </div>
                     <div>
                         <IoIosCloseCircle size={32} onClick={handleCloseRegister} />
@@ -307,57 +318,57 @@ const Register = ({ showRegister, setShowRegister, setIsOTP, email, setEmail, in
                         <h5 className="text-[34px] font-bold textColor">{t("welcome")}</h5>
                         <span className="textColor text-xs">{t("signupMessage")}</span>
                     </div>
-                    <div className='mt-8 flex flex-col gap-2'>
-                        <div className='flex flex-col gap-1'>
-                            <span className='font-bold text-base'>{t("name")}<span className='text-red-500'>*</span></span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_name")} value={name} onChange={handleUsernameChange} />
-                            {error && errorType == "name" && <span className='text-xs text-red-500'>{error}</span>}
-                        </div>
-                        <div className='flex flex-col gap-1'>
-                            <span className='font-bold text-base'>{t("email")}{inputType == "email" ? <span className='text-red-500'>*</span> : <></>}</span>
-                            <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_email")} value={email} onChange={handleEmailChange} />
-                            {error && errorType == "email" && <span className='text-xs text-red-500'>{error}</span>}
-                        </div>
-                        <div className='flex flex-col gap-1 pl-0'>
-                            <span className='font-bold text-base'>{t("mobileNumber")}{inputType == "number" ? <span className='text-red-500'>*</span> : <></>}</span>
-                            <PhoneInput
-                                inputStyle={{ direction: language?.type }}
-                                country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
-                                value={phoneNumber}
-                                onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
-                                onCountryChange={(code) => setCountryCode(code)}
-                                className='w-full '
-                            />
-                        </div>
-                        <div className='flex flex-col gap-1'>
-                            <span className='font-bold text-base'>{t("password")}<span className='text-red-500'>*</span></span>
-                            <div className='relative w-full '>
-                                <input type={showPassword ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_password")} value={password} onChange={handlePasswordChange} />
-                                <span className='absolute right-3 top-3' onClick={handleShowPassword}>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
-                                {error && errorType == "password" && <span className='text-xs text-red-500'>{error}</span>}
-                            </div>
-
-                        </div>
-                        <div className='flex flex-col gap-1'>
-                            <span className='font-bold text-base'>{t("confirmPassword")}<span className='text-red-500'>*</span></span>
-                            <div className='relative w-full '>
-                                <input type={showConfirmPass ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_confirm_password")} value={confirmPassword} onChange={handleConfirmPasswordChange} />
-                                <span className='absolute right-3 top-3' onClick={handleShowConfirmPassword}>{showConfirmPass ? <FaEyeSlash /> : <FaEye />}</span>
-                                {error && errorType == "confirmpassword" && <span className='text-xs text-red-500'>{error}</span>}
-                            </div>
-                        </div>
-                        {isPhoneOtp && <div className='flex flex-col gap-1'>
+                    {
+                        isPhoneOtp ? <div className='flex flex-col gap-1'>
                             <span className='font-bold text-base'>{t("otp")}<span className='text-red-500'>*</span></span>
                             <div className=''>
                                 <input type="number" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("otpPlaceholder")} value={otp} onChange={handleOtpChange} />
                             </div>
+                        </div> : <div className='mt-8 flex flex-col gap-2'>
+                            <div className='flex flex-col gap-1'>
+                                <span className='font-bold text-base'>{t("name")}<span className='text-red-500'>*</span></span>
+                                <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_name")} value={name} onChange={handleUsernameChange} />
+                                {error && errorType == "name" && <span className='text-xs text-red-500'>{error}</span>}
+                            </div>
+                            <div className='flex flex-col gap-1'>
+                                <span className='font-bold text-base'>{t("email")}{inputType == "email" ? <span className='text-red-500'>*</span> : <></>}</span>
+                                <input type="text" name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm' placeholder={t("please_enter_email")} value={email} onChange={handleEmailChange} />
+                                {error && errorType == "email" && <span className='text-xs text-red-500'>{error}</span>}
+                            </div>
+                            <div className='flex flex-col gap-1 pl-0'>
+                                <span className='font-bold text-base'>{t("mobileNumber")}{inputType == "number" ? <span className='text-red-500'>*</span> : <></>}</span>
+                                <PhoneInput
+                                    inputStyle={{ direction: language?.type }}
+                                    country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
+                                    value={phoneNumber}
+                                    onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
+                                    onCountryChange={(code) => setCountryCode(code)}
+                                    className='w-full '
+                                />
+                            </div>
+                            <div className='flex flex-col gap-1'>
+                                <span className='font-bold text-base'>{t("password")}<span className='text-red-500'>*</span></span>
+                                <div className='relative w-full '>
+                                    <input type={showPassword ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_password")} value={password} onChange={handlePasswordChange} />
+                                    <span className='absolute right-3 top-3' onClick={handleShowPassword}>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                                    {error && errorType == "password" && <span className='text-xs text-red-500'>{error}</span>}
+                                </div>
+
+                            </div>
+                            <div className='flex flex-col gap-1'>
+                                <span className='font-bold text-base'>{t("confirmPassword")}<span className='text-red-500'>*</span></span>
+                                <div className='relative w-full '>
+                                    <input type={showConfirmPass ? "text" : "password"} name="" id="" className='py-2 px-4 cardBorder outline-none rounded-sm w-full' placeholder={t("please_enter_confirm_password")} value={confirmPassword} onChange={handleConfirmPasswordChange} />
+                                    <span className='absolute right-3 top-3' onClick={handleShowConfirmPassword}>{showConfirmPass ? <FaEyeSlash /> : <FaEye />}</span>
+                                    {error && errorType == "confirmpassword" && <span className='text-xs text-red-500'>{error}</span>}
+                                </div>
+                            </div>
+
+
                         </div>}
 
-                    </div>
                     <div className='mt-4 flex flex-col justify-center text-center gap-3'>
                         {isPhoneOtp ? <button onClick={handleMobileRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("register")}</button> : <button onClick={handleUserRegister} className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal" disabled={isLoading}>{isLoading ? t("loading") : t("verify")}</button>}
-
-
                         <span className='text-base font-medium'>{t("alreadyHaveAnAccount")} <span className='primaryColor underline ml-[2px] cursor-pointer' onClick={() => setShowRegister(false)}>{t("signIn")}</span></span>
                     </div>
                     <div className="flex items-center justify-between my-4 gap-2">

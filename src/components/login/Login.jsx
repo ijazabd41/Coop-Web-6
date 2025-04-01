@@ -175,6 +175,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const handleShowRegister = (type) => {
     setShowRegister(true);
     setInputType(type);
+
     setError("")
   };
 
@@ -750,14 +751,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       <Dialog open={showLogin}>
         <DialogContent className="overflow-y-auto overflow-x-hidden">
           <DialogHeader className="flex justify-between items-center flex-row">
-            <div className="relative aspect-square object-cover h-[68px] w-[72px]">
+            <div>
+
+              <h1 className='text-3xl font-bold'>{t("login")}</h1>
+            </div>
+            {/* <div className="relative aspect-square object-cover h-[68px] w-[72px]">
               <Image
                 src={setting?.web_settings?.web_logo}
                 alt="logo"
                 fill
                 className="aspect-square w-full h-full object-cover"
               />
-            </div>
+            </div> */}
             <div>
               <IoIosCloseCircle size={32} onClick={() => handleHideLogin()} />
             </div>
@@ -970,6 +975,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setOtp={setOtp}
         inputType={inputType}
         setTimer={setTimer}
+        setShowLogin={setShowLogin}
       />
       <ForgetPasswordModal
         showForgetPassword={showForgetPassword}
