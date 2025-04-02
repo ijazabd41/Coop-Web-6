@@ -7,30 +7,6 @@ import firebase from "firebase/compat/app";
 
 const FirebaseData = () => {
   const setting = useSelector((state) => state.Setting);
-  // if (setting.setting === null) {
-  //   return <Loader screen="full" />;
-  // }
-
-  // const {
-  //   apiKey,
-  //   authDomain,
-  //   projectId,
-  //   storageBucket,
-  //   messagingSenderId,
-  //   appId,
-  //   measurementId,
-  // } = setting.setting?.firebase || {};
-
-  // const firebaseConfig = {
-  //   apiKey,
-  //   authDomain,
-  //   projectId,
-  //   storageBucket,
-  //   messagingSenderId,
-  //   appId,
-  //   measurementId,
-  // };
-
   const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
