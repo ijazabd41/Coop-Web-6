@@ -151,6 +151,46 @@ const Location = ({ showLocation, setShowLocation }) => {
         }
     }
 
+    const handleMapClick = async (e) => {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+        const geocoder = new window.google.maps.Geocoder();
+        const response = await geocoder.geocode({
+            location: {
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng(),
+            }
+        }).then(async (res) => {
+
+            if (res.results[0]) {
+                const result = await getAvailableCity(res)
+                if (result.status == 1) {
+                    setlocalLocation({
+                        formatted_address: result?.data?.formatted_address,
+                        city: result?.data?.name,
+                        lat: res.results[0].geometry.location.lat(),
+                        lng: res.results[0].geometry.location.lng()
+                    })
+                    setAddressLoading(false);
+                    seterrorMsg("");
+                } else {
+                    setlocalLocation({
+                        city: null,
+                        formatted_address: res.results[0].formatted_address,
+                        lat: (res.results[0].geometry.location.lat()),
+                        lng: (res.results[0].geometry.location.lng()),
+                    });
+                    setAddressLoading(false);
+                    // setisloading(false);
+                    seterrorMsg(res.message);
+                }
+            } else {
+                toast.error("City not found")
+            }
+        }).catch((error) => {
+            console.log("err", error)
+        })
+    };
 
     const getAvailableCity = async (response) => {
         var results = response.results;
@@ -197,6 +237,49 @@ const Location = ({ showLocation, setShowLocation }) => {
             location: {
                 lat: e.latLng.lat(),
                 lng: e.latLng.lng(),
+            }
+        }).then(async (res) => {
+
+            if (res.results[0]) {
+                const result = await getAvailableCity(res)
+                if (result.status == 1) {
+                    setlocalLocation({
+                        formatted_address: result?.data?.formatted_address,
+                        city: result?.data?.name,
+                        lat: res.results[0].geometry.location.lat(),
+                        lng: res.results[0].geometry.location.lng()
+                    })
+                    setAddressLoading(false);
+                    seterrorMsg("");
+                } else {
+                    setlocalLocation({
+                        city: null,
+                        formatted_address: res.results[0].formatted_address,
+                        lat: (res.results[0].geometry.location.lat()),
+                        lng: (res.results[0].geometry.location.lng()),
+                    });
+                    setAddressLoading(false);
+                    // setisloading(false);
+                    seterrorMsg(res.message);
+                }
+            } else {
+                toast.error("City not found")
+            }
+        }).catch((error) => {
+            console.log("err", error)
+        })
+    }
+
+    const handleMoveMarkerOnMap = async (e) => {
+        const places = inputRef.current.getPlaces();
+        const geocoder = new window.google.maps.Geocoder();
+        const place = places[0];
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        const response = await geocoder.geocode({
+            location: {
+                lat: lat,
+                lng: lng,
             }
         }).then(async (res) => {
 
@@ -292,6 +375,7 @@ const Location = ({ showLocation, setShowLocation }) => {
         setLoading(false);
     }
 
+
     const handleShowModal = () => {
         setShowLocation(false)
         setMapView(false)
@@ -332,7 +416,6 @@ const Location = ({ showLocation, setShowLocation }) => {
                                     <StandaloneSearchBox
                                         onLoad={ref => inputRef.current = ref}
                                         onPlacesChanged={handlePlaceChanged}
-
                                     >
                                         <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor'
                                             onFocus={() => {
@@ -348,12 +431,26 @@ const Location = ({ showLocation, setShowLocation }) => {
                                         <GoogleMap streetViewControl={false} tilt={true} options={{
                                             streetViewControl: false,
                                             styles: theme == "dark" ? darkThemeStyles : []
-                                        }} zoom={11} center={center} mapContainerStyle={{ height: "400px" }}>
-                                            <MarkerF position={center} draggable={true} onDragStart={onMarkerDragStart} onDragEnd={handleDragEnd} />
+                                        }} zoom={11} center={center} mapContainerStyle={{ height: "400px" }}
+                                            onClick={handleMapClick}
+                                        >
+                                            <MarkerF position={center} draggable={true} onDragStart={onMarkerDragStart} onDragEnd={handleDragEnd}
+
+                                            />
                                         </GoogleMap>
                                     </div>
+                                    <StandaloneSearchBox
+                                        onLoad={ref => inputRef.current = ref}
+                                        onPlacesChanged={handleMoveMarkerOnMap}
+                                    >
+                                        <input type="text" name="" id="" placeholder={t("select_delivery_location")} className='w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor py-3'
+                                            onFocus={() => {
+                                                setcurrLocationClick(false);
+                                                setisInputFields(true);
+                                            }} onBlur={() => { setisInputFields(false); }}
+                                        />
+                                    </StandaloneSearchBox>
                                     <div className='flex flex-col gap-1'>
-                                        {/* <h2 className='text-center font-bold text-base'>address:</h2> */}
                                         <p className='text-center font-semibold text-base'><b>{t("address")} : </b>{addressLoading ? "...." : localLocation.formatted_address}</p>
                                     </div>
                                     <button onClick={handleConfirmLocation} className='w-full primaryBorder p-1 rounded-lg' >{t("confirm")}</button>
