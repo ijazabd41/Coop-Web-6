@@ -90,7 +90,7 @@ const ProductDescription = ({ product, ratingData }) => {
                                             {/* Section 1 */}
                                             <div className='col-span-12 md:col-span-4 flex flex-col gap-1'>
                                                 <h1 className='text-base font-bold'>{t("customer_reviews")}</h1>
-                                                <div className="flex  items-center space-x-4 cartButtonBackground p-4 rounded-sm">
+                                                <div className="flex  items-center space-x-4 addToCartColor p-4 rounded-sm ">
                                                     <div className="text-4xl font-bold text-white primaryBackColor  p-4 rounded-md">
                                                         {ratingData?.average_rating?.toFixed(2)}
                                                     </div>

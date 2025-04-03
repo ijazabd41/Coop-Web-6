@@ -378,9 +378,9 @@ const ProductDetail = () => {
                                                     const discountPrice = variant?.discounted_price
                                                     const price = variant?.price
                                                     return (
-                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-sm  justify-center items-center cursor-pointer ${selectVariant?.id == variant?.id ? "primaryBorder addToCartColor" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
+                                                        <div className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${selectVariant?.id == variant?.id ? "primaryBorder addToCartColor" : "cardBorder"}`} key={variant.id} onClick={() => handleChangeVariant(variant)}>
                                                             <p className='font-bold text-sm'>{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
-                                                            <span className='flex gap-1 text-[13px] line-clamp-1'><p>{currency}{discountPrice != 0 && discountPrice !== price ? discountPrice : price}</p>{discountPrice != 0 && discountPrice !== price ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
+                                                            <span className='flex gap-1 text-[13px] line-clamp-1 font-semibold'><p>{currency}{discountPrice != 0 && discountPrice !== price ? discountPrice : price}</p>{discountPrice != 0 && discountPrice !== price ? <p className='line-through'>{currency}{price}</p> : <></>}</span>
                                                         </div>
                                                     )
                                                 })
@@ -388,16 +388,18 @@ const ProductDetail = () => {
                                         </div>
                                     </div>
                                     <div className='flex gap-4 flex-col lg:flex-row '>
-                                        {isVariantAvailable ? <div className='flex gap-4 items-center '>
-                                            <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-1/3'>
-                                                <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
-                                                <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
-                                                <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
+                                        {isVariantAvailable ?
+                                            <div className='flex gap-4 items-center '>
+                                                <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-[120px]'>
+                                                    <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
+                                                    <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-[70px]' />
+                                                    <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
+                                                </div>
+                                                <div>
+                                                    <button className='primaryBackColor flex gap-2 text-white py-[6px] px-5 md:px-5 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <button className='primaryBackColor flex gap-2 text-white py-[6px] px-5 md:px-5 lg:py-3 rounded-sm text-base font-semibold text-nowrap' onClick={handleAddToCart}><FaShoppingBasket size={22} />{t("add_to_cart")}</button>
-                                            </div>
-                                        </div> : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
+                                            : <div className='flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
 
 
                                         <div className='flex gap-2 items-center'>
