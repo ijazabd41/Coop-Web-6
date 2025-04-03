@@ -37,7 +37,7 @@ const HorizontalCardContainer = ({ section }) => {
                     </div>
 
                     <div>
-                        <button onClick={handleViewAll}>{t("see_all")}</button>
+                        <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>
                     </div>
                 </div>
                 <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 my-2 gap-4'>

@@ -38,7 +38,7 @@ const VerticleCardContainer = ({ section }) => {
                         </div>
 
                         <div>
-                            <button onClick={handleViewAll}>{t("see_all")}</button>
+                            <button className='hover:primaryColor' onClick={handleViewAll}>{t("see_all")}</button>
                         </div>
                     </div>
                     <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4 cardBorder rounded-md verticle-card'>

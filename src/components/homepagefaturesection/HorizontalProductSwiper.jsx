@@ -51,10 +51,12 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                         <p className=''>{section?.short_description}</p>
                                     </div>
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
-                                        <button onClick={handleViewAll} >{t("see_all")}</button>
+                                        <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>
                                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`} >
-                                            <button className={`textColor fontColorBorder rounded-full  prev-btn-${section?.id} p-2`}><IoMdArrowBack className='textColor' size={20} /></button>
-                                            <button className={`textColor fontColorBorder rounded-full  next-btn-${section?.id} p-2`}><IoMdArrowForward className='textColor' size={20} /></button>
+                                            <button className={`group textColor fontColorBorder rounded-full prev-btn-${section?.id} p-2 hover:primaryBackColor hover:text-white transition-all duration-200 ease-linear hover:primaryBorder`}>
+                                                <IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} />
+                                            </button>
+                                            <button className={` group textColor fontColorBorder rounded-full  next-btn-${section?.id} p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder`}><IoMdArrowForward className=' textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                                         </div>
                                     </div>
                                 </div>

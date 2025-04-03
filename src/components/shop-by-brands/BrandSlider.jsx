@@ -27,10 +27,10 @@ const BrandSlider = ({ brands }) => {
                 <div className='flex justify-between items-center mb-3'>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
                     <div className={`flex items-center gap-2 `}>
-                        <Link href={"/brands"} >{t("see_all")}</Link>
+                        <Link href={"/brands"} className='hover:primaryColor'>{t("see_all")}</Link>
                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                            <button className='fontColorBorder rounded-full p-2 seller-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                            <button className='fontColorBorder rounded-full p-2 seller-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                            <button className=' group fontColorBorder rounded-full top-0 p-2 seller-prev hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200 ' size={20} /></button>
+                            <button className=' group fontColorBorder top-0 rounded-full p-2 seller-next hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200 ' size={20} /></button>
                         </div>
                     </div>
                 </div>

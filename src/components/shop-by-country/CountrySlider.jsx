@@ -31,10 +31,10 @@ const CountrySlider = ({ countries }) => {
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("countries")} </h2>
                         <div className='flex gap-4 items-center flex-col md:flex-row text-nowrap'>
-                            <Link href={"/countries"} >{t("see_all")}</Link>
+                            <Link href={"/countries"} className='hover:primaryColor'>{t("see_all")}</Link>
                             <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className='fontColorBorder rounded-full p-2 country-prev'><IoMdArrowBack className='textColor' size={20} /></button>
-                                <button className='fontColorBorder rounded-full p-2 country-next'><IoMdArrowForward className='textColor' size={20} /></button>
+                                <button className=' group fontColorBorder rounded-full p-2 country-prev hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                <button className=' group fontColorBorder rounded-full p-2 country-next hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                             </div>
                         </div>
                     </div>

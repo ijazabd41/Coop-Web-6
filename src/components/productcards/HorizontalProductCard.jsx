@@ -147,7 +147,7 @@ const HorizontalProductCard = ({ product }) => {
         if (Number(product.is_unlimited_stock !== 0)) {
 
             if (productQty >= Number(product?.total_allowed_quantity)) {
-              toast.error(t("max_cart_limit_error"));
+                toast.error(t("max_cart_limit_error"));
             }
             else {
                 AddToGuestCart(product, product?.id, selectedVariant?.id, quantity, 1, "add");
@@ -229,14 +229,14 @@ const HorizontalProductCard = ({ product }) => {
             if (productQty < Number(product?.total_allowed_quantity)) {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             } else {
-              toast.error(t("max_cart_limit_error"));
+                toast.error(t("max_cart_limit_error"));
             }
         } else {
             if (productQty >= Number(selectedVariant.stock)) {
                 toast.error(t("out_of_stock_message"));
             }
             else if (Number(productQty) >= Number(product.total_allowed_quantity)) {
-toast.error(t("max_cart_limit_error"));
+                toast.error(t("max_cart_limit_error"));
             } else {
                 addToCart(product.id, selectedVariant?.id, cart?.cartProducts?.find(prdct => prdct?.product_variant_id == selectedVariant?.id)?.qty + 1);
             }
@@ -373,7 +373,7 @@ toast.error(t("max_cart_limit_error"));
                                 <button className='rounded-sm primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityDecrease}><BiMinus /></button>
                                 <input type="text" disabled value={addedQuantity} min={"1"} max={selectedVariant?.stock} className='text-center w-full' />
                                 <button className='rounded-sm primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg ' onClick={handleQuantityIncrease}><BiPlus /></button>
-                            </div> : <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white addToCartColor primaryColor' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
+                            </div> : <button className='w-full  flex gap-1 text-base  items-center  justify-center rounded-[4px] p-2 text-white addToCartColor primaryColor hover:primaryBackColor transition-all duration-300 hover:text-white' onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                         </div> : <div className='flex items-center h-[92px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
 

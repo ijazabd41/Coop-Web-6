@@ -17,6 +17,7 @@
   /* --cart-button-bg: #55ae7b26; */
   --bs-body-bg: #fff;
   --shimmer-highlight-color: #dddddd;
+  --brand-bg-color: #F2F5F7;
 }
 
 .dark {
@@ -34,6 +35,7 @@
   --swiper-background-color: #202934;
   --border-color: #4a4949;
   --shimmer-highlight-color: #363e48;
+  --brand-bg-color: #40454A;
 }
 
 /* .container {
@@ -53,6 +55,10 @@
 
   .headerBackgroundColor {
     background-color: var(--bs-body-bg);
+  }
+
+  .brandBackgroundColor {
+    background-color: var(--brand-bg-color);
   }
 
   .bodyBackgroundColor {
@@ -381,4 +387,15 @@ input[type="number"]::-webkit-outer-spin-button {
 
 span.react-loading-skeleton {
   --highlight-color: var(--shimmer-highlight-color) !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

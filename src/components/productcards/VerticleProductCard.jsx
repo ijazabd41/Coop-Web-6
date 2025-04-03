@@ -370,7 +370,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
                             <input value={addedQuantity} disabled className='w-1/2  text-center' min={"1"} max={selectedVariant?.stock} />
                             <button className=' flex items-center justify-center font-bold text-sm  md:p-1 primaryBackColor text-white w-8  rounded-[2px] h-[34px] ' onClick={handleQuantityIncrease}><FaPlus /></button>
                         </div>
-                        : <button className={`w-full md:w-1/2 flex gap-1 text-base  my-[5px] p-1 md:p-0 items-center  justify-center rounded-[4px]  text-white addToCartColor primaryColor `} onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
+                        : <button className={`w-full md:w-1/2 flex gap-1 text-base  my-[5px] p-1 md:p-0 items-center  justify-center rounded-[4px]  hover:primaryBackColor transition-all duration-300 hover:text-white addToCartColor primaryColor `} onClick={handleIntialAddToCart}><FaShoppingBasket size={20} /><span>{t("add")}</span></button>}
 
                 </div> : <div className='flex items-center h-[80px] md:h-[44px]  text-[#db3d26] font-extrabold '>{t("OutOfStock")}</div>}
             </Link>
