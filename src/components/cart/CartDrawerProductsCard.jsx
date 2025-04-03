@@ -7,6 +7,7 @@ import { addtoGuestCart, clearCartPromo, setCartProducts, setCartPromo, setCartS
 import { toast } from 'react-toastify';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import { t } from '@/utils/translation';
+import { FiMinus, FiPlus } from 'react-icons/fi';
 
 
 const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData }) => {
@@ -245,38 +246,49 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
     return (
         <div>
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
-                <div className='col-span-3 '>
+                <div className='col-span-4 '>
                     <div className='h-full w-full object-cover aspect-square relative'>
                         <ImageWithPlaceholder src={product?.image_url} alt='Image' className='h-full w-full object-cover' />
                     </div>
                 </div>
-                <div className='col-span-9'>
+                <div className='col-span-8'>
                     <div className='flex flex-col justify-between h-full'>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-base font-bold text-ellipsis overflow-hidden w-full line-clamp-2">
+                            <h2 className="text-base font-bold whitespace-nowrap overflow-hidden text-ellipsis w-[80%]">
                                 {product?.name}
                             </h2>
                             <IoClose size={20} onClick={handleRemoveItem} />
                         </div>
 
-                        <div>
+                        <div className='mt-2'>
                             <span className='flex items-center gap-1'>{product?.measurement} {product?.unit_code}</span>
                         </div>
-                        <div className='flex justify-between items-center'>
+                        <div className='flex justify-between items-center mt-4'>
                             <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>
-                                <button className='text-2xl font-bold px-1' onClick={handleQuantityDecrease}><TiMinus /></button>
+                                <button className='text-2xl font-bold px-1' onClick={handleQuantityDecrease}><FiMinus size={20} /></button>
                                 <span className='w-full text-center'>{addedQuantity}</span>
-                                <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><TiPlus /></button>
+                                <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><FiPlus size={20} /></button>
                             </div>
-                            <div className='flex gap-1 items-center'>
+                            {/* <div className='flex gap-1 items-center'>
                                 {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.discounted_price}</h2>
                                     <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
+                            </div> */}
+
+                            <div className='flex flex-col sm:flex-row gap-1 items-start sm:items-center'>
+                                {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? (
+                                    <>
+                                        <h2 className='text-base font-bold whitespace-nowrap'>{setting?.currency}{product?.discounted_price}</h2>
+                                        <p className='text-sm font-normal line-through whitespace-nowrap opacity-50'>{setting?.currency} {product?.price}</p>
+                                    </>
+                                ) : (
+                                    <h2 className='text-base font-bold whitespace-nowrap '>{setting?.currency} {product?.price}</h2>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

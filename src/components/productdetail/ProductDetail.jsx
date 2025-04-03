@@ -358,9 +358,7 @@ const ProductDetail = () => {
                                                         {product?.fssai_lic_img && <Image width={0} height={0} src={product?.fssai_lic_img} className="w-9 h-9 object-contain" alt="fssaiImage" />}
                                                     </div>
                                                     <div className='text-xs'>{t("fssai_license_no")} {product?.fssai_lic_no}</div>
-
                                                 </div>}
-
                                         </div>
                                     </div>
                                     <div className='flex items-center gap-1'>
@@ -406,7 +404,6 @@ const ProductDetail = () => {
                                             <span className='rounded-full border-2 p-2' onClick={handleProductLikes}>
                                                 {favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}
                                             </span>
-
                                             <span> {favoriteProducts && favoriteProducts?.includes(product?.id) ?
                                                 t("removeTowishlist") : t("addToWishlist")}</span>
                                         </div>

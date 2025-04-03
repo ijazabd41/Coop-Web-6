@@ -50,7 +50,7 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                 </SheetHeader>
                 <div className='mt-4'>
                     {couponCodes.map((coupon) => {
-                        return <div className='m-2' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode} /></div>
+                        return <div className='m-4' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode} /></div>
                     })}
                 </div>
             </SheetContent>

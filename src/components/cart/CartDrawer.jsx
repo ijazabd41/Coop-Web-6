@@ -134,7 +134,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     return (
         <>
             <Sheet open={showCart} >
-                <SheetContent side={language?.type == "RTL" ? "left" : "right"} className="p-0 w-full sm:w-[900px] flex flex-col h-screen">
+                <SheetContent side={language?.type == "RTL" ? "left" : "right"} className="p-0 w-[900px] w-full flex flex-col h-screen">
                     <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
                         <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
                             <p className='text-2xl font-bold'>{t("shoppingCart")}</p>
@@ -149,7 +149,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                     ) : cartProductsData?.length !== 0 ? (
                         <>
 
-                            <div className="flex-grow overflow-y-auto mt-6 p-2">
+                            <div className="flex-grow overflow-y-auto gap-2 p-2 flex flex-col">
                                 {cartProductsData?.map((product) => (
                                     <div key={product?.id}>
                                         <CartProductsCard
@@ -160,7 +160,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="w-full max-w-sm mx-auto p-4 border rounded-md shadow-sm sticky bottom-0 ">
+                            <div className="w-full mx-auto p-4 border rounded-md shadow-sm sticky bottom-0 ">
                                 {cart?.isGuest == false && !isCouponApplied ?
                                     (<div className="mb-2">
                                         <div className='flex justify-between items-center'>

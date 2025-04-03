@@ -33,8 +33,8 @@ const CountrySlider = ({ countries }) => {
                         <div className='flex gap-4 items-center flex-col md:flex-row text-nowrap'>
                             <Link href={"/countries"} className='hover:primaryColor'>{t("see_all")}</Link>
                             <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className=' group fontColorBorder rounded-full p-2 country-prev hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
-                                <button className=' group fontColorBorder rounded-full p-2 country-next hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                <button className=' group swiperBorderColor rounded-full p-2 country-prev hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowBack className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                <button className=' group swiperBorderColor rounded-full p-2 country-next hover:primaryBackColor hover:text-white hover:primaryBorder'><IoMdArrowForward className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                             </div>
                         </div>
                     </div>

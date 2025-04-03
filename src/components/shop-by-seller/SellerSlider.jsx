@@ -36,8 +36,8 @@ const SellerSlider = ({ sellers }) => {
 
                                 <Link href={"/sellers"} className='hover:primaryColor'>{t("see_all")}</Link>
                                 <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                    <button className=' group seller-slider-prev  textColor fontColorBorder rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
-                                    <button className=' group seller-slider-next  textColor fontColorBorder rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                    <button className=' group seller-slider-prev  textColor swiperBorderColor rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowBack className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                    <button className=' group seller-slider-next  textColor swiperBorderColor rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowForward className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                                 </div>
                             </div>
                         }

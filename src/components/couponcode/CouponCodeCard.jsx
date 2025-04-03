@@ -22,7 +22,7 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
     }
 
     return (
-        <div className='m-4'>
+        <div className=''>
             <div className='w-full p-2 cardBorder  my-2 rounded-sm'>
                 <div className="flex items-center gap-4">
                     <div className="w-16 h-16  flex-shrink-0" >
