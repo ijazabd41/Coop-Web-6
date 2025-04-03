@@ -14,7 +14,7 @@ const HomePageSlider = ({ slider }) => {
     const language = useSelector(state => state.Language.selectedLanguage)
     const rtl = isRtl()
     return (
-        <div className="w-full mx-auto md:h-[600px] backgroundColor">
+        <div className="w-full mx-auto md:h-[600px] backgroundColor ">
             <Swiper
                 key={rtl}
                 dir={language?.type}
