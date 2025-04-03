@@ -7,9 +7,6 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import { isRtl } from '@/lib/utils';
 
-
-
-
 const HomePageSlider = ({ slider }) => {
     const language = useSelector(state => state.Language.selectedLanguage)
     const rtl = isRtl()
@@ -51,3 +48,4 @@ const HomePageSlider = ({ slider }) => {
 };
 
 export default HomePageSlider;
+ 
