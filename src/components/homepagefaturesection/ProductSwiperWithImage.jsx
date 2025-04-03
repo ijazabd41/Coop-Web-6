@@ -49,8 +49,8 @@ const ProductSwiperWithImage = ({ section }) => {
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>
                                 <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                    <button className={` group hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear fontColorBorder rounded-full p-2 prev-btn-${section?.id} hover:primaryBorder`}><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
-                                    <button className={` group hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear fontColorBorder rounded-full p-2 next-btn-${section?.id} hover:primaryBorder`} ><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                    <button className={` group hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear swiperBorderColor rounded-full p-2 prev-btn-${section?.id} hover:primaryBorder`}><IoMdArrowBack className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                    <button className={` group hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear swiperBorderColor rounded-full p-2 next-btn-${section?.id} hover:primaryBorder`} ><IoMdArrowForward className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                                 </div>
                             </div>
                         </div>

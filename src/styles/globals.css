@@ -18,9 +18,13 @@
   --bs-body-bg: #fff;
   --shimmer-highlight-color: #dddddd;
   --brand-bg-color: #F2F5F7;
+  --category-card-bg: #fff;
+  --nav-button-bg: #8BA2B3;
 }
 
 .dark {
+  --nav-button-bg: #fff;
+  --category-card-bg: #000;
   --body-background-color: #141414;
   --button-background-color: #141414;
   --primary-color: #55ae7b;
@@ -51,6 +55,17 @@
     background-color: var(--font-color);
   }
 
+  .categoryCardBackground {
+    background-color: var(--category-card-bg);
+  }
+
+  .swiperNavButtonColor {
+    color: var(--nav-button-bg);
+  }
+
+  .swiperBorderColor {
+    border: 1px solid var(--nav-button-bg);
+  }
 
 
   .headerBackgroundColor {
@@ -227,6 +242,12 @@ input[type="number"]::-webkit-outer-spin-button {
   position: absolute;
   bottom: 45px !important;
   color: black;
+  width: fit-content !important;
+  padding: 0 10px !important;
+  margin: 0 auto;
+  left: 45% !important;
+  background-color: #fff !important;
+  border-radius: 4px !important;
 }
 
 .homePageSwiper .swiper-pagination-bullet-active {

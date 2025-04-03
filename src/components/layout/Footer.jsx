@@ -232,7 +232,7 @@ const Footer = () => {
 
             </div>
             <div className='bottom-footer bg-black text-white'>
-                <div className='container  md:grid md:grid-cols-12 p-6 flex flex-col mb-[75px] md:mb-0'>
+                <div className='container  md:grid md:grid-cols-12 py-6 flex flex-col mb-[75px] md:mb-0'>
                     <div className='col-span-6 text-center md:text-left'>
                         {setting?.web_settings?.copyright_details !== "" && setting?.web_settings?.copyright_details}
                     </div>

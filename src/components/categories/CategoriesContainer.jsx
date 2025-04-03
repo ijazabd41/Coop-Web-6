@@ -43,11 +43,11 @@ const CategoriesContainer = ({ categories }) => {
                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
                             <Link className="text-nowrap  hover:primaryColor" href="/categories/all">{t('see_all')}</Link>
                             <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                <button className=" group category-button-next fontColorBorder rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                                    <IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} />
+                                <button className=" group category-button-next swiperBorderColor rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                                    <IoMdArrowBack className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} />
                                 </button>
-                                <button className=" group category-button-prev fontColorBorder rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                                    <IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} />
+                                <button className=" group category-button-prev swiperBorderColor rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                                    <IoMdArrowForward className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} />
                                 </button>
                             </div>
 

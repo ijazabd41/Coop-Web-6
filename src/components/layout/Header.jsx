@@ -238,7 +238,7 @@ const Header = () => {
                                         {setting?.setting?.social_media && setting?.setting?.social_media?.map((social, index) => {
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
-                                                    <li className="border-r-[2px] p-3 border-white py-[2px]">
+                                                    <li className="border-r-[2px]  p-3 border-white py-[2px]">
                                                         {social?.icon.toLowerCase().includes('wechat') ? (
                                                             // Special handling for WeChat icon
                                                             <i className="fab fa-weixin"></i>

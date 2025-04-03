@@ -393,9 +393,9 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
                                     </div>
                                     <div className='flex gap-4 flex-col lg:flex-row'>
                                         {isVariantAvailable ? <div className='flex gap-6 md:gap-4 items-center'>
-                                            <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-1/3'>
+                                            <div className='flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-[120px]'>
                                                 <button className=' font-bold text-xl' onClick={handleDecreaseQuantity}><FiMinus /></button>
-                                                <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-full' />
+                                                <input type="text" disabled value={quantity} className=' text-center font-medium text-base bg-transparent w-[70px]' />
                                                 <button className=' font-bold text-xl' onClick={handleIncreseQuantity}><FiPlus /></button>
                                             </div>
                                             <div>
