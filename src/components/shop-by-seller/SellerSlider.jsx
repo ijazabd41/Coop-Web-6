@@ -34,10 +34,10 @@ const SellerSlider = ({ sellers }) => {
                         {sellers?.sellers?.length > 4 &&
                             <div className='flex gap-4 items-center flex-col md:flex-row'>
 
-                                <Link href={"/sellers"} >{t("see_all")}</Link>
+                                <Link href={"/sellers"} className='hover:primaryColor'>{t("see_all")}</Link>
                                 <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                    <button className=' seller-slider-prev cardBorder textColor rounded-full p-2 '><IoMdArrowBack className='textColor' size={20} /></button>
-                                    <button className='seller-slider-next cardBorder textColor rounded-full p-2 '><IoMdArrowForward className='textColor' size={20} /></button>
+                                    <button className=' group seller-slider-prev  textColor fontColorBorder rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowBack className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
+                                    <button className=' group seller-slider-next  textColor fontColorBorder rounded-full p-2 hover:primaryBackColor hover:text-white  transition-all duration-200 ease-linear hover:primaryBorder'><IoMdArrowForward className='textColor group-hover:text-white transition-colors duration-200' size={20} /></button>
                                 </div>
                             </div>
                         }
