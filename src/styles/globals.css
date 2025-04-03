@@ -32,7 +32,7 @@
   --font-color: white;
   --button-border-color: #8ba2b3;
   --bs-body-bg: #212529;
-  --swiper-background-color: #202934;
+  --swiper-background-color: #292F34;
   --border-color: #4a4949;
   --shimmer-highlight-color: #363e48;
   --brand-bg-color: #40454A;
@@ -208,6 +208,10 @@
   /* Toast Margin Responsive */
   div.toast-container-className {
     @apply mx-3 my-2 md:mx-0 md:my-0;
+  }
+
+  .swiper-image {
+    border-radius: 28px;
   }
 }
 
