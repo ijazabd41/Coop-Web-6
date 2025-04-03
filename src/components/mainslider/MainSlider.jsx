@@ -26,7 +26,7 @@ const HomePageSlider = ({ slider }) => {
                 {slider?.sliders?.map((slider, index) => {
                     return (
                         <SwiperSlide className=' ' key={index}>
-                            <div className="relative    =">
+                            <div className="relative">
                                 <div className="flex flex-col items-center   text-center rounded-xl px-2 py-4 md:py-6
                                  md:px-4 2xl:p-6">
                                     <Image

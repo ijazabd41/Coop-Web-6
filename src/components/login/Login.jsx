@@ -224,7 +224,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(true);
           setLoading(false);
         } catch (error) {
-
+          console.log("error", error)
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
