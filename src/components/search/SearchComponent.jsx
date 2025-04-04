@@ -66,7 +66,7 @@ const SearchComponent = ({ isMobile, mobileSearch, setMobileSearch, handleSearch
                         onChange={(e) => handleSearch(e)}
                     />
                     <button
-                        className="justify-center gap-1 px-4 py-2   h-full flex items-center rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow
+                        className="justify-center gap-1 px-4 py-2   h-full flex items-center rounded-r-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#29363f] text-white text-xl shadow
                         md:p-[20px]  text-whiterounded order-2"
                         onClick={() => {
                             handleSearchItemClick()

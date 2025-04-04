@@ -32,7 +32,7 @@ const HomePageSlider = ({ slider }) => {
                                         src={slider.image_url}
                                         alt="Fruit Basket"
                                         priority='false'
-                                        className="swiper-image w-full md:h-[700px] p-4"
+                                        className="swiper-image w-full md:h-[700px] py-8 px-4"
                                         width={0}
                                         height={0}
                                     />
@@ -48,4 +48,3 @@ const HomePageSlider = ({ slider }) => {
 };
 
 export default HomePageSlider;
- 

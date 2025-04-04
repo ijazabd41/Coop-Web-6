@@ -31,7 +31,7 @@ const CategoriesContainer = ({ categories }) => {
     }
     return (
         <section>
-            <div className='container py-3 md:py-6 px-2' dir={language?.type}>
+            <div className='container py-3 md:py-12 px-2' dir={language?.type}>
                 <div className="flex justify-between items-center p-0 w-full mb-3">
                     <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
                         <p>{t('shop_by')} {t('categories')}</p>

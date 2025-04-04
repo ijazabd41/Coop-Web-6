@@ -14,6 +14,7 @@ import { setFavoriteProductIds } from '@/redux/slices/FavoriteSlice';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
 import { isRtl } from '@/lib/utils';
+import { GoEye } from 'react-icons/go';
 
 
 const VerticleProductCard = ({ product, largeImage = false }) => {
@@ -330,8 +331,8 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
                         </span> : null}
                         <ul className="absolute right-3 top-5 flex flex-col gap-2 translate-x-3 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                            <li className='buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}</span></li>
-                            <li className='buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><div onClick={handleShowDetailModal} ><FaRegEye size={18} className='fontColor' /></div></li>
+                            <li className='buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor' onClick={handleProductLikes}><span>{favoriteProducts && favoriteProducts?.includes(product?.id) ? <BiSolidHeart size={20} className='primaryFilledColor' /> : <BiHeart size={20} />}</span></li>
+                            <li className='buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor'><div onClick={handleShowDetailModal} ><GoEye size={20} /></div></li>
                         </ul>
                     </div>
                 </div>

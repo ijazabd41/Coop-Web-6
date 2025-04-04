@@ -435,7 +435,7 @@ const Header = () => {
 
                     </div>
                     <div className="bottom-header ">
-                        <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 px-2 ">
+                        <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 mb-4 px-2 ">
                             {/* First column: col-3 equivalent */}
                             <div className="col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer" onClick={handleOpenLocation}>
                                 <span className="p-3 iconBackgroundColor  rounded-full">
