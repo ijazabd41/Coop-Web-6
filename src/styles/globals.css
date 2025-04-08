@@ -230,9 +230,18 @@
   }
 
   .swiper-image {
-    border-radius: 24px;
+    border-radius: 12px;
   }
+
+  .feature-section {
+    @apply py-6 md:py-12 px-2;
+  }
+
+  /* .promotion-image{
+    @apply 
+  } */
 }
+
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

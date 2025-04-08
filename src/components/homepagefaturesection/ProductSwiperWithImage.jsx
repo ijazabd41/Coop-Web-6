@@ -39,7 +39,7 @@ const ProductSwiperWithImage = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container py-12 px-2 '>
+                <div className='container feature-section '>
                     <div dir={language?.type}>
                         <div className='flex justify-between items-center mb-3'>
                             <div>

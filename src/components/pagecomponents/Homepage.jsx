@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { clearAllFilter } from '@/redux/slices/productFilterSlice'
 
 
+
 const Homepage = () => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -57,7 +58,11 @@ const Homepage = () => {
         <div>
             {
                 <Layout>
-                    <Home />
+                    {loading ? <div > <Loader height="500vh" /></div> : <Home />}
+                    {/* {!loading ? <HomePageSkeleton /> : */}
+                    {/* <Home /> */}
+                    {/* //  } */}
+
                 </Layout>
             }
 

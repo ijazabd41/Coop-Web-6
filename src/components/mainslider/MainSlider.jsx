@@ -11,7 +11,7 @@ const HomePageSlider = ({ slider }) => {
     const language = useSelector(state => state.Language.selectedLanguage)
     const rtl = isRtl()
     return (
-        <div className="w-full mx-auto md:h-[700px] backgroundColor ">
+        <div className="w-full mx-auto md:h-[670px]  backgroundColor ">
             <Swiper
                 key={rtl}
                 dir={language?.type}
@@ -21,18 +21,18 @@ const HomePageSlider = ({ slider }) => {
                 loop={true}
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 2000, disableOnInteraction: false }}
-                className="homePageSwiper relative md:h-[700px]"
+                className="homePageSwiper relative md:h-[670px] h-full"
             >
                 {slider?.sliders?.map((slider, index) => {
                     return (
                         <SwiperSlide className=' ' key={index}>
-                            <div className="relative    ">
-                                <div className="flex flex-col items-center text-center rounded-xl">
+                            <div className="relative    md:h-[670px]">
+                                <div className="flex flex-col items-center md:h-[670px]   text-center rounded-xl px-2 py-4 md:py-6 md:px-4">
                                     <Image
                                         src={slider.image_url}
                                         alt="Fruit Basket"
                                         priority='false'
-                                        className="swiper-image w-full md:h-[700px] py-8 px-4"
+                                        className="swiper-image w-full md:h-[670px] "
                                         width={0}
                                         height={0}
                                     />

@@ -26,7 +26,7 @@ const CountrySlider = ({ countries }) => {
 
     return (
         <section>
-            <div className='container py-3 md:py-12 px-2'>
+            <div className='container feature-section'>
                 <div className='flex flex-col gap-3' dir={language?.type}>
                     <div className='flex justify-between items-center'>
                         <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("countries")} </h2>
@@ -38,7 +38,7 @@ const CountrySlider = ({ countries }) => {
                             </div>
                         </div>
                     </div>
-                    <div className=''>
+                    <div className='mt-6'>
                         <Swiper
                             key={rtl}
                             spaceBetween={20}

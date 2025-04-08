@@ -331,10 +331,10 @@ const Header = () => {
                                         <IoCartOutline size={24} className='iconsColor' />
                                         {
                                             cart.isGuest == true ? <p className={cart?.guestCart
-                                                ?.length != 0 ? "flex absolute top-[-7px] right-0  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-bold text-sm" : "none"}> {cart?.guestCart
+                                                ?.length != 0 ? "flex absolute top-[-7px] right-0  bodyTextColor textBackground rounded-full h-[20px] w-[20px] items-center justify-center text-center font-bold text-sm" : "none"}> {cart?.guestCart
                                                     ?.length != 0 ? cart?.guestCart
                                                     ?.length : null}</p> :
-                                                <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor top-[-7px] right-0   textBackground rounded-full text-center h-4 w-4 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
+                                                <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor top-[-7px] right-0   textBackground rounded-full text-center h-5 w-5 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
                                         }
                                     </span>
                                     <div className='flex flex-col '>
@@ -419,7 +419,6 @@ const Header = () => {
                                         <span className='text-base font-bold'>{t("login")}</span>
                                     </div>
                                 </div>}
-
                             </div>
                             <div className='flex  md:hidden gap-2 order-3 items-center'>
                                 <div >{themes?.theme == "light" ? <CiSun onClick={() => handleChangeTheme('dark')} size={24} /> : <FiMoon onClick={() => handleChangeTheme('light')} size={24} />}</div>
@@ -460,9 +459,6 @@ const Header = () => {
 
                                 </div>
                             </div>
-
-
-
                             <div className='hidden md:block lg:col-span-6 md:col-span-8'>
                                 <SearchComponent
                                     isSuggLoading={isSuggLoading}
@@ -476,7 +472,6 @@ const Header = () => {
                                     <FaPhoneVolume size={18} /> {setting?.setting?.support_number}
                                 </Link>
                             </div>}
-
                         </div>
                     </div>
                 </div>

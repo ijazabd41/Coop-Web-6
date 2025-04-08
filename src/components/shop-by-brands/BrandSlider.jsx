@@ -23,7 +23,7 @@ const BrandSlider = ({ brands }) => {
 
     return (
         <section>
-            <div className='container py-3 md:py-12 px-2' dir={language?.type}>
+            <div className='container feature-section' dir={language?.type}>
                 <div className='flex justify-between items-center mb-3'>
                     <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
                     <div className={`flex items-center gap-4`}>
@@ -34,7 +34,7 @@ const BrandSlider = ({ brands }) => {
                         </div>
                     </div>
                 </div>
-                <div >
+                <div className='mt-6'>
                     <Swiper
                         key={rtl}
                         slidesPerView={1.5}

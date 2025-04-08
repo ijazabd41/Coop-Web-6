@@ -325,7 +325,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         <div>
             <Link href={`/product/${product?.slug}`} className='flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.image-card_&]:rounded-none [.cardBorder_&]:rounded-none rounded-md'>
                 <div className='flex relative textColor'>
-                    <div className='relative aspect-square w-full h-44 [.verticle-card_&]:h-44 [.image-card_&]:h-56 [.verticle-card_&]:md:h-72'>
+                    <div className='relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72'>
                         <ImageWithPlaceholder className='rounded-lg object-cover h-full w-full' alt={product.name} src={product.image_url} />
                         {selectedVariant?.discounted_price !== 0 && selectedVariant?.discounted_price !== selectedVariant?.price ? <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-medium left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
                             {calculateDiscount(selectedVariant?.discounted_price, selectedVariant?.price).toFixed(2)}% {t("off")}
