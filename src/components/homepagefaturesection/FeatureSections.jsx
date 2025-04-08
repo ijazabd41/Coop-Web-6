@@ -35,7 +35,7 @@ const FeatureSections = () => {
     return (
         <section>
             <div className=' md:mx-0'>
-                <div className='container'>
+                <div className='container promotion-image'>
                     {aboveHomeSlider && aboveHomeSlider?.map((offer) => {
                         return (
                             <div key={offer?.id}>
@@ -57,7 +57,7 @@ const FeatureSections = () => {
 
                 })}
                 {shop?.sliders?.length > 0 && <HomePageSlider slider={shop} />}
-                <div className='container'>
+                <div className='container promotion-image'>
                     {BelowHomeSlider && BelowHomeSlider?.map((offer) => {
                         return (
                             <div key={offer?.id}>
@@ -80,7 +80,7 @@ const FeatureSections = () => {
                 })}
                 {shop?.categories?.length > 0 && <Categories categories={shop} />}
 
-                <div className='container'>
+                <div className='container promotion-image'>
                     {BelowCategory && BelowCategory?.map((offer) => {
                         return (
                             <div key={offer?.id}>

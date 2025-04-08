@@ -21,7 +21,7 @@ const HomeOfferSection = ({ offer }) => {
     }
 
     return (
-        <div className='py-6  relative' key={offer?.id}>
+        <div className='py-3 px-2 relative ' key={offer?.id}>
             <ImageWithPlaceholder src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' handleOnClick={handleOfferClick} />
         </div>
     )

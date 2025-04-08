@@ -207,14 +207,17 @@ const Checkout = () => {
     };
 
     const handleFetchTimeSlots = async (selectedDate) => {
+        setLoading(true)
         try {
             const response = await api.getTimeSlots();
             const allTimeSlots = response?.data?.time_slots || [];
             setTimeSlotsData(response?.data); // Store the full response data if needed
             setTimeSlots(allTimeSlots); // Store the original time slots
             handleFilterTimeSlots(selectedDate); // Filter the time slots based on the selected date
+            setLoading(false)
         } catch (error) {
             console.log("Error", error);
+            setLoading(false)
         }
     };
 
@@ -503,7 +506,7 @@ const Checkout = () => {
 
 
     return (
-        loading ? <Loader screen="full" /> :
+        loading ? <Loader height="100vh" /> :
             <section>
                 <BreadCrumb />
                 <div className='container px-2'>

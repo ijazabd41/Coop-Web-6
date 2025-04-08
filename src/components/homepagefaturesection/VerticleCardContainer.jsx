@@ -30,7 +30,7 @@ const VerticleCardContainer = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='py-3 md:py-6 container px-2'>
+                <div className='container feature-section'>
                     <div className='flex justify-between items-center mb-3'>
                         <div>
                             <h2 className='text-2xl font-bold'>{section?.title}</h2>
@@ -41,7 +41,7 @@ const VerticleCardContainer = ({ section }) => {
                             <button className='hover:primaryColor' onClick={handleViewAll}>{t("see_all")}</button>
                         </div>
                     </div>
-                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 my-4 cardBorder rounded-md verticle-card'>
+                    <div className='grid grid-cols-6 md:grid-cols-9 lg:grid-cols-12 mt-6 cardBorder rounded-md verticle-card'>
                         {section?.products?.map((product, index) => {
                             return (
                                 <div className='col-span-3' key={index}>

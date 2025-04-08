@@ -292,7 +292,7 @@ const Location = ({ showLocation, setShowLocation }) => {
         <>
             {loading ? <Loader screen={"full"} /> : <Dialog open={showLocation} onOpenChange={handleCloseLocation} >
                 <DialogOverlay
-                    className={`${theme == "light" ? "bg-white/100" : "bg-black/100"}`}
+                    className={`${theme == "light" ? setting.setting?.default_city == null && city?.city == null ? "bg-white/100" : "bg-white/10" : setting.setting?.default_city == null && city?.city == null ? "bg-black/100" : "bg-black/10"}`}
                 />
                 <DialogContent
                     onInteractOutside={(e) => e.preventDefault()}

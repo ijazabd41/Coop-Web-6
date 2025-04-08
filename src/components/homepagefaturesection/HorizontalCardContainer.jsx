@@ -29,7 +29,7 @@ const HorizontalCardContainer = ({ section }) => {
 
     return (
         <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-            {section?.products?.length > 0 ? <div className='container py-6 px-2'>
+            {section?.products?.length > 0 ? <div className='container feature-section'>
                 <div className='flex justify-between items-center mb-3'>
                     <div>
                         <h2 className='text-2xl font-bold'>{section?.title}</h2>
@@ -40,7 +40,7 @@ const HorizontalCardContainer = ({ section }) => {
                         <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>
                     </div>
                 </div>
-                <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 my-2 gap-4'>
+                <div className='grid grid-cols-4 sm:grid-cols-8 md:grid-cols-8 lg:grid-cols-12 mt-6 gap-4'>
                     {section?.products?.slice(0, 6)?.map((product, index) => {
                         return (
                             <div key={index} className='col-span-4 '>

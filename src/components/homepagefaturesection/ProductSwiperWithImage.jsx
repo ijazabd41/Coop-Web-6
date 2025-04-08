@@ -39,7 +39,7 @@ const ProductSwiperWithImage = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container py-6 px-2 '>
+                <div className='container feature-section '>
                     <div dir={language?.type}>
                         <div className='flex justify-between items-center mb-3'>
                             <div>
@@ -54,7 +54,7 @@ const ProductSwiperWithImage = ({ section }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='grid grid-cols-1  md:grid-cols-12 gap-4 md:gap-0 image-card '>
+                        <div className='grid grid-cols-1 mt-6  md:grid-cols-12 gap-4 md:gap-0 image-card '>
                             {/* Image Section */}
                             <div className='md:col-span-3'>
                                 <div className='aspect-square w-full h-full relative '>
