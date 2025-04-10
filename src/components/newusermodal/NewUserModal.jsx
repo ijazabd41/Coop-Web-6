@@ -6,8 +6,6 @@ import {
 } from "@/components/ui/dialog"
 import { useSelector, useDispatch } from 'react-redux';
 import { t } from "@/utils/translation";
-import Image from "next/image";
-import Logo from "/public/logo.png";
 import * as api from "@/api/apiRoutes"
 import { toast } from 'react-toastify';
 import { IoIosCloseCircle } from 'react-icons/io';
@@ -72,10 +70,11 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
 
   const handleFetchSetting = async () => {
     try {
-      const setting = await api.getSetting();
-      dispatch(setSetting({ data: setting?.data }))
+      const res = await api.getSetting();
+      const parsedSetting = JSON.parse(atob(res.data))
+      dispatch(setSetting({ data: parsedSetting }));
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
     }
   }
 

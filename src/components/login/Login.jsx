@@ -375,6 +375,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   const loginApiCall = async (user, id, fcm, type) => {
     setLoading(true)
+    const mobileNo = phoneNumber?.split(" ")?.[1];
     try {
       dispatch(setAuthId({ data: Uid, type }));
       const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
@@ -422,8 +423,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhonePassword("")
         setLoading(false)
       } else if (res.message == "user_not_exist") {
-        setError(t("user_not_exist"))
-        setLoading(false)
+        if (isPhoneAuthPassword == false) {
+          setUserAuthType(type);
+          dispatch(setAuthType({ data: "phone" }));
+          setPhoneNumber(mobileNo);
+          setShowNewUser(true);
+          setShowLogin(false);
+          setLoading(false)
+        } else {
+          setError(t("user_not_exist"))
+          setLoading(false)
+        }
+
       }
       else {
         setUserAuthType(type);
