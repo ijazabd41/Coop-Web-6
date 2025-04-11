@@ -31,9 +31,8 @@ const PaymentStatus = () => {
     useEffect(() => {
         setTimeout(() => {
             if (type == "wallet") {
-                handleWalletClose
+                handleWalletClose()
             } else {
-
                 handlePaymentClose()
             }
         }, 3000)
@@ -53,22 +52,20 @@ const PaymentStatus = () => {
         router.replace("/");
     }
 
+
+
     const handlePaymentClose = async () => {
         try {
-            if (type == "order") {
-                const response = await api.deleteCart();
-                if (response.status === 1) {
-                    dispatch(setCart({ data: [] }));
-                    dispatch(clearCartPromo());
-                    dispatch(setCartSubTotal({ data: 0 }));
-                    dispatch(setCartProducts({ data: [] }));
-                    dispatch(clearCheckout());
-                    router.replace("/");
-                } else {
-                    console.error("Error clearing cart", response);
-                }
-            } else {
+            const response = await api.deleteCart();
+            if (response.status === 1) {
+                dispatch(setCart({ data: [] }));
+                dispatch(clearCartPromo());
+                dispatch(setCartSubTotal({ data: 0 }));
+                dispatch(setCartProducts({ data: [] }));
+                dispatch(clearCheckout());
                 router.replace("/");
+            } else {
+                console.error("Error clearing cart", response);
             }
         } catch (error) {
             console.error("Error", error);
