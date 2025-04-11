@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../breadcrumb/BreadCrumb'
 import Stepper from './Stepper'
 import AddressCard from '../cards/AddressCard'
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { FaRegCalendarAlt } from 'react-icons/fa'
-import { useRazorpay } from "react-razorpay"
 import {
     Select,
     SelectContent,
@@ -25,20 +24,16 @@ import OrderSummaryCard from './OrderSummaryCard'
 import { useDispatch, useSelector } from 'react-redux'
 import NewAddressModal from '../newaddressmodal/NewAddressModal'
 import * as api from "@/api/apiRoutes"
-import { clearCartPromo, setCart, setCartCheckout, setCartProducts, setCartPromo, setCartSubTotal } from "@/redux/slices/cartSlice"
-import { setAllAddresses, setSelectedAddress } from '@/redux/slices/addressSlice'
-import { checkoutReducer, setAddress, setSelectedDate, setFormateDate, setPaymentMethod, setCurrentStep, setTimeSlot, setWalletChecked, setOrderNote, clearCheckout, setCheckoutTotal } from "@/redux/slices/checkoutSlice"
+import { clearCartPromo, setCartCheckout, setCartPromo } from "@/redux/slices/cartSlice"
+import { setAllAddresses, } from '@/redux/slices/addressSlice'
+import { setAddress, setSelectedDate, setCurrentStep, setTimeSlot, setOrderNote, setCheckoutTotal } from "@/redux/slices/checkoutSlice"
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-import { deductUserBalance, setCurrentUser } from '@/redux/slices/userSlice'
+import { setCurrentUser } from '@/redux/slices/userSlice'
 import StripeModal from './StripeModal'
 import PaystackPop from '@paystack/inline-js'
-
-
-import OrderSuccessModal from '../paymentstatusmodals/OrderSuccessModal'
-import dynamic from 'next/dynamic'
 import Loader from '../loader/Loader';
-
+import CheckoutSkeleton from './CheckoutSkeleton';
 
 const Checkout = () => {
     const router = useRouter();
@@ -506,11 +501,11 @@ const Checkout = () => {
 
 
     return (
-        loading ? <Loader height="100vh" /> :
+        loading ? <CheckoutSkeleton /> :
             <section>
                 <BreadCrumb />
                 <div className='container px-2'>
-                    {paymentLoading ? <Loader height={100} width={100} /> : <div className='flex justify-center flex-col items-center'>
+                    {paymentLoading ? <CheckoutSkeleton /> : <div className='flex justify-center flex-col items-center'>
                         <div className='flex w-full lg:w-1/2'>
                             <Stepper currentStep={checkout?.currentStep} />
                         </div>

@@ -20,8 +20,7 @@ const Address = () => {
     const [showAddAddres, setShowAddAddres] = useState(false)
     const [isAddressSelected, setIsAddressSelected] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [total, setTotal] = useState(null)
-    const [offset, setOffset] = useState(0)
+
     useEffect(() => {
         fetchAddress()
     }, [])
@@ -44,9 +43,7 @@ const Address = () => {
         }
     }
 
-    // const handleLoadMore = () => {
-    //     setOffset(offset => offset + addressPerPage);
-    // }
+    
 
     const handleshowAddres = () => {
         setIsAddressSelected(false)

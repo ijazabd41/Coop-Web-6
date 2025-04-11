@@ -9,7 +9,7 @@ import Layout from '../layout/Layout'
 // import { resetSelectedCategories } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/router'
 import { clearAllFilter } from '@/redux/slices/productFilterSlice'
-
+import HomeSkeleton from '../homepage/HomeSkeleton'
 
 
 const Homepage = () => {
@@ -27,7 +27,6 @@ const Homepage = () => {
 
     useEffect(() => {
         if (router?.pathname === "/") {
-            // dispatch(resetSelectedCategories())
             dispatch(clearAllFilter())
         }
     }, [])
@@ -58,7 +57,7 @@ const Homepage = () => {
         <div>
             {
                 <Layout>
-                    {loading ? <div > <Loader height="500vh" /></div> : <Home />}
+                    {loading ? <div > <HomeSkeleton /></div> : <Home />}
                     {/* {!loading ? <HomePageSkeleton /> : */}
                     {/* <Home /> */}
                     {/* //  } */}
