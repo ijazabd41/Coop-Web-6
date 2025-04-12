@@ -39,16 +39,7 @@ const Products = () => {
     const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
 
-
     const total_products_per_page = 12;
-
-
-
-    // useEffect(() => {
-    //     if (filter?.searchedCategory) {
-    //         dispatch(setFilterCategory({ data: filter?.searchedCategory }))
-    //     }
-    // }, [])
 
     useEffect(() => {
         filterProductsFromApi({
@@ -149,6 +140,7 @@ const Products = () => {
     const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
     return (
+
         <section>
             <div >
                 <div><BreadCrumb /></div>
@@ -156,7 +148,7 @@ const Products = () => {
                     <div className='w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold hover:cursor-pointer' onClick={() => setShowFilter(true)}><IoFilter />{t("filter")}</div>
                     <div className='my-8 grid grid-cols-12 gap-6'>
                         <div className=' col-span-3 rounded-sm hidden md:block '>
-                            <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} />
+                            <Filter setProductResult={setProductResult} setOffset={setOffset} handlePrices={handlePrices} minPrice={minPrice} maxPrice={maxPrice} values={values} setValues={setValues} setMaxPrice={setMaxPrice} setMinPrice={setMinPrice} setisLoader={setisLoader} />
                         </div>
                         <div className='col-span-12 md:col-span-9'>
                             <div className='flex flex-col gap-6'>

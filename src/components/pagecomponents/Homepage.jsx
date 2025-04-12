@@ -58,10 +58,6 @@ const Homepage = () => {
             {
                 <Layout>
                     {loading ? <div > <HomeSkeleton /></div> : <Home />}
-                    {/* {!loading ? <HomePageSkeleton /> : */}
-                    {/* <Home /> */}
-                    {/* //  } */}
-
                 </Layout>
             }
 
