@@ -49,7 +49,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in";
+  const defaultCountry = process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in";
 
   const [userName, setUserName] = useState("");
   const [showNewUser, setShowNewUser] = useState(false);
@@ -83,7 +83,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE);
+    setCountryCode(process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE);
   }, []);
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
@@ -224,7 +224,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(true);
           setLoading(false);
         } catch (error) {
-          console.log("error", error)
+
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
@@ -375,7 +375,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   const loginApiCall = async (user, id, fcm, type) => {
     setLoading(true)
-    const mobileNo = phoneNumber?.split(" ")?.[1];
     try {
       dispatch(setAuthId({ data: Uid, type }));
       const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
@@ -423,18 +422,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhonePassword("")
         setLoading(false)
       } else if (res.message == "user_not_exist") {
-        if (isPhoneAuthPassword == false) {
-          setUserAuthType(type);
-          dispatch(setAuthType({ data: "phone" }));
-          setPhoneNumber(mobileNo);
-          setShowNewUser(true);
-          setShowLogin(false);
-          setLoading(false)
-        } else {
-          setError(t("user_not_exist"))
-          setLoading(false)
-        }
-
+        setError(t("user_not_exist"))
+        setLoading(false)
       }
       else {
         setUserAuthType(type);
