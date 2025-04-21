@@ -615,7 +615,19 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const handlePhoneLogin = async (e) => {
     e.preventDefault();
     if (setting?.phone_auth_password == 1) {
-      loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+      if (
+        phoneNumber?.length < countryCode.length ||
+        phoneNumber?.slice(1) === countryCode
+      ) {
+        setError(t("please_enter_phone_number"));
+        setLoading(false);
+        return
+      } else if (!phonePassword) {
+        setError(t("please_enter_password"))
+        return
+      } else {
+        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+      }
     } else {
       handleSendOTP(e)
     }
