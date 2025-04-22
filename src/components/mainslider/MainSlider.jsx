@@ -20,7 +20,7 @@ const HomePageSlider = ({ slider }) => {
                 centeredSlides={true}
                 loop={true}
                 pagination={{ clickable: true }}
-                // autoplay={{ delay: 2000, disableOnInteraction: false }}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
                 className="homePageSwiper relative "
             >
                 {slider?.sliders?.map((slider, index) => {
