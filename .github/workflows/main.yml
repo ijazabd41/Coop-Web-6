@@ -1,0 +1,29 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main # Change this if you want to trigger on another branch
+
+jobs:
+  deploy:
+    if: github.actor != 'YOUR_GITHUB_NAME' # Skip workflow run if you are the committer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel and Fetch Build Logs Only
+        run: |
+          DEPLOY_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes)
+          echo "✅ Deployed to $DEPLOY_URL"
+
+          # Extract the deployment ID (last part of inspect URL)
+          DEPLOY_ID=$(basename "$DEPLOY_URL")
+          echo "📦 Fetching logs for deployment ID: $DEPLOY_ID"
+
+          # Fetch only build logs (safe for CI)
+          vercel inspect --logs "$DEPLOY_ID" --token ${{ secrets.VERCEL_TOKEN }}
