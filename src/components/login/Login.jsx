@@ -421,7 +421,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setError(t("password_not_valid"));
         setPhonePassword("")
         setLoading(false)
-      } else if (res.message == "user_not_exist") {
+      } else if (res.message == "user_not_exist" && isPhoneAuthPassword == true) {
         setError(t("user_not_exist"))
         setLoading(false)
       }

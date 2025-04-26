@@ -16,7 +16,7 @@ const HomePageSlider = ({ slider }) => {
                 key={rtl}
                 dir={language?.type}
                 modules={[Pagination, Autoplay]}
-                slidesPerView={1.2}
+                slidesPerView={1.5}
                 centeredSlides={true}
                 loop={true}
                 pagination={{ clickable: true }}
@@ -33,7 +33,7 @@ const HomePageSlider = ({ slider }) => {
                                         src={slider.image_url}
                                         alt="Fruit Basket"
                                         priority='false'
-                                        className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[900px]"
+                                        className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[650px]"
                                         width={0}
                                         height={0}
                                     />
