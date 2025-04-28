@@ -42,7 +42,6 @@ const HomePageSlider = ({ slider }) => {
                         </SwiperSlide>
                     )
                 })}
-
             </Swiper>
         </div>
     );

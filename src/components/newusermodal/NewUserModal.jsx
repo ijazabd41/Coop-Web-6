@@ -72,12 +72,13 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
 
   const handleFetchSetting = async () => {
     try {
-      const setting = await api.getSetting();
-      dispatch(setSetting({ data: setting?.data }))
+      const res = await api.getSetting();
+      const parsedSetting = JSON.parse(atob(res.data))
+      dispatch(setSetting({ data: parsedSetting }));
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
     }
-  }
+  };
 
   const getCurrentUser = async () => {
     try {
