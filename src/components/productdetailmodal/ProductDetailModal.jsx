@@ -325,7 +325,7 @@ const ProductDetailModal = ({ product, showDetailModal, setShowDetailModal }) =>
 
                                 </div>
                             </div>
-                            <div className='grid  grid-cols-1 md:grid-cols-12  mx-auto mt-6 gap-3  justify-center'>
+                            <div className='grid  grid-cols-1 md:grid-cols-12   mt-6 gap-3  justify-center'>
                                 <div className='md:col-span-5 col-span-12'>
 
                                     <div className='relative aspect-square h-auto w-full'>

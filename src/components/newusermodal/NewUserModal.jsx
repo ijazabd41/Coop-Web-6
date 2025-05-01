@@ -140,8 +140,8 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
     <Dialog open={showNewUser}  >
       <DialogContent className="">
         <DialogHeader className="flex flex-row justify-between items-center">
-          <div className="relative aspect-square object-cover h-[68px] w-[72px]">
-            <ImageWithPlaceholder src={setting?.web_settings?.web_logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
+          <div className="">
+            <h1 className='text-3xl font-bold'>{t("register")}</h1>
           </div>
           <div>
             <IoIosCloseCircle size={32} onClick={() => setShowNewUser(false)} />

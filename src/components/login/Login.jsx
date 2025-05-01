@@ -289,7 +289,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         if (
           response?.status == 1 &&
           response?.message ==
-          "OTP is valid, but no user found with this phone number."
+          t("otp_valid_but_user_invalid")
         ) {
           setShowNewUser(true);
           setShowLogin(false);
@@ -409,7 +409,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setShowLogin(false);
           setShowRegister(false);
         }
-
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
         setLoading(false)
@@ -424,8 +423,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       } else if (res.message == "user_not_exist" && isPhoneAuthPassword == true) {
         setError(t("user_not_exist"))
         setLoading(false)
-      }
-      else {
+      } else {
         setUserAuthType(type);
         setEmail(user?.providerData?.[0]?.email);
         setUserName(user?.providerData?.[0]?.displayName);
@@ -434,7 +432,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setShowLogin(false);
         setLoading(false)
       }
-      // setLoading(false);
     } catch (error) {
       console.error("error", error);
       setLoading(false);

@@ -515,5 +515,6 @@
     "go_back": "Go Back",
     "wallet_amount_cannot_be_decimal": "Wallet amount cannot be decimal",
     "oops": "Oops!",
-    "product_is_either_unavailable_or_does_not_exist": "The product is either unavailable or doesn't exist."
+    "product_is_either_unavailable_or_does_not_exist": "The product is either unavailable or doesn't exist.",
+    "otp_valid_but_user_not_found": " OTP is valid, but no user found with this phone number."
 }

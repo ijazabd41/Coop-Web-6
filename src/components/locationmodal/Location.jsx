@@ -96,34 +96,43 @@ const Location = ({ showLocation, setShowLocation }) => {
     }
 
     const handleConfirmLocation = async () => {
-
         try {
             if (errorMessage !== "") {
                 toast.error("We are not deliver on this city")
                 return;
             }
             const result = await api.getCity({ latitude: localLocation.lat, longitude: localLocation.lng })
-            dispatch(setCity({
-                data: {
-                    id: result.data.id,
-                    name: localLocation.city,
-                    state: result.data.state,
-                    formatted_address: localLocation.formatted_address,
-                    latitude: result.data.latitude,
-                    longitude: result.data.longitude,
-                    min_amount_for_free_delivery: result.data.min_amount_for_free_delivery,
-                    delivery_charge_method: result.data.delivery_charge_method,
-                    fixed_charge: result.data.fixed_charge,
-                    per_km_charge: result.data.per_km_charge,
-                    time_to_travel: result.data.time_to_travel,
-                    max_deliverable_distance: result.data.max_deliverable_distance,
-                    distance: result.data.distance
-                }
-            }))
-            fetchShop(result.data.latitude, result.data.longitude)
-            setShowLocation(false)
-            seterrorMsg("")
-            setMapView(false)
+            if (result?.status == 1) {
+                dispatch(setCity({
+                    data: {
+                        id: result.data.id,
+                        name: localLocation.city,
+                        state: result.data.state,
+                        formatted_address: localLocation.formatted_address,
+                        latitude: result.data.latitude,
+                        longitude: result.data.longitude,
+                        min_amount_for_free_delivery: result.data.min_amount_for_free_delivery,
+                        delivery_charge_method: result.data.delivery_charge_method,
+                        fixed_charge: result.data.fixed_charge,
+                        per_km_charge: result.data.per_km_charge,
+                        time_to_travel: result.data.time_to_travel,
+                        max_deliverable_distance: result.data.max_deliverable_distance,
+                        distance: result.data.distance
+                    }
+                }))
+                fetchShop(result.data.latitude, result.data.longitude)
+                setShowLocation(false)
+                seterrorMsg("")
+                setMapView(false)
+            } else if (result.status == 0) {
+                setLoading(false);
+                toast.error(t("We_doesn't_deliver_at_selected_city"));
+                setShowLocation(true);
+            } else {
+                setLoading(false);
+                seterrorMsg(result.message);
+            }
+
         } catch (error) {
             console.log("error", error)
         }

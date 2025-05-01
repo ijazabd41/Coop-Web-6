@@ -150,7 +150,6 @@ const Layout = ({ children }) => {
       {loading ? <Loader screen="full" /> :
         setting?.setting?.web_settings?.website_mode == 1 ? <MaintanceMode message={setting?.setting?.web_settings?.website_mode_remark} /> :
           <PushNotification>
-
             <Header />
             {children}
             <Footer />
