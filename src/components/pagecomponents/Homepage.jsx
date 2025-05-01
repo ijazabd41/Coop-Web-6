@@ -3,13 +3,13 @@ import Home from '@/components/homepage/Home'
 import * as api from "@/api/apiRoutes"
 import { setShop } from '@/redux/slices/shopSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import Categories from '../categories/CategoriesContainer'
+
 import Loader from '../loader/Loader'
 import Layout from '../layout/Layout'
 // import { resetSelectedCategories } from '@/redux/slices/productFilterSlice'
 import { useRouter } from 'next/router'
 import { clearAllFilter } from '@/redux/slices/productFilterSlice'
-
+import HomeSkeleton from '../homepage/HomeSkeleton'
 
 
 const Homepage = () => {
@@ -27,7 +27,6 @@ const Homepage = () => {
 
     useEffect(() => {
         if (router?.pathname === "/") {
-            // dispatch(resetSelectedCategories())
             dispatch(clearAllFilter())
         }
     }, [])
@@ -58,11 +57,7 @@ const Homepage = () => {
         <div>
             {
                 <Layout>
-                    {loading ? <div > <Loader height="500vh" /></div> : <Home />}
-                    {/* {!loading ? <HomePageSkeleton /> : */}
-                    {/* <Home /> */}
-                    {/* //  } */}
-
+                    {loading ? <div > <HomeSkeleton /></div> : <Home />}
                 </Layout>
             }
 

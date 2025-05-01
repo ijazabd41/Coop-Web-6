@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import dynamic from "next/dynamic";
 // import { resetSelectedCategories } from "@/redux/slices/productFilterSlice";
 const PriceSlider = dynamic(() => import("./PriceSlider"), { ssr: false });
+import FilterSkeleton from "./FilterSkeleton";
 
 const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setValues, setMinPrice, setMaxPrice, setShowFilter }) => {
     const filter = useSelector(state => state.ProductFilter)
@@ -31,6 +32,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
     const [tempMaxPrice, setTempMaxPrice] = useState(null)
     const [activeKey, setActiveKey] = useState(["1", "2", "3"]);
     const brandLimit = 10;
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -54,11 +56,14 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
 
     const fetchCategories = async () => {
+        setLoading(true)
         try {
             const categories = await api.getCategories()
             setCategories(categories.data)
         } catch (error) {
             console.log("erorr", error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -71,6 +76,7 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
 
     const fetchBrands = async (bOffset) => {
+        setLoading(true)
         try {
             const result = await api.getBrands({ limit: brandLimit, offset: bOffset, latitude: city?.city?.latitude, longitude: city?.city?.longitude });
             if (result.status === 1) {
@@ -83,6 +89,8 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
             }
         } catch (error) {
             console.log("Error", error)
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -120,110 +128,112 @@ const Filter = ({ setProductResult, setOffset, minPrice, maxPrice, values, setVa
 
     return (
         <>
-            <div className="md:cardBorder rounded-md headerBackgroundColor ">
-                <div className='p-3 md:p-4 bottomBorder '>
-                    <div className='flex justify-between items-center  '>
-                        <h5 className="text-xl font-bold">{t("filters")}</h5>
-                        <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'
-                            onClick={() => {
-                                setSelectedCategories([]);
-                                setMinPrice(null);
-                                setMaxPrice(null);
-                                dispatch(clearAllFilter());
-                                // dispatch(resetSelectedCategories())
-                                setOffset(0)
-                                setProductResult([])
-                            }}
-                        >
-                            {t("clearAll")}
-                        </p>
+            {loading ? <FilterSkeleton /> :
+                <div className="md:cardBorder rounded-md headerBackgroundColor ">
+                    <div className='p-3 md:p-4 bottomBorder '>
+                        <div className='flex justify-between items-center  '>
+                            <h5 className="text-xl font-bold">{t("filters")}</h5>
+                            <p className='m-0 text-sm font-normal text-[#DB3D26] cursor-pointer'
+                                onClick={() => {
+                                    setSelectedCategories([]);
+                                    setMinPrice(null);
+                                    setMaxPrice(null);
+                                    dispatch(clearAllFilter());
+                                    // dispatch(resetSelectedCategories())
+                                    setOffset(0)
+                                    setProductResult([])
+                                }}
+                            >
+                                {t("clearAll")}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <Collapsible open={activeKey.includes("1")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("1")}>
-                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                        <div className="text-start font-medium textColor md:text-base">{t("product_category")}</div>
-                        <div className={`transition-transform duration-250 ${activeKey.includes("1") ? "rotate-0" : "-rotate-90"}`}>
-                            <FaChevronDown />
-                        </div>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        <div className='filter-row'>
-                            <CategoryTree
-                                categories={categories}
-                                selectedCategories={selectedCategories}
-                                onCategoryChange={handleCategoryChange}
-                                initialFilter={filter}
-                            />
-                        </div>
-                    </CollapsibleContent>
-                </Collapsible>
-                {brands && brands?.length > 0 &&
-                    <Collapsible open={activeKey.includes("2")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("2")}>
+                    <Collapsible open={activeKey.includes("1")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("1")}>
                         <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                            <div className="text-base font-medium textColor">{t("brands")}</div>
-                            <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
+                            <div className="text-start font-medium textColor md:text-base">{t("product_category")}</div>
+                            <div className={`transition-transform duration-250 ${activeKey.includes("1") ? "rotate-0" : "-rotate-90"}`}>
                                 <FaChevronDown />
                             </div>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                            <div className='filter-row px-2 pb-4 md:px-2 lg:px-4'>
-                                {brands?.map((brand, index) => {
-                                    const isChecked = filter.brand_ids.includes(brand.id);
-                                    return (
-                                        <div key={brand.id} className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2">
-                                            <Checkbox
-                                                className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
-                                                checked={isChecked}
-                                                onCheckedChange={() => {
-                                                    setProductResult([])
-                                                    filterbyBrands(brand)
-                                                }}
-                                            />
-                                            <span className="text-sm font-normal textColor">{brand.name}</span>
-                                        </div>
-                                    );
-                                })
-                                }
-                                {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+                            <div className='filter-row'>
+                                <CategoryTree
+                                    categories={categories}
+                                    selectedCategories={selectedCategories}
+                                    onCategoryChange={handleCategoryChange}
+                                    initialFilter={filter}
+                                />
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                }
+                    {brands && brands?.length > 0 &&
+                        <Collapsible open={activeKey.includes("2")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("2")}>
+                            <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                                <div className="text-base font-medium textColor">{t("brands")}</div>
+                                <div className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"}`}>
+                                    <FaChevronDown />
+                                </div>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                                <div className='filter-row px-2 pb-4 md:px-2 lg:px-4'>
+                                    {brands?.map((brand, index) => {
+                                        const isChecked = filter.brand_ids.includes(brand.id);
+                                        return (
+                                            <div key={brand.id} className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2">
+                                                <Checkbox
+                                                    className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
+                                                    checked={isChecked}
+                                                    onCheckedChange={() => {
+                                                        setProductResult([])
+                                                        filterbyBrands(brand)
+                                                    }}
+                                                />
+                                                <span className="text-sm font-normal textColor">{brand.name}</span>
+                                            </div>
+                                        );
+                                    })
+                                    }
+                                    {brands?.length < totalBrands ? <a className='brand-view-more textColor' onClick={loadMoreBrands}>{t("showMore")}</a> : <></>}
+                                </div>
+                            </CollapsibleContent>
+                        </Collapsible>
+                    }
 
-                <Collapsible open={activeKey.includes("3")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("3")}>
-                    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-                        <div className="text-base font-medium textColor">{t("priceRange")}</div>
-                        <div className={`transition-transform duration-250 ${activeKey.includes("3") ? "rotate-0" : "-rotate-90"}`}>
-                            <FaChevronDown />
-                        </div>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className='px-2 pb-4 md:px-2 lg:px-4'>
-                        <div className="flex flex-col gap-4">
-                            <PriceSlider
-                                minPrice={minPrice}
-                                maxPrice={maxPrice}
-                                setValues={setValues}
-                                setTempMaxPrice={setTempMaxPrice}
-                                setTempMinPrice={setTempMinPrice}
-                                values={values}
-                            />
-                            <div className='range-prices flex justify-between'>
-                                <p>{setting?.currency}{values[0]}</p>
-                                <p>{setting?.currency}{values[1]}</p>
-
+                    <Collapsible open={activeKey.includes("3")} className="w-full bottomBorder" onOpenChange={() => handleActiveKey("3")}>
+                        <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                            <div className="text-base font-medium textColor">{t("priceRange")}</div>
+                            <div className={`transition-transform duration-250 ${activeKey.includes("3") ? "rotate-0" : "-rotate-90"}`}>
+                                <FaChevronDown />
                             </div>
-                            <button className="rounded py-2 px-4 buttonBackground text-xl"
-                                onClick={(newValues) => {
-                                    setOffset(0)
-                                    setProductResult([])
-                                    dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
-                                }}>
-                                {t("apply")}
-                            </button>
-                        </div>
-                    </CollapsibleContent>
-                </Collapsible>
-            </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className='px-2 pb-4 md:px-2 lg:px-4'>
+                            <div className="flex flex-col gap-4">
+                                <PriceSlider
+                                    minPrice={minPrice}
+                                    maxPrice={maxPrice}
+                                    setValues={setValues}
+                                    setTempMaxPrice={setTempMaxPrice}
+                                    setTempMinPrice={setTempMinPrice}
+                                    values={values}
+                                />
+                                <div className='range-prices flex justify-between'>
+                                    <p>{setting?.currency}{values[0]}</p>
+                                    <p>{setting?.currency}{values[1]}</p>
+
+                                </div>
+                                <button className="rounded py-2 px-4 buttonBackground text-xl"
+                                    onClick={(newValues) => {
+                                        setOffset(0)
+                                        setProductResult([])
+                                        dispatch(setFilterMinMaxPrice({ data: { min_price: tempMinPrice, max_price: tempMaxPrice } }))
+                                    }}>
+                                    {t("apply")}
+                                </button>
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                </div>
+            }
         </>
     );
 };

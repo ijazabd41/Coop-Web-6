@@ -72,12 +72,13 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
 
   const handleFetchSetting = async () => {
     try {
-      const setting = await api.getSetting();
-      dispatch(setSetting({ data: setting?.data }))
+      const res = await api.getSetting();
+      const parsedSetting = JSON.parse(atob(res.data))
+      dispatch(setSetting({ data: parsedSetting }));
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
     }
-  }
+  };
 
   const getCurrentUser = async () => {
     try {
@@ -139,8 +140,8 @@ const NewUserModal = ({ showNewUser, setShowNewUser, setUserName, setPhoneNumber
     <Dialog open={showNewUser}  >
       <DialogContent className="">
         <DialogHeader className="flex flex-row justify-between items-center">
-          <div className="relative aspect-square object-cover h-[68px] w-[72px]">
-            <ImageWithPlaceholder src={setting?.web_settings?.web_logo} alt="logo" fill className=" aspect-square w-full h-full object-cover" />
+          <div className="">
+            <h1 className='text-3xl font-bold'>{t("register")}</h1>
           </div>
           <div>
             <IoIosCloseCircle size={32} onClick={() => setShowNewUser(false)} />

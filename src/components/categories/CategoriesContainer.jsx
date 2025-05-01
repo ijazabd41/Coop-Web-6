@@ -55,7 +55,7 @@ const CategoriesContainer = ({ categories }) => {
                     </div>
                 </div>
 
-                <div className='flex'>
+                <div className='mt-6'>
                     <Swiper
                         key={rtl}
                         modules={[Navigation]}
@@ -69,8 +69,8 @@ const CategoriesContainer = ({ categories }) => {
                             0: { slidesPerView: 1.5 },
                             320: { slidesPerView: 2.2 },
                             375: { slidesPerView: 2.3 },
-                            425: { slidesPerView: 2.5 },
-                            768: { slidesPerView: 3 },
+                            425: { slidesPerView: 4 },
+                            768: { slidesPerView: 4 },
                             1024: { slidesPerView: 6 },
                         }}
                     >

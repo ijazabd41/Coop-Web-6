@@ -49,7 +49,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  const defaultCountry = process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE || "in";
+  const defaultCountry = process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in";
 
   const [userName, setUserName] = useState("");
   const [showNewUser, setShowNewUser] = useState(false);
@@ -83,7 +83,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_APP_DEFAULT_COUNTRY_CODE);
+    setCountryCode(process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE);
   }, []);
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
@@ -224,7 +224,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(true);
           setLoading(false);
         } catch (error) {
-          console.log("error", error)
+
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
@@ -289,7 +289,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         if (
           response?.status == 1 &&
           response?.message ==
-          "OTP is valid, but no user found with this phone number."
+          t("otp_valid_but_user_invalid")
         ) {
           setShowNewUser(true);
           setShowLogin(false);
@@ -409,7 +409,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setShowLogin(false);
           setShowRegister(false);
         }
-
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
         setLoading(false)
@@ -421,11 +420,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setError(t("password_not_valid"));
         setPhonePassword("")
         setLoading(false)
-      } else if (res.message == "user_not_exist") {
+      } else if (res.message == "user_not_exist" && isPhoneAuthPassword == true) {
         setError(t("user_not_exist"))
         setLoading(false)
-      }
-      else {
+      } else {
         setUserAuthType(type);
         setEmail(user?.providerData?.[0]?.email);
         setUserName(user?.providerData?.[0]?.displayName);
@@ -434,7 +432,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setShowLogin(false);
         setLoading(false)
       }
-      // setLoading(false);
     } catch (error) {
       console.error("error", error);
       setLoading(false);
@@ -615,7 +612,19 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const handlePhoneLogin = async (e) => {
     e.preventDefault();
     if (setting?.phone_auth_password == 1) {
-      loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+      if (
+        phoneNumber?.length < countryCode.length ||
+        phoneNumber?.slice(1) === countryCode
+      ) {
+        setError(t("please_enter_phone_number"));
+        setLoading(false);
+        return
+      } else if (!phonePassword) {
+        setError(t("please_enter_password"))
+        return
+      } else {
+        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+      }
     } else {
       handleSendOTP(e)
     }

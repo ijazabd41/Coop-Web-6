@@ -15,6 +15,7 @@ import NonVegIcon from "@/assets/NonVegIcon.svg";
 import NonCancelable from "@/assets/NotCancelable.svg";
 import Cancelable from "@/assets/Cancelable.svg";
 import Returnable from "@/assets/Returnable.svg";
+import ProductNotFoundImage from "@/assets/not_found_images/No_product_found.svg"
 import NotReturnable from "@/assets/NotReturnable.svg";
 import { WhatsappShareButton, WhatsappIcon, TwitterIcon, TwitterShareButton, FacebookIcon, FacebookShareButton } from "react-share";
 import ProductDescription from './ProductDescription';
@@ -28,6 +29,8 @@ import SimilarProducts from '../productslist/SimilarProducts';
 import { usePathname } from 'next/navigation';
 import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 import SingleSellerConfirmationModal from '../single-seller-confirmation-modal/SingleSellerConfirmationModal';
+import Link from 'next/link';
+
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -52,6 +55,7 @@ const ProductDetail = () => {
     const [selectedImage, setSelectedImage] = useState("")
     const [showSingleSellerModal, setSingleSellerModal] = useState(false);
     const [isVariantAvailable, setIsVariantAvailable] = useState(false)
+    const [productNotAvailable, setProductNotAvailable] = useState(false)
 
     const ratingsCount = 10;
 
@@ -73,14 +77,19 @@ const ProductDetail = () => {
         setIsLoading(true)
         try {
             const res = await api.getProductById({ slug: slug, latitude: city.latitude, longitude: city.longitude, id: -1 })
-            setProduct(res?.data)
-            setSelectedVariant(res?.data?.variants?.[0])
-            setIsLoading(false)
-            setProductImages([res?.data?.image_url, ...res?.data?.images])
-            setSelectedImage(res?.data?.image_url)
+            if (res.status == 1) {
+                setProduct(res?.data)
+                setSelectedVariant(res?.data?.variants?.[0])
+                setProductImages([res?.data?.image_url, ...res?.data?.images])
+                setSelectedImage(res?.data?.image_url)
+            } else {
+                setProductNotAvailable(true)
+            }
         } catch (error) {
             console.log("error", error)
+        } finally {
             setIsLoading(false)
+
         }
     }
 
@@ -270,7 +279,11 @@ const ProductDetail = () => {
     return (
 
         <section>
-            {isLoading ? <div className='h-[100vh]'><Loader screen="full" /></div> : <>
+            {isLoading ? <div className='h-[100vh]'><Loader screen="full" /></div> : productNotAvailable == true ? <div className='h-full w-full flex flex-col items-center my-4'>
+                <ImageWithPlaceholder src={ProductNotFoundImage} alt={"not product found"} />
+                <p className='text-3xl font-bold w-1/3 text-center'>{t("oops")} {t("product_is_either_unavailable_or_does_not_exist")}</p>
+                <Link href={"/"} className='px-4 py-2 rounded-md font-medium primaryBackColor text-white'>{t("go_back")}</Link>
+            </div> : <>
                 <BreadCrumb />
                 <div className='container px-2 '>
                     <div className='mt-1'>

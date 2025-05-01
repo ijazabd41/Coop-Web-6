@@ -28,7 +28,7 @@ const nextConfig = {
     if (dir && outDir && fs.existsSync(path.join(dir, '.htaccess'))) {
       fs.copyFileSync(path.join(dir, '.htaccess'), path.join(outDir, '.htaccess'))
     } else {
-      console.log('No .htaccess file found')
+      // console.log('No .htaccess file found')
     }
     return defaultPathMap
   }

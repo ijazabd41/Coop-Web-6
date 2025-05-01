@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import FeatureSections from '../homepagefaturesection/FeatureSections'
 import HomeAllProducts from '../homepagefaturesection/HomeAllProducts'
 import HomeOfferModal from '../homepageoffermodal/HomeOfferModal'
-
+import HomeSkeleton from './HomeSkeleton'
 
 const HomePage = () => {
 
@@ -17,7 +17,7 @@ const HomePage = () => {
     return (
         <>
             <div>
-                {setting?.setting == null ? <Loader /> :
+                {setting?.setting == null ? <HomeSkeleton /> :
                     <>
                         <FeatureSections />
 

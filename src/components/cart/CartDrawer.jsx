@@ -88,6 +88,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     }
 
     const handleApplyCoupon = async () => {
+        setLoading(true)
         try {
             const response = await api.setPromoCode({ promoCodeName: coupon?.promo_code, amount: cart?.cartSubTotal })
             if (response.status == 1) {
@@ -98,6 +99,8 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
             }
         } catch (error) {
             console.log("Error", error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -134,7 +137,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     return (
         <>
             <Sheet open={showCart} >
-                <SheetContent side={language?.type == "RTL" ? "left" : "right"} className="p-0 w-[900px] w-full flex flex-col h-screen">
+                <SheetContent side={language?.type == "RTL" ? "left" : "right"} className="p-0  w-full flex flex-col h-screen">
                     <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
                         <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
                             <p className='text-2xl font-bold'>{t("shoppingCart")}</p>
@@ -143,12 +146,10 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                             </div>
                         </SheetTitle>
                     </SheetHeader>
-
                     {loading ? (
                         <p><Loader height={800} /></p>
                     ) : cartProductsData?.length !== 0 ? (
                         <>
-
                             <div className="flex-grow overflow-y-auto gap-2 p-2 flex flex-col">
                                 {cartProductsData?.map((product) => (
                                     <div key={product?.id}>
@@ -215,7 +216,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                         </div>
                     )}
                 </SheetContent>
-            </Sheet >
+            </Sheet>
             <Login showLogin={showLogin} setShowLogin={setShowLogin} setMobileActiveKey={setMobileActiveKey} />
             <CouponCodeDrawer showCouponCode={showCouponCode} setShowCouponCode={setShowCouponCode} />
         </>
