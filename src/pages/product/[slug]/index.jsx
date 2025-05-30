@@ -6,19 +6,6 @@ import MetaData from '@/components/metadata-component/MetaData'
 import axios from 'axios'
 import { extractJSONFromMarkup } from '@/utils/helperFunction'
 
-export default function Index({ title }) {
-    return (
-        <>
-            {/* <Head>
-                <title>{title}</title>
-                <meta name="description" content="Example meta description" />
-            </Head> */}
-            <MetaData pageName="/product/" title={title} />
-            <ProductDescriptionPage />
-        </>
-    )
-}
-
 export async function getServerSideProps(context) {
     const { slug } = context.params
     try {
@@ -34,16 +21,29 @@ export async function getServerSideProps(context) {
         let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION
         let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS
         if (process.env.NEXT_PUBLIC_SEO == "true") {
-            console.log("response", response.data.data)
             const seoData = response.data.data
             metatitle = seoData.meta_title
+            metaDescription = seoData.meta_description,
+                metaKeywords = seoData.meta_keywords
         }
         return {
             props: {
-                title: metatitle
+                title: metatitle,
+                description: metaDescription,
+                keywords: metaKeywords
             }
         }
     } catch (error) {
         console.log("error", error)
     }
 }
+
+export default function Index({ title, description, keywords }) {
+    return (
+        <>
+            <MetaData pageName="/product/" title={title} description={description} keywords={keywords} />
+            <ProductDescriptionPage />
+        </>
+    )
+}
+
