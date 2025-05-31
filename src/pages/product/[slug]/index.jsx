@@ -16,21 +16,26 @@ export async function getServerSideProps(context) {
                 }
             }
         )
-
+        console.log("response", response.data.data)
         let metatitle = process.env.NEXT_PUBLIC_META_TITLE
         let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION
         let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS
+        let schemaMarkup = null
         if (process.env.NEXT_PUBLIC_SEO == "true") {
             const seoData = response.data.data
             metatitle = seoData.meta_title
             metaDescription = seoData.meta_description,
                 metaKeywords = seoData.meta_keywords
+            if (seoData.schema_markup) {
+                schemaMarkup = extractJSONFromMarkup(seoData.schema_markup)
+            }
         }
         return {
             props: {
                 title: metatitle,
                 description: metaDescription,
-                keywords: metaKeywords
+                keywords: metaKeywords,
+                schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null
             }
         }
     } catch (error) {
@@ -38,10 +43,10 @@ export async function getServerSideProps(context) {
     }
 }
 
-export default function Index({ title, description, keywords }) {
+export default function Index({ title, description, keywords, schemaMarkup }) {
     return (
         <>
-            <MetaData pageName="/product/" title={title} description={description} keywords={keywords} />
+            <MetaData pageName="/product/" title={title} description={description} keywords={keywords} structuredData={schemaMarkup} />
             <ProductDescriptionPage />
         </>
     )

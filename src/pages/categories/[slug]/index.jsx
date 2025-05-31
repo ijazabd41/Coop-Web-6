@@ -1,5 +1,8 @@
+
 import React from 'react'
-import CategoriesPages from '@/components/pagecomponents/CategoriesPages'
+const CategoriesPages = dynamic(() => import('@/components/pagecomponents/CategoriesPages'), { ssr: false })
+import dynamic from 'next/dynamic'
+
 import MetaData from '@/components/metadata-component/MetaData'
 import axios from "axios"
 import { extractJSONFromMarkup } from '@/utils/helperFunction'
@@ -19,12 +22,15 @@ export async function getServerSideProps(context) {
         let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION
         let markUpSchema = "";
         let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS
-        if (process.env.NEXT_PUBLI_SEO === "true") {
+        if (process.env.NEXT_PUBLIC_SEO === "true") {
             const seoData = response.data.data || {}
+
             metaKeywords = seoData.meta_keywords || metaKeywords
             metaTitle = seoData.meta_title || metaTitle
             metaDescription = seoData.meta_description || metaDescription
-            markUpSchema = seoData.schema_markup || ""
+            if (seoData.schema_markup) {
+                markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || ""
+            }
         }
         return {
             props: {
@@ -44,23 +50,17 @@ export async function getServerSideProps(context) {
 }
 
 const Categories = ({ slug, metaKeywords, metaTitle, metaDescription, markUpSchema }) => {
-    let structuredData = null;
-
-    if (markUpSchema != "") {
-        structuredData = extractJSONFromMarkup(markUpSchema)
-
-    }
     return (
-        <>
+        <div>
             <MetaData pageName="/categories/all"
                 title={metaTitle}
                 keywords={metaKeywords}
                 description={metaDescription}
-                structuredData={structuredData}
-                key={`meta-${slug}`}
+                structuredData={markUpSchema}
+            // key={`meta-${slug}`}
             />
             <CategoriesPages />
-        </>
+        </div>
     )
 }
 
