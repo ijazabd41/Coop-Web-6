@@ -49,7 +49,7 @@ export async function getServerSideProps() {
   }
 }
 const Index = ({ title, description, keywords, schemaMarkup, ogImage }) => {
-  console.log("title", title);
+  const currentURL = `${process.env.NEXT_PUBLIC_BASE_URL}/about-us`;
   return (
     <div>
       <MetaData
@@ -59,6 +59,7 @@ const Index = ({ title, description, keywords, schemaMarkup, ogImage }) => {
         keywords={keywords}
         schemaMarkup={schemaMarkup}
         ogImage={ogImage}
+        ogUrl={currentURL}
       />
       <AboutUsPage />
     </div>
