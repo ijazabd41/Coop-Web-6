@@ -11,6 +11,7 @@ import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
 export async function getServerSideProps(context) {
   const { slug } = context.params;
+  let isMetadata = false;
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/products/get_seo_things`,
@@ -20,15 +21,23 @@ export async function getServerSideProps(context) {
         },
       },
     );
+    console.log(response.data.data);
+    if (
+      response.data.data?.meta_title != null &&
+      response.data.data?.meta_description != null &&
+      response.data.data?.meta_keywords != null
+    ) {
+      isMetadata = true;
+    }
     let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let schemaMarkup = null;
-    if (process.env.NEXT_PUBLIC_SEO == "true") {
+    if (process.env.NEXT_PUBLIC_SEO == "true" && isMetadata == true) {
       const seoData = response.data.data;
       metatitle = seoData.meta_title;
-      (metaDescription = seoData.meta_description),
-        (metaKeywords = seoData.meta_keywords);
+      metaDescription = seoData.meta_description;
+      metaKeywords = seoData.meta_keywords;
       if (seoData.schema_markup) {
         schemaMarkup = extractJSONFromMarkup(seoData.schema_markup);
       }
@@ -54,7 +63,7 @@ export default function Index({
   keywords,
   schemaMarkup,
 }) {
-  const productUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/product/${slug}`;
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/product/${slug}`;
   return (
     <>
       <MetaData
@@ -63,7 +72,7 @@ export default function Index({
         description={description}
         keywords={keywords}
         structuredData={schemaMarkup}
-        ogUrl={productUrl}
+        ogUrl={pageUrl}
       />
       <ProductDescriptionPage />
     </>

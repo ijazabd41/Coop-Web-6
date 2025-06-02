@@ -23,9 +23,11 @@ export async function getServerSideProps() {
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let ogImage = "";
     let schemaMarkup = null;
-    if (process.env.NEXT_PUBLIC_SEO == "true") {
+    if (
+      process.env.NEXT_PUBLIC_SEO == "true" &&
+      response.data.data?.length > 0
+    ) {
       const seoData = response.data.data;
-      console.log("seoData", seoData);
       metatitle = seoData[0].meta_title;
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;
@@ -56,7 +58,7 @@ const Index = ({ title, description, keywords, schemaMarkup, ogImage }) => {
         title={`${title}`}
         description={description}
         keywords={keywords}
-        schemaMarkup={schemaMarkup}
+        structuredData={schemaMarkup}
         ogImage={ogImage}
         ogUrl={currentURL}
       />

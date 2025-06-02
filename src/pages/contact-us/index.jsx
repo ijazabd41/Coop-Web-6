@@ -1,4 +1,6 @@
 import MetaData from "@/components/metadata-component/MetaData";
+import { extractJSONFromMarkup } from "@/utils/helperFunction";
+import axios from "axios";
 import dynamic from "next/dynamic";
 const ContactUsPage = dynamic(
   () => import("@/components/pagecomponents/ContactUsPage"),
@@ -21,9 +23,11 @@ export async function getServerSideProps() {
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let ogImage = "";
     let schemaMarkup = null;
-    if (process.env.NEXT_PUBLIC_SEO == "true") {
+    if (
+      process.env.NEXT_PUBLIC_SEO == "true" &&
+      response.data.data?.length > 0
+    ) {
       const seoData = response.data.data;
-      console.log("seoData", seoData);
       metatitle = seoData[0].meta_title;
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;
@@ -37,7 +41,7 @@ export async function getServerSideProps() {
         title: metatitle,
         description: metaDescription,
         keywords: metaKeywords,
-        schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
+        structuredData: schemaMarkup,
         ogImage: ogImage,
       },
     };
@@ -47,15 +51,18 @@ export async function getServerSideProps() {
 }
 
 const index = ({ title, description, keywords, schemaMarkup, ogImage }) => {
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/contact-us`;
+
   return (
     <div>
       <MetaData
-        title={`${title}`}
+        title={title}
         description={description}
         keywords={keywords}
-        schemaMarkup={schemaMarkup}
+        structuredData={schemaMarkup}
         ogImage={ogImage}
         pageName="/contact-us"
+        ogUrl={pageUrl}
       />
       <ContactUsPage />
     </div>

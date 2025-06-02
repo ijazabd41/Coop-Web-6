@@ -37,7 +37,6 @@ const MetaData = ({
   appleTouchIcon = "/favicon.ico",
   favicon = "/favicon.ico",
 }) => {
-  // console.log("title inside compo", title)
   return (
     <Head>
       {/* Basic SEO */}

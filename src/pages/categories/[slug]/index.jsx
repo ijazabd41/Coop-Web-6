@@ -1,67 +1,79 @@
+import React from "react";
+const CategoriesPages = dynamic(
+  () => import("@/components/pagecomponents/CategoriesPages"),
+  { ssr: false },
+);
+import dynamic from "next/dynamic";
 
-import React from 'react'
-const CategoriesPages = dynamic(() => import('@/components/pagecomponents/CategoriesPages'), { ssr: false })
-import dynamic from 'next/dynamic'
-
-import MetaData from '@/components/metadata-component/MetaData'
-import axios from "axios"
-import { extractJSONFromMarkup } from '@/utils/helperFunction'
+import MetaData from "@/components/metadata-component/MetaData";
+import axios from "axios";
+import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
 export async function getServerSideProps(context) {
-    const { slug } = context.params
-    try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/categories/get_seo_things`,
-            {
-                params: {
-                    slug: slug
-                }
-            }
-        )
+  const { slug } = context.params;
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/categories/get_seo_things`,
+      {
+        params: {
+          slug: slug,
+        },
+      },
+    );
 
-        let metaTitle = process.env.NEXT_PUBLIC_META_TITLE
-        let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION
-        let markUpSchema = "";
-        let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS
-        if (process.env.NEXT_PUBLIC_SEO === "true") {
-            const seoData = response.data.data || {}
-
-            metaKeywords = seoData.meta_keywords || metaKeywords
-            metaTitle = seoData.meta_title || metaTitle
-            metaDescription = seoData.meta_description || metaDescription
-            if (seoData.schema_markup) {
-                markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || ""
-            }
-        }
-        return {
-            props: {
-                slug,
-                metaKeywords,
-                metaTitle,
-                metaDescription,
-                markUpSchema
-            },
-        }
-    } catch (error) {
-        console.error('Error fetching product data:', error)
-        return {
-            notFound: true,
-        }
+    let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
+    let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
+    let markUpSchema = "";
+    let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
+    if (process.env.NEXT_PUBLIC_SEO === "true") {
+      const seoData = response.data.data || {};
+      metaKeywords = seoData.meta_keywords || metaKeywords;
+      metaTitle = seoData.meta_title || metaTitle;
+      metaDescription = seoData.meta_description || metaDescription;
+      if (seoData.schema_markup) {
+        markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || "";
+      }
     }
+    return {
+      props: {
+        slug,
+        metaKeywords,
+        metaTitle,
+        metaDescription,
+        markUpSchema,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching product data:", error);
+    return {
+      notFound: true,
+    };
+  }
 }
 
-const Categories = ({ slug, metaKeywords, metaTitle, metaDescription, markUpSchema }) => {
-    return (
-        <div>
-            <MetaData pageName="/categories/all"
-                title={metaTitle}
-                keywords={metaKeywords}
-                description={metaDescription}
-                structuredData={markUpSchema}
-            // key={`meta-${slug}`}
-            />
-            <CategoriesPages />
-        </div>
-    )
-}
+const Categories = ({
+  slug,
+  metaKeywords,
+  metaTitle,
+  metaDescription,
+  markUpSchema,
+}) => {
+  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${slug}`;
 
-export default Categories
+  return (
+    <div>
+      <MetaData
+        pageName="/categories/all"
+        title={metaTitle}
+        keywords={metaKeywords}
+        description={metaDescription}
+        structuredData={markUpSchema}
+        ogUrl={pageUrl}
+        // key={`meta-${slug}`}
+      />
+      <CategoriesPages />
+    </div>
+  );
+};
+
+export default Categories;
