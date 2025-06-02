@@ -18,7 +18,6 @@ export async function getServerSideProps() {
         },
       },
     );
-    console.log("response", response.data);
     let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
@@ -54,7 +53,7 @@ const Index = ({ title, description, keywords, schemaMarkup, ogImage }) => {
     <div>
       <MetaData
         pageName="/about"
-        title={`${title}- ${process.env.NEXT_PUBLIC_META_TITLE}`}
+        title={`${title}`}
         description={description}
         keywords={keywords}
         schemaMarkup={schemaMarkup}
