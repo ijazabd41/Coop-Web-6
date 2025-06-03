@@ -57,7 +57,7 @@ const MetaData = ({
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />
-      <meta property='og:image:type' content='image/jpg' />
+
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:url" content={ogUrl} />
