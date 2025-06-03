@@ -21,7 +21,7 @@ export async function getServerSideProps(context) {
         },
       },
     );
-    console.log(response.data.data);
+
     if (
       response.data.data?.meta_title != null &&
       response.data.data?.meta_description != null &&
@@ -33,11 +33,13 @@ export async function getServerSideProps(context) {
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let schemaMarkup = null;
+    let og_image = null;
     if (process.env.NEXT_PUBLIC_SEO == "true" && isMetadata == true) {
       const seoData = response.data.data;
       metatitle = seoData.meta_title;
       metaDescription = seoData.meta_description;
       metaKeywords = seoData.meta_keywords;
+      og_image = seoData.og_image;
       if (seoData.schema_markup) {
         schemaMarkup = extractJSONFromMarkup(seoData.schema_markup);
       }
@@ -48,6 +50,7 @@ export async function getServerSideProps(context) {
         title: metatitle,
         description: metaDescription,
         keywords: metaKeywords,
+        og_image,
         schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
       },
     };
@@ -61,6 +64,7 @@ export default function Index({
   title,
   description,
   keywords,
+  og_image,
   schemaMarkup,
 }) {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/product/${slug}`;
@@ -73,6 +77,7 @@ export default function Index({
         keywords={keywords}
         structuredData={schemaMarkup}
         ogUrl={pageUrl}
+        ogImage={og_image}
       />
       <ProductDescriptionPage />
     </>

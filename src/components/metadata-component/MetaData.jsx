@@ -37,6 +37,7 @@ const MetaData = ({
   appleTouchIcon = "/favicon.ico",
   favicon = "/favicon.ico",
 }) => {
+  console.log("ogIage", ogImage);
   return (
     <Head>
       {/* Basic SEO */}

@@ -25,11 +25,13 @@ export async function getServerSideProps(context) {
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let markUpSchema = "";
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
+    let og_image = null;
     if (process.env.NEXT_PUBLIC_SEO === "true") {
       const seoData = response.data.data || {};
       metaKeywords = seoData.meta_keywords || metaKeywords;
       metaTitle = seoData.meta_title || metaTitle;
       metaDescription = seoData.meta_description || metaDescription;
+      og_image = seoData.og_image
       if (seoData.schema_markup) {
         markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || "";
       }
@@ -41,6 +43,7 @@ export async function getServerSideProps(context) {
         metaTitle,
         metaDescription,
         markUpSchema,
+        og_image
       },
     };
   } catch (error) {
@@ -57,6 +60,7 @@ const Categories = ({
   metaTitle,
   metaDescription,
   markUpSchema,
+  og_image
 }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${slug}`;
 
@@ -69,6 +73,7 @@ const Categories = ({
         description={metaDescription}
         structuredData={markUpSchema}
         ogUrl={pageUrl}
+        ogImage={og_image}
         // key={`meta-${slug}`}
       />
       <CategoriesPages />
