@@ -205,14 +205,12 @@ const Header = () => {
         setIsSuggLoading(true)
         dispatch(setFilterSearch({ data: e.target.value }))
         dispatch(setSearchedCategory({ data: searchCatId }))
-
         if (typingTimeout) {
             clearTimeout(typingTimeout)
         }
         const timeout = setTimeout(() => {
             handleSearchData(e.target.value)
         }, 2000);
-
         setTypingTimeout(timeout)
     }
 

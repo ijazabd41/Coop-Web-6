@@ -16,6 +16,7 @@ export async function getServerSideProps() {
         },
       },
     );
+
     let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
@@ -26,7 +27,6 @@ export async function getServerSideProps() {
       response.data.data?.length > 0
     ) {
       const seoData = response.data.data;
-      console.log("seoData", seoData);
       metatitle = seoData[0].meta_title;
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;
@@ -64,7 +64,7 @@ export default function Home({
         description={description}
         keywords={keywords}
         pageName="/"
-        schemaMarkup={schemaMarkup ? JSON.parse(schemaMarkup) : null}
+        structuredData={schemaMarkup}
         ogImage={ogImage}
         productUrl={pageUrl}
       />
