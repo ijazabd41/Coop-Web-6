@@ -234,7 +234,6 @@ const Header = () => {
                                 <div className="flex">
                                     <ul className="flex gap-0 px-[16px] py-[8px]">
                                         {setting?.setting?.social_media && setting?.setting?.social_media?.map((social, index) => {
-                                            console.log("social", social?.icon)
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                                     <li className="border-r-[2px]  p-3 border-white py-[2px]">
@@ -350,7 +349,6 @@ const Header = () => {
                                     </div>
                                 </div>
                                 {user?.jwtToken !== "" ? <div className='flex gap-2 items-center cursor-pointer' >
-
                                     <div className='flex '>
                                         <DropdownMenu >
                                             <DropdownMenuTrigger className="flex items-center border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
@@ -426,12 +424,12 @@ const Header = () => {
                             </div>
                             <div className='flex  md:hidden gap-2 order-3 items-center'>
                                 <div >{themes?.theme == "light" ? <CiSun onClick={() => handleChangeTheme('dark')} size={24} /> : <FiMoon onClick={() => handleChangeTheme('light')} size={24} />}</div>
-                                <div onClick={handleCartOpen}><IoCartOutline size={24} /> {
+                                <div onClick={handleCartOpen} className='relative'><IoCartOutline size={24} /> {
                                     cart.isGuest == true ? <p className={cart?.guestCart
-                                        ?.length != 0 ? "flex absolute top-1.5 right-0.5  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-semibold text-xs" : "none"}> {cart?.guestCart
+                                        ?.length != 0 ? "flex absolute  bottom-4 left-4  bodyTextColor textBackground rounded-full h-[18px] w-[18px] items-center justify-center text-center font-semibold text-xs" : "none"}> {cart?.guestCart
                                             ?.length != 0 ? cart?.guestCart
                                             ?.length : null}</p> :
-                                        <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor top-1 right-0   textBackground rounded-full text-center h-4 w-4 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
+                                        <p className={cart?.cartProducts?.length != 0 ? "flex absolute bodyTextColor bottom-4 left-4   textBackground rounded-full text-center h-4 w-4 items-center justify-center p-1 font-bold text-sm" : "none"}> {cart?.cartProducts?.length != 0 ? cart?.cartProducts?.length : null}</p>
                                 }</div>
                             </div>
                         </div>

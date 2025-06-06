@@ -122,7 +122,6 @@ const Footer = () => {
                                                     <i className={`${social?.icon}`}></i>
                                                 </Link>
                                             )
-
                                         }
                                     })}
                                 </div>

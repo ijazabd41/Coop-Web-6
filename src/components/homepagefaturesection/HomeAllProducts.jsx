@@ -123,7 +123,7 @@ const HomeAllProducts = () => {
                                             <div
                                                 ref={lastProductRef}
                                                 key={product?.id}
-                                                className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'
+                                                className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2'
                                             >
                                                 <VerticleProductCard product={product} />
                                             </div>
@@ -132,7 +132,7 @@ const HomeAllProducts = () => {
                                         return (
                                             <div
                                                 key={product?.id}
-                                                className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'
+                                                className='col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2'
                                             >
                                                 <VerticleProductCard product={product} />
                                             </div>

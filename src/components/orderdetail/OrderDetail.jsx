@@ -82,6 +82,13 @@ const OrderDetail = () => {
                                 <span className='font-normal text-sm '>{t("orderDate")}</span>
                                 <p className='text-base font-medium'>{formatCustomDate(orderDetail?.date)}</p>
                             </div>
+                            {
+                              Number((orderDetail?.active_status) < 6 && (parseInt(orderDetail?.otp) !== 0 &&orderDetail?.otp !== null) )  ?  <div className='flex flex-col items-start md:items-end'>
+                                <span className='font-normal text-sm '>{t("otp")}</span>
+                                <p className='text-base font-medium'>{orderDetail?.otp}</p>
+                            </div> :<></>  
+                            }
+                          
                             {Number(orderDetail?.active_status) === 6 ? <div className='md:border-l-2'>
                                 <button className='flex items-center gap-2 bg-[#29363F] p-2 md:ml-2 rounded-md text-white' onClick={handleDownloadInvoice}><MdOutlineFileDownload size={22} /> {t("GetInvoice")}</button>
                             </div> : null}
