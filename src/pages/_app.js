@@ -10,6 +10,7 @@ import Loader from "@/components/loader/Loader";
 import { useRouter } from "next/router";
 import { ThemeProvider } from 'next-themes';
 import MetaData from "@/components/metadata-component/MetaData";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 
 export default function App({ Component, pageProps }) {
@@ -35,6 +36,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <main>
+      <ErrorBoundary>
       <Provider store={store}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <Suspense fallback={<Loader screen="full" />}>
@@ -42,6 +44,7 @@ export default function App({ Component, pageProps }) {
           </Suspense>
         </ThemeProvider >
       </Provider>
+      </ErrorBoundary>
     </main>
   );
 }

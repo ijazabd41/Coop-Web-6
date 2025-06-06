@@ -16,7 +16,7 @@ import {
 import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
 import * as api from "@/api/apiRoutes";
 import { IoCartOutline, IoPersonOutline, IoLocationOutline, IoHomeOutline, IoSearchOutline, IoLanguage } from 'react-icons/io5';
-import { FaPhoneVolume } from "react-icons/fa6";
+import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from '../cart/CartDrawer';
 import Login from '../login/Login';
@@ -234,13 +234,19 @@ const Header = () => {
                                 <div className="flex">
                                     <ul className="flex gap-0 px-[16px] py-[8px]">
                                         {setting?.setting?.social_media && setting?.setting?.social_media?.map((social, index) => {
+                                            console.log("social", social?.icon)
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                                     <li className="border-r-[2px]  p-3 border-white py-[2px]">
                                                         {social?.icon.toLowerCase().includes('wechat') ? (
                                                             // Special handling for WeChat icon
                                                             <i className="fab fa-weixin"></i>
-                                                        ) : (
+                                                        ) 
+                                                        : social?.icon.toLowerCase().includes('twitter') ? (
+                                                            // Special handling for TikTok icon
+                                                          <FaXTwitter className={`${social?.icon}`} />
+                                                        )
+                                                        : (
                                                             <i className={`${social?.icon}`}></i>
                                                         )}
                                                     </li>

@@ -16,6 +16,7 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg";
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg";
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg";
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
+import { FaXTwitter } from 'react-icons/fa6'
 
 const paymentMethodsConfig = [
     { key: "cod_payment_method", label: "COD", image: CashOnDeliveryImage },
@@ -108,7 +109,14 @@ const Footer = () => {
                                                     <i className="fab fa-weixin"></i>
                                                 </Link>
                                             )
-                                        } else {
+                                        }else if(social?.icon.toLowerCase().includes('twitter')){
+                                            return(
+                                                <Link key={social?.id} href={social?.link || "#"} target='_blank'>
+                                                    <FaXTwitter className={`${social?.icon} `} />
+                                                </Link>
+                                            )
+                                        }
+                                          else {
                                             return (
                                                 <Link key={social?.id} href={social?.link || "#"} target='_blank'>
                                                     <i className={`${social?.icon}`}></i>
