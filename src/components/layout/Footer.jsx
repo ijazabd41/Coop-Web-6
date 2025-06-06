@@ -246,9 +246,13 @@ const Footer = () => {
                                             <Image src={method?.image} alt={method?.label} width={0} height={0} />
                                         </div>
                                     ))}
-                                    <div className='w-8 h-8 bg-white/[0.24] rounded-sm flex justify-center items-center'>
-                                        {enabledPaymentMethods?.length > 4 && <p>+{enabledPaymentMethods?.length - 4}</p>}
+                                    {
+                                        enabledPaymentMethods?.length > 4 &&
+                                         <div className='w-8 h-8 bg-white/[0.24] rounded-sm flex justify-center items-center'>
+                                         <p>+{enabledPaymentMethods?.length - 4}</p>
                                     </div>
+                                    }
+                                   
                                 </div>
                             </>
                         }

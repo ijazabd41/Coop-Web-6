@@ -35,6 +35,7 @@ import PaystackPop from '@paystack/inline-js'
 import Loader from '../loader/Loader';
 import CheckoutSkeleton from './CheckoutSkeleton';
 
+
 const Checkout = () => {
     const router = useRouter();
     const dispatch = useDispatch();
