@@ -252,7 +252,6 @@ const Footer = () => {
                                          <p>+{enabledPaymentMethods?.length - 4}</p>
                                     </div>
                                     }
-                                   
                                 </div>
                             </>
                         }

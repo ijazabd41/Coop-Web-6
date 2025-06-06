@@ -11,8 +11,8 @@ export default function Document() {
           async
           defer src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_API}&libraries=places&loading=async`}
         ></script>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <body className="antialiased !pointer-events-auto">
         <Main />
         <NextScript />

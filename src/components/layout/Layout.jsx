@@ -119,6 +119,18 @@ const Layout = ({ children }) => {
         "--primary-color",
         setting?.web_settings?.color,
       );
+      if(setting?.favicon){
+        const link =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement('link');
+        const oldLinks = document.querySelectorAll("link[rel*='icon']");
+        oldLinks.forEach((el) => el.parentNode.removeChild(el));
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = setting.favicon;
+        link.sizes = '16x16 32x32 64x64';
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
       document.documentElement.style.setProperty(
         "--light-primary-color",
         setting?.web_settings?.light_color,
