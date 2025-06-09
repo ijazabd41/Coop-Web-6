@@ -26,12 +26,14 @@ export async function getServerSideProps(context) {
     let markUpSchema = "";
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let og_image = null;
+    let favicon = null;
     if (process.env.NEXT_PUBLIC_SEO === "true") {
       const seoData = response.data.data || {};
       metaKeywords = seoData.meta_keywords || metaKeywords;
       metaTitle = seoData.meta_title || metaTitle;
       metaDescription = seoData.meta_description || metaDescription;
-      og_image = seoData.og_image
+      og_image = seoData.og_image;
+      favicon = seoData.favicon || null;
       if (seoData.schema_markup) {
         markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || "";
       }
@@ -43,7 +45,8 @@ export async function getServerSideProps(context) {
         metaTitle,
         metaDescription,
         markUpSchema,
-        og_image
+        og_image,
+        favicon: favicon ? favicon : null,
       },
     };
   } catch (error) {
@@ -60,7 +63,8 @@ const Categories = ({
   metaTitle,
   metaDescription,
   markUpSchema,
-  og_image
+  og_image,
+  favicon
 }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${slug}`;
 
@@ -74,6 +78,7 @@ const Categories = ({
         structuredData={markUpSchema}
         ogUrl={pageUrl}
         ogImage={og_image}
+        favicon={favicon}
         // key={`meta-${slug}`}
       />
       <CategoriesPages />

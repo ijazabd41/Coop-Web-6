@@ -23,6 +23,7 @@ export async function getServerSideProps() {
     let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let ogImage = "";
+    let favicon = null;
     let schemaMarkup = null;
     if (
       process.env.NEXT_PUBLIC_SEO == "true" &&
@@ -33,6 +34,7 @@ export async function getServerSideProps() {
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;
       ogImage = seoData[0].og_image_url;
+      favicon = seoData[0].favicon;
       if (seoData[0].schema_markup) {
         schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup);
       }
@@ -44,6 +46,7 @@ export async function getServerSideProps() {
         keywords: metaKeywords,
         schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
         ogImage: ogImage,
+        favicon: favicon ? favicon : null,
       },
     };
   } catch (error) {
@@ -51,7 +54,7 @@ export async function getServerSideProps() {
   }
 }
 
-const index = ({ title, description, keywords, ogImage, schemaMarkup }) => {
+const index = ({ title, description, keywords, ogImage, schemaMarkup,favicon }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/cancellation-policy`;
   return (
     <div>
@@ -62,6 +65,7 @@ const index = ({ title, description, keywords, ogImage, schemaMarkup }) => {
         keywords={keywords}
         structuredData={schemaMarkup}
         ogImage={ogImage}
+        favicon={favicon}
       />
       <CancellationPolicyPage />
     </div>

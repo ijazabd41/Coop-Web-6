@@ -23,6 +23,7 @@ export async function getServerSideProps() {
     let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
     let ogImage = "";
     let schemaMarkup = null;
+    let favicon = null;
     if (
       process.env.NEXT_PUBLIC_SEO == "true" &&
       response.data.data?.length > 0
@@ -33,6 +34,7 @@ export async function getServerSideProps() {
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;
       ogImage = seoData[0].og_image_url;
+      favicon = seoData[0].favicon;
       if (seoData[0].schema_markup) {
         schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup);
       }
@@ -44,6 +46,7 @@ export async function getServerSideProps() {
         keywords: metaKeywords,
         schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
         ogImage: ogImage,
+        favicon: favicon ? favicon : null,
       },
     };
   } catch (error) {
@@ -51,7 +54,7 @@ export async function getServerSideProps() {
   }
 }
 
-const Products = ({ title, description, keywords, schemaMarkup, ogImage }) => {
+const Products = ({ title, description, keywords, schemaMarkup, ogImage,favicon }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/products`;
 
   return (
@@ -64,6 +67,7 @@ const Products = ({ title, description, keywords, schemaMarkup, ogImage }) => {
         structuredData={schemaMarkup}
         ogImage={ogImage}
         ogUrl={pageUrl}
+        favicon={favicon}
       />
       <ProductsPage />
     </>
