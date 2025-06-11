@@ -12,7 +12,7 @@ import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
 let serverSidePropsFunction = null;
 
-if(process.env.NEXT_PUBLIC_SEO == true){
+if(process.env.NEXT_PUBLIC_SEO == "true"){
   serverSidePropsFunction = async(context) => {
   const { slug } = context.params;
   let isMetadata = false;

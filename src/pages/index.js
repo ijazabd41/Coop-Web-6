@@ -9,7 +9,7 @@ const HomePage = dynamic(() => import("@/components/pagecomponents/Homepage"), {
 
 let serverSidePropsFunction = null;
 
-if(process.env.NEXT_PUBLIC_SEO == true){
+if(process.env.NEXT_PUBLIC_SEO == "true"){
  serverSidePropsFunction = async() => {
   try {
     const response = await axios.get(
@@ -31,6 +31,7 @@ if(process.env.NEXT_PUBLIC_SEO == true){
       response.data.data?.length > 0
     ) {
       const seoData = response.data.data;
+
       metatitle = seoData[0].meta_title;
       metaDescription = seoData[0].meta_description;
       metaKeywords = seoData[0].meta_keyword;

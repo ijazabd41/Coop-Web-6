@@ -12,7 +12,7 @@ import React from "react";
 
 let serverSidePropsFunction = null;
 
-if(process.env.NEXT_PUBLIC_SEO == true){
+if(process.env.NEXT_PUBLIC_SEO == "true"){
 serverSidePropsFunction = async() =>  {
   try {
     const response = await axios.get(
