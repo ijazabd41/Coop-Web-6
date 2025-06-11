@@ -1,6 +1,7 @@
 import React from 'react'
-import WishlistPage from '@/components/pagecomponents/WishlistPage'
+const WishlistPage = dynamic(()=>import("@/components/pagecomponents/WishlistPage"),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const Wishlist = () => {
     return (

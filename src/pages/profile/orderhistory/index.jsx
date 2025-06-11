@@ -1,6 +1,7 @@
 import React from 'react'
-import OrderHistoryPage from '@/components/pagecomponents/OrderHistoryPage'
+const OrderHistoryPage = dynamic(()=>import('@/components/pagecomponents/OrderHistoryPage'),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const OrderHistory = () => {
     return (

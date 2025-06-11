@@ -1,6 +1,7 @@
 import React from 'react'
-import ProfilePage from '@/components/pagecomponents/ProfilePage';
+const ProfilePage = dynamic(()=>import('@/components/pagecomponents/ProfilePage'),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData';
+import dynamic from 'next/dynamic';
 
 const Profile = () => {
     return (

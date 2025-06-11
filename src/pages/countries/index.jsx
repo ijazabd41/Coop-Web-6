@@ -1,5 +1,6 @@
 import MetaData from '@/components/metadata-component/MetaData'
-import CountriesPage from '@/components/pagecomponents/CountriesPage'
+const CountriesPage = dynamic(()=>import('@/components/pagecomponents/CountriesPage'),{ssr:false})
+import dynamic from 'next/dynamic'
 import React from 'react'
 
 const index = () => {

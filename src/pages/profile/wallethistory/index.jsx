@@ -1,5 +1,6 @@
 import MetaData from '@/components/metadata-component/MetaData'
-import WalletHistoryPage from '@/components/pagecomponents/WalletHistoryPage'
+const WalletHistoryPage = dynamic(()=>import('@/components/pagecomponents/WalletHistoryPage'),{ssr:false})
+import dynamic from 'next/dynamic'
 import React from 'react'
 
 const index = () => {

@@ -1,6 +1,7 @@
 import React from 'react'
-import CartPage from '@/components/pagecomponents/CartPage'
+const CartPage = dynamic(()=>import('@/components/pagecomponents/CartPage'),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const index = () => {
     return (

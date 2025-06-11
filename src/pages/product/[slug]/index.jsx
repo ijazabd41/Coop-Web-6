@@ -9,7 +9,11 @@ import MetaData from "@/components/metadata-component/MetaData";
 import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
-export async function getServerSideProps(context) {
+
+let serverSidePropsFunction = null;
+
+if(process.env.NEXT_PUBLIC_SEO == true){
+  serverSidePropsFunction = async(context) => {
   const { slug } = context.params;
   let isMetadata = false;
   try {
@@ -61,6 +65,11 @@ export async function getServerSideProps(context) {
     console.log("error", error);
   }
 }
+}
+
+export const getServerSideProps = serverSidePropsFunction
+
+ 
 
 export default function Index({
   slug,

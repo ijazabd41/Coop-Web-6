@@ -6,7 +6,11 @@ const HomePage = dynamic(() => import("@/components/pagecomponents/Homepage"), {
   ssr: false,
 });
 
-export async function getServerSideProps() {
+
+let serverSidePropsFunction = null;
+
+if(process.env.NEXT_PUBLIC_SEO == true){
+ serverSidePropsFunction = async() => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -48,6 +52,11 @@ export async function getServerSideProps() {
     console.log("error", error);
   }
 }
+}
+
+export const getServerSideProps = serverSidePropsFunction
+
+
 
 export default function Home({
   title,

@@ -8,7 +8,12 @@ import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 import dynamic from "next/dynamic";
 
-export async function getServerSideProps() {
+
+
+let serverSidePropsFunction = null;
+
+if(process.env.NEXT_PUBLIC_SEO == true){
+serverSidePropsFunction = async() =>  {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -53,6 +58,11 @@ export async function getServerSideProps() {
     console.log("error", error);
   }
 }
+}
+
+export const getServerSideProps = serverSidePropsFunction
+
+
 
 const Products = ({ title, description, keywords, schemaMarkup, ogImage,favicon }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/products`;

@@ -1,6 +1,7 @@
 import React from 'react'
-import TransactionHistory from '@/components/pagecomponents/TransactionHistoryPage'
+const TransactionHistory = dynamic(()=>import('@/components/pagecomponents/TransactionHistoryPage'),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const Transaction = () => {
   return (

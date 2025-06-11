@@ -1,5 +1,6 @@
 import MetaData from "@/components/metadata-component/MetaData";
-import NotificationsPage from "@/components/pagecomponents/NotificationsPage";
+const NotificationsPage = dynamic(()=>import("@/components/pagecomponents/NotificationsPage"),{ssr:false})
+import dynamic from "next/dynamic";
 import React from "react";
 
 const Notifications = () => {

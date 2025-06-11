@@ -1,6 +1,7 @@
 import React from 'react'
-import PaymentStatusPage from '@/components/pagecomponents/PaymentStatusPage'
+const PaymentStatusPage = dynamic(()=>import('@/components/pagecomponents/PaymentStatusPage'),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const index = () => {
     return (

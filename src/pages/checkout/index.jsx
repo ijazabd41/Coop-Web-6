@@ -1,6 +1,7 @@
 import React from 'react'
-import CheckoutPage from '@/components/pagecomponents/CheckoutPage'
+const CheckoutPage = dynamic(()=>import("@/components/pagecomponents/CheckoutPage"),{ssr:false})
 import MetaData from '@/components/metadata-component/MetaData'
+import dynamic from 'next/dynamic'
 
 const index = () => {
     return (

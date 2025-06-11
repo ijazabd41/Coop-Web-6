@@ -48,10 +48,13 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                         </div>
                     </SheetTitle>
                 </SheetHeader>
-                <div className='mt-4'>
-                    {couponCodes.map((coupon) => {
+               <div className='mt-4'>
+                    {couponCodes?couponCodes?.map((coupon) => {
                         return <div className='m-4' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode} /></div>
-                    })}
+                    }):
+                    <div className='flex justify-center items-center h-[80vh]'>
+                    <p className=' text-2xl  font-semibold'>{t("no_coupon_code_available")}</p> 
+                    </div>}
                 </div>
             </SheetContent>
         </Sheet>
