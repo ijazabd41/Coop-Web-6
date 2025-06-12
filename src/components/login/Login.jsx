@@ -87,7 +87,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, []);
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
-      if (process.env.NEXT_PUBLIC_APP_DEMO_MODE == "true") {
+      if (process.env.NEXT_PUBLIC_DEMO_MODE == "true") {
         setInputType("number");
         dispatch(setAuthType({ data: "number" }))
         setPhoneNumber(`+919876543210`);
@@ -95,6 +95,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumberWithoutCountryCode("9876543210");
         setOtp("123456");
       }
+      // else if(process.env.NEXT_PUBLIC_DEMO_MODE == "true" && inputType == "email"){
+      //   setInputType("number");
+      //   dispatch(setAuthType({ data: "number" }))
+      //   setPhoneNumber(`+919876543210`);
+      //   setCountryCode(defaultCountry);
+      //   setPhoneNumberWithoutCountryCode("9876543210");
+      //   setOtp("123456");
+      // }
     }
     if (setting?.phone_login == 1) {
       setInputType("number");
