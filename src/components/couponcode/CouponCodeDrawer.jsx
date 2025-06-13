@@ -10,6 +10,8 @@ import { IoIosCloseCircle } from 'react-icons/io';
 import { t } from '@/utils/translation';
 import CouponCodeCard from './CouponCodeCard';
 import { useSelector } from 'react-redux';
+import NoCouponFound from '@/assets/not_found_images/No_Coupon_Code_Found.svg'
+import ImageWithPlaceholder from '../image-with-placeholder/ImageWithPlaceholder';
 
 
 const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
@@ -52,8 +54,9 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                     {couponCodes?couponCodes?.map((coupon) => {
                         return <div className='m-4' key={coupon?.id}> <CouponCodeCard coupon={coupon} setShowCouponCode={setShowCouponCode} /></div>
                     }):
-                    <div className='flex justify-center items-center h-[80vh]'>
-                    <p className=' text-2xl  font-semibold'>{t("no_coupon_code_available")}</p> 
+                    <div className='flex justify-center items-center h-[80vh] flex-col'>
+                    <ImageWithPlaceholder src={NoCouponFound} alt={'Image not found'}/>
+                    <p className=' text-2xl  font-bold'>{t("no_coupon_code_available")}</p> 
                     </div>}
                 </div>
             </SheetContent>

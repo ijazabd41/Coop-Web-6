@@ -518,5 +518,5 @@
   "oops": "Oops!",
   "product_is_either_unavailable_or_does_not_exist": "The product is either unavailable or doesn't exist.",
   "otp_valid_but_user_not_found": " OTP is valid, but no user found with this phone number.",
-  "no_coupon_code_available":"No Coupons Available"
+  "no_coupon_code_available":"No Coupon Codes Available"
 }

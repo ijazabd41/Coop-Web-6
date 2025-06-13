@@ -286,7 +286,7 @@ const ProductDetail = () => {
                 <Link href={"/"} className='px-4 py-2 rounded-md font-medium primaryBackColor text-white'>{t("go_back")}</Link>
             </div> : <>
                 <BreadCrumb />
-                <div className='container px-2 '>
+                <div className='container px-2 mb-6'>
                     <div className='mt-1'>
                         <div className='flex flex-col justify-center'>
                             <div className='grid  grid-cols-1 md:grid-cols-12 mt-2 gap-4 items-start  '>
