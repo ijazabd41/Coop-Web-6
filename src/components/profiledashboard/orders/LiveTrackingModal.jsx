@@ -8,7 +8,7 @@ import { IoIosCloseCircle } from 'react-icons/io'
 import { t } from '@/utils/translation'
 import * as api from "@/api/apiRoutes"
 import {
-    GoogleMap, Marker, useJsApiLoader, Polyline
+    GoogleMap, Marker, Polyline
 } from '@react-google-maps/api';
 import { BiChevronRight, BiPhoneCall } from 'react-icons/bi'
 import { IoLocationOutline } from 'react-icons/io5'

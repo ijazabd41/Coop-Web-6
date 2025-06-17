@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddressPage = dynamic(()=>import('@/components/metadata-component/MetaData'),{ssr:false})
+const AddressPage = dynamic(()=>import('@/components/pagecomponents/AddressPage'),{ssr:false})
 import dynamic from 'next/dynamic'
 import MetaData from '@/components/metadata-component/MetaData'
 const Address = () => {
