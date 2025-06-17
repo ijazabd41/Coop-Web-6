@@ -1,20 +1,30 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
-
+    
     # Show the current request URI in the response
     # ErrorDocument 200 "%{REQUEST_URI}"
     # RewriteRule ^ - [L,R=200]
+    # RewriteRule ^([^/]+)/$ /404.html [L]
+
 
     # Handle Next.js dynamic routes
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^categories/$ /404.html [L]
     RewriteRule ^categories/([^/]+)/?$ /categories/[slug].html [L]
+    
+    RewriteRule ^order-detail/$ /order-detail.html [L]
     RewriteRule ^order-detail/([^/]+)/?$ /order-detail/[orderid].html [L]
+    
+    RewriteRule ^product/$ /products.html [L]
     RewriteRule ^product/([^/]+)/?$ /product/[slug].html [L]
+    
+    RewriteRule ^profile/orderhistory/$ /profile/orderhistory.html [L]
     RewriteRule ^profile/orderhistory/([^/]+)/?$ /profile/orderhistory/[orderid].html [L]
 
     # Handle other static routes
+    RewriteRule ^profile/$ /profile.html [L]
     RewriteRule ^profile/activeorders$ /profile/activeorders.html [L]
     RewriteRule ^profile/address$ /profile/address.html [L]
     RewriteRule ^profile/notifications$ /profile/notifications.html [L]
@@ -45,5 +55,6 @@
     # Fallback for all other routes to index.html
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    # RewriteRule ^$ /index.html [L] 
     RewriteRule ^(.*)$ /index.html [L]
 </IfModule>
