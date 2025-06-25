@@ -77,7 +77,7 @@ const Layout = ({ children }) => {
             }
           } else if (language == null) {
             const langId = response?.data?.find(
-              (lang) => lang?.is_default == 1,
+              (lang) => lang?.is_default == 1
             )?.id;
             const langRes = await api.getSystemLanguages({
               id: langId,
@@ -117,23 +117,23 @@ const Layout = ({ children }) => {
       dispatch(setFavoriteProductIds({ data: setting?.favorite_product_ids }));
       document.documentElement.style.setProperty(
         "--primary-color",
-        setting?.web_settings?.color,
+        setting?.web_settings?.color
       );
-      if(setting?.favicon){
+      if (setting?.favicon) {
         const link =
-        document.querySelector("link[rel*='icon']") ||
-        document.createElement('link');
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement("link");
         const oldLinks = document.querySelectorAll("link[rel*='icon']");
         oldLinks.forEach((el) => el.parentNode.removeChild(el));
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
+        link.type = "image/x-icon";
+        link.rel = "shortcut icon";
         link.href = setting.favicon;
-        link.sizes = '16x16 32x32 64x64';
-        document.getElementsByTagName('head')[0].appendChild(link);
+        link.sizes = "16x16 32x32 64x64";
+        document.getElementsByTagName("head")[0].appendChild(link);
       }
       document.documentElement.style.setProperty(
         "--light-primary-color",
-        setting?.web_settings?.light_color,
+        setting?.web_settings?.light_color
       );
       setLoading(false);
     } catch (error) {

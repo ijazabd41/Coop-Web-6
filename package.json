@@ -1,13 +1,13 @@
 {
   "name": "egrocer-nextjs",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": " node scripts/generator.js && next build"
+    "export": "node scripts/generator.js && next build"
   },
   "dependencies": {
     "@paystack/inline-js": "^2.22.1",
