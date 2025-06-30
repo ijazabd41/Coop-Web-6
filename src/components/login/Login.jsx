@@ -43,7 +43,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
-  const language = useSelector(state => state.Language.selectedLanguage);
+  const language = useSelector((state) => state.Language.selectedLanguage);
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const { auth, app, messaging } = FirebaseData();
   const dispatch = useDispatch();
@@ -72,9 +72,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const [userAuthType, setUserAuthType] = useState("");
   const [showRegister, setShowRegister] = useState(false);
   const [showForgetPassword, setShowForgetPassword] = useState(false);
-  const [phonePassword, setPhonePassword] = useState("")
+  const [phonePassword, setPhonePassword] = useState("");
   const [forgotPasswordType, setForgotPasswordType] = useState("");
-  const [isErrorMessage, setIsErrorMessage] = useState(false)
+  const [isErrorMessage, setIsErrorMessage] = useState(false);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -89,7 +89,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     if (showLogin === true && showRegister === false) {
       if (process.env.NEXT_PUBLIC_DEMO_MODE == "true") {
         setInputType("number");
-        dispatch(setAuthType({ data: "number" }))
+        dispatch(setAuthType({ data: "number" }));
         setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
@@ -106,8 +106,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
     if (setting?.phone_login == 1) {
       setInputType("number");
-    }
-    else if (setting?.email_login == 1) {
+    } else if (setting?.email_login == 1) {
       setInputType("email");
     }
   }, [showLogin]);
@@ -184,7 +183,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setShowRegister(true);
     setInputType(type);
 
-    setError("")
+    setError("");
   };
 
   const handleEmailChange = (value, data) => {
@@ -232,7 +231,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(true);
           setLoading(false);
         } catch (error) {
-          console.log("error", error)
+          console.log("error", error);
           setPhoneNumber();
           setError(error.message);
           setLoading(false);
@@ -241,7 +240,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       } else if (setting?.custom_sms_gateway_otp_based == 1) {
         try {
           const res = await api.sendSms({
-            mobile: phoneNumberWithoutSpaces
+            mobile: phoneNumberWithoutSpaces,
           });
           if (res?.status == 1) {
             setTimer(90);
@@ -296,8 +295,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         });
         if (
           response?.status == 1 &&
-          response?.message ==
-          t("otp_valid_but_user_invalid")
+          response?.message == t("otp_valid_but_user_invalid")
         ) {
           setShowNewUser(true);
           setShowLogin(false);
@@ -331,7 +329,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setIsOTP(false);
           setShowLogin(false);
         } else {
-          toast.error()
+          toast.error();
         }
       } catch (error) {
         console.log("error", error);
@@ -342,7 +340,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const handleFetchSetting = async () => {
     try {
       const res = await api.getSetting();
-      const parsedSetting = JSON.parse(atob(res.data))
+      const parsedSetting = JSON.parse(atob(res.data));
       dispatch(setSetting({ data: parsedSetting }));
     } catch (error) {
       console.log("error", error);
@@ -382,19 +380,28 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   };
 
   const loginApiCall = async (user, id, fcm, type) => {
-    setLoading(true)
+    setLoading(true);
     try {
       dispatch(setAuthId({ data: Uid, type }));
-      const isPhoneAuthPassword = setting?.phone_auth_password == 1 ? true : false;
-      const res = await api.login({ id: id, fcm, type, phoneAuthType: isPhoneAuthPassword, password: phonePassword });
+      const isPhoneAuthPassword =
+        setting?.phone_auth_password == 1 ? true : false;
+      const res = await api.login({
+        id: id,
+        fcm,
+        type,
+        phoneAuthType: isPhoneAuthPassword,
+        password: phonePassword,
+      });
       if (res.status === 1) {
         if (res?.status == 1 && res?.message == "user_deactivated") {
-          toast.error(t("user_deactivated"))
+          toast.error(t("user_deactivated"));
           setLoading(false);
-          setShowLogin(false)
+          setShowLogin(false);
           return;
         } else {
-          const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
+          const tokenSet = await dispatch(
+            setTokenThunk(res?.data?.access_token)
+          );
           await getCurrentUser();
           dispatch(setAuthType({ data: type }));
           if (res?.data?.user?.status == 1) {
@@ -419,18 +426,21 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         }
       } else if (res.message == "user_exist_with_email") {
         toast.error(t("user_exist_with_email"));
-        setLoading(false)
+        setLoading(false);
       } else if (res.message == "user_exist_password_blank") {
-        setIsErrorMessage(t("forget_password_note"))
-        handleShowForgotPassword("phone")
-        setLoading(false)
+        setIsErrorMessage(t("forget_password_note"));
+        handleShowForgotPassword("phone");
+        setLoading(false);
       } else if (res.message == "invalid_password") {
         setError(t("password_not_valid"));
-        setPhonePassword("")
-        setLoading(false)
-      } else if (res.message == "user_not_exist" && isPhoneAuthPassword == true) {
-        setError(t("user_not_exist"))
-        setLoading(false)
+        setPhonePassword("");
+        setLoading(false);
+      } else if (
+        res.message == "user_not_exist" &&
+        isPhoneAuthPassword == true
+      ) {
+        setError(t("user_not_exist"));
+        setLoading(false);
       } else {
         setUserAuthType(type);
         setEmail(user?.providerData?.[0]?.email);
@@ -438,7 +448,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumber(user?.providerData?.[0]?.phoneNumber);
         setShowNewUser(true);
         setShowLogin(false);
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
       console.error("error", error);
@@ -461,7 +471,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   };
 
   const handleShowForgotPassword = (type) => {
-    setPhonePassword("")
+    setPhonePassword("");
     // setShowLogin(false);
     setForgotPasswordType(type);
     setShowForgetPassword(true);
@@ -487,10 +497,15 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       const credentials = GoogleAuthProvider.credentialFromResult(result);
       const user = result?.user;
       dispatch(setAuthType({ data: "google" }));
-      const response = await loginApiCall(user, user?.providerData[0].email, fcmToken, "google");
+      const response = await loginApiCall(
+        user,
+        user?.providerData[0].email,
+        fcmToken,
+        "google"
+      );
     } catch (error) {
       if (error?.message?.includes("auth/popup-closed-by-user")) {
-        toast.error(t("popup_closed_by_user"))
+        toast.error(t("popup_closed_by_user"));
       }
     }
   };
@@ -502,25 +517,27 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       e.preventDefault();
     }
     if (!email || !password) {
-      setError(t("email_password_mandatory"))
+      setError(t("email_password_mandatory"));
       setLoading(false);
-      return
+      return;
     }
     try {
       const res = await api.login({
         id: email,
         type: "email",
         password: password,
-        fcm: fcmToken
+        fcm: fcmToken,
       });
       if (res.status === 1) {
         if (res?.status == 1 && res?.message == "user_deactivated") {
-          toast.error(t("user_deactivated"))
-          setLoading(false)
-          setShowLogin(false)
+          toast.error(t("user_deactivated"));
+          setLoading(false);
+          setShowLogin(false);
           return;
         } else {
-          const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
+          const tokenSet = await dispatch(
+            setTokenThunk(res?.data?.access_token)
+          );
           await getCurrentUser();
           dispatch(setAuthType({ data: "email" }));
           if (res?.data?.user?.status == 1) {
@@ -543,7 +560,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setShowRegister(false);
           setShowLogin(false);
         }
-
       } else {
         setLoading(false);
         if (res.message == "email_not_verified") {
@@ -626,33 +642,34 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       ) {
         setError(t("please_enter_phone_number"));
         setLoading(false);
-        return
+        return;
       } else if (!phonePassword) {
-        setError(t("please_enter_password"))
-        return
+        setError(t("please_enter_password"));
+        return;
       } else {
-        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone")
+        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone");
       }
     } else {
-      handleSendOTP(e)
+      handleSendOTP(e);
     }
-  }
+  };
 
   const renderPhoneInput = () => (
     <>
-      {error ? <p className="text-center text-xs text-red-500 my-2 font-semibold">{error}</p> : <></>
-      }
+      {error ? (
+        <p className="text-center text-xs text-red-500 my-2 font-semibold">
+          {error}
+        </p>
+      ) : (
+        <></>
+      )}
       <form onSubmit={handlePhoneLogin}>
         <div className="flex flex-col gap-4">
           <PhoneInput
             inputStyle={{ direction: language?.type }}
-            country={
-              defaultCountry
-            }
+            country={defaultCountry}
             value={phoneNumber}
-            onChange={(phone, data) =>
-              handlePhoneNoChange(phone, data)
-            }
+            onChange={(phone, data) => handlePhoneNoChange(phone, data)}
             onCountryChange={(code) => setCountryCode(code)}
             inputProps={{
               name: "phone",
@@ -683,7 +700,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   {t("forget_password_?")}
                 </p>
               </div>
-            </form>)}
+            </form>
+          )}
         </div>
         <button
           disabled={loading}
@@ -692,36 +710,39 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         >
           {loading ? t("loading") : t("continue")}
         </button>
-        {setting?.phone_auth_password == 1 &&
+        {setting?.phone_auth_password == 1 && (
           <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
             {t("registerMsg")}
             <p
-              onClick={() => handleShowRegister('number')}
+              onClick={() => handleShowRegister("number")}
               className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
             >
               {t("registerNow")}
             </p>
           </h2>
-        }
+        )}
       </form>
     </>
-  )
+  );
 
   const renderEmailInput = () => (
     <>
-      {error ? <p className="text-center text-xs text-red-500 my-2 font-semibold">{error}</p> : <></>}
+      {error ? (
+        <p className="text-center text-xs text-red-500 my-2 font-semibold">
+          {error}
+        </p>
+      ) : (
+        <></>
+      )}
 
       <form className="relative" onSubmit={handleEmailLogin}>
         <input
           value={email}
-          onChange={(e) =>
-            handleEmailChange(e.target.value, {})
-          }
+          onChange={(e) => handleEmailChange(e.target.value, {})}
           className="border-black border-[1px] py-2 px-4 rounded-sm w-full "
           placeholder={t("email_placeholder")}
           ref={inputRef}
         />
-
         <input
           type={showPassword ? "text" : "password"}
           value={password}
@@ -753,7 +774,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         <h2 className="mt-1 block md:flex justify-start md:justify-center gap-0 md:gap-1 text-base font-medium text-center">
           {t("registerMsg")}
           <p
-            onClick={() => handleShowRegister('email')}
+            onClick={() => handleShowRegister("email")}
             className="primaryColor text-base font-medium underline ml-[2px] cursor-pointer"
           >
             {t("registerNow")}
@@ -761,7 +782,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         </h2>
       </form>
     </>
-  )
+  );
 
   return (
     <>
@@ -769,8 +790,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         <DialogContent className="overflow-y-auto overflow-x-hidden">
           <DialogHeader className="flex justify-between items-center flex-row">
             <div>
-
-              <h1 className='text-3xl font-bold'>{t("login")}</h1>
+              <h1 className="text-3xl font-bold">{t("login")}</h1>
             </div>
             {/* <div className="relative aspect-square object-cover h-[68px] w-[72px]">
               <Image
@@ -796,9 +816,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {t("otp_send_message")}
                       <p className="font-weight-bold py-2">
                         {inputType == "email" ? (
-                          <div className="flex gap-2">{t('email')}: {email}</div>
+                          <div className="flex gap-2">
+                            {t("email")}: {email}
+                          </div>
                         ) : (
-                          <div className="flex gap-2">{t("phone")}: {phoneNumber}</div>
+                          <div className="flex gap-2">
+                            {t("phone")}: {phoneNumber}
+                          </div>
                         )}
                       </p>
                     </span>
@@ -827,7 +851,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   }
                 >
                   <div className="overflow-auto p-0 flex items-center justify-center flex-col ">
-                    {error ? <p className="text-center text-xs text-red-500">{error}</p> : <></>}
+                    {error ? (
+                      <p className="text-center text-xs text-red-500">
+                        {error}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
                     <OtpInput
                       className=" mx-auto items-center flex flex-wrap justify-center p-0"
                       value={otp}
@@ -854,31 +884,32 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {loading == true ? t("loading") : t("login")}
                     </button>
                   </div>
-                  {inputType == "number" && <div className="mt-2 text-center">
-                    <div className="text-base font-medium flex gap-1 justify-center my-2">
-                      <button onClick={handleSendOTP} disabled={otpDisabled}>
-                        {timer === 0 ? (
-                          `Resend OTP`
-                        ) : (
-                          <>
-                            {t("resetOtpIn")} <strong> {formatTime(timer)} </strong>{" "}
-                          </>
-                        )}
-                      </button>
+                  {inputType == "number" && (
+                    <div className="mt-2 text-center">
+                      <div className="text-base font-medium flex gap-1 justify-center my-2">
+                        <button onClick={handleSendOTP} disabled={otpDisabled}>
+                          {timer === 0 ? (
+                            `Resend OTP`
+                          ) : (
+                            <>
+                              {t("resetOtpIn")}{" "}
+                              <strong> {formatTime(timer)} </strong>{" "}
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>}
-
+                  )}
                 </form>
               ) : (
                 <>
-                  <div
-                    className="my-4 flex flex-col gap-2 "
-                  >
+                  <div className="my-4 flex flex-col gap-2 ">
                     {setting?.email_login == 1 && setting?.phone_login == 1 ? (
-                      inputType == "number" ?
+                      inputType == "number" ? (
                         renderPhoneInput()
-                        :
+                      ) : (
                         renderEmailInput()
+                      )
                     ) : setting?.phone_login == 1 ? (
                       renderPhoneInput()
                     ) : setting?.email_login == 1 ? (
@@ -888,10 +919,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     )}
                   </div>
 
-
-
                   {setting?.google_login == 1 &&
-                    (setting?.email_login == 1 || setting?.phone_login == 1) ? (
+                  (setting?.email_login == 1 || setting?.phone_login == 1) ? (
                     <div className="flex items-center justify-between my-4 gap-2">
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                       <span className=" text-[#4B6272] font-bold text-base">
@@ -926,14 +955,16 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       <div className="my-4">
                         <button
                           onClick={() => {
-                            setError("")
-                            setInputType("email")
+                            setError("");
+                            setInputType("email");
                           }}
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
-                          <FaRegEnvelope size={30} className="h-[30px] w-[30px]" />
-                          {" "}
+                          <FaRegEnvelope
+                            size={30}
+                            className="h-[30px] w-[30px]"
+                          />{" "}
                           {t("continue_with_email")}
                         </button>
                       </div>
@@ -952,8 +983,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
-                          <FiPhone size={30} className="h-[30px] w-[30px]" />
-                          {" "}
+                          <FiPhone size={30} className="h-[30px] w-[30px]" />{" "}
                           {t("continue_with_phone")}
                         </button>
                       </div>
@@ -961,7 +991,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   )}
                   <div className="py-6 flex items-center justify-center">
                     <p className=" text-center ">
-                      {t("agreement_updated_message")} {setting?.web_setting?.site_title} {t("terms_of_service")} {t("and")} {t("privacy_policy")}
+                      {t("agreement_updated_message")}{" "}
+                      {setting?.web_setting?.site_title} {t("terms_of_service")}{" "}
+                      {t("and")} {t("privacy_policy")}
                     </p>
                   </div>
                 </>
@@ -969,8 +1001,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             </div>
           </div>
           <div id="recaptcha-container" style={{ display: "none" }}></div>
-        </DialogContent >
-      </Dialog >
+        </DialogContent>
+      </Dialog>
       <NewUserModal
         showNewUser={showNewUser}
         setShowNewUser={setShowNewUser}
