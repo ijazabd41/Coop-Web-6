@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { IoIosCloseCircle } from "react-icons/io";
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes";
+import { useSelector } from "react-redux";
 import {
   GoogleMap,
   Marker,
@@ -20,12 +21,15 @@ const LiveTrackingModal = ({
   setShowLiveTracking,
   order,
 }) => {
+  const setting = useSelector((state) => state.Setting.setting);
   const [map, setMap] = useState(null);
   const [riderLocation, setRiderLocation] = useState();
   const [userLocation, setUserLocation] = useState({
     lat: null,
     lng: null,
   });
+
+  console.log("setting", setting);
 
   const [showOverlay, setShowOverlay] = useState(false);
   const [directions, setDirections] = useState(null);
@@ -78,54 +82,39 @@ const LiveTrackingModal = ({
     setShowLiveTracking(false);
   };
 
-  //   const GOOGLE_MAPS_LIBRARIES = ["places", "geometry"];
-
   useEffect(() => {
     if (riderLocation && userLocation && map) {
-      const directionsService = new window.google.maps.DirectionsService();
-
-      directionsService.route(
-        {
-          origin: riderLocation,
-          destination: userLocation,
-          travelMode: window.google.maps.TravelMode.DRIVING,
-        },
-        (result, status) => {
-          if (status === window.google.maps.DirectionsStatus.OK) {
-            setDirections(result);
-          } else {
-            console.error("Error fetching directions", result);
+      // NOTE: when live location tracking is on
+      if (setting?.enable_road_path_tracking === "1") {
+        const directionsService = new window.google.maps.DirectionsService();
+        directionsService.route(
+          {
+            origin: riderLocation,
+            destination: userLocation,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === window.google.maps.DirectionsStatus.OK) {
+              setDirections(result);
+            } else {
+              console.error("Error fetching directions", result);
+            }
           }
-        }
-      );
+        );
+      }
+      // NOTE: when live location tracking is off
+      else {
+        const bounds = new window.google.maps.LatLngBounds(
+          riderLocation && riderLocation
+        );
+        bounds.extend(riderLocation);
+        bounds.extend(userLocation);
+        map.fitBounds(bounds);
+      }
     }
   }, [riderLocation, userLocation, map]);
 
   const onLoad = useCallback(function callback(map) {
-    // NOTE: when live location tracking is off then use this code
-    // const bounds = new window.google.maps.LatLngBounds(
-    //   riderLocation && riderLocation
-    // );
-    // map.fitBounds(bounds);
-    // setMap(map);
-
-    // NOTE: when live location tracking is on then use this code
-    //   const directionsService = new window.google.maps.DirectionsService();
-
-    //   directionsService.route(
-    //     {
-    //       origin: riderLocation,
-    //       destination: userLocation,
-    //       travelMode: window.google.maps.TravelMode.DRIVING,
-    //     },
-    //     (result, status) => {
-    //       if (status === window.google.maps.DirectionsStatus.OK) {
-    //         setDirections(result);
-    //       } else {
-    //         console.error("Error fetching directions", result);
-    //       }
-    //     }
-    //   );
     setMap(map);
   }, []);
 
@@ -138,14 +127,12 @@ const LiveTrackingModal = ({
     height: "calc(50vh - 100px)",
   };
 
-  // Improved polyline options for better UI (now green for grocery delivery)
   const polylineOptions = {
-    strokeColor: "#16a34a", // Modern green (Tailwind green-600)
+    strokeColor: "#16a34a",
     strokeOpacity: 0.9,
-    strokeWeight: 6, // Thicker for visibility
+    strokeWeight: 6,
     icons: [
       {
-        // Arrow icon to indicate direction
         icon: {
           path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
           scale: 3,
@@ -154,13 +141,10 @@ const LiveTrackingModal = ({
           fillColor: "#16a34a",
           fillOpacity: 1,
         },
-        offset: "50%", // Place arrow in the middle
+        offset: "50%",
       },
     ],
   };
-
-  // Optional: Polyline options for a subtle glow effect (drawn underneath main polyline)
-
 
   return (
     <Dialog open={showLiveTracking}>
@@ -173,45 +157,34 @@ const LiveTrackingModal = ({
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div className="w-full">
-            {/* {isLoaded ?  */}
-
             <div className="relative">
-              {/* <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={riderLocation && riderLocation}
-                zoom={7}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
-              >
-                {riderLocation && userLocation && (
-                  <>
-                    <Marker position={riderLocation}></Marker>
-                    <Marker position={userLocation}></Marker>
-                  </>
-                )}
-                {riderLocation && userLocation && (
-                  <Polyline
-                    path={[riderLocation, userLocation]}
-                    options={polylineOptions}
-                  />
-                )}
-              </GoogleMap> */}
               <GoogleMap
                 mapContainerStyle={containerStyle}
+                center={riderLocation && riderLocation}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
-                zoom={7}
+                zoom={setting?.enable_road_path_tracking === "1" ? 7 : 15}
               >
-                {/* Removed Polyline: only show DirectionsRenderer for the route */}
-                {directions && (
-                  <DirectionsRenderer
-                    directions={directions}
-                    options={{
-                      polylineOptions: polylineOptions,
-                      suppressMarkers: true,
-                    }}
-                  />
-                )}
+                {setting?.enable_road_path_tracking === "1"
+                  ? // NOTE: when live location tracking is on
+                    directions && (
+                      <DirectionsRenderer
+                        directions={directions}
+                        options={{
+                          polylineOptions: polylineOptions,
+                          suppressMarkers: true,
+                        }}
+                      />
+                    )
+                  : // NOTE: when live location tracking is off
+                    riderLocation &&
+                    userLocation && (
+                      <Polyline
+                        path={[riderLocation, userLocation]}
+                        options={polylineOptions}
+                      />
+                    )}
+
                 <Marker
                   position={riderLocation}
                   icon={{
@@ -240,8 +213,6 @@ const LiveTrackingModal = ({
                 </div>
               )}
             </div>
-
-            {/* : null} */}
           </div>
           <div className="w-full pt-4">
             <div className="flex justify-between items-center border-b pb-2">
