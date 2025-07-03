@@ -12,6 +12,7 @@ export const registerUser = async ({
   country_code,
   password,
   phoneAuthType = false,
+  friend_code,
 }) => {
   const formData = new FormData();
   formData.append("name", name);
@@ -30,6 +31,9 @@ export const registerUser = async ({
   }
   if (type === "email" || type === "google" || (type === "phone" && email)) {
     formData.append("email", email);
+  }
+  if (friend_code !== null) {
+    formData.append("friends_code", friend_code);
   }
   const response = await api.post(apiEndPoints.register, formData);
   return response.data;

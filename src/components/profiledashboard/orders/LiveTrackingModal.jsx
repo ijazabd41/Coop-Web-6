@@ -29,8 +29,6 @@ const LiveTrackingModal = ({
     lng: null,
   });
 
-  console.log("setting", setting);
-
   const [showOverlay, setShowOverlay] = useState(false);
   const [directions, setDirections] = useState(null);
 

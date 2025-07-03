@@ -20,6 +20,7 @@
   --brand-bg-color: #F2F5F7;
   --category-card-bg: #fff;
   --nav-button-bg: #8BA2B3;
+  --sub-text-color: #595F65;
 }
 
 .dark {
@@ -51,6 +52,11 @@
 }
 
 @layer utilities {
+
+  .subTextColor{
+    color:var(--sub-text-color)
+  }
+
   .textBackground {
     background-color: var(--font-color);
   }
@@ -154,6 +160,8 @@
   .buttonBorder {
     border: 1px solid var(--button-border-color);
   }
+
+
 
   .bottomBorder {
     border-bottom: 1px solid var(--border-color);

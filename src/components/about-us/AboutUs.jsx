@@ -10,13 +10,16 @@ const AboutUs = () => {
         <div>
           <BreadCrumb />
         </div>
-        <div className="container my-5 bodyBackgroundColor px-1 md:px-0">
-          <div className=" flex flex-col gap-4 rounded p-4 items-center backgroundColor infoContent "
-            dangerouslySetInnerHTML={{
-              __html: setting?.about_us,
-            }}
-          />
-        </div>
+        {setting?.about_us !== "" && (
+          <div className="container my-5 bodyBackgroundColor px-1 md:px-0">
+            <div
+              className=" flex flex-col gap-4 rounded p-4 items-center backgroundColor infoContent "
+              dangerouslySetInnerHTML={{
+                __html: setting?.about_us,
+              }}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
