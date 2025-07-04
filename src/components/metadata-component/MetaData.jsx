@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Head from "next/head";
 const MetaData = ({
   // Basic SEO
@@ -35,8 +36,14 @@ const MetaData = ({
   // PWA
   manifestUrl = "/manifest.json",
   appleTouchIcon = "/favicon.ico",
-  favicon = "/favicon.ico",
+  favicon,
 }) => {
+  const setting = useSelector((state) => state.Setting.setting);
+
+  let finalFavicon =
+    favicon == "" || favicon == undefined ? setting?.favicon : favicon;
+
+
 
   return (
     <Head>
@@ -81,13 +88,12 @@ const MetaData = ({
       {/* PWA */}
       <link rel="manifest" href={manifestUrl} />
       <link rel="apple-touch-icon" href={appleTouchIcon} />
-      <link rel="icon" href={favicon} />
+      <link rel="icon" href={finalFavicon} />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       <meta name="apple-mobile-web-app-title" content={title} />
       <meta name="format-detection" content="telephone=no" />
       <meta name="mobile-web-app-capable" content="yes" />
-
 
       {/* Structured Data */}
       {structuredData && (

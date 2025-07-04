@@ -115,6 +115,7 @@ const Layout = ({ children }) => {
       const setting = JSON.parse(atob(res.data));
       dispatch(setSetting({ data: setting }));
       dispatch(setFavoriteProductIds({ data: setting?.favorite_product_ids }));
+      const themeColor = setting?.web_settings?.color;
       document.documentElement.style.setProperty(
         "--primary-color",
         setting?.web_settings?.color
