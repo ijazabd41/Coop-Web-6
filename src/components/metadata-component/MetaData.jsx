@@ -43,8 +43,6 @@ const MetaData = ({
   let finalFavicon =
     favicon == "" || favicon == undefined ? setting?.favicon : favicon;
 
-  console.log("finalFavicon", finalFavicon);
-
   return (
     <Head>
       {/* Basic SEO */}
@@ -88,7 +86,8 @@ const MetaData = ({
       {/* PWA */}
       <link rel="manifest" href={manifestUrl} />
       <link rel="apple-touch-icon" href={appleTouchIcon} />
-      <link rel="icon" href={finalFavicon} />
+
+      <link rel="icon" href={finalFavicon ? finalFavicon : "/favicon.ico"} />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       <meta name="apple-mobile-web-app-title" content={title} />
