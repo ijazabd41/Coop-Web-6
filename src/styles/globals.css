@@ -445,3 +445,21 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.custom-inner-image-zoom .iiz__img {
+  aspect-ratio: 1/1;
+  max-width: 100%;
+  width: 100%;
+  object-fit: contain;
+  height: 400px;
+  vertical-align: middle;
+}
+
+.custom-inner-image-zoom .iiz__hint {
+  display: none;
+}
+
+.pswp__zoom-wrap img {
+  object-fit: contain;
+  overflow: hidden;
+}

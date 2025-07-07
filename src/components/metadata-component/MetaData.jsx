@@ -43,7 +43,7 @@ const MetaData = ({
   let finalFavicon =
     favicon == "" || favicon == undefined ? setting?.favicon : favicon;
 
-
+  console.log("finalFavicon", finalFavicon);
 
   return (
     <Head>
