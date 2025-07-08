@@ -992,8 +992,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   <div className="py-6 flex items-center justify-center">
                     <p className=" text-center ">
                       {t("agreement_updated_message")}{" "}
-                      {setting?.web_setting?.site_title} {t("terms_of_service")}{" "}
-                      {t("and")} {t("privacy_policy")}
+                      {setting?.web_settings?.site_title}{" "}
+                      {t("terms_of_service")} {t("and")} {t("privacy_policy")}
                     </p>
                   </div>
                 </>

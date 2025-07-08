@@ -27,7 +27,7 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
   };
 
   const handleShare = (platform) => {
-    const message = `Join me and earn rewards! Use my referral code: ${referralCode}`;
+    const message = `${t("join_me_message")}: ${user?.referral_code}`;
     const encodedMessage = encodeURIComponent(message);
 
     switch (platform) {
@@ -63,12 +63,10 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
         </DialogHeader>
         <div className="flex item-center flex-col justify-center text-center gap-2 p-4">
           <DialogTitle className="text-2xl font-bold">
-            Refer and Earn
+            {t("referandearn")}
           </DialogTitle>
           <DialogDescription className="subTextColor leading-relaxed">
-            Share this with friends. Use your referral Code across social media,
-            messaging apps—earn rewards when someone takes action through your
-            Code.
+            {t("share_message")}
           </DialogDescription>
         </div>
 
@@ -93,7 +91,7 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
                 className="bg-[#29363F] text-white px-4 py-2 rounded-lg flex items-center space-x-2  transition-colors"
               >
                 <IoCopy size={16} />
-                <span>{copied ? "Copied!" : "Copy Code"}</span>
+                <span>{copied ? t("copied") : t("copy_code")}</span>
               </button>
             </div>
           </div>
@@ -114,21 +112,21 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
               className="bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors"
             >
               <FaFacebook size={20} />
-              <span>Facebook</span>
+              <span>{t("facebook")}</span>
             </button>
             <button
               onClick={() => handleShare("twitter")}
               className="bg-gray-900 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors"
             >
               <FaTwitter size={20} />
-              <span>Twitter</span>
+              <span>{t("twitter")}</span>
             </button>
             <button
               onClick={() => handleShare("whatsapp")}
               className="bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-600 transition-colors"
             >
               <FaWhatsapp size={20} />
-              <span>WhatsApp</span>
+              <span>{t("whatsapp")}</span>
             </button>
           </div>
         </div>

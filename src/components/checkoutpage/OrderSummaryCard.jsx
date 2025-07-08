@@ -10,6 +10,7 @@ const OrderSummaryCard = ({
   checkoutData,
   handlePlaceOrder,
   checkOutError,
+  checkoutLoading,
 }) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.Setting.setting);
@@ -99,7 +100,7 @@ const OrderSummaryCard = ({
       </div>
       <button
         className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor"
-        disabled={step !== 3}
+        disabled={step !== 3 || checkoutLoading}
         onClick={handlePlaceOrder}
       >
         {t("place_order")}

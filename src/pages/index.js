@@ -25,7 +25,7 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
       let ogImage = "";
       let schemaMarkup = null;
-      let favicon = ""
+      let favicon = "";
       if (
         process.env.NEXT_PUBLIC_SEO == "true" &&
         response.data.data?.length > 0

@@ -59,6 +59,7 @@ const Checkout = () => {
 
   const checkout = useSelector((state) => state.Checkout);
 
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [showStripe, setShowStripe] = useState(false);
@@ -468,6 +469,7 @@ const Checkout = () => {
         toast.error("Please select address");
         return;
       } else {
+        setCheckoutLoading(true);
         const response = await api.placeOrder({
           productVariantId: cart?.checkout?.product_variant_id,
           quantity: cart?.checkout?.quantity,
@@ -490,19 +492,23 @@ const Checkout = () => {
             checkout?.selectedPaymentMethod === "COD" ||
             checkout?.selectedPaymentMethod === "wallet"
           ) {
+            setCheckoutLoading(false);
             await handleInitiateTransaction();
           } else {
             setOrderId(response?.data?.order_id);
+            setCheckoutLoading(false);
             await handleInitiateTransaction(
               response?.data?.order_id,
               capilizePaymeneMethod
             );
           }
         } else {
+          setCheckoutLoading(false);
           toast.error(response?.message);
         }
       }
     } catch (error) {
+      setCheckoutLoading(false);
       console.log("Error", error);
     }
   };
@@ -782,6 +788,7 @@ const Checkout = () => {
                     checkoutData={checkoutData}
                     handlePlaceOrder={handlePlaceOrder}
                     checkOutError={checkOutError}
+                    checkoutLoading={checkoutLoading}
                   />
                 </div>
               </div>

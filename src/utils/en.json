@@ -520,5 +520,12 @@
   "otp_valid_but_user_not_found": " OTP is valid, but no user found with this phone number.",
   "no_coupon_code_available":"No Coupon Codes Available",
   "referandearn":"Refer And Earn",
-  "friend_code":"Friend Code"
+  "friend_code":"Friend Code",
+  "join_me_message":"Join me and earn rewards! Use my referral code",
+  "share_message":" Share this with friends. Use your referral Code across social media messaging apps—earn rewards when someone takes action through your Code.",
+  "copied":"Copied",
+  "copy_code":"Copy Code",
+  "facebook":"Facebook",
+  "twitter":"Twitter",
+  "whatsapp":"WhatsApp"
 }

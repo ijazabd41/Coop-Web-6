@@ -392,7 +392,7 @@ const ProductDetail = () => {
                       {selectVariant?.discounted_price !== 0 &&
                       selectVariant?.discounted_price !==
                         selectVariant?.price ? (
-                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
+                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 absolute text-center uppercase  top-3">
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price
