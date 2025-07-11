@@ -464,3 +464,36 @@ input[type=number] {
   object-fit: cover;
   overflow: hidden;
 }
+
+.pac-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 8px !important; 
+}
+
+.pac-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* .pac-icon-marker {
+  background-image: url('https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png');
+}
+
+.pac-item::before {
+  content: "";
+  background-image: url('https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle;
+} */

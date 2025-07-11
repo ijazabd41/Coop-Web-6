@@ -26,6 +26,9 @@ import { darkThemeStyles } from "@/utils/mapColor";
 import { BsCheckLg } from "react-icons/bs";
 
 const Location = ({ showLocation, setShowLocation }) => {
+
+  
+
   const city = useSelector((state) => state.City);
   const setting = useSelector((state) => state.Setting);
   const theme = useSelector((state) => state.Theme.theme);
