@@ -28,7 +28,7 @@ const getMessagingInstance = async () => {
 
   try {
     const isSupportedBrowser = await isSupported();
-    if (!isSupportedBrowser) {
+    if (isSupportedBrowser) {
       messaging = getMessaging(app);
       return messaging;
     } else {
