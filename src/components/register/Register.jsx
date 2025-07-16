@@ -11,7 +11,7 @@ import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthType } from "@/redux/slices/userSlice";
-import FirebaseData from "@/utils/firebase";
+import { auth } from "@/utils/firebase";
 import { signInWithPhoneNumber } from "firebase/auth";
 
 const Register = ({
@@ -24,7 +24,6 @@ const Register = ({
   setTimer,
   setShowLogin,
 }) => {
-  const { auth, app, messaging } = FirebaseData();
   const dispatch = useDispatch();
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const setting = useSelector((state) => state.Setting.setting);
@@ -47,7 +46,6 @@ const Register = ({
   const [errorType, setErrorType] = useState("");
   const [isPhoneOtp, setIsPhoneOtp] = useState(false);
   const [otp, setOtp] = useState(null);
-
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);

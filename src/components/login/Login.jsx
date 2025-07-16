@@ -30,7 +30,7 @@ import {
   signInWithPopup,
   RecaptchaVerifier,
 } from "firebase/auth";
-import FirebaseData from "@/utils/firebase";
+import { app, auth } from "@/utils/firebase";
 import * as api from "@/api/apiRoutes";
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
 import NewUserModal from "../newusermodal/NewUserModal";
@@ -45,7 +45,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const setting = useSelector((state) => state.Setting.setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
   const fcmToken = useSelector((state) => state.User?.fcm_token);
-  const { auth, app, messaging } = FirebaseData();
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
@@ -95,14 +94,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumberWithoutCountryCode("9876543210");
         setOtp("123456");
       }
-      // else if(process.env.NEXT_PUBLIC_DEMO_MODE == "true" && inputType == "email"){
-      //   setInputType("number");
-      //   dispatch(setAuthType({ data: "number" }))
-      //   setPhoneNumber(`+919876543210`);
-      //   setCountryCode(defaultCountry);
-      //   setPhoneNumberWithoutCountryCode("9876543210");
-      //   setOtp("123456");
-      // }
     }
     if (setting?.phone_login == 1) {
       setInputType("number");

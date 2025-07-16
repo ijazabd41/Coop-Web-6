@@ -527,5 +527,7 @@
   "copy_code":"Copy Code",
   "facebook":"Facebook",
   "twitter":"Twitter",
-  "whatsapp":"WhatsApp"
+  "whatsapp":"WhatsApp",
+  "chat_and_notification_not_supported": "Chat and Notification features are not supported on this browser. For a better user experience, please use our mobile application.",
+  "download_now": "Download Now"
 }
