@@ -22,32 +22,24 @@ const HomePageSlider = ({ slider }) => {
   const slides = slider?.sliders || [];
   const slideCount = slides.length;
 
-  // --- Embla Carousel Setup ---
-
-  // 1. Initialize the Autoplay plugin
   const autoplayPlugin = Autoplay({
     delay: 2500,
     stopOnInteraction: false,
     stopOnMouseEnter: true, // Good UX practice
   });
 
-  // 2. Setup the main Embla hook
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      // Embla Options
-      loop: slideCount > 1, // Looping is more stable in Embla
-      align: "center", // This is the equivalent of Swiper's `centeredSlides`
+      loop: slideCount > 1,
+      align: "center",
       containScroll: "trimSnaps",
       direction: language?.type === "rtl" ? "rtl" : "ltr",
     },
-    [autoplayPlugin] // Pass the plugins in an array
+    [autoplayPlugin]
   );
 
-  // 3. State for custom pagination dots
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
-
-  // --- Event Handlers for Embla ---
 
   const scrollTo = useCallback(
     (index) => emblaApi && emblaApi.scrollTo(index),
@@ -59,18 +51,16 @@ const HomePageSlider = ({ slider }) => {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
-  // 4. Set up the state and event listeners when the carousel is ready
   useEffect(() => {
     if (!emblaApi) return;
     setScrollSnaps(emblaApi.scrollSnapList());
     emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect); // Update on resize, etc.
+    emblaApi.on("reInit", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
 
-  // --- Click Handler for slides ---
   const handleSliderClick = (slide) => {
     if (slide?.type === "slider_url") {
       window.open(slide?.slider_url, "_blank");

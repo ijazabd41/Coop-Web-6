@@ -19,10 +19,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import FirebaseData from "@/utils/firebase";
 
 const DeleteModal = ({ showDelete, setShowDelete }) => {
-  const { auth } = FirebaseData();
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.User);
