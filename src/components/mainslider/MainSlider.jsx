@@ -23,9 +23,9 @@ const HomePageSlider = ({ slider }) => {
   const slideCount = slides.length;
 
   const autoplayPlugin = Autoplay({
-    delay: 2500,
+    delay: 2000,
     stopOnInteraction: false,
-    stopOnMouseEnter: true, // Good UX practice
+    stopOnMouseEnter: true,
   });
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
