@@ -5,14 +5,9 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay"; // Import the autoplay plugin
+import Autoplay from "embla-carousel-autoplay";
 
-import { isRtl } from "@/lib/utils";
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
-
-// You can create a separate CSS file for this or use a <style jsx> block
-// if you prefer. This is the "bring-your-own-styles" part of Embla.
-// For this example, we'll use Tailwind classes directly.
 
 const HomePageSlider = ({ slider }) => {
   const dispatch = useDispatch();
@@ -86,11 +81,9 @@ const HomePageSlider = ({ slider }) => {
         <div className="flex">
           {slides.map((slide, index) => (
             <div
-              className="relative flex-shrink-0 min-w-0"
-              style={{
-                flexBasis: slideCount > 1 ? "66.6666%" : "100%",
-                // paddingLeft: "1rem",
-              }}
+              className={`relative flex-shrink-0 min-w-0 basis-full ${
+                slideCount > 1 ? "md:basis-2/3" : ""
+              }`}
               key={index}
             >
               <div
@@ -100,10 +93,10 @@ const HomePageSlider = ({ slider }) => {
                 <Image
                   src={slide.image_url}
                   alt="Fruit Basket"
-                  priority="false"
+                  priority={index === 0}
                   className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[650px]"
-                  width={0}
-                  height={0}
+                  width={1200}
+                  height={650}
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

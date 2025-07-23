@@ -50,6 +50,20 @@ const OrderSummaryCard = ({
           </span>
         )}
       </div>
+
+      {checkoutData?.additional_charges?.length > 0
+        ? checkoutData?.additional_charges?.map((charge) => {
+            return (
+              <div className="flex justify-between items-center my-2">
+                <span className="">{charge?.title}</span>
+                <span className="font-semibold">
+                  {setting?.currency}
+                  {charge?.amount}
+                </span>
+              </div>
+            );
+          })
+        : null}
       {checkOutError == false && (
         <div className="flex justify-between items-center mb-2">
           <span className="">{t("delivery_charge")}</span>
