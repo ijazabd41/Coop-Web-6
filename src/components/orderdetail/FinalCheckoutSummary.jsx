@@ -33,9 +33,12 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
           </div>
 
           {orderDetail?.additional_charges?.length > 0
-            ? orderDetail?.additional_charges?.map((charge) => {
+            ? orderDetail?.additional_charges?.map((charge, index) => {
                 return (
-                  <div className="flex justify-between items-center my-2">
+                  <div
+                    className="flex justify-between items-center my-2"
+                    key={index}
+                  >
                     <span className="">{charge?.title}</span>
                     <span className="font-semibold">
                       {setting?.currency}
