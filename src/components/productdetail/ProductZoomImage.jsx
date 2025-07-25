@@ -1,70 +1,56 @@
-import { useRef } from "react";
-import InnerImageZoom from "react-inner-image-zoom";
-import { Gallery, Item } from "react-photoswipe-gallery";
-import "react-inner-image-zoom/lib/styles.min.css";
-import "photoswipe/dist/photoswipe.css";
+import React from "react";
+import ReactImageMagnify from "react-image-magnify";
+import { useSelector } from "react-redux";
 import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
-import Image from "next/image";
 
 const ProductZoomImage = ({ image }) => {
-  const buttonRef = useRef(null);
-
-  const handleOpenLightbox = () => {
-    if (buttonRef.current) {
-      buttonRef.current.click();
-    }
-  };
+  const setting = useSelector((state) => state.Setting);
+  const imageSrc = image || setting?.setting?.web_settings?.placeholder_image;
 
   return (
-    <Card className="border-0 shadow-none">
-      <CardContent className="p-2">
-        <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-          <InnerImageZoom
-            src={image || "/assets/images/Durga.png"}
-            zoomSrc={image || "/assets/images/Durga.png"}
-            zoomType="hover"
-            // imgAttributes={{
-            //   alt: data?.heading || "Product image",
-            //   title: data?.heading || "Product image",
-            // }}
-            className="custom-inner-image-zoom"
-          />
-
-          <Button
-            aria-label="Open full image zoom"
-            onClick={handleOpenLightbox}
-            className="absolute bottom-0 right-0 bg-transparent px-4 py-2 text-black shadow-none hover:bg-transparent"
-          >
-            {/* <Image
-              src="/assets/images/Zoom-Icons.png"
-              alt="Open full image zoom"
-              width={0}
-              height={0}
-              className="h-[20px] w-[20px] object-contain"
-            /> */}
-          </Button>
-
-          <Gallery>
-            <Item
-              original={image || "/assets/images/Durga.png"}
-              thumbnail=""
-              width=""
-              height=""
-            >
-              {({ ref, open }) => (
-                <button
-                  aria-label="Zoom"
-                  ref={(node) => {
-                    ref(node);
-                    buttonRef.current = node;
-                  }}
-                  onClick={open}
-                  style={{ display: "none" }}
-                />
-              )}
-            </Item>
-          </Gallery>
+    <Card className="border-0 shadow-none h-full w-full">
+      <CardContent className="p-2 h-full w-full">
+        <div className="flex justify-center items-center h-full">
+          <div className="w-full  h-full ">
+            <ReactImageMagnify
+              {...{
+                smallImage: {
+                  alt: "Product Image",
+                  isFluidWidth: true,
+                  src: imageSrc,
+                },
+                largeImage: {
+                  src: imageSrc,
+                  width: 1000,
+                  height: 1000,
+                },
+                style: {
+                  height: "100%",
+                  width: "100%",
+                },
+                imageClassName: "my-custom-image-class",
+                enlargedImageContainerDimensions: {
+                  width: "200%",
+                  height: "150%",
+                },
+                enlargedImageContainerStyle: {
+                  zIndex: 1000,
+                  width: "300px",
+                  height: "300px",
+                  overflow: "hidden",
+                  zIndex: 999,
+                  backgroundColor: "#fff",
+                  border: "none",
+                },
+                enlargedImagePosition: "beside",
+                lensStyle: {
+                  backgroundColor: "rgba(0, 0, 0, 0.1)",
+                },
+                isHintEnabled: true,
+                hintTextMouse: "Hover to zoom",
+              }}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

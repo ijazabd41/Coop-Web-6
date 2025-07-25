@@ -636,3 +636,14 @@ input[type=number] {
 .pac-container.pac-loading {
  background-color: var(--body-background-color) !important;
 }
+
+.my-custom-image-class{
+aspect-ratio: 3/1;
+max-width: 100%;
+width: 100%;
+object-fit: cover;
+height: 400px !important;
+vertical-align: middle;
+border-radius: 8px;
+
+}
