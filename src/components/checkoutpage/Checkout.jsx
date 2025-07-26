@@ -177,11 +177,13 @@ const Checkout = () => {
     } else {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      return tomorrow.toLocaleDateString("en-US", {
+      const finalDate = tomorrow.toLocaleDateString("en-US", {
         day: "2-digit",
         month: "long",
         year: "numeric",
       });
+      dispatch(setSelectedDate({ data: finalDate }));
+      return finalDate;
     }
   };
 
