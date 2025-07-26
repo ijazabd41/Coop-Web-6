@@ -67,6 +67,17 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
             </div>
           )}
 
+          {orderDetail?.wallet_balance != 0 && (
+            <div className="flex justify-between items-center">
+              <span className="">{t("walletBalance")}</span>
+              <span className="font-semibold">
+                - {setting?.currency}
+                {orderDetail?.wallet_balance?.toFixed(2)}
+              </span>
+            </div>
+          )}
+          {console.log("orderDetail", orderDetail)}
+
           <div className="pt-4 border-t ">
             <div className="flex justify-between items-center">
               <span className="font-bold text-base">

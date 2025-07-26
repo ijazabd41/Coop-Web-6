@@ -46,9 +46,14 @@ const Register = ({
   const [errorType, setErrorType] = useState("");
   const [isPhoneOtp, setIsPhoneOtp] = useState(false);
   const [otp, setOtp] = useState(null);
+  const [friendCode, setFriendCode] = useState(null);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleFriendCodeChange = (e) => {
+    setFriendCode(e.target.value);
   };
 
   const handleShowConfirmPassword = () => {
@@ -274,6 +279,7 @@ const Register = ({
         country_code: countryCode,
         password: password,
         fcm: fcmToken,
+        friend_code: friendCode,
       });
       if (res.status == 1) {
         setIsLoading(false);
@@ -288,6 +294,7 @@ const Register = ({
         setPhoneNumberWithoutCountryCode("");
         setConfirmPassword("");
         setPhoneNumber("");
+        setFriendCode("");
       } else {
         setIsLoading(false);
         // For failed to send verification email
@@ -296,6 +303,7 @@ const Register = ({
         setPassword("");
         setName("");
         setConfirmPassword("");
+        setFriendCode("");
         setPhoneNumber("");
         setPhoneNumberWithoutCountryCode("");
       }
@@ -319,6 +327,7 @@ const Register = ({
     setIsPhoneOtp(false);
     setPassword("");
     setConfirmPassword("");
+    setFriendCode("");
     setShowRegister(false);
     setIsLoading(false);
   };
@@ -472,6 +481,18 @@ const Register = ({
                     <span className="text-xs text-red-500">{error}</span>
                   )}
                 </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="font-bold text-base">{t("friend_code")}</span>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  className="py-2 px-4 cardBorder outline-none rounded-sm disabled:text-gray-400"
+                  placeholder={t("friend_code")}
+                  value={friendCode}
+                  onChange={handleFriendCodeChange}
+                />
               </div>
             </div>
           )}

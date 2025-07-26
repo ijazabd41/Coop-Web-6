@@ -41,6 +41,7 @@ const LiveTrackingModal = ({
         const latitude = parseFloat(res?.data?.latitude);
         const longitude = parseFloat(res?.data?.longitude);
         setRiderLocation({ lat: latitude, lng: longitude });
+        setShowOverlay(false);
       }
     } catch (error) {
       console.log("error", error);

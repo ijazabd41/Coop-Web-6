@@ -167,12 +167,22 @@ const Checkout = () => {
   };
 
   const formatDate = (date) => {
-    if (!date) return t("choose_date");
-    return new Date(date).toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
+    if (timeSlotsData?.time_slots_is_enabled == "true") {
+      if (!date) return t("choose_date");
+      return new Date(date).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    } else {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+    }
   };
 
   const fetchAddress = async () => {
@@ -676,6 +686,7 @@ const Checkout = () => {
                               {t("preferred_delivery_day")}
                               <span className="text-red-500">*</span>
                             </span>
+
                             <Popover open={isPopoverOpen}>
                               <PopoverTrigger
                                 className="cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between "
@@ -684,25 +695,30 @@ const Checkout = () => {
                                 {formatDate(checkout?.selectedDate)}
                                 <FaRegCalendarAlt />
                               </PopoverTrigger>
-                              <PopoverContent className="w-full p-0">
-                                <Calendar
-                                  mode="single"
-                                  selected={checkout?.selectedDate}
-                                  onSelect={handleSelectedDate}
-                                  className="rounded-md w-full"
-                                  fromDate={new Date()}
-                                  toDate={(() => {
-                                    let date = new Date();
-                                    let allowedDays =
-                                      parseInt(
-                                        setting?.setting
-                                          ?.time_slots_allowed_days
-                                      ) || 15;
-                                    date.setDate(date.getDate() + allowedDays);
-                                    return date;
-                                  })()}
-                                />
-                              </PopoverContent>
+                              {timeSlotsData?.time_slots_is_enabled ==
+                                "true" && (
+                                <PopoverContent className="w-full p-0">
+                                  <Calendar
+                                    mode="single"
+                                    selected={checkout?.selectedDate}
+                                    onSelect={handleSelectedDate}
+                                    className="rounded-md w-full"
+                                    fromDate={new Date()}
+                                    toDate={(() => {
+                                      let date = new Date();
+                                      let allowedDays =
+                                        parseInt(
+                                          setting?.setting
+                                            ?.time_slots_allowed_days
+                                        ) || 15;
+                                      date.setDate(
+                                        date.getDate() + allowedDays
+                                      );
+                                      return date;
+                                    })()}
+                                  />
+                                </PopoverContent>
+                              )}
                             </Popover>
                           </div>
                           {timeSlotsData?.time_slots_is_enabled == "true" && (

@@ -92,7 +92,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
-        setOtp("123456");
+        if (inputType != "email") {
+          setOtp("123456");
+        }
       }
     }
     if (setting?.phone_login == 1) {
