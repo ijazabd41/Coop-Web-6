@@ -21,26 +21,20 @@ const ProductZoomImage = ({ image }) => {
                 },
                 largeImage: {
                   src: imageSrc,
-                  width: 1000,
-                  height: 1000,
-                },
-                style: {
-                  height: "100%",
-                  width: "100%",
+                  width: 900,
+                  height: 1200,
                 },
                 imageClassName: "my-custom-image-class",
                 enlargedImageContainerDimensions: {
-                  width: "200%",
+                  width: "220%",
                   height: "150%",
                 },
                 enlargedImageContainerStyle: {
                   zIndex: 1000,
-                  width: "300px",
-                  height: "300px",
                   overflow: "hidden",
-                  zIndex: 999,
                   backgroundColor: "#fff",
                   border: "none",
+                  borderRadius: "12px",
                 },
                 enlargedImagePosition: "beside",
                 lensStyle: {
