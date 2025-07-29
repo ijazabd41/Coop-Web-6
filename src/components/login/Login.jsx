@@ -92,7 +92,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
-        console.log("input type", inputType);
         if (inputType != "email") {
           setOtp("123456");
         }
@@ -953,6 +952,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                           onClick={() => {
                             setError("");
                             setInputType("email");
+                            setOtp(null);
                           }}
                           // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"

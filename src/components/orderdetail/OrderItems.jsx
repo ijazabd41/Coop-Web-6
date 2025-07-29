@@ -53,7 +53,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
           <tr>
             <th className="text-left p-4 border-b ">{t("product")}</th>
             <th className="text-left p-4 border-b ">{t("price")}</th>
-            <th className="text-left p-4 border-b ">{t("total")}</th>
+            {/* <th className="text-left p-4 border-b ">{t("total")}</th> */}
             <th className="text-left p-4 border-b ">{t("action")}</th>
           </tr>
         </thead>
@@ -99,10 +99,10 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                                     {product?.price?.toFixed(2)}
                                 </p>} */}
                 </td>
-                <td className="p-4 font-bold">
+                {/* <td className="p-4 font-bold">
                   {setting?.currency}
                   {product?.sub_total?.toFixed(2)}
-                </td>
+                </td> */}
                 <td className="p-4 ">
                   <div className="flex gap-2 flex-col items-start">
                     {Number(product?.active_status) === 6 &&
