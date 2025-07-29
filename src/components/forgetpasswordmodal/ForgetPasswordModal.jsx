@@ -34,7 +34,10 @@ const ForgetPasswordModal = ({
   const [error, setError] = useState("");
 
   const handleOtpChange = (e) => {
-    setOtp(e.target.value);
+    const value = e.target.value;
+    if (/^\d{0,6}$/.test(value)) {
+      setOtp(value);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -147,9 +150,9 @@ const ForgetPasswordModal = ({
         setLoading(false);
         return true;
       } catch (error) {
-        return false;
         setLoading(false);
         toast.error(t("invalid_otp"));
+        return false;
       }
     } else if (setting?.custom_sms_gateway_otp_based == 1) {
       const mobileNo = phoneNumber?.split(" ")?.[1];
@@ -190,6 +193,7 @@ const ForgetPasswordModal = ({
         otp: otp,
         password: password,
         confirmPassword: confirmPassword,
+        type: forgotPasswordType,
       });
       if (res.status == 1) {
         setConfirmPassword("");
@@ -374,10 +378,13 @@ const ForgetPasswordModal = ({
                   <div className="">
                     <input
                       type="number"
+                      inputMode="numeric"
+                      pattern="\d*"
                       className="py-2 px-4 cardBorder outline-none rounded-sm w-full"
                       placeholder={t("otpPlaceholder")}
                       value={otp}
                       onChange={handleOtpChange}
+                      maxLength={6}
                     />
                   </div>
                 </div>

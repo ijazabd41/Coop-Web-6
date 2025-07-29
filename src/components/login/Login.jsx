@@ -92,6 +92,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setPhoneNumber(`+919876543210`);
         setCountryCode(defaultCountry);
         setPhoneNumberWithoutCountryCode("9876543210");
+        console.log("input type", inputType);
         if (inputType != "email") {
           setOtp("123456");
         }
@@ -563,6 +564,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setError(t("user_does_not_exist"));
           // setInputValue("")
           setPassword("");
+        } else if (res.message == "user_exist_with_email") {
+          toast.error(t("user_exist_with_email"));
         } else {
           setError(t("password_not_valid"));
           // setInputValue("")

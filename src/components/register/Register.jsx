@@ -295,8 +295,17 @@ const Register = ({
         setConfirmPassword("");
         setPhoneNumber("");
         setFriendCode("");
-      } else {
+      } else if (res.message == "user_exist_with_email") {
+        toast.error(t("user_exist_with_email"));
+        setShowRegister(false);
         setIsLoading(false);
+        setPassword("");
+        setName("");
+        setConfirmPassword("");
+        setFriendCode("");
+        setPhoneNumber("");
+        setPhoneNumberWithoutCountryCode("");
+      } else {
         // For failed to send verification email
         toast.error(res.message);
         setShowRegister(false);
@@ -334,7 +343,7 @@ const Register = ({
 
   return (
     <Dialog open={showRegister}>
-      <DialogContent className="overflow-y-auto">
+      <DialogContent className="overflow-y-auto max-h-[90%]">
         <DialogHeader className="flex justify-between flex-row items-center">
           <div className="">
             <h1 className="text-3xl font-bold">{t("register")}</h1>
