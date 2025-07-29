@@ -305,6 +305,16 @@ const Register = ({
         setFriendCode("");
         setPhoneNumber("");
         setPhoneNumberWithoutCountryCode("");
+      } else if (res.message == "email_not_verified") {
+        toast.error(t("email_not_verified"));
+        setShowRegister(false);
+        setIsLoading(false);
+        setPassword("");
+        setName("");
+        setConfirmPassword("");
+        setFriendCode("");
+        setPhoneNumber("");
+        setPhoneNumberWithoutCountryCode("");
       } else {
         // For failed to send verification email
         toast.error(res.message);
