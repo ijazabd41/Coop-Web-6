@@ -533,5 +533,7 @@
   "join_us":"Jois Us Now",
   "collabration_msg":"Collabrate with us as a seller or delivery partner",
   "seller_registration":"As Seller" ,
-  "deliveryboy_registration":"As Delivery Partner"
+  "deliveryboy_registration":"As Delivery Partner",
+  "prev":"Prev",
+  "next":"Next"
 }

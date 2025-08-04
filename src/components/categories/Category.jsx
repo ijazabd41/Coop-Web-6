@@ -9,6 +9,7 @@ import {
   setSelectedCategories,
 } from "@/redux/slices/productFilterSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";
+import { t } from "@/utils/translation";
 
 const Category = () => {
   const dispatch = useDispatch();
@@ -100,11 +101,11 @@ const Category = () => {
               disabled={page === 1}
               className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
                 page === 1
-                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : "bg-white hover:bg-gray-100 text-gray-700"
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "buttonBackground hover:backgroundColor textColor"
               }`}
             >
-              Prev
+              {t("prev")}
             </button>
 
             {Array.from({ length: totalPages }).map((_, idx) => {
@@ -116,7 +117,7 @@ const Category = () => {
                   className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
                     page === pageNumber
                       ? "primaryBackColor text-white primaryBorder"
-                      : "bg-white text-gray-700 hover:bg-gray-100"
+                      : "backgroundColor textColor hover:backgroundColor"
                   }`}
                 >
                   {pageNumber}
@@ -131,11 +132,11 @@ const Category = () => {
               disabled={page === totalPages}
               className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
                 page === totalPages
-                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : "bg-white hover:bg-gray-100 text-gray-700"
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "backgroundColor hover:backgroundColor textColor"
               }`}
             >
-              Next
+              {t("next")}
             </button>
           </div>
         )}
