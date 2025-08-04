@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { setPaymentSetting, setSetting } from "@/redux/slices/settingSlice";
@@ -6,9 +6,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "@/api/apiRoutes";
 import { ToastContainer } from "react-toastify";
-import { setShop } from "@/redux/slices/shopSlice";
 import Loader from "../loader/Loader";
-import Location from "../locationmodal/Location";
 import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import PushNotification from "../firebasenotification/PushNotification";
 import LangFile from "@/utils/en.json";

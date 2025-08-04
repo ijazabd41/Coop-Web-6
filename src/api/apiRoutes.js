@@ -539,13 +539,17 @@ export const placeOrder = async ({
   promocodeId = 0,
   status,
 }) => {
+  let finalPaymentMethod = paymentMethod;
+  if (paymentMethod == "wallet") {
+    finalPaymentMethod = "Wallet";
+  }
   const formData = new FormData();
   formData.append("product_variant_id", productVariantId);
   formData.append("quantity", quantity);
   formData.append("total", total);
   formData.append("delivery_charge", deliveryCharge);
   formData.append("final_total", finalTotal);
-  formData.append("payment_method", paymentMethod);
+  formData.append("payment_method", finalPaymentMethod);
   formData.append("address_id", addressId);
   formData.append("status", status);
 

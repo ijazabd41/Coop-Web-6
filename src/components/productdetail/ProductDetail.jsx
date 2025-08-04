@@ -46,8 +46,11 @@ import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
 import Link from "next/link";
 import ProductZoomImage from "./ProductZoomImage";
+import { useMediaQuery } from "react-responsive";
 
 const ProductDetail = () => {
+  const isMobile = useMediaQuery({ query: "(max-width: 765px)" });
+
   const dispatch = useDispatch();
   const router = useRouter();
   const { slug } = router.query;
@@ -383,12 +386,15 @@ const ProductDetail = () => {
                 <div className="grid  grid-cols-1 md:grid-cols-12 mt-2 gap-4 items-start  ">
                   <div className="col-span-12 md:col-span-4 ">
                     <div className="relative aspect-square h-auto w-full">
-                      {/* <ImageWithPlaceholder
-                        src={selectedImage}
-                        alt={product?.name}
-                        className="h-full w-full aspect-square rounded-sm"
-                      /> */}
-                      <ProductZoomImage image={selectedImage} />
+                      {isMobile ? (
+                        <ImageWithPlaceholder
+                          src={selectedImage}
+                          alt={product?.name}
+                          className="h-full w-full aspect-square rounded-sm"
+                        />
+                      ) : (
+                        <ProductZoomImage image={selectedImage} />
+                      )}
                       {selectVariant?.discounted_price !== 0 &&
                       selectVariant?.discounted_price !==
                         selectVariant?.price ? (

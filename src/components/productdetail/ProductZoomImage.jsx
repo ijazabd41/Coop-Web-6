@@ -9,9 +9,9 @@ const ProductZoomImage = ({ image }) => {
 
   return (
     <Card className="border-0 shadow-none h-full w-full">
-      <CardContent className="p-2 h-full w-full">
+      <CardContent className="p-0 h-full w-full">
         <div className="flex justify-center items-center h-full">
-          <div className="w-full  h-full ">
+          <div className="w-full  h-full custom-img-wrapper">
             <ReactImageMagnify
               {...{
                 smallImage: {
@@ -40,7 +40,6 @@ const ProductZoomImage = ({ image }) => {
                 lensStyle: {
                   backgroundColor: "rgba(0, 0, 0, 0.1)",
                 },
-                isHintEnabled: true,
                 hintTextMouse: "Hover to zoom",
               }}
             />
