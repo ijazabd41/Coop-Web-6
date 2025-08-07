@@ -632,7 +632,7 @@ input[type=number] {
   background-color: var(--swiper-background-color) !important;
 }
 
-/* Loading state background */
+
 .pac-container.pac-loading {
  background-color: var(--body-background-color) !important;
 }

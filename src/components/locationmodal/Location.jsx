@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,16 +23,14 @@ import { setShop } from "@/redux/slices/shopSlice";
 import Loader from "../loader/Loader";
 import { IoIosCloseCircle } from "react-icons/io";
 import { darkThemeStyles } from "@/utils/mapColor";
-import { BsCheckLg } from "react-icons/bs";
 
 const Location = ({ showLocation, setShowLocation }) => {
-
-  
-
   const city = useSelector((state) => state.City);
   const setting = useSelector((state) => state.Setting);
   const theme = useSelector((state) => state.Theme.theme);
   const inputRef = useRef();
+  const inputDomRef = useRef(null);
+  const debounceTimeoutRef = useRef(null);
   const dispatch = useDispatch();
   const [mapView, setMapView] = useState(false);
   const [currLocationClick, setcurrLocationClick] = useState(false);
@@ -41,6 +39,10 @@ const Location = ({ showLocation, setShowLocation }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, seterrorMsg] = useState("");
   const [center, setCenter] = useState();
+  const [inputValue, setInputValue] = useState("");
+  const [resultedPlaces, setResultedPlaces] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const [localLocation, setlocalLocation] = useState({
     city: "",
@@ -65,6 +67,57 @@ const Location = ({ showLocation, setShowLocation }) => {
     };
     setCenter(center);
   }, [localLocation.lat, localLocation.lng]);
+
+  useEffect(() => {
+    const inputEl = inputDomRef.current;
+    if (inputEl) {
+      inputEl.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      if (inputEl) {
+        inputEl.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  }, [resultedPlaces, highlightedIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (value.length > 2) {
+        handleFetchPlaces(value);
+      } else {
+        setResultedPlaces([]);
+      }
+    }, 1000);
+  };
+
+  const handleFetchPlaces = async (input) => {
+    setHighlightedIndex(-1);
+    try {
+      const response = await api.getPlaces({ input: input });
+      if (response.status === 1) {
+        setResultedPlaces(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching places:", error);
+      toast.error("Failed to fetch places");
+    }
+  };
 
   const handleCloseLocation = () => {
     setShowLocation(false);
@@ -129,7 +182,7 @@ const Location = ({ showLocation, setShowLocation }) => {
               max_deliverable_distance: result.data.max_deliverable_distance,
               distance: result.data.distance,
             },
-          }),
+          })
         );
         fetchShop(result.data.latitude, result.data.longitude);
         setShowLocation(false);
@@ -241,6 +294,7 @@ const Location = ({ showLocation, setShowLocation }) => {
       };
     }
   };
+
   const onMarkerDragStart = () => {
     setAddressLoading(true);
   };
@@ -364,7 +418,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                   response.data.max_deliverable_distance,
                 distance: response.data.distance,
               },
-            }),
+            })
           );
           const updatedSetting = {
             ...setting?.setting,
@@ -400,6 +454,54 @@ const Location = ({ showLocation, setShowLocation }) => {
     setLoading(false);
   };
 
+  const handleKeyDown = (e) => {
+    if (!resultedPlaces?.predictions?.length) return;
+    if (e.key === "ArrowDown") {
+      setHighlightedIndex((prev) =>
+        prev < resultedPlaces.predictions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : resultedPlaces.predictions.length - 1
+      );
+    } else if (e.key === "Enter") {
+      if (highlightedIndex >= 0) {
+        const selected = resultedPlaces.predictions[highlightedIndex];
+        handleSelectLocation(selected);
+      }
+    }
+  };
+
+  const handleSelectLocation = (place) => {
+    setInputValue(place.description);
+    setSelectedLocation(place);
+    setResultedPlaces([]);
+    getPlacecDetails(place);
+    setHighlightedIndex(-1);
+  };
+
+  const getPlacecDetails = async (place) => {
+    try {
+      const response = await api.getPlacesDetails({
+        place_id: place.place_id,
+      });
+      if (response.status === 1) {
+        const { lat, lng } = response.data.geometry.location;
+        setlocalLocation({
+          formatted_address: response.data.formatted_address,
+          city: response.data.address_components[0].long_name,
+          lat: parseFloat(lat),
+          lng: parseFloat(lng),
+        });
+        setAddressLoading(false);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log("Error fetching place details:", error);
+    }
+  };
+
   const handleShowModal = () => {
     setShowLocation(false);
     setMapView(false);
@@ -412,7 +514,15 @@ const Location = ({ showLocation, setShowLocation }) => {
       ) : (
         <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
           <DialogOverlay
-            className={`${theme == "light" ? (setting.setting?.default_city == null && city?.city == null ? "bg-white/100" : "bg-white/10") : setting.setting?.default_city == null && city?.city == null ? "bg-black/100" : "bg-black/10"}`}
+            className={`${
+              theme == "light"
+                ? setting.setting?.default_city == null && city?.city == null
+                  ? "bg-white/100"
+                  : "bg-white/10"
+                : setting.setting?.default_city == null && city?.city == null
+                ? "bg-black/100"
+                : "bg-black/10"
+            }`}
           />
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
@@ -453,16 +563,65 @@ const Location = ({ showLocation, setShowLocation }) => {
                     <span className="  font-bold text-base">OR</span>
                     <hr className="flex-grow border-t-2 border-solid border-gray-300" />
                   </div>
-                  <StandaloneSearchBox
-                    onLoad={(ref) => (inputRef.current = ref)}
-                    onPlacesChanged={handlePlaceChanged}
-                  >
+
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <input
+                        ref={inputDomRef}
+                        type="text"
+                        name=""
+                        id=""
+                        value={inputValue}
+                        placeholder={t("select_delivery_location")}
+                        className="w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor"
+                        onFocus={() => {
+                          setcurrLocationClick(false);
+                          setisInputFields(true);
+                        }}
+                        onChange={(event) => {
+                          handleInputChange(event);
+                        }}
+                        onBlur={() => {
+                          setisInputFields(false);
+                        }}
+                      />
+                    </div>
+                    <div className="w-full relative">
+                      {resultedPlaces?.predictions?.length > 0 && (
+                        <div
+                          className="absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-[200px] overflow-y-auto"
+                          role="listbox"
+                        >
+                          {resultedPlaces?.predictions?.map((place, index) => (
+                            <div
+                              role="option"
+                              key={index}
+                              className={`p-2 cursor-pointer transition-colors duration-150 ${
+                                highlightedIndex === index
+                                  ? "bg-blue-500 text-white" // Highlighted style
+                                  : "bg-white hover:bg-gray-100" // Default style
+                              }`}
+                              onClick={() => {
+                                handleSelectLocation(place);
+                              }}
+                            >
+                              {place.description}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3 w-full">
+                  <div className="w-full flex flex-col gap-4">
                     <input
                       type="text"
                       name=""
                       id=""
-                      placeholder={t("select_delivery_location")}
-                      className="w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor"
+                      placeholder={t("search_delivery_location")}
+                      className="w-full p-2 buttonBackground outline-none roundΩed-lg text-sm placeholder:text-left placeholder:textColor py-3"
                       onFocus={() => {
                         setcurrLocationClick(false);
                         setisInputFields(true);
@@ -471,30 +630,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                         setisInputFields(false);
                       }}
                     />
-                  </StandaloneSearchBox>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3 w-full">
-                  <div className="w-full flex flex-col gap-4">
-                    <StandaloneSearchBox
-                      onLoad={(ref) => (inputRef.current = ref)}
-                      onPlacesChanged={handleMoveMarkerOnMap}
-                    >
-                      <input
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder={t("search_delivery_location")}
-                        className="w-full p-2 buttonBackground outline-none roundΩed-lg text-sm placeholder:text-left placeholder:textColor py-3"
-                        onFocus={() => {
-                          setcurrLocationClick(false);
-                          setisInputFields(true);
-                        }}
-                        onBlur={() => {
-                          setisInputFields(false);
-                        }}
-                      />
-                    </StandaloneSearchBox>
+                    {/* </StandaloneSearchBox> */}
                     <GoogleMap
                       streetViewControl={false}
                       tilt={true}
