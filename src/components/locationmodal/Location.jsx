@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogOverlay,
 } from "@/components/ui/dialog";
+import { debounce } from "lodash";
 import { t } from "@/utils/translation";
 import { useSelector } from "react-redux";
 import Image from "next/image";
@@ -29,15 +30,15 @@ const Location = ({ showLocation, setShowLocation }) => {
   const debounceTimeoutRef = useRef(null);
   const dispatch = useDispatch();
   const [mapView, setMapView] = useState(false);
-  const [currLocationClick, setcurrLocationClick] = useState(false);
-  const [isInputFields, setisInputFields] = useState(false);
+  // const [currLocationClick, setcurrLocationClick] = useState(false);
+  // const [isInputFields, setisInputFields] = useState(false);
   const [addressLoading, setAddressLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, seterrorMsg] = useState("");
   const [center, setCenter] = useState();
   const [inputValue, setInputValue] = useState("");
   const [resultedPlaces, setResultedPlaces] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  // const [selectedLocation, setSelectedLocation] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const [localLocation, setlocalLocation] = useState({
@@ -112,31 +113,36 @@ const Location = ({ showLocation, setShowLocation }) => {
       setlocalLocation({ lat: lat, lng: lng });
     });
     const geocoder = new window.google.maps.Geocoder();
-    const response = await geocoder
-      .geocode({
+    try {
+      const response = await geocoder.geocode({
         location: {
           lat: localLocation.lat,
           lng: localLocation.lng,
         },
-      })
-      .then((response) => {
-        if (response.results[0]) {
-          setlocalLocation((state) => ({
-            ...state,
-            formatted_address: response.results[0].formatted_address,
-          }));
-        }
-      })
-      .catch((error) => {
-        console.log("err", error);
       });
 
-    setMapView(true);
+      if (response.results[0]) {
+        setlocalLocation((state) => ({
+          ...state,
+          formatted_address: response.results[0].formatted_address,
+        }));
+      }
+      setMapView(true);
+    } catch (error) {
+      toast.error(t("provided_api_invalid"));
+      console.log("err", error);
+    }
   };
 
-  const handleConfirmLocation = async (latitude, longitude) => {
+  const handleConfirmLocation = async (
+    latitude,
+    longitude,
+    cityName,
+    formattedAddress
+  ) => {
     try {
       if (errorMessage !== "") {
+        setInputValue("");
         toast.error("We are not deliver on this city");
         return;
       }
@@ -149,9 +155,11 @@ const Location = ({ showLocation, setShowLocation }) => {
           setCity({
             data: {
               id: result.data.id,
-              name: localLocation.city,
+              name: cityName ? cityName : localLocation.city,
               state: result.data.state,
-              formatted_address: localLocation.formatted_address,
+              formatted_address: formattedAddress
+                ? formattedAddress
+                : localLocation.formatted_address,
               latitude: result.data.latitude,
               longitude: result.data.longitude,
               min_amount_for_free_delivery:
@@ -167,6 +175,9 @@ const Location = ({ showLocation, setShowLocation }) => {
         );
         fetchShop(result.data.latitude, result.data.longitude);
         setShowLocation(false);
+        setInputValue("");
+        setResultedPlaces([]);
+        setAddressLoading(false);
         seterrorMsg("");
         setMapView(false);
       } else if (result.status == 0) {
@@ -194,40 +205,18 @@ const Location = ({ showLocation, setShowLocation }) => {
     }
   };
 
-  const handleMapClick = async (e) => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
+  const handleMapClick = (e) => {
     const geocoder = new window.google.maps.Geocoder();
-    const response = await geocoder
-      .geocode({
-        location: {
-          lat: e.latLng.lat(),
-          lng: e.latLng.lng(),
-        },
-      })
-      .then(async (res) => {
+    geocoder
+      .geocode({ location: { lat: e.latLng.lat(), lng: e.latLng.lng() } })
+      .then((res) => {
         if (res.results[0]) {
-          const result = await getAvailableCity(res);
-          if (result.status == 1) {
-            setlocalLocation({
-              formatted_address: result?.data?.formatted_address,
-              city: result?.data?.name,
-              lat: res.results[0].geometry.location.lat(),
-              lng: res.results[0].geometry.location.lng(),
-            });
-            setAddressLoading(false);
-            seterrorMsg("");
-          } else {
-            setlocalLocation({
-              city: null,
-              formatted_address: res.results[0].formatted_address,
-              lat: res.results[0].geometry.location.lat(),
-              lng: res.results[0].geometry.location.lng(),
-            });
-            setAddressLoading(false);
-            // setisloading(false);
-            seterrorMsg(res.message);
-          }
+          debouncedGetAvailableCity(
+            res,
+            setlocalLocation,
+            setAddressLoading,
+            seterrorMsg
+          );
         } else {
           toast.error("City not found");
         }
@@ -238,43 +227,51 @@ const Location = ({ showLocation, setShowLocation }) => {
   };
 
   const getAvailableCity = async (response) => {
-    var results = response.results;
-    var c, lc, component;
-    var found = false,
-      message = "";
-    for (var r = 0, rl = results.length; r < 2; r += 1) {
-      var flag = false;
-      var result = results[r];
-      for (c = 0, lc = result.address_components.length; c < 2; c += 1) {
-        component = result.address_components[c];
-        const res = await api.getCity({
-          latitude: result.geometry.location.lat(),
-          longitude: result.geometry.location.lng(),
-        });
-        if (res.status === 1) {
-          flag = true;
-          found = true;
-          return res;
-        } else {
-          // flag = true;
-          found = false;
-          message = res.message;
-        }
-        if (flag === true) {
-          break;
-        }
+    try {
+      const firstResult = response.results[0];
+      if (!firstResult) {
+        return { status: 0, message: "City not found" };
       }
-      if (flag === true) {
-        break;
-      }
-    }
-    if (found === false) {
-      return {
-        status: 0,
-        message: message,
-      };
+
+      const { lat, lng } = firstResult.geometry.location;
+      const res = await api.getCity({
+        latitude: lat(),
+        longitude: lng(),
+      });
+
+      return res;
+    } catch (error) {
+      console.error("Error in getAvailableCity:", error);
+      return { status: 0, message: "Error fetching city" };
     }
   };
+
+  const debouncedGetAvailableCity = debounce(
+    async (res, setlocalLocation, setAddressLoading, seterrorMsg) => {
+      const result = await getAvailableCity(res);
+
+      if (result.status === 1) {
+        setlocalLocation({
+          formatted_address: result?.data?.formatted_address,
+          city: result?.data?.name,
+          lat: res.results[0].geometry.location.lat(),
+          lng: res.results[0].geometry.location.lng(),
+        });
+        setAddressLoading(false);
+        seterrorMsg("");
+      } else {
+        setlocalLocation({
+          city: null,
+          formatted_address: res.results[0].formatted_address,
+          lat: res.results[0].geometry.location.lat(),
+          lng: res.results[0].geometry.location.lng(),
+        });
+        setAddressLoading(false);
+        seterrorMsg(result.message);
+      }
+    },
+    500
+  );
 
   const onMarkerDragStart = () => {
     setAddressLoading(true);
@@ -321,134 +318,20 @@ const Location = ({ showLocation, setShowLocation }) => {
       });
   };
 
-  const handleMoveMarkerOnMap = async (e) => {
-    const places = inputRef.current.getPlaces();
-    const geocoder = new window.google.maps.Geocoder();
-    const place = places[0];
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
-    const response = await geocoder
-      .geocode({
-        location: {
-          lat: lat,
-          lng: lng,
-        },
-      })
-      .then(async (res) => {
-        if (res.results[0]) {
-          const result = await getAvailableCity(res);
-          if (result.status == 1) {
-            setlocalLocation({
-              formatted_address: result?.data?.formatted_address,
-              city: result?.data?.name,
-              lat: res.results[0].geometry.location.lat(),
-              lng: res.results[0].geometry.location.lng(),
-            });
-            setAddressLoading(false);
-            seterrorMsg("");
-          } else {
-            setlocalLocation({
-              city: null,
-              formatted_address: res.results[0].formatted_address,
-              lat: res.results[0].geometry.location.lat(),
-              lng: res.results[0].geometry.location.lng(),
-            });
-            setAddressLoading(false);
-            // setisloading(false);
-            seterrorMsg(res.message);
-          }
-        } else {
-          toast.error("City not found");
-        }
-      })
-      .catch((error) => {
-        console.log("err", error);
-      });
-  };
-
-  const handlePlaceChanged = async (e) => {
-    setLoading(true);
-    const [place] = inputRef.current.getPlaces();
-    try {
-      if (place) {
-        let city_name = place.address_components[0].long_name;
-        let loc_lat = place.geometry.location.lat();
-        let loc_lng = place.geometry.location.lng();
-        let formatted_address = place.formatted_address;
-        const response = await api.getCity({
-          latitude: loc_lat,
-          longitude: loc_lng,
-        });
-        if (response.status === 1) {
-          dispatch(
-            setCity({
-              data: {
-                id: response.data.id,
-                name: city_name,
-                state: response.data.state,
-                formatted_address: formatted_address,
-                latitude: response.data.latitude,
-                longitude: response.data.longitude,
-                min_amount_for_free_delivery:
-                  response.data.min_amount_for_free_delivery,
-                delivery_charge_method: response.data.delivery_charge_method,
-                fixed_charge: response.data.fixed_charge,
-                per_km_charge: response.data.per_km_charge,
-                time_to_travel: response.data.time_to_travel,
-                max_deliverable_distance:
-                  response.data.max_deliverable_distance,
-                distance: response.data.distance,
-              },
-            })
-          );
-          const updatedSetting = {
-            ...setting?.setting,
-            default_city: {
-              id: response?.data?.id,
-              name: city_name,
-              state: response?.data?.name,
-              formatted_address: formatted_address,
-              latitude: response?.data?.latitude,
-              longitude: response?.data?.longitude,
-            },
-          };
-          dispatch(setSetting({ data: updatedSetting }));
-          setLoading(false);
-          setShowLocation(false);
-        } else if (response.status == 0) {
-          setLoading(false);
-          toast.error(t("We_doesn't_deliver_at_selected_city"));
-          setShowLocation(true);
-        } else {
-          setLoading(false);
-          seterrorMsg(res.message);
-        }
-      } else {
-        toast.error("Location not found !");
-        setShowLocation(true);
-        setLoading(false);
-      }
-    } catch (e) {
-      toast.error("Location not found!");
-      console.log(e);
-    }
-    setLoading(false);
-  };
-
   const handleKeyDown = (e) => {
-    if (!resultedPlaces?.predictions?.length) return;
+    if (!resultedPlaces?.suggestions?.length) return;
     if (e.key === "ArrowDown") {
       setHighlightedIndex((prev) =>
-        prev < resultedPlaces.predictions.length - 1 ? prev + 1 : 0
+        prev < resultedPlaces.suggestions?.length - 1 ? prev + 1 : 0
       );
     } else if (e.key === "ArrowUp") {
       setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : resultedPlaces.predictions.length - 1
+        prev > 0 ? prev - 1 : resultedPlaces?.suggestions?.length - 1
       );
     } else if (e.key === "Enter") {
       if (highlightedIndex >= 0) {
-        const selected = resultedPlaces.predictions[highlightedIndex];
-        handleSelectLocation(selected);
+        const selected = resultedPlaces?.suggestions[highlightedIndex];
+        handleSelectLocation(selected?.placePrediction);
       }
     }
   };
@@ -471,7 +354,7 @@ const Location = ({ showLocation, setShowLocation }) => {
   const handleSelectLocation = (place) => {
     const description = `${place.structuredFormat.mainText.text}, ${place.structuredFormat.secondaryText.text}`;
     setInputValue(description);
-    setSelectedLocation(place);
+    // setSelectedLocation(place);
     setResultedPlaces([]);
     getPlacecDetails(place);
     setHighlightedIndex(-1);
@@ -480,23 +363,30 @@ const Location = ({ showLocation, setShowLocation }) => {
   const getPlacecDetails = async (place) => {
     try {
       const response = await api.getPlacesDetails({
-        place_id: place.placeId,
+        placeId: place.placeId,
       });
 
       if (response.status === 1) {
         const { latitude, longitude } = response?.data?.location;
-
+        let cityName = response.data.addressComponents?.[0].longText;
+        let formattedAddress = response.data.formattedAddress;
         setlocalLocation({
           formatted_address: response.data.formattedAddress,
-          city: response.data.address_components[0].long_name,
+          city: response.data.addressComponents?.[0].longText,
           lat: parseFloat(latitude),
           lng: parseFloat(longitude),
         });
-        await handleConfirmLocation(latitude, longitude);
+        await handleConfirmLocation(
+          latitude,
+          longitude,
+          cityName,
+          formattedAddress
+        );
         setAddressLoading(false);
       } else {
         // toast.error(response.message);
-        seterrorMsg(res.message);
+        setInputValue("");
+        seterrorMsg(response.message);
       }
     } catch (error) {
       console.log("Error fetching place details:", error);
@@ -576,14 +466,14 @@ const Location = ({ showLocation, setShowLocation }) => {
                         placeholder={t("select_delivery_location")}
                         className="w-full p-2 buttonBackground outline-none rounded-lg text-sm placeholder:text-center placeholder:textColor"
                         onFocus={() => {
-                          setcurrLocationClick(false);
-                          setisInputFields(true);
+                          // setcurrLocationClick(false);
+                          // setisInputFields(true);
                         }}
                         onChange={(event) => {
                           handleInputChange(event);
                         }}
                         onBlur={() => {
-                          setisInputFields(false);
+                          // setisInputFields(false);
                         }}
                       />
                     </div>
@@ -593,35 +483,27 @@ const Location = ({ showLocation, setShowLocation }) => {
                           className="absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-[200px] overflow-y-auto"
                           role="listbox"
                         >
-                          {resultedPlaces?.data?.suggestions?.map(
-                            (item, index) => (
-                              <div
-                                role="option"
-                                key={index}
-                                className={`p-2 cursor-pointer transition-colors duration-150 ${
-                                  highlightedIndex === index
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white hover:bg-gray-100"
-                                }`}
-                                onClick={() =>
-                                  handleSelectLocation(item.placePrediction)
+                          {resultedPlaces?.suggestions?.map((item, index) => (
+                            <div
+                              role="option"
+                              key={index}
+                              className={`p-2 cursor-pointer transition-colors duration-150 ${
+                                highlightedIndex === index
+                                  ? "bg-blue-500 text-white"
+                                  : "bg-white hover:bg-gray-100"
+                              }`}
+                              onClick={() =>
+                                handleSelectLocation(item.placePrediction)
+                              }
+                            >
+                              <div className="font-medium">
+                                {
+                                  item?.placePrediction.structuredFormat
+                                    .mainText.text
                                 }
-                              >
-                                <div className="font-medium">
-                                  {
-                                    item.placePrediction.structuredFormat
-                                      .mainText.text
-                                  }
-                                </div>
-                                {/* <div className="text-sm text-gray-500">
-                                  {
-                                    item.placePrediction.structuredFormat
-                                      .secondaryText.text
-                                  }
-                                </div> */}
                               </div>
-                            )
-                          )}
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
@@ -674,7 +556,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                     </p>
                   </div>
                   <button
-                    onClick={handleConfirmLocation}
+                    onClick={() => handleConfirmLocation()}
                     className="w-full primaryBorder p-1 rounded-lg"
                   >
                     {t("confirm")}

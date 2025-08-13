@@ -84,33 +84,33 @@ const LiveTrackingModal = ({
   useEffect(() => {
     if (riderLocation && userLocation && map) {
       // NOTE: when live location tracking is on
-      if (setting?.enable_road_path_tracking === "1") {
-        const directionsService = new window.google.maps.DirectionsService();
-        directionsService.route(
-          {
-            origin: riderLocation,
-            destination: userLocation,
-            travelMode: window.google.maps.TravelMode.DRIVING,
-          },
-          (result, status) => {
-            if (status === window.google.maps.DirectionsStatus.OK) {
-              setDirections(result);
-            } else {
-              console.error("Error fetching directions", result);
-            }
-          }
-        );
-      }
-      // NOTE: when live location tracking is off
-      else {
-        const bounds = new window.google.maps.LatLngBounds(
-          riderLocation && riderLocation
-        );
-        bounds.extend(riderLocation);
-        bounds.extend(userLocation);
-        map.fitBounds(bounds);
-      }
+      // if (setting?.enable_road_path_tracking === "1") {
+      //   const directionsService = new window.google.maps.DirectionsService();
+      //   directionsService.route(
+      //     {
+      //       origin: riderLocation,
+      //       destination: userLocation,
+      //       travelMode: window.google.maps.TravelMode.DRIVING,
+      //     },
+      //     (result, status) => {
+      //       if (status === window.google.maps.DirectionsStatus.OK) {
+      //         setDirections(result);
+      //       } else {
+      //         console.error("Error fetching directions", result);
+      //       }
+      //     }
+      //   );
+      // }
+      // // NOTE: when live location tracking is off
+      // else {
+      const bounds = new window.google.maps.LatLngBounds(
+        riderLocation && riderLocation
+      );
+      bounds.extend(riderLocation);
+      bounds.extend(userLocation);
+      map.fitBounds(bounds);
     }
+    // }
   }, [riderLocation, userLocation, map]);
 
   const onLoad = useCallback(function callback(map) {
@@ -162,9 +162,9 @@ const LiveTrackingModal = ({
                 center={riderLocation && riderLocation}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
-                zoom={setting?.enable_road_path_tracking === "1" ? 7 : 15}
+                zoom={15}
               >
-                {setting?.enable_road_path_tracking === "1"
+                {/* {setting?.enable_road_path_tracking === "1"
                   ? // NOTE: when live location tracking is on
                     directions && (
                       <DirectionsRenderer
@@ -175,14 +175,13 @@ const LiveTrackingModal = ({
                         }}
                       />
                     )
-                  : // NOTE: when live location tracking is off
-                    riderLocation &&
-                    userLocation && (
-                      <Polyline
-                        path={[riderLocation, userLocation]}
-                        options={polylineOptions}
-                      />
-                    )}
+                  : // NOTE: when live location tracking is off */}
+                {riderLocation && userLocation && (
+                  <Polyline
+                    path={[riderLocation, userLocation]}
+                    options={polylineOptions}
+                  />
+                )}
 
                 <Marker
                   position={riderLocation}

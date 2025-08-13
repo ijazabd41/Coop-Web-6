@@ -535,5 +535,6 @@
   "seller_registration":"As Seller" ,
   "deliveryboy_registration":"As Delivery Partner",
   "prev":"Prev",
-  "next":"Next"
+  "next":"Next",
+  "provided_api_invalid":"The provided API key is invalid."
 }

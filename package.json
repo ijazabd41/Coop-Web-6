@@ -35,6 +35,7 @@
     "embla-carousel-react": "^8.6.0",
     "firebase": "11.1.0",
     "globby": "^14.1.0",
+    "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.461.0",
     "next": "^14.2.5",
@@ -67,5 +68,10 @@
     "eslint-config-next": "14.2.18",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
+  },
+  "overrides": {
+    "react-image-magnify": {
+      "react": "^18.3.1"
+    }
   }
 }
