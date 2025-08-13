@@ -9,11 +9,7 @@ import { t } from "@/utils/translation";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { FaLocationCrosshairs } from "react-icons/fa6";
-import {
-  StandaloneSearchBox,
-  GoogleMap,
-  MarkerF,
-} from "@react-google-maps/api";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import * as api from "@/api/apiRoutes";
 import { setSetting } from "@/redux/slices/settingSlice";
 import { setCity } from "@/redux/slices/citySlice";
@@ -104,21 +100,6 @@ const Location = ({ showLocation, setShowLocation }) => {
     }, 1000);
   };
 
-  const handleFetchPlaces = async (input) => {
-    setHighlightedIndex(-1);
-    try {
-      const response = await api.getPlaces({ input: input });
-      if (response.status === 1) {
-        setResultedPlaces(response.data);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      console.error("Error fetching places:", error);
-      toast.error("Failed to fetch places");
-    }
-  };
-
   const handleCloseLocation = () => {
     setShowLocation(false);
     setMapView(false);
@@ -153,15 +134,15 @@ const Location = ({ showLocation, setShowLocation }) => {
     setMapView(true);
   };
 
-  const handleConfirmLocation = async () => {
+  const handleConfirmLocation = async (latitude, longitude) => {
     try {
       if (errorMessage !== "") {
         toast.error("We are not deliver on this city");
         return;
       }
       const result = await api.getCity({
-        latitude: localLocation.lat,
-        longitude: localLocation.lng,
+        latitude: latitude ? latitude : localLocation.lat,
+        longitude: longitude ? longitude : localLocation.lng,
       });
       if (result?.status == 1) {
         dispatch(
@@ -472,8 +453,24 @@ const Location = ({ showLocation, setShowLocation }) => {
     }
   };
 
+  const handleFetchPlaces = async (input) => {
+    setHighlightedIndex(-1);
+    try {
+      const response = await api.getPlaces({ input: input });
+      if (response.status === 1) {
+        setResultedPlaces(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching places:", error);
+      toast.error("Failed to fetch places");
+    }
+  };
+
   const handleSelectLocation = (place) => {
-    setInputValue(place.description);
+    const description = `${place.structuredFormat.mainText.text}, ${place.structuredFormat.secondaryText.text}`;
+    setInputValue(description);
     setSelectedLocation(place);
     setResultedPlaces([]);
     getPlacecDetails(place);
@@ -483,19 +480,23 @@ const Location = ({ showLocation, setShowLocation }) => {
   const getPlacecDetails = async (place) => {
     try {
       const response = await api.getPlacesDetails({
-        place_id: place.place_id,
+        place_id: place.placeId,
       });
+
       if (response.status === 1) {
-        const { lat, lng } = response.data.geometry.location;
+        const { latitude, longitude } = response?.data?.location;
+
         setlocalLocation({
-          formatted_address: response.data.formatted_address,
+          formatted_address: response.data.formattedAddress,
           city: response.data.address_components[0].long_name,
-          lat: parseFloat(lat),
-          lng: parseFloat(lng),
+          lat: parseFloat(latitude),
+          lng: parseFloat(longitude),
         });
+        await handleConfirmLocation(latitude, longitude);
         setAddressLoading(false);
       } else {
-        toast.error(response.message);
+        // toast.error(response.message);
+        seterrorMsg(res.message);
       }
     } catch (error) {
       console.log("Error fetching place details:", error);
@@ -587,27 +588,40 @@ const Location = ({ showLocation, setShowLocation }) => {
                       />
                     </div>
                     <div className="w-full relative">
-                      {resultedPlaces?.predictions?.length > 0 && (
+                      {resultedPlaces?.suggestions?.length > 0 && (
                         <div
                           className="absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-[200px] overflow-y-auto"
                           role="listbox"
                         >
-                          {resultedPlaces?.predictions?.map((place, index) => (
-                            <div
-                              role="option"
-                              key={index}
-                              className={`p-2 cursor-pointer transition-colors duration-150 ${
-                                highlightedIndex === index
-                                  ? "bg-blue-500 text-white" // Highlighted style
-                                  : "bg-white hover:bg-gray-100" // Default style
-                              }`}
-                              onClick={() => {
-                                handleSelectLocation(place);
-                              }}
-                            >
-                              {place.description}
-                            </div>
-                          ))}
+                          {resultedPlaces?.data?.suggestions?.map(
+                            (item, index) => (
+                              <div
+                                role="option"
+                                key={index}
+                                className={`p-2 cursor-pointer transition-colors duration-150 ${
+                                  highlightedIndex === index
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-white hover:bg-gray-100"
+                                }`}
+                                onClick={() =>
+                                  handleSelectLocation(item.placePrediction)
+                                }
+                              >
+                                <div className="font-medium">
+                                  {
+                                    item.placePrediction.structuredFormat
+                                      .mainText.text
+                                  }
+                                </div>
+                                {/* <div className="text-sm text-gray-500">
+                                  {
+                                    item.placePrediction.structuredFormat
+                                      .secondaryText.text
+                                  }
+                                </div> */}
+                              </div>
+                            )
+                          )}
                         </div>
                       )}
                     </div>
@@ -616,7 +630,7 @@ const Location = ({ showLocation, setShowLocation }) => {
               ) : (
                 <div className="flex flex-col gap-3 w-full">
                   <div className="w-full flex flex-col gap-4">
-                    <input
+                    {/* <input
                       type="text"
                       name=""
                       id=""
@@ -629,8 +643,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                       onBlur={() => {
                         setisInputFields(false);
                       }}
-                    />
-                    {/* </StandaloneSearchBox> */}
+                    /> */}
                     <GoogleMap
                       streetViewControl={false}
                       tilt={true}
