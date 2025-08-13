@@ -162,14 +162,14 @@ export const deleteUser = async ({ uid = null }) => {
 
 // Location api's
 export const getPlaces = async ({ input }) => {
-  const params = { input: input };
+  const params = { input: input, source: "web" };
 
   const response = await api.get(apiEndPoints.getPlaces, { params });
   return response.data;
 };
 
 export const getPlacesDetails = async ({ placeId }) => {
-  const params = { place_id: placeId };
+  const params = { place_id: placeId, source: "web" };
   const response = await api.get(apiEndPoints.getPlacecDetails, { params });
   return response.data;
 };
