@@ -350,7 +350,7 @@ const ProductDetail = () => {
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`
     );
     toast.success(t("link_copied_to_clipboard"));
   };
@@ -764,17 +764,17 @@ const ProductDetail = () => {
                       </span>
                       <div className="flex gap-3">
                         <WhatsappShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
                         >
                           <WhatsappIcon className="h-8 w-8 rounded-full" />
                         </WhatsappShareButton>
                         <TwitterShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
                         >
                           <TwitterIcon className="h-8 w-8 rounded-full" />
                         </TwitterShareButton>
                         <FacebookShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
                         >
                           <FacebookIcon className="h-8 w-8 rounded-full" />
                         </FacebookShareButton>
