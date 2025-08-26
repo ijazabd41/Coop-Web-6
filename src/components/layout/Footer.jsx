@@ -107,11 +107,11 @@ const Footer = () => {
             <p className="w-full">{t("collabration_msg")}</p>
           </div>
           <div className="col-span-6 w-full flex justify-start gap-3 md:justify-end">
-            <div className="col-span-3 hidden order-3 justify-end lg:flex  h-full gap-2">
+            <div className="col-span-3 order-3 justify-end flex   h-full gap-2">
               <Link
                 href={`${process.env.NEXT_PUBLIC_API_URL}/seller/login`}
                 target="__blank"
-                className="px-3  flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none primaryBackColor gap-2 text-base"
+                className="px-1 md:px-4  flex items-center justify-center font-medium text-white  rounded shadow-sm focus:outline-none primaryBackColor gap-2 text-base"
               >
                 <IoStorefrontOutline size={22} />
                 {t("seller_registration")}

@@ -78,6 +78,31 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                         {t("return_requested")}
                       </button>
                     )}
+                    {Number(product?.return_requested) === 4 && (
+                      <button className="text-[#0DCaf0]">
+                        {t("delivery_boy_assinged")}
+                      </button>
+                    )}
+                    {Number(product?.return_requested) === 5 && (
+                      <button className="text-[#0d6efd]">
+                        {t("deliver_boy_out_for_pickup")}
+                      </button>
+                    )}
+                    {Number(product?.return_requested) === 6 && (
+                      <button className="text-[#6C757D]">
+                        {t("item_received_from_customer")}
+                      </button>
+                    )}
+                    {Number(product?.return_requested) === 7 && (
+                      <button className="text-[#DB3D26]">
+                        {t("return_request_cancel_by_delivery_boy")}
+                      </button>
+                    )}
+                    {Number(product?.return_requested) === 8 && (
+                      <button className="text-[#212529]">
+                        {t("item_returned_to_seller")}
+                      </button>
+                    )}
                     {Number(product?.active_status) === 8 && (
                       <button className="text-[#DB3D26]">
                         {t("returned")}

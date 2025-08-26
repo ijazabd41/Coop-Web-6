@@ -536,5 +536,10 @@
   "deliveryboy_registration":"As Delivery Partner",
   "prev":"Prev",
   "next":"Next",
-  "provided_api_invalid":"The provided API key is invalid."
+  "provided_api_invalid":"The provided API key is invalid.",
+  "delivery_boy_assinged":"Delivery boy assigned",
+  "deliver_boy_out_for_pickup":"Delivery boy out for pickup",
+  "item_received_from_customer":"Item received from customer",
+  "item_returned_to_seller":"Item returned to seller",
+  "return_request_cancel_by_delivery_boy":"Return request cancelled by delivery boy"
 }
