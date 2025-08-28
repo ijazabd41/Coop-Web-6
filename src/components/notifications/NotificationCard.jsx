@@ -17,13 +17,15 @@ const NotificationCard = ({ notification }) => {
       router.push("/products");
     } else if (notification?.type === "product") {
       router.push(`/products/${notification?.type_id}`);
+    } else if (notification?.type === "url") {
+      window.open(notification?.link_url, "_blank");
     }
     return;
   };
 
   return (
     <div className="flex flex-row flex-wrap justify-start sm:justify-center items-center border border-b-1 p-4 gap-4 sm:p-8 sm:flex-nowrap">
-      <div className="rounded w-12 h-12 p-2 primaryBackColor">
+      <div className=" ">
         {notification?.image_url !== "" ? (
           <Image
             src={notification?.image_url}
@@ -31,9 +33,13 @@ const NotificationCard = ({ notification }) => {
             loading="lazy"
             height={0}
             width={0}
+            className="h-12 w-12"
           />
         ) : (
-          <FaRegBell className="text-white" size={30} />
+          <FaRegBell
+            className="text-white primaryBackColor rounded w-12 h-12 p-2"
+            size={30}
+          />
         )}
       </div>
       <div className="w-full flex flex-col gap-2">
