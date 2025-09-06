@@ -38,6 +38,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import Register from "../register/Register";
 import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
+import Link from "next/link";
 
 export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
@@ -986,10 +987,22 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                     </>
                   )}
                   <div className="py-6 flex items-center justify-center">
-                    <p className=" text-center ">
+                    <p className="text-center">
                       {t("agreement_updated_message")}{" "}
                       {setting?.web_settings?.site_title}{" "}
-                      {t("terms_of_service")} {t("and")} {t("privacy_policy")}
+                      <Link
+                        href="/terms-and-conditions"
+                        className="text-blue-600 underline hover:text-blue-800"
+                      >
+                        {t("terms_of_service")}
+                      </Link>{" "}
+                      {t("and")}{" "}
+                      <Link
+                        href="/privacy-policy"
+                        className="text-blue-600 underline hover:text-blue-800"
+                      >
+                        {t("privacy_policy")}
+                      </Link>
                     </p>
                   </div>
                 </>

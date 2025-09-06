@@ -174,6 +174,7 @@ const Products = () => {
 
   const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
+
   return (
     <section>
       <div>

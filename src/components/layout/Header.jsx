@@ -310,12 +310,22 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
-                  <IoLanguage />{" "}
-                  {language?.selectedLanguage
-                    ? language?.selectedLanguage?.name
-                    : "English"}
-                </DropdownMenuTrigger>
+                {language?.availableLanguages?.length > 1 ? (
+                  <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
+                    <IoLanguage />{" "}
+                    {language?.selectedLanguage
+                      ? language?.selectedLanguage?.name
+                      : "English"}
+                  </DropdownMenuTrigger>
+                ) : (
+                  <button className="w-[100px] border-none flex items-center gap-2 justify-center">
+                    <IoLanguage />{" "}
+                    {language?.selectedLanguage
+                      ? language?.selectedLanguage?.name
+                      : "English"}
+                  </button>
+                )}
+
                 <DropdownMenuContent className="w-[100px] ">
                   {language?.availableLanguages &&
                     language?.availableLanguages?.map((language) => {
@@ -429,8 +439,12 @@ const Header = () => {
                     <span className="text-base font-bold">
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
-                        ? cart?.guestCartTotal?.toFixed(2)
-                        : cart?.cartSubTotal?.toFixed(2)}
+                        ? cart?.guestCartTotal?.toFixed(
+                            setting?.decimal_point ? setting?.decimal_point : 0
+                          )
+                        : cart?.cartSubTotal?.toFixed(
+                            setting?.decimal_point ? setting?.decimal_point : 0
+                          )}
                     </span>
                   </div>
                 </div>

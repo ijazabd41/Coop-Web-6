@@ -118,7 +118,9 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                 <td className="p-4">
                   <p className="font-bold">
                     {setting?.currency}
-                    {product?.price?.toFixed(2)}
+                    {product?.price?.toFixed(
+                      setting?.decimal_point ? setting?.decimal_point : 0
+                    )}
                   </p>
                   {/* {product?.discounted_price != 0 && <p className="text-sm  line-through">{setting?.currency}
                                     {product?.price?.toFixed(2)}

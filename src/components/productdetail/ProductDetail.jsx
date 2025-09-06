@@ -402,7 +402,7 @@ const ProductDetail = () => {
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price
-                          ).toFixed(2)}
+                          ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}
                           % {t("off")}
                         </span>
                       ) : null}

@@ -11,6 +11,7 @@ const FAQs = () => {
   const [currPage, setcurrPage] = useState(1);
   const [offset, setoffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalFaqs, setTotalFaqs] = useState(0);
 
   useEffect(() => {
     handleFetchFAQs();
@@ -24,6 +25,7 @@ const FAQs = () => {
         offset,
       });
       setFaqs([...faqs, ...response?.data]);
+      setTotalFaqs(response?.total);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -50,7 +52,7 @@ const FAQs = () => {
               <CardSkeleton height={40} padding="p-1" />
             </div>
           ))}
-        {faqs?.length > 0 && (
+        {totalFaqs > faqs?.length && (
           <button
             className="px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow"
             onClick={() => handlePageChange(currPage + 1)}

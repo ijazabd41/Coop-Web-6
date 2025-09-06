@@ -62,7 +62,9 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="">{t("promoDiscount")}</span>
               <span className="font-semibold">
                 - {setting?.currency}
-                {orderDetail?.promo_discount?.toFixed(2)}
+                {orderDetail?.promo_discount?.toFixed(
+                  setting?.decimal_point ? setting?.decimal_point : 0
+                )}
               </span>
             </div>
           )}
@@ -72,7 +74,9 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="">{t("walletBalance")}</span>
               <span className="font-semibold">
                 - {setting?.currency}
-                {orderDetail?.wallet_balance?.toFixed(2)}
+                {orderDetail?.wallet_balance?.toFixed(
+                  setting?.decimal_point ? setting?.decimal_point : 0
+                )}
               </span>
             </div>
           )}

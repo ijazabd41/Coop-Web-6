@@ -42,11 +42,17 @@ const OrderSummaryCard = ({
         <span className="font-bold ">{t("sub_total")}</span>
         {checkOutError == false ? (
           <span className="font-semibold ">
-            {setting?.currency} {checkoutData?.sub_total?.toFixed(2)}
+            {setting?.currency}{" "}
+            {checkoutData?.sub_total?.toFixed(
+              setting?.decimal_point ? setting?.decimal_point : 0
+            )}
           </span>
         ) : (
           <span className="font-semibold ">
-            {setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}
+            {setting?.currency}{" "}
+            {cart?.cart?.sub_total?.toFixed(
+              setting?.decimal_point ? setting?.decimal_point : 0
+            )}
           </span>
         )}
       </div>
@@ -92,7 +98,10 @@ const OrderSummaryCard = ({
           {t("wallet_balance_used")}
 
           <span className="">
-            - {setting?.currency} {checkout?.usedWalletBalance?.toFixed(2)}
+            - {setting?.currency}{" "}
+            {checkout?.usedWalletBalance?.toFixed(
+              setting?.decimal_point ? setting?.decimal_point : 0
+            )}
           </span>
         </div>
       )}
@@ -106,12 +115,17 @@ const OrderSummaryCard = ({
               ? (
                   Number(checkoutData?.total_amount) -
                   Number(checkout?.usedWalletBalance)
-                ).toFixed(2)
-              : checkoutData?.total_amount?.toFixed(2)}
+                ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)
+              : checkoutData?.total_amount?.toFixed(
+                  setting?.decimal_point ? setting?.decimal_point : 0
+                )}
           </span>
         ) : (
           <span className="font-semibold ">
-            {setting?.currency} {cart?.cart?.sub_total?.toFixed(2)}
+            {setting?.currency}{" "}
+            {cart?.cart?.sub_total?.toFixed(
+              setting?.decimal_point ? setting?.decimal_point : 0
+            )}
           </span>
         )}
       </div>

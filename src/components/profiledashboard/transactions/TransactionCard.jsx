@@ -64,7 +64,7 @@ const TransactionCard = ({ transaction }) => {
                 <div className=" p-1 rounded-lg flex justify-between items-center backgroundColor">
                     <div>
                         <p className=" text-sm">{t("transaction")} {t("amount")}</p>
-                        <p className="text-2xl font-bold">{setting?.currency}{transaction?.amount?.toFixed(2)}</p>
+                        <p className="text-2xl font-bold">{setting?.currency}{transaction?.amount?.toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}</p>
                     </div>
                     <div>
                         {transaction?.status == "success" ? <span className="border border-green-500 text-green-500 font-bold text-sm py-1 px-2 rounded">
