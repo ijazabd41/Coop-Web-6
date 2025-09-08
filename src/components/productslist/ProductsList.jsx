@@ -135,8 +135,20 @@ const Products = () => {
     }
   };
 
+
+
   const handlePrices = async (result) => {
-    if (minPrice == null && maxPrice == null && filter?.price_filter == null) {
+    if (
+      filter?.price_filter?.min_price !== undefined &&
+      filter?.price_filter?.max_price !== undefined
+    ) {
+      setValues([
+        parseInt(filter?.price_filter?.min_price),
+        parseInt(filter?.price_filter?.max_price),
+      ]);
+      setMinPrice(parseInt(result.total_min_price));
+      setMaxPrice(parseInt(result.total_max_price));
+    } else {
       setMinPrice(parseInt(result.total_min_price));
       if (result.total_min_price === result.total_max_price) {
         setMaxPrice(parseInt(result.total_max_price) + 100);
@@ -173,7 +185,6 @@ const Products = () => {
   };
 
   const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
-
 
   return (
     <section>

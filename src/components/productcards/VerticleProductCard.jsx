@@ -63,7 +63,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     const actualDiscountPrice = difference / actualPrice;
     return actualDiscountPrice * 100;
   };
-  
+
   const getProductQuantities = (products) => {
     return Object.entries(
       products?.reduce((quantities, product) => {
@@ -78,6 +78,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       qty,
     }));
   };
+
   // cart functionality
   const addToCart = async (productId, productVId, qty) => {
     try {
@@ -125,6 +126,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       console.log("error", error);
     }
   };
+
   const removeFromCart = async (productId, variantId) => {
     try {
       const response = await api.removeFromCart({
@@ -146,6 +148,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       console.log("error", error);
     }
   };
+
   const AddToGuestCart = (
     product,
     productId,
@@ -245,6 +248,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       }
     }
   };
+
   const handleAddNewProductGuest = (productQuantity, product) => {
     const productQty = productQuantity?.find(
       (prdct) => prdct?.product_id == product?.id
@@ -262,6 +266,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       toast.error(t("out_of_stock_message"));
     }
   };
+
   const handleValidateAddNewProduct = (productQuantity, product) => {
     const productQty = productQuantity?.find(
       (prdct) => prdct?.product_id == product?.id
@@ -284,6 +289,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       }
     }
   };
+
   const handleIntialAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -327,6 +333,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       }
     }
   };
+
   const handleQuantityIncrease = (e) => {
     e.preventDefault();
     e.stopPropagation();

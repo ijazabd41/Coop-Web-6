@@ -281,11 +281,13 @@ const Filter = ({
                 <div className="range-prices flex justify-between">
                   <p>
                     {setting?.currency}
-                    {values[0]}
+                    {/* {values[0]} */}
+                    {minPrice}
                   </p>
                   <p>
                     {setting?.currency}
-                    {values[1]}
+                    {maxPrice}
+                    {/* {values[1]} */}
                   </p>
                 </div>
                 <button

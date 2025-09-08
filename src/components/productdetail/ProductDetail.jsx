@@ -297,6 +297,8 @@ const ProductDetail = () => {
             dispatch(setCart({ data: response }));
             dispatch(setCartSubTotal({ data: response.sub_total }));
             toast.success(t("product_added_successfully"));
+          } else if (response?.message == "opps_stock_is_not_available") {
+            toast.error(t("out_of_stock_message"));
           } else {
             setSingleSellerModal(true);
           }
@@ -402,7 +404,9 @@ const ProductDetail = () => {
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price
-                          ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}
+                          ).toFixed(
+                            setting?.decimal_point ? setting?.decimal_point : 0
+                          )}
                           % {t("off")}
                         </span>
                       ) : null}
@@ -764,17 +768,23 @@ const ProductDetail = () => {
                       </span>
                       <div className="flex gap-3">
                         <WhatsappShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                            pathname
+                          )}`}
                         >
                           <WhatsappIcon className="h-8 w-8 rounded-full" />
                         </WhatsappShareButton>
                         <TwitterShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                            pathname
+                          )}`}
                         >
                           <TwitterIcon className="h-8 w-8 rounded-full" />
                         </TwitterShareButton>
                         <FacebookShareButton
-                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`}
+                          url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                            pathname
+                          )}`}
                         >
                           <FacebookIcon className="h-8 w-8 rounded-full" />
                         </FacebookShareButton>
