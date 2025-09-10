@@ -26,6 +26,9 @@ import CouponCodeDrawer from "@/components/couponcode/CouponCodeDrawer";
 import { RiCoupon3Line } from "react-icons/ri";
 import Link from "next/link";
 import Loader from "../loader/Loader";
+import CartDrawerSkeletons, {
+  AppliedCouponSkeleton,
+} from "./CartDrawerLoading.jsx";
 
 const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
   const dispatch = useDispatch();
@@ -41,6 +44,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
   const [cartProductsData, setCartProductsData] = useState([]);
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [couponLoading, setCouponLoading] = useState(false);
   const [showCouponCode, setShowCouponCode] = useState(false);
 
   useEffect(() => {
@@ -92,7 +96,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
   };
 
   const handleApplyCoupon = async () => {
-    setLoading(true);
+    setCouponLoading(true);
     try {
       const response = await api.setPromoCode({
         promoCodeName: coupon?.promo_code,
@@ -107,11 +111,12 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     } catch (error) {
       console.log("Error", error);
     } finally {
-      setLoading(false);
+      setCouponLoading(false);
     }
   };
 
   const fetchGuestCart = async () => {
+    setLoading(true);
     try {
       const variantIds = cart?.guestCart?.map((p) => p.product_variant_id);
       const quantities = cart?.guestCart?.map((p) => p.qty);
@@ -128,6 +133,8 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
       }
     } catch (error) {
       console.log("Error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,8 +149,11 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
 
   const isCouponApplied = cart?.promo_code != null;
   const handleRemoveCoupon = async () => {
+    setCouponLoading(true);
     dispatch(clearCartPromo());
+    setCouponLoading(false);
   };
+
   return (
     <>
       <Sheet open={showCart}>
@@ -163,10 +173,9 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
               </div>
             </SheetTitle>
           </SheetHeader>
+
           {loading ? (
-            <p>
-              <Loader height={800} />
-            </p>
+            <CartDrawerSkeletons />
           ) : cartProductsData?.length !== 0 ? (
             <>
               <div className="flex-grow overflow-y-auto gap-2 p-2 flex flex-col">
@@ -181,7 +190,9 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                 ))}
               </div>
               <div className="w-full mx-auto p-4 border rounded-md shadow-sm sticky bottom-0 ">
-                {cart?.isGuest == false && !isCouponApplied ? (
+                {couponLoading ? (
+                  <AppliedCouponSkeleton />
+                ) : cart?.isGuest == false && !isCouponApplied ? (
                   <div className="mb-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-bold">
@@ -218,8 +229,9 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                             <button
                               className="text-red-500"
                               onClick={handleRemoveCoupon}
+                              disabled={couponLoading}
                             >
-                              {t("delete")}
+                              {couponLoading ? "..." : t("delete")}
                             </button>
                           </div>
                         </div>
