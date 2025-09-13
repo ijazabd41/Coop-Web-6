@@ -7,10 +7,6 @@ import * as api from "@/api/apiRoutes";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { BiCurrentLocation } from "react-icons/bi";
 import Loader from "../loader/Loader";
-import {
-  setAllAddresses,
-  setSelectedAddres,
-} from "@/redux/slices/addressSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { darkThemeStyles } from "@/utils/mapColor";
@@ -21,7 +17,6 @@ const NewAddressModal = ({
   isAddressSelected,
   fetchAddress,
 }) => {
-  const dispatch = useDispatch();
   const addresses = useSelector((state) => state.Addresses);
   const city = useSelector((state) => state.City.city);
   const theme = useSelector((state) => state.Theme.theme);
@@ -101,11 +96,24 @@ const NewAddressModal = ({
         is_default:
           addresses.selectedEditAddress.is_default === 1 ? true : false,
       });
-    }
-    if (!isAddressSelected) {
+    } else {
       setlocalLocation({
         lat: parseFloat(city?.city ? city?.city?.latitude : 0),
         lng: parseFloat(city?.city ? city?.city?.longitude : 0),
+      });
+      setaddressDetails({
+        name: "",
+        mobile_num: "",
+        alternate_mobile_num: "",
+        address: "",
+        landmark: "",
+        city: "",
+        area: "",
+        pincode: "",
+        state: "",
+        country: "",
+        address_type: "Home",
+        is_default: true,
       });
     }
   }, [isAddressSelected, addresses?.selectedEditAddress, showAddAddres]);

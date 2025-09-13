@@ -193,11 +193,12 @@ const Checkout = () => {
       const response = await api.getAddress();
       if (response.status == 1) {
         dispatch(setAllAddresses({ data: response.data }));
-        console.log("checkout address", checkout?.address);
         const defaultAddress = response?.data?.find(
           (address) => address.is_default == 1
         );
-        if (!defaultAddress) {
+        if (checkout?.address != null) {
+          return;
+        } else if (!defaultAddress) {
           dispatch(setAddress({ data: response?.data[0] }));
         } else {
           dispatch(setAddress({ data: defaultAddress }));
