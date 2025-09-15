@@ -213,8 +213,20 @@ const ProductDetailModal = ({
       }
     } else {
       try {
+        const isInclude = productQuantity.some(
+          (item) => item.product_id === product?.id
+        );
         if (productQty + quantity > product?.total_allowed_quantity) {
           toast.error(t("max_cart_limit_error"));
+        } else if (
+          cart?.cartProducts?.length >= setting?.setting?.max_cart_items_count
+        ) {
+          toast.error(t("maximum_cart_quantity_reach"));
+        } else if (
+          !isInclude &&
+          cart?.cartProducts?.length >= setting?.setting?.max_cart_items_count
+        ) {
+          toast.error(t("maximum_cart_quantity_reach"));
         } else {
           const response = await api.addToCart({
             product_id: product.id,
@@ -336,13 +348,19 @@ const ProductDetailModal = ({
   return (
     <>
       <Dialog open={showDetailModal}>
-        <DialogContent className="max-w-xl lg:max-w-screen-lg overflow-y-scroll max-h-screen">
-          <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end">
+        <DialogContent className="max-w-xl lg:max-w-screen-lg overflow-y-scroll max-h-screen ">
+          <button
+            className="absolute top-4 right-4 z-10"
+            onClick={handleHideDetailModal}
+          >
+            <IoIosCloseCircle size={32} />
+          </button>
+          {/* <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end">
             {" "}
             <div>
               <IoIosCloseCircle size={32} onClick={handleHideDetailModal} />
             </div>
-          </DialogHeader>
+          </DialogHeader> */}
           <div className=" ">
             {loading ? (
               <Loader />

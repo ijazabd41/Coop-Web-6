@@ -209,6 +209,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       dispatch(addtoGuestCart({ data: [...cart?.guestCart, productData] }));
     }
   };
+
   const handleValidateAddExistingGuestProduct = (
     productQuantity,
     product,
@@ -279,6 +280,9 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       selectedVariant?.stock <= 0
     ) {
       toast.error(t("out_of_stock_message"));
+    } else if (cart?.cartProducts?.length >= setting?.max_cart_items_count) {
+      toast.error(t("maximum_cart_quantity_reach"));
+
     } else if (Number(product.is_unlimited_stock)) {
       addToCart(product.id, selectedVariant.id, 1);
     } else {
@@ -301,6 +305,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       handleValidateAddNewProduct(quantity, product);
     }
   };
+
   const handleValidateAddExistingProduct = (productQuantity, product) => {
     const productQty = productQuantity?.find(
       (prdct) => prdct?.product_id == product?.id
@@ -353,6 +358,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       handleValidateAddExistingProduct(quantity, product);
     }
   };
+
   const handleQuantityDecrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -385,6 +391,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       }
     }
   };
+
   const handleShowVariantModal = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
@@ -394,6 +401,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       return;
     }
   };
+
   const handleShowDetailModal = (e) => {
     e.preventDefault();
     e.stopPropagation();

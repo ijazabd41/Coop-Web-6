@@ -260,6 +260,8 @@ const HorizontalProductCard = ({ product }) => {
 
     if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
       toast.error(t("out_of_stock_message"));
+    } else if (cart?.cartProducts?.length >= setting?.max_cart_items_count) {
+      toast.error(t("maximum_cart_quantity_reach"));
     } else if (Number(product.is_unlimited_stock)) {
       addToCart(product.id, selectedVariant.id, 1);
     } else {

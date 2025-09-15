@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    status: 'loading', //fulfill
+    status: 'loading',
     cart: null,
     checkout: null,
     promo_code: null,

@@ -542,5 +542,6 @@
   "item_received_from_customer":"Item received from customer",
   "item_returned_to_seller":"Item returned to seller",
   "return_request_cancel_by_delivery_boy":"Return request cancelled by delivery boy",
-  "add_new_address":"Add New Address"
+  "add_new_address":"Add New Address",
+  "maximum_cart_quantity_reach":"Cart's maximum quantity reached"
 }

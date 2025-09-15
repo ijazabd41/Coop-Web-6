@@ -8,9 +8,13 @@ import RatingImagesModal from "./RatingImagesModal";
 import RatingLightBox from "./RatingLightBox";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import { isRtl } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 const ProductDescription = ({ product, ratingData }) => {
   const rtl = isRtl();
+
+  const setting = useSelector((state) => state.Setting.setting);
+
   const [selectedTab, setSelectedTab] = useState(0);
   const [ratingImages, setRatingImages] = useState([]);
   const [showImagesModal, setShowImagesModal] = useState(false);

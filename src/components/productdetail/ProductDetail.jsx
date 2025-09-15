@@ -4,7 +4,13 @@ import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import { FaLink, FaRegHeart, FaShoppingBasket, FaStar } from "react-icons/fa";
+import {
+  FaLink,
+  FaRegHeart,
+  FaShoppingBasket,
+  FaStar,
+  FaStarHalfAlt,
+} from "react-icons/fa";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -165,8 +171,6 @@ const ProductDetail = () => {
       quantity >= selectVariant?.stock
     ) {
       toast.error(t("out_of_stock"));
-    } else if (quantity >= product?.total_allowed_quantity) {
-      toast.error(t("max_cart_limit_error"));
     } else {
       setQuantity(quantity + 1);
     }
@@ -255,9 +259,18 @@ const ProductDetail = () => {
         }
       }
     } else {
+      const isInclude = productQuantity.some(
+        (item) => item.product_id === product?.id
+      );
+
       try {
         if (totalQty > product?.total_allowed_quantity) {
           toast.error(t("max_cart_limit_error"));
+        } else if (
+          !isInclude &&
+          cart?.cartProducts?.length >= setting?.setting?.max_cart_items_count
+        ) {
+          toast.error(t("maximum_cart_quantity_reach"));
         } else {
           const response = await api.addToCart({
             product_id: product.id,
@@ -470,17 +483,41 @@ const ProductDetail = () => {
                             <div className="border-r-2 px-2">
                               <div className="flex gap-1 items-center">
                                 <div className="flex">
-                                  {[1, 2, 3, 4, 5].map((star, index) => (
-                                    <FaStar
-                                      key={star}
-                                      size={15}
-                                      className={`${
-                                        star <= ratingData?.average_rating
-                                          ? "fill-yellow-400 text-yellow-400"
-                                          : "fill-gray-200 text-gray-200"
-                                      }`}
-                                    />
-                                  ))}
+                                  {[1, 2, 3, 4, 5].map((star) => {
+                                    const roundedRating =
+                                      Math.round(
+                                        ratingData?.average_rating * 2
+                                      ) / 2;
+
+                                    if (star <= Math.floor(roundedRating)) {
+                                      return (
+                                        <FaStar
+                                          key={star}
+                                          size={15}
+                                          className="fill-yellow-400 text-yellow-400"
+                                        />
+                                      );
+                                    } else if (
+                                      star === Math.floor(roundedRating) + 1 &&
+                                      roundedRating % 1 === 0.5
+                                    ) {
+                                      return (
+                                        <FaStarHalfAlt
+                                          key={star}
+                                          size={15}
+                                          className="fill-yellow-400 text-yellow-400"
+                                        />
+                                      );
+                                    } else {
+                                      return (
+                                        <FaStar
+                                          key={star}
+                                          size={15}
+                                          className="fill-gray-200 text-gray-200"
+                                        />
+                                      );
+                                    }
+                                  })}
                                 </div>
                                 {`(${ratingData?.rating_list?.length})`}
                               </div>
