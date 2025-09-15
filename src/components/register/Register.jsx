@@ -12,7 +12,11 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthType } from "@/redux/slices/userSlice";
 import { auth } from "@/utils/firebase";
-import { signInWithPhoneNumber } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPhoneNumber,
+  signInWithPopup,
+} from "firebase/auth";
 
 const Register = ({
   showRegister,
@@ -544,7 +548,8 @@ const Register = ({
               </span>
             </span>
           </div>
-          <div className="flex items-center justify-between my-4 gap-2">
+          {/* NOTE: Remove this becuase of copy of functionality  */}
+          {/* <div className="flex items-center justify-between my-4 gap-2">
             <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
             <span className=" text-[#4B6272] font-bold text-base">
               {t("or")}
@@ -562,7 +567,7 @@ const Register = ({
               />{" "}
               {t("continue_with_google")}
             </button>
-          </div>
+          </div> */}
           <div className="py-6 flex items-center justify-center">
             <p className=" text-center ">
               {t("agreement_updated_message")}{" "}
