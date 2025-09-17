@@ -773,6 +773,7 @@ const Checkout = () => {
                             value={checkout?.orderNote}
                             onChange={(e) => handleChangeOrderNote(e)}
                             placeholder={t("order_note")}
+                            maxLength={256}
                           ></textarea>
                         </div>
                         <div className="flex justify-end gap-4">

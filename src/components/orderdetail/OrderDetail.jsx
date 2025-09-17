@@ -73,7 +73,7 @@ const OrderDetail = () => {
             <Loader />
           </>
         ) : (
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-8">
             <div className="flex flex-col md:flex-row justify-between backgroundColor p-4 rounded-md">
               <div>
                 <span className="font-normal text-base">
@@ -114,6 +114,12 @@ const OrderDetail = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 px-2 md:px-0 md:gap-8">
+              <div className="col-span-12 flex flex-col gap-3 mb-8 md:mb-2">
+                <h3 className="font-bold text-2xl">{t("order_note_title")}</h3>
+                <div className="cardBorder p-4 rounded-sm text-base font-normal">
+                  <p>{orderDetail?.order_note}</p>
+                </div>
+              </div>
               <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
                 <div className="flex flex-col gap-3">
                   <h1 className="font-bold text-2xl">{t("shippingAdress")}</h1>

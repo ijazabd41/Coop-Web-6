@@ -1,6 +1,7 @@
 import * as Slider from "@radix-ui/react-slider";
 import Skeleton from "react-loading-skeleton";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const PriceSlider = ({
   values,
@@ -12,6 +13,8 @@ const PriceSlider = ({
 }) => {
   const [showMinTooltips, setMinShowTooltips] = useState(false);
   const [showMaxTooltips, setMaxShowTooltips] = useState(false);
+
+  const setting = useSelector((state) => state?.Setting?.setting);
 
   const currentValues = values?.length === 2 ? values : [minPrice, maxPrice];
 
@@ -54,7 +57,8 @@ const PriceSlider = ({
             >
               {showMinTooltips && (
                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-base p-2 rounded whitespace-nowrap z-10 ">
-                  ${currentValues[0]?.toFixed(2)}
+                  {setting?.currency}
+                  {currentValues[0]?.toFixed(2)}
                   <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                 </div>
               )}
@@ -69,7 +73,8 @@ const PriceSlider = ({
             >
               {showMaxTooltips && (
                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-base p-2 rounded whitespace-nowrap z-10">
-                  ${currentValues[1]?.toFixed(2)}
+                  {setting?.currency}
+                  {currentValues[1]?.toFixed(2)}
                   <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                 </div>
               )}

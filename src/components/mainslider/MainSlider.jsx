@@ -94,7 +94,7 @@ const HomePageSlider = ({ slider }) => {
                   src={slide.image_url}
                   alt="Fruit Basket"
                   priority={index === 0}
-                  className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[650px]"
+                  className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] "
                   width={1200}
                   height={650}
                   onClick={() => handleSliderClick(slide)}
@@ -105,7 +105,6 @@ const HomePageSlider = ({ slider }) => {
         </div>
       </div>
 
-      {/* Custom Pagination Dots */}
       <div
         className="absolute bottom-[45px] left-1/2 -translate-x-1/2 
              md:flex items-center justify-center gap-2 
