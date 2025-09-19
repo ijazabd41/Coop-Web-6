@@ -12,6 +12,7 @@ const initialState = {
   orderNote: "",
   checkoutTotal: 0,
   phonepecheckoutdetails: "",
+  orderType: "doorstep",
 };
 
 export const checkoutReducer = createSlice({
@@ -51,6 +52,9 @@ export const checkoutReducer = createSlice({
     setPhonePeCheckoutDetails: (state, action) => {
       state.phonepecheckoutdetails = action.payload;
     },
+    setOrderType: (state, action) => {
+      state.orderType = action.payload.data;
+    },
     clearCheckout: (state) => {
       const phonepecheckoutdetails = state.phonepecheckoutdetails;
       Object.assign(state, {
@@ -83,6 +87,7 @@ export const {
   setCheckoutTotal,
   setUserWalletBalance,
   setPhonePeCheckoutDetails,
+  setOrderType,
 } = checkoutReducer.actions;
 
 export default checkoutReducer.reducer;

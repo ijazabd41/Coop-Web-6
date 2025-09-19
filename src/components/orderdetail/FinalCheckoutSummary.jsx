@@ -48,14 +48,15 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
                 );
               })
             : null}
-
-          <div className="flex justify-between items-center">
-            <span className="">{t("delivery_charge")}</span>
-            <span className="font-semibold">
-              {setting?.currency}
-              {orderDetail?.delivery_charge}
-            </span>
-          </div>
+          {orderDetail?.order_type == "doorstep" && (
+            <div className="flex justify-between items-center">
+              <span className="">{t("delivery_charge")}</span>
+              <span className="font-semibold">
+                {setting?.currency}
+                {orderDetail?.delivery_charge}
+              </span>
+            </div>
+          )}
 
           {orderDetail?.promo_discount != 0 && (
             <div className="flex justify-between items-center">
@@ -80,7 +81,6 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               </span>
             </div>
           )}
-          {console.log("orderDetail", orderDetail)}
 
           <div className="pt-4 border-t ">
             <div className="flex justify-between items-center">

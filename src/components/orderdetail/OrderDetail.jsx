@@ -75,11 +75,25 @@ const OrderDetail = () => {
         ) : (
           <div className="flex flex-col gap-8">
             <div className="flex flex-col md:flex-row justify-between backgroundColor p-4 rounded-md">
-              <div>
-                <span className="font-normal text-base">
-                  {t("orderNumber")}:
-                </span>
-                <h1 className="text-2xl font-bold">#{orderDetail?.id}</h1>
+              <div className="flex items-center gap-2">
+                <div>
+                  <span className="font-normal text-base">
+                    {t("orderNumber")}:
+                  </span>
+                  <h1 className="text-2xl font-bold">#{orderDetail?.id}</h1>
+                </div>
+                <div className="md:border-l-2">
+                  <div className="md:ml-2 flex flex-col">
+                    <span className="font-normal text-sm ">
+                      {t("order_type")}:
+                    </span>
+                    <p className="text-base font-bold">
+                      {orderDetail?.order_type == "doorstep"
+                        ? t("home_delivery")
+                        : t("store_pickup")}
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col gap-2 items-start md:flex-row md:items-center">
                 <div className="flex flex-col items-start md:items-end">
@@ -114,12 +128,17 @@ const OrderDetail = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 px-2 md:px-0 md:gap-8">
-              <div className="col-span-12 flex flex-col gap-3 mb-8 md:mb-2">
-                <h3 className="font-bold text-2xl">{t("order_note_title")}</h3>
-                <div className="cardBorder p-4 rounded-sm text-base font-normal">
-                  <p>{orderDetail?.order_note}</p>
+              {orderDetail?.order_note !== "" && (
+                <div className="col-span-12 flex flex-col gap-3 mb-8 md:mb-2">
+                  <h3 className="font-bold text-2xl">
+                    {t("order_note_title")}
+                  </h3>
+                  <div className="cardBorder p-4 rounded-sm text-base font-normal">
+                    <p>{orderDetail?.order_note}</p>
+                  </div>
                 </div>
-              </div>
+              )}
+
               <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
                 <div className="flex flex-col gap-3">
                   <h1 className="font-bold text-2xl">{t("shippingAdress")}</h1>

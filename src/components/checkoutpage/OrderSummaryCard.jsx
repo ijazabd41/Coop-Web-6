@@ -73,7 +73,7 @@ const OrderSummaryCard = ({
             );
           })
         : null}
-      {checkOutError == false && (
+      {checkOutError == false && checkout?.orderType == "doorstep" && (
         <div className="flex justify-between items-center mb-2">
           <span className="">{t("delivery_charge")}</span>
           <span className="">

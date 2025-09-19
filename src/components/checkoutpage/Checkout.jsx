@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaTruck } from "react-icons/fa";
 import {
   Select,
   SelectContent,
@@ -38,6 +38,7 @@ import {
   setOrderNote,
   setCheckoutTotal,
   setPhonePeCheckoutDetails,
+  setOrderType,
 } from "@/redux/slices/checkoutSlice";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -46,6 +47,8 @@ import StripeModal from "./StripeModal";
 import PaystackPop from "@paystack/inline-js";
 import Loader from "../loader/Loader";
 import CheckoutSkeleton from "./CheckoutSkeleton";
+import { FiTruck } from "react-icons/fi";
+import { MdOutlineStorefront } from "react-icons/md";
 
 const Checkout = () => {
   const router = useRouter();
@@ -100,7 +103,13 @@ const Checkout = () => {
 
   useEffect(() => {
     handleFetchCheckout();
-  }, [cart?.cart, cart?.promo_code, checkout?.address, cart?.cartProducts]);
+  }, [
+    cart?.cart,
+    cart?.promo_code,
+    checkout?.address,
+    cart?.cartProducts,
+    checkout?.orderType,
+  ]);
 
   const getCurrentUser = async () => {
     try {
@@ -139,6 +148,7 @@ const Checkout = () => {
         longitude: checkout?.address?.longitude,
         checkout: 1,
         promocode_id: couponseCodeId,
+        order_type: checkout?.orderType,
       });
       if (response?.status == 1) {
         dispatch(setCartCheckout({ data: response?.data }));
@@ -264,6 +274,10 @@ const Checkout = () => {
     dispatch(setTimeSlot({ data: value }));
   };
 
+  const handleOrderType = (value) => {
+    dispatch(setOrderType({ data: value }));
+  };
+
   const handleChangeOrderNote = (e) => {
     dispatch(setOrderNote({ data: e.target.value }));
   };
@@ -295,6 +309,15 @@ const Checkout = () => {
     }
 
     dispatch(setCurrentStep({ data: 3 }));
+  };
+
+  const handlePickupOrderStep = () => {
+    if (checkOutError) {
+      toast.error(t(checkOutErrorMsg));
+      return;
+    } else {
+      dispatch(setCurrentStep({ data: 3 }));
+    }
   };
 
   const formatDateToDDMMYYYY = (date) => {
@@ -480,10 +503,16 @@ const Checkout = () => {
       if (checkout?.selectedPaymentMethod == null) {
         toast.error("Please select payment method");
         return;
-      } else if (checkout?.selectedDate == null) {
+      } else if (
+        checkout?.selectedDate == null &&
+        checkout?.orderType == "doorstep"
+      ) {
         toast.error("Please select date");
         return;
-      } else if (checkout?.address == null) {
+      } else if (
+        checkout?.address == null &&
+        checkout?.orderType == "doorstep"
+      ) {
         toast.error("Please select address");
         return;
       } else {
@@ -503,6 +532,7 @@ const Checkout = () => {
           paymentMethod: checkout?.selectedPaymentMethod,
           promocodeId: cart?.promo_code?.promo_code_id,
           status: status,
+          order_type: checkout?.orderType,
         });
         if (response?.status == 1) {
           dispatch(setOrderNote(""));
@@ -615,67 +645,165 @@ const Checkout = () => {
           <CheckoutSkeleton />
         ) : (
           <div className="flex justify-center flex-col items-center">
-            <div className="flex w-full lg:w-1/2">
+            <div
+              className={`flex w-full ${
+                checkout?.orderType == "doorstep" ? "lg:w-1/2" : "lg:w-1/4"
+              }`}
+            >
               <Stepper currentStep={checkout?.currentStep} />
             </div>
             <div className="w-full">
               <div className="grid grid-cols-12 gap-2 md:gap-6">
-                {/* step 1 */}
                 {checkout?.currentStep == 1 && (
                   <div className="col-span-12 md:col-span-8 lg:col-span-9">
-                    <div className="flex flex-col cardBorder rounded-sm mb-4">
-                      <div className="flex justify-between backgroundColor py-4 px-2 ">
-                        <span className="font-bold text-base md:text-xl">
-                          {t("choose_delivery_address")}
-                        </span>
-                        {address?.allAddresses?.length > 0 && (
-                          <button
-                            className="flex  items-center text-sm"
-                            onClick={handleShowAddress}
+                    <div className="flex flex-col cardBorder rounded-sm mb-4 backgroundColor p-4 gap-6">
+                      <h2 className="font-bold text-base md:text-xl">
+                        {t("choose_delivery_method")}
+                      </h2>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor ">
+                          <input
+                            type="radio"
+                            name="delivery"
+                            value="doorstep"
+                            checked={checkout?.orderType == "doorstep"}
+                            className="mr-3 primaryAccentColor scale-150"
+                            onChange={(e) => handleOrderType(e.target.value)}
+                          />
+                          <div className="flex items-center space-x-3">
+                            <div className=" rounded-md  primaryFilledColor addToCartColor p-3">
+                              <FiTruck size={22} />
+                            </div>
+                            <div>
+                              <p className="font-bold">{t("home_delivery")}</p>
+                              <p className="text-sm text-gray-500">
+                                {t("get_it_deliverd_to_your_address")}
+                              </p>
+                            </div>
+                          </div>
+                        </label>
+
+                        <label className="flex items-center p-4 border rounded-md cursor-pointer transition bodyBackgroundColor peer-disabled:disabledBackgroundColor">
+                          <input
+                            type="radio"
+                            name="delivery"
+                            value="selfpickup"
+                            disabled={
+                              checkoutData?.seller_self_pickup
+                                ?.self_pickup_mode == 0
+                            }
+                            checked={checkout?.orderType == "selfpickup"}
+                            className="mr-3 primaryAccentColor scale-150"
+                            onChange={(e) => handleOrderType(e.target.value)}
+                          />
+                          <div className="flex items-center space-x-3">
+                            <div className="p-3 rounded-md primaryFilledColor addToCartColor">
+                              <MdOutlineStorefront size={22} />
+                            </div>
+                            <div>
+                              <p className="font-bold">{t("store_pickup")}</p>
+                              <p className="text-sm text-gray-500">
+                                {t("pick_up_from_store")}
+                              </p>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    {checkout?.orderType == "doorstep" ? (
+                      <div className="flex flex-col cardBorder rounded-sm mb-4">
+                        <div className="flex justify-between backgroundColor py-4 px-2 ">
+                          <span className="font-bold text-base md:text-xl">
+                            {t("choose_delivery_address")}
+                          </span>
+                          {address?.allAddresses?.length > 0 && (
+                            <button
+                              className="flex  items-center text-sm"
+                              onClick={handleShowAddress}
+                            >
+                              <GoPlus />
+                              {t("add_address")}
+                            </button>
+                          )}
+                        </div>
+                        {address?.allAddresses?.length > 0 ? (
+                          <>
+                            {" "}
+                            <div className="flex flex-col h-full">
+                              {address?.allAddresses?.map((address) => {
+                                return (
+                                  <div key={address?.id}>
+                                    {" "}
+                                    <AddressCard
+                                      address={address}
+                                      setShowAddAddres={setShowAddAddres}
+                                      setIsAddressSelected={
+                                        setIsAddressSelected
+                                      }
+                                      fetchAddress={fetchAddress}
+                                    />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="flex justify-end m-4">
+                              <button
+                                onClick={handleFirstStep}
+                                className="text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal"
+                              >
+                                {t("continue")}
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div
+                            className=" flex justify-center  my-2 cursor-pointer"
+                            onClick={() => setShowAddAddres(true)}
                           >
-                            <GoPlus />
-                            {t("add_address")}
-                          </button>
+                            <div className="border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl">
+                              <GoPlusCircle /> {t("add_address")}
+                            </div>
+                          </div>
                         )}
                       </div>
-                      {address?.allAddresses?.length > 0 ? (
-                        <>
-                          {" "}
-                          <div className="flex flex-col h-full">
-                            {address?.allAddresses?.map((address) => {
-                              return (
-                                <div key={address?.id}>
-                                  {" "}
-                                  <AddressCard
-                                    address={address}
-                                    setShowAddAddres={setShowAddAddres}
-                                    setIsAddressSelected={setIsAddressSelected}
-                                    fetchAddress={fetchAddress}
-                                  />
-                                </div>
-                              );
-                            })}
+                    ) : (
+                      <div className="flex flex-col cardBorder rounded-sm mb-4">
+                        <div className="flex justify-between backgroundColor py-4 px-2 ">
+                          <span className="font-bold text-base md:text-xl">
+                            {t("store_address")}
+                          </span>
+                        </div>
+                        <div className="flex flex-col h-full px-4 py-6 gap-1  border-b">
+                          <div className="flex gap-2 items-center">
+                            <h2 className="font-bold text-md ">
+                              {t("seller_name")} :
+                            </h2>
+                            <p>
+                              {checkoutData?.seller_self_pickup?.seller_name}
+                            </p>
                           </div>
-                          <div className="flex justify-end m-4">
-                            <button
-                              onClick={handleFirstStep}
-                              className="text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal"
-                            >
-                              {t("continue")}
-                            </button>
+                          <div className="flex gap-2 items-center">
+                            <p className="font-bold text-md">
+                              {t("store_timing")} :
+                            </p>
+                            <p>{`${checkoutData?.seller_self_pickup?.opening_time} - ${checkoutData?.seller_self_pickup?.closing_time}`}</p>
                           </div>
-                        </>
-                      ) : (
-                        <div
-                          className=" flex justify-center  my-2 cursor-pointer"
-                          onClick={() => setShowAddAddres(true)}
-                        >
-                          <div className="border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl">
-                            <GoPlusCircle /> {t("add_address")}
+                          <div className="flex flex-col">
+                            {`${checkoutData?.seller_self_pickup?.pickup_latitude}, ${checkoutData?.seller_self_pickup?.pickup_longitude}, ${checkoutData?.seller_self_pickup?.pickup_store_address}`}
                           </div>
                         </div>
-                      )}
-                    </div>
+                        <div className="flex justify-end m-4">
+                          <button
+                            onClick={handlePickupOrderStep}
+                            className="text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal"
+                          >
+                            {t("continue")}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 {/* step 2 */}

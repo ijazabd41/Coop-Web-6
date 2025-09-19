@@ -384,6 +384,7 @@
   "light": "Light",
   "dark": "Dark",
   "paymentPending": "Payment Pending",
+  "pending":"Pending",
   "outForDelivery": "Out for delivery",
   "enable_payment_methods": "Please enable payment methods from admin panel",
   "order_note": "Order note (Optional)",
@@ -543,5 +544,18 @@
   "item_returned_to_seller":"Item returned to seller",
   "return_request_cancel_by_delivery_boy":"Return request cancelled by delivery boy",
   "add_new_address":"Add New Address",
-  "maximum_cart_quantity_reach":"Cart's maximum quantity reached"
+  "maximum_cart_quantity_reach":"Cart's maximum quantity reached",
+  "choose_delivery_method":"Choose Delivery Method",
+  "home_delivery":"Home Delivery",
+  "store_pickup":"Store Pickup",
+  "pick_up_from_store":"Pick up from our store",
+  "get_it_deliverd_to_your_address":"Get it delivered to your address",
+  "store_address":"Store Address",
+  "store_timing":"Store Timing",
+  "seller_name":"Seller Name",
+  "select_order_type":"Select Order Type",
+  "order_type":"Order Type",
+  "ready_to_pickup":"ready for pickup",
+  "pickuped":"Pickuped",
+  "order_is_pickuped":"Order is pickuped"
 }

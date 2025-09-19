@@ -317,11 +317,13 @@ export const getCart = async ({
   longitude,
   checkout = 0,
   promocode_id = 0,
+  order_type = "doorstep",
 }) => {
   const params = {
     latitude: latitude,
     longitude: longitude,
     is_checkout: checkout,
+    is_self_pickup: order_type == "doorstep" ? 0 : 1,
   };
   if (promocode_id !== 0) {
     params.promocode_id = promocode_id;
@@ -552,6 +554,7 @@ export const placeOrder = async ({
   orderNote,
   promocodeId = 0,
   status,
+  order_type = "doorstep",
 }) => {
   let finalPaymentMethod = paymentMethod;
   if (paymentMethod == "wallet") {
@@ -566,7 +569,7 @@ export const placeOrder = async ({
   formData.append("payment_method", finalPaymentMethod);
   formData.append("address_id", addressId);
   formData.append("status", status);
-
+  formData.append("order_type", order_type);
   formData.append("delivery_time", deliveryTime);
   if (walletUsed) {
     formData.append("wallet_used", 1);
@@ -649,10 +652,19 @@ export const getFAQs = async ({ limit = 7, offset = 0 }) => {
   return response.data;
 };
 
-export const getOrders = async ({ limit, offset, orderId, type }) => {
+export const getOrders = async ({
+  limit,
+  offset,
+  orderId,
+  type,
+  orderType,
+}) => {
   const params = { limit: limit, offset: offset, type: type };
   if (orderId) {
     params.order_id = orderId;
+  }
+  if (orderType != "") {
+    params.order_type = orderType;
   }
   const response = await api.get(`${apiEndPoints.getOrders}`, { params });
   return response.data;

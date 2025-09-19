@@ -94,6 +94,10 @@
     background-color: var(--primary-color);
   }
 
+  .primaryAccentColor {
+    accent-color: var(--primary-color);
+  }
+
   .cartButtonBackground {
     background-color: var(--cart-button-bg);
   }
@@ -157,6 +161,9 @@
     background-color: var(--swiper-background-color);
   }
 
+  .disabledBackgroundColor {
+    background-color: var(--button-border-color);
+  }
   .buttonBorder {
     border: 1px solid var(--button-border-color);
   }

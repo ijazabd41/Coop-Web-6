@@ -65,6 +65,24 @@ const ActiveOrdersCard = ({ order }) => {
             {t("returned")}
           </span>
         );
+      case "9":
+        return (
+          <span className="p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]">
+            {t("order_status_display_name_recieved")}
+          </span>
+        );
+      case "10":
+        return (
+          <span className="p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]">
+            {t("ready_to_pickup")}
+          </span>
+        );
+      case "9":
+        return (
+          <span className="p-2 text-center w-10/12 border-[1px] border-[#59AC77] rounded-sm text-base font-bold text-[#59AC77]">
+            {t("pickuped")}
+          </span>
+        );
       default:
         return (
           <span className="p-2 text-center w-10/12 border-[1px] border-[#458ae6] rounded-sm text-base font-bold text-[#458ae6]">
