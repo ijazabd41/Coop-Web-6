@@ -47,8 +47,9 @@ import StripeModal from "./StripeModal";
 import PaystackPop from "@paystack/inline-js";
 import Loader from "../loader/Loader";
 import CheckoutSkeleton from "./CheckoutSkeleton";
-import { FiTruck } from "react-icons/fi";
-import { MdOutlineStorefront } from "react-icons/md";
+import { FiPhoneCall, FiTruck } from "react-icons/fi";
+import { MdOutlineStorefront, MdOutlineWatchLater } from "react-icons/md";
+import { IoLocationOutline } from "react-icons/io5";
 
 const Checkout = () => {
   const router = useRouter();
@@ -635,6 +636,10 @@ const Checkout = () => {
     }
   };
 
+  const handleLocationRedirect = (lat, lng) => {
+    window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
+  };
+
   return loading ? (
     <CheckoutSkeleton />
   ) : (
@@ -770,28 +775,81 @@ const Checkout = () => {
                       </div>
                     ) : (
                       <div className="flex flex-col cardBorder rounded-sm mb-4">
-                        <div className="flex justify-between backgroundColor py-4 px-2 ">
+                        <div className="flex item-center gap-2 border-b p-4 ">
+                          <MdOutlineStorefront size={28} />
                           <span className="font-bold text-base md:text-xl">
-                            {t("store_address")}
+                            {t("pickup_from_store")}
                           </span>
                         </div>
-                        <div className="flex flex-col h-full px-4 py-6 gap-1  border-b">
-                          <div className="flex gap-2 items-center">
-                            <h2 className="font-bold text-md ">
-                              {t("seller_name")} :
-                            </h2>
-                            <p>
-                              {checkoutData?.seller_self_pickup?.seller_name}
-                            </p>
+                        <div className="flex flex-col h-full p-4   border-b gap-6">
+                          <div className="flex justify-between items-center">
+                            <div className="flex gap-2 items-center">
+                              <IoLocationOutline size={22} />
+                              <div className="flex flex-col gap-1">
+                                <h2 className="font-bold text-base">
+                                  {
+                                    checkoutData?.seller_self_pickup
+                                      ?.seller_name
+                                  }
+                                </h2>
+                                <p className="font-medium">
+                                  {
+                                    checkoutData?.seller_self_pickup
+                                      ?.pickup_store_address
+                                  }
+                                </p>
+                              </div>
+                            </div>
+                            <div>
+                              {/* EDITME: */}
+                              <button
+                                className="px-4 py-2 flex item-center footer text-white rounded-md gap-1"
+                                onClick={() => {
+                                  handleLocationRedirect(
+                                    checkoutData?.seller_self_pickup
+                                      ?.pickup_latitude,
+                                    checkoutData?.seller_self_pickup
+                                      ?.pickup_longitude
+                                  );
+                                }}
+                              >
+                                <IoLocationOutline size={22} />
+                                {t("direction")}
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex gap-2 items-center">
-                            <p className="font-bold text-md">
-                              {t("store_timing")} :
-                            </p>
-                            <p>{`${checkoutData?.seller_self_pickup?.opening_time} - ${checkoutData?.seller_self_pickup?.closing_time}`}</p>
+                          <div className="flex gap-2">
+                            <div className="flex gap-2 items-center">
+                              <FiPhoneCall size={20} />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <h2 className="font-bold text-base">
+                                {t("phone")}
+                              </h2>
+                              <p className="font-medium">
+                                {
+                                  checkoutData?.seller_self_pickup
+                                    ?.seller_mobile
+                                }
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex flex-col">
-                            {`${checkoutData?.seller_self_pickup?.pickup_latitude}, ${checkoutData?.seller_self_pickup?.pickup_longitude}, ${checkoutData?.seller_self_pickup?.pickup_store_address}`}
+                          <div className="flex gap-2">
+                            <div className="flex gap-2 items-center">
+                              <MdOutlineWatchLater size={20} />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <h2 className="font-bold text-base">
+                                {t("open_hours")}
+                              </h2>
+                              <p className="font-medium">
+                                {`${t("today")} ${
+                                  checkoutData?.seller_self_pickup.opening_time
+                                } - ${
+                                  checkoutData?.seller_self_pickup.closing_time
+                                }`}
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <div className="flex justify-end m-4">

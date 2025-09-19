@@ -557,5 +557,9 @@
   "order_type":"Order Type",
   "ready_to_pickup":"ready for pickup",
   "pickuped":"Pickuped",
-  "order_is_pickuped":"Order is pickuped"
+  "order_is_pickuped":"Order is pickuped",
+  "pickup_from_store":"Pickup From Store",
+  "direction":"Direction",
+  "open_hours":"Open Hours",
+  "today":"Today"
 }

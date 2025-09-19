@@ -1,6 +1,6 @@
 import { t } from "@/utils/translation";
-import { CloudCog } from "lucide-react";
 import React from "react";
+
 import { useSelector } from "react-redux";
 
 const FinalCheckoutSummary = ({ orderDetail }) => {
