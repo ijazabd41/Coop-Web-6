@@ -801,7 +801,6 @@ const Checkout = () => {
                               </div>
                             </div>
                             <div>
-                              {/* EDITME: */}
                               <button
                                 className="px-4 py-2 flex item-center footer text-white rounded-md gap-1"
                                 onClick={() => {

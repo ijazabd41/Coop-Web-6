@@ -433,7 +433,7 @@
   "user_exist_with_email": "User already register with email login, please login with email",
   "user_exist_with_apple": "User already register with apple login, please login with apple",
   "user_exist_with_phone": "User already register with phone login, please login with phone",
-  "email_not_verified": "Email ID already registered with emailPlease check Inbox for verification code",
+  "email_not_verified": "Email ID already registered with email, Please check Inbox for verification code",
   "verification_mail_sent_successfully": "Verification Email sent successfully",
   "forget_password_?": "Forgot Password?",
   "forget_password": "Forgot Password",

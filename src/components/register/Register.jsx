@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import Image from "next/image";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import GoogleLogo from "@/assets/googleLogin.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import * as api from "@/api/apiRoutes";
@@ -12,11 +10,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthType } from "@/redux/slices/userSlice";
 import { auth } from "@/utils/firebase";
-import {
-  GoogleAuthProvider,
-  signInWithPhoneNumber,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithPhoneNumber } from "firebase/auth";
 
 const Register = ({
   showRegister,
@@ -311,6 +305,16 @@ const Register = ({
         setPhoneNumberWithoutCountryCode("");
       } else if (res.message == "email_not_verified") {
         toast.error(t("email_not_verified"));
+        setShowRegister(false);
+        setIsLoading(false);
+        setPassword("");
+        setName("");
+        setConfirmPassword("");
+        setFriendCode("");
+        setPhoneNumber("");
+        setPhoneNumberWithoutCountryCode("");
+      } else if (res.message == "user_exist_with_google") {
+        toast.error(t("user_exist_with_google"));
         setShowRegister(false);
         setIsLoading(false);
         setPassword("");

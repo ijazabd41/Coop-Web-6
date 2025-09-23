@@ -435,6 +435,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       ) {
         setError(t("user_not_exist"));
         setLoading(false);
+      } else if (res?.message == "user_exist_with_google") {
+        setError(t("user_exist_with_google"));
+        setLoading(false);
       } else {
         setUserAuthType(type);
         setEmail(user?.providerData?.[0]?.email);
@@ -566,6 +569,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setPassword("");
         } else if (res.message == "user_exist_with_email") {
           toast.error(t("user_exist_with_email"));
+        } else if (res.message == "user_exist_with_google") {
+          toast.error(t("user_exist_with_google"));
+          setError(t("user_exist_with_google"));
+          setPassword("");
         } else {
           setError(t("password_not_valid"));
           // setInputValue("")
@@ -977,7 +984,6 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                             setPassword("");
                             setError("");
                           }}
-                          // onClick={handleGoogleLogin}
                           className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal"
                         >
                           <FiPhone size={30} className="h-[30px] w-[30px]" />{" "}
@@ -992,14 +998,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                       {setting?.web_settings?.site_title}{" "}
                       <Link
                         href="/terms-and-conditions"
-                        className="text-blue-600 underline hover:text-blue-800"
+                        className="primaryColor underline hover:text-blue-800"
                       >
                         {t("terms_of_service")}
                       </Link>{" "}
                       {t("and")}{" "}
                       <Link
                         href="/privacy-policy"
-                        className="text-blue-600 underline hover:text-blue-800"
+                        className="primaryColor underline hover:text-blue-800"
                       >
                         {t("privacy_policy")}
                       </Link>

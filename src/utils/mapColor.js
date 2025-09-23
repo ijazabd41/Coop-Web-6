@@ -18,7 +18,9 @@ export const darkThemeStyles = [
     {
       featureType: "administrative",
       elementType: "geometry",
-      stylers: [{ color: "#757575" }],
+      stylers: [{ 
+        
+        color: "#757575" }],
     },
     {
       featureType: "administrative.country",
