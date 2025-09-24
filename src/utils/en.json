@@ -561,5 +561,11 @@
   "pickup_from_store":"Pickup From Store",
   "direction":"Direction",
   "open_hours":"Open Hours",
-  "today":"Today"
+  "today":"Today",
+  "playStore":"Play Store",
+  "appStore":"App Store",
+  "downloadPromptPlayStore": "Download our app from Play Store for the best experience",
+  "downloadPromptAppStore": "Download our app from App Store for the best experience",
+  "betterExperienceInApp": "Get a better experience in our mobile app",
+  "openInApp": "Open in App"
 }

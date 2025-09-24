@@ -304,7 +304,7 @@ const Register = ({
         setPhoneNumber("");
         setPhoneNumberWithoutCountryCode("");
       } else if (res.message == "email_not_verified") {
-        toast.error(t("email_not_verified"));
+        toast.error(t("user_exist_with_email"));
         setShowRegister(false);
         setIsLoading(false);
         setPassword("");

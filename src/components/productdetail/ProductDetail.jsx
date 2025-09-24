@@ -53,6 +53,7 @@ import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/S
 import Link from "next/link";
 import ProductZoomImage from "./ProductZoomImage";
 import { useMediaQuery } from "react-responsive";
+import MobileBottomSheet from "../mobile-bottom-sheet/MobileBottomSheet";
 
 const ProductDetail = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 765px)" });
@@ -849,6 +850,7 @@ const ProductDetail = () => {
         product={product}
         selectedVariant={selectVariant}
       />
+      {isMobile && <MobileBottomSheet isOpen={true} />}
     </section>
   );
 };
