@@ -53,6 +53,7 @@ const NewAddressModal = ({
   }, [showAddAddres]);
 
   useEffect(() => {
+   
     const center = {
       lat: localLocation.lat,
       lng: localLocation.lng,
@@ -185,6 +186,7 @@ const NewAddressModal = ({
         toast.success("Succesfully Updated Address!");
         fetchAddress();
         setShowAddAddres(false);
+        setLoading(false);
       } else {
         setLoading(false);
       }

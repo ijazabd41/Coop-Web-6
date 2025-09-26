@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CancelReasonModal from "./CancelReasonModal";
 import ReturnReasonModal from "./ReturnReasonModal";
-import { FaStar } from "react-icons/fa";
 import { MdOutlineStar } from "react-icons/md";
 import ProductRatingModal from "./ProductRatingModal";
-import { rating } from "@/api/apiEndpoints";
 import { IoMdStar } from "react-icons/io";
 import RatingUpdateModal from "./RatingUpdateModal";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
@@ -53,7 +51,6 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
           <tr>
             <th className="text-left p-4 border-b ">{t("product")}</th>
             <th className="text-left p-4 border-b ">{t("price")}</th>
-            {/* <th className="text-left p-4 border-b ">{t("total")}</th> */}
             <th className="text-left p-4 border-b ">{t("action")}</th>
           </tr>
         </thead>
@@ -104,9 +101,9 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                       </button>
                     )}
                     {Number(product?.active_status) === 8 && (
-                      <button className="text-[#DB3D26]">
-                        {t("returned")}
-                      </button>
+                      <span className="text-[#DB3D26]">{`${t("total")} ${
+                        setting?.currency
+                      }${product?.sub_total} ${t("refunded")}`}</span>
                     )}
                     {Number(product?.return_requested) === 3 && (
                       <button className=" text-red-500 ">
@@ -121,15 +118,15 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                     {product?.price?.toFixed(
                       setting?.decimal_point ? setting?.decimal_point : 0
                     )}
+                    {/* {product?.discounted_price == 0
+                      ? product?.price?.toFixed(
+                          setting?.decimal_point ? setting?.decimal_point : 0
+                        )
+                      : product?.discounted_price?.toFixed(
+                          setting?.decimal_point ? setting?.decimal_point : 0
+                        )} */}
                   </p>
-                  {/* {product?.discounted_price != 0 && <p className="text-sm  line-through">{setting?.currency}
-                                    {product?.price?.toFixed(2)}
-                                </p>} */}
                 </td>
-                {/* <td className="p-4 font-bold">
-                  {setting?.currency}
-                  {product?.sub_total?.toFixed(2)}
-                </td> */}
                 <td className="p-4 ">
                   <div className="flex gap-2 flex-col items-start">
                     {Number(product?.active_status) === 6 &&

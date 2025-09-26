@@ -56,7 +56,7 @@ const OrderStepper = ({ orderDetail }) => {
           <div className="relative">
             <div className="w-12 h-12 flex items-center border-4 border-[#273F40] justify-center primaryBackColor  rounded-full">
               <Image
-                src={status.icon.src}
+                src={status?.icon?.src}
                 alt="icon"
                 height={0}
                 width={0}

@@ -294,49 +294,29 @@ const Register = ({
         setPhoneNumber("");
         setFriendCode("");
       } else if (res.message == "user_exist_with_email") {
-        toast.error(t("user_exist_with_email"));
-        setShowRegister(false);
-        setIsLoading(false);
-        setPassword("");
-        setName("");
-        setConfirmPassword("");
-        setFriendCode("");
-        setPhoneNumber("");
-        setPhoneNumberWithoutCountryCode("");
+        handleResponseError(res.message);
       } else if (res.message == "email_not_verified") {
-        toast.error(t("user_exist_with_email"));
-        setShowRegister(false);
-        setIsLoading(false);
-        setPassword("");
-        setName("");
-        setConfirmPassword("");
-        setFriendCode("");
-        setPhoneNumber("");
-        setPhoneNumberWithoutCountryCode("");
+        handleResponseError(res.message);
       } else if (res.message == "user_exist_with_google") {
-        toast.error(t("user_exist_with_google"));
-        setShowRegister(false);
-        setIsLoading(false);
-        setPassword("");
-        setName("");
-        setConfirmPassword("");
-        setFriendCode("");
-        setPhoneNumber("");
-        setPhoneNumberWithoutCountryCode("");
+        handleResponseError(res.message);
       } else {
-        // For failed to send verification email
-        toast.error(res.message);
-        setShowRegister(false);
-        setPassword("");
-        setName("");
-        setConfirmPassword("");
-        setFriendCode("");
-        setPhoneNumber("");
-        setPhoneNumberWithoutCountryCode("");
+        handleResponseError(res.message);
       }
     } catch (error) {
       console.log("error", error);
     }
+  };
+
+  const handleResponseError = (errorMessage) => {
+    toast.error(t(errorMessage));
+    setShowRegister(false);
+    setIsLoading(false);
+    setPassword("");
+    setName("");
+    setConfirmPassword("");
+    setFriendCode("");
+    setPhoneNumber("");
+    setPhoneNumberWithoutCountryCode("");
   };
 
   const handleOtpChange = (e) => {

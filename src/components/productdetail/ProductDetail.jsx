@@ -56,11 +56,11 @@ import { useMediaQuery } from "react-responsive";
 import MobileBottomSheet from "../mobile-bottom-sheet/MobileBottomSheet";
 
 const ProductDetail = () => {
-  const isMobile = useMediaQuery({ query: "(max-width: 765px)" });
+  const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug, isMobile } = router.query;
   const pathname = usePathname();
   const city = useSelector((state) => state.City.city);
   const setting = useSelector((state) => state.Setting);
@@ -71,6 +71,8 @@ const ProductDetail = () => {
   const favoriteProducts = useSelector(
     (state) => state.Favorite.favouriteProductIds
   );
+
+  const isMobileDevice = isMobile === "true";
 
   const [product, setProduct] = useState([]);
   const [selectVariant, setSelectedVariant] = useState([]);
@@ -402,7 +404,7 @@ const ProductDetail = () => {
                 <div className="grid  grid-cols-1 md:grid-cols-12 mt-2 gap-4 items-start  ">
                   <div className="col-span-12 md:col-span-4 ">
                     <div className="relative aspect-square h-auto w-full">
-                      {isMobile ? (
+                      {isMobileScreen ? (
                         <ImageWithPlaceholder
                           src={selectedImage}
                           alt={product?.name}
@@ -850,7 +852,7 @@ const ProductDetail = () => {
         product={product}
         selectedVariant={selectVariant}
       />
-      {isMobile && <MobileBottomSheet isOpen={true} />}
+      {isMobileScreen && isMobileDevice && <MobileBottomSheet isOpen={true} />}
     </section>
   );
 };

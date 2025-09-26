@@ -67,8 +67,8 @@ const ActiveOrdersCard = ({ order }) => {
         );
       case "9":
         return (
-          <span className="p-2 text-center w-10/12 border-[1px] border-[#319795] rounded-sm text-base font-bold text-[#319795]">
-            {t("order_status_display_name_recieved")}
+          <span className="p-2 text-center w-10/12 border-[1px] border-[#e3aa0e] rounded-sm text-base font-bold text-[#e3aa0e]">
+            {t("order_in_process")}
           </span>
         );
       case "10":
@@ -107,16 +107,26 @@ const ActiveOrdersCard = ({ order }) => {
       <div className="py-3 px-4">
         <div className="w-full cardBorder rounded-md">
           <div className="flex flex-col gap-3 md:gap-0 md:grid grid-cols-12 p-4 border-b-2">
-            <div className="col-span-1  ">
+            <div className="col-span-1">
               <p className="font-normal text-sm">{t("order")}</p>
               <p className="font-bold text-sm">{order?.id}</p>
             </div>
-            <div className="col-span-8">
+            <div className="col-span-2">
+              <p className="font-normal text-sm">{t("order_type")}</p>
+              <p className="font-bold text-sm">
+                {" "}
+                {order?.order_type == "doorstep"
+                  ? t("home_delivery")
+                  : t("store_pickup")}
+              </p>
+            </div>
+            <div className="col-span-6">
               <p className="font-normal text-sm">{t("orderDate")}</p>
               <p className="font-bold text-sm">
                 {formatCustomDate(order?.date)}
               </p>
             </div>
+
             <div className="col-span-3 flex flex-col items-start md:items-end">
               <p className="font-normal text-sm">{t("orderStatus")}</p>
               {getOrderStatus()}

@@ -92,6 +92,8 @@ const Checkout = () => {
   const [checkoutData, setCheckoutData] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
 
+  console.log("loading", loading);
+
   useEffect(() => {
     fetchAddress();
     handleFetchTimeSlots();
@@ -199,7 +201,6 @@ const Checkout = () => {
   };
 
   const fetchAddress = async () => {
-    setLoading(true);
     try {
       const response = await api.getAddress();
       if (response.status == 1) {
@@ -640,7 +641,7 @@ const Checkout = () => {
     window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
   };
 
-  return loading ? (
+  return loading == true ? (
     <CheckoutSkeleton />
   ) : (
     <section>

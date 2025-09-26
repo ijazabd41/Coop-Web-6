@@ -9,11 +9,11 @@ export function cn(...inputs) {
 export function formatCustomDate(dateString) {
   if (!dateString) return;
 
-  const isoCompatibleString = dateString.replace(" ", "T") + "Z";
-
+  const isoCompatibleString = dateString.replace(/Z+$/, "Z");
+  // NOTE: for removing the zz from created At which return Nan
+  // const isoCompatibleString = dateString.replace(" ", "T") + "Z";
   const date = new Date(isoCompatibleString);
 
-  // Local parts
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();

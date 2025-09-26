@@ -68,6 +68,7 @@ export const checkoutReducer = createSlice({
         usedWalletBalance: 0,
         orderNote: "",
         checkoutTotal: 0,
+        orderType: "doorstep",
         phonepecheckoutdetails, // preserve the existing value
       });
     },

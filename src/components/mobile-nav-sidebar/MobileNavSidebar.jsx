@@ -95,9 +95,9 @@ const MobileNavSidebar = ({ open, setOpen, handleLanguageChange }) => {
           <div className="p-4 flex flex-col gap-2">
             <div className="flex flex-col items-start">{t("follow_us")}</div>
             <div className="flex justify-center ">
-              <ul className="flex justify-center gap-3 items-center h-12 w-full backgroundColor">
+              <ul className="flex justify-center gap-1 items-center h-12 w-full backgroundColor">
                 {setting?.social_media &&
-                  setting?.social_media?.slice(0, 4)?.map((social, index) => {
+                  setting?.social_media?.slice(0, 7)?.map?.((social, index) => {
                     return (
                       <React.Fragment key={social?.id}>
                         <Link href={social?.link || "#"} target="_blank">

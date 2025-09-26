@@ -24,9 +24,20 @@ const PrevOrderCard = ({ order }) => {
       <div className="py-3 px-4">
         <div className="w-full  cardBorder rounded-md">
           <div className=" p-4 border-b-2 flex   gap-4 md:gap-0 justify-between">
-            <div className=" ">
-              <p className="font-normal text-sm">{t("order")}</p>
-              <p className="font-bold text-sm">{order?.id}</p>
+            <div className="flex gap-4">
+              <div>
+                <p className="font-normal text-sm">{t("order")}</p>
+                <p className="font-bold text-sm">{order?.id}</p>
+              </div>
+              <div>
+                <p className="font-normal text-sm">{t("order_type")}</p>
+                <p className="font-bold text-sm">
+                  {" "}
+                  {order?.order_type == "doorstep"
+                    ? t("home_delivery")
+                    : t("store_pickup")}
+                </p>
+              </div>
             </div>
             <div className="">
               <div>

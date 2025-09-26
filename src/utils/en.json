@@ -250,6 +250,7 @@
   "required_login_message_for_cart": "Oops! You need to login first to add items into cart!",
   "order_status_display_name_shipped": "Shipped",
   "order_status_display_name_recieved": "Received",
+  "order_in_process":"In Process",
   "empty_notification_list_description": "You have no notification right now come back later.",
   "order_status_display_name_delivered": "Delivered",
   "required_login_message_for_wishlist": "Oops! You need to login first to add items into wishlist!",
@@ -431,6 +432,7 @@
   "alreadyHaveAnAccount": "Already have an account?",
   "user_exist_with_google": "User already register with google login, please login with google",
   "user_exist_with_email": "User already register with email login, please login with email",
+  "user_exist_but_not_verified":"This email is already registered. Please log in with your email.",
   "user_exist_with_apple": "User already register with apple login, please login with apple",
   "user_exist_with_phone": "User already register with phone login, please login with phone",
   "email_not_verified": "Email ID already registered with email, Please check Inbox for verification code",
@@ -567,5 +569,6 @@
   "downloadPromptPlayStore": "Download our app from Play Store for the best experience",
   "downloadPromptAppStore": "Download our app from App Store for the best experience",
   "betterExperienceInApp": "Get a better experience in our mobile app",
-  "openInApp": "Open in App"
+  "openInApp": "Open in App",
+  "refunded":"refunded"
 }

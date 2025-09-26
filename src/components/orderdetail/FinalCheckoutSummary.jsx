@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 
 const FinalCheckoutSummary = ({ orderDetail }) => {
   const setting = useSelector((state) => state.Setting.setting);
-
   return (
     <div className="max-w-md p-6 rounded-md border cartBorder ">
       <div className="flex justify-between items-center mb-4">
@@ -28,7 +27,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
             <span className="">{t("sub_total")}</span>
             <span className="font-semibold">
               {setting?.currency}
-              {orderDetail?.total}
+              {Number(orderDetail?.remaining_total)}
             </span>
           </div>
 
@@ -89,7 +88,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               </span>
               <span className="text-green-600 font-bold">
                 {setting?.currency}
-                {orderDetail?.final_total}
+                {Number(orderDetail?.remaining_final)}
               </span>
             </div>
           </div>
