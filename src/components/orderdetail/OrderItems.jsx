@@ -118,13 +118,6 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                     {product?.price?.toFixed(
                       setting?.decimal_point ? setting?.decimal_point : 0
                     )}
-                    {/* {product?.discounted_price == 0
-                      ? product?.price?.toFixed(
-                          setting?.decimal_point ? setting?.decimal_point : 0
-                        )
-                      : product?.discounted_price?.toFixed(
-                          setting?.decimal_point ? setting?.decimal_point : 0
-                        )} */}
                   </p>
                 </td>
                 <td className="p-4 ">

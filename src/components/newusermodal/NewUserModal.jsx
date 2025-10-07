@@ -15,6 +15,7 @@ import {
   setCartSubTotal,
   setGuestCartTotal,
   setIsGuest,
+  setSelfPickupMode,
 } from "@/redux/slices/cartSlice";
 import { setSetting } from "@/redux/slices/settingSlice";
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
@@ -154,6 +155,7 @@ const NewUserModal = ({
         const productsData = getProductData(response.data);
         dispatch(setCartProducts({ data: productsData }));
         dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
+        dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
       } else {
         dispatch(setCart({ data: null }));
       }

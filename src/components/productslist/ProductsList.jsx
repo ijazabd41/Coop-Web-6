@@ -48,7 +48,10 @@ const Products = () => {
     filterProductsFromApi({
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
-      category_ids: filter?.category_id,
+      category_ids:
+        filter?.category_id == "NaN" || filter?.category_id == "all categories"
+          ? null
+          : filter?.category_id,
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
       search: filter?.search,
@@ -134,8 +137,6 @@ const Products = () => {
       console.log(error.message);
     }
   };
-
-
 
   const handlePrices = async (result) => {
     if (

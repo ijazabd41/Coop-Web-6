@@ -92,8 +92,6 @@ const Checkout = () => {
   const [checkoutData, setCheckoutData] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
 
-  console.log("loading", loading);
-
   useEffect(() => {
     fetchAddress();
     handleFetchTimeSlots();
@@ -695,10 +693,7 @@ const Checkout = () => {
                             type="radio"
                             name="delivery"
                             value="selfpickup"
-                            disabled={
-                              checkoutData?.seller_self_pickup
-                                ?.self_pickup_mode == 0
-                            }
+                            disabled={cart?.self_pickup_mode == 0}
                             checked={checkout?.orderType == "selfpickup"}
                             className="mr-3 primaryAccentColor scale-150"
                             onChange={(e) => handleOrderType(e.target.value)}

@@ -4,7 +4,11 @@ import CartProductCard from "./CartProductCard";
 import CartCouponCard from "./CartCouponCard";
 import { t } from "@/utils/translation";
 import { useSelector, useDispatch } from "react-redux";
-import { setCartProducts, setCartSubTotal } from "@/redux/slices/cartSlice";
+import {
+  setCartProducts,
+  setCartSubTotal,
+  setSelfPickupMode,
+} from "@/redux/slices/cartSlice";
 import * as api from "@/api/apiRoutes";
 import CouponCodeDrawer from "@/components/couponcode/CouponCodeDrawer";
 import Link from "next/link";
@@ -69,6 +73,8 @@ const Cart = () => {
       if (cartData?.status == 1) {
         setCartProductsData(cartData?.data?.cart);
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
+        dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
+        dispatch(s);
         setCartData(cartData?.data);
         setLoading(false);
         setInitialLoad(false);

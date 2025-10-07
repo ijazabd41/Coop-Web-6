@@ -18,6 +18,7 @@ import {
   setCartPromo,
   setCartSubTotal,
   setGuestCartTotal,
+  setSelfPickupMode,
 } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import Login from "../login/Login";
@@ -69,6 +70,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
       if (cartData?.status == 1) {
         setCartProductsData(cartData?.data?.cart);
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
+        dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
         setCartData(cartData?.data);
         await handleApplyCoupon();
         const productsData = cartData?.data?.cart?.map((product) => {

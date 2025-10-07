@@ -197,6 +197,7 @@ const Header = () => {
     setSearchCatId(value);
     dispatch(setSearchedCategory({ data: value }));
   };
+
   const handleSearchData = async (searchValue) => {
     setIsSuggLoading(true);
     try {
