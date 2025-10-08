@@ -9,9 +9,11 @@ import OrderItems from "./OrderItems";
 import OrderStepper from "./OrderStatusStepper";
 import FinalCheckoutSummary from "./FinalCheckoutSummary";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
-import { MdOutlineFileDownload } from "react-icons/md";
+import { MdOutlineFileDownload, MdOutlineWatchLater } from "react-icons/md";
 import ProductDetail from "../productdetail/ProductDetail";
 import Loader from "../loader/Loader";
+import { FiPhoneCall } from "react-icons/fi";
+import { IoLocationOutline } from "react-icons/io5";
 
 const OrderDetail = () => {
   const router = useRouter();
@@ -62,6 +64,10 @@ const OrderDetail = () => {
         toast.error("Something went wrong!");
       }
     }
+  };
+
+  const handleLocationRedirect = (lat, lng) => {
+    window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
   };
 
   return (
@@ -140,12 +146,81 @@ const OrderDetail = () => {
               )}
 
               <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
-                <div className="flex flex-col gap-3">
-                  <h1 className="font-bold text-2xl">{t("shippingAdress")}</h1>
-                  <div className="cardBorder rounded-sm">
-                    <OrderAdressCard orderDetail={orderDetail} />
+                {orderDetail?.order_type == "doorstep" ? (
+                  <div className="flex flex-col gap-3">
+                    <h1 className="font-bold text-2xl">
+                      {t("shippingAdress")}
+                    </h1>
+                    <div className="cardBorder rounded-sm">
+                      <OrderAdressCard orderDetail={orderDetail} />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <h1 className="font-bold text-2xl">
+                      {t("pickup_from_store")}
+                    </h1>
+                    <div className="flex flex-col h-full p-4   cardBorder rounded-sm gap-6">
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2 items-center">
+                          <IoLocationOutline size={22} />
+                          <div className="flex flex-col gap-1">
+                            <h2 className="font-bold text-base">
+                              {orderDetail?.pickup_address?.seller_name}
+                            </h2>
+                            <p className="font-medium">
+                              {
+                                orderDetail?.pickup_address
+                                  ?.pickup_store_address
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                            className="px-4 py-2 flex item-center footer text-white rounded-md gap-1"
+                            onClick={() => {
+                              handleLocationRedirect(
+                                orderDetail?.pickup_address?.pickup_latitude,
+                                orderDetail?.pickup_address?.pickup_longitude
+                              );
+                            }}
+                          >
+                            <IoLocationOutline size={22} />
+                            {t("direction")}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2 items-center">
+                          <FiPhoneCall size={20} />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <h2 className="font-bold text-base">{t("phone")}</h2>
+                          <p className="font-medium">
+                            {orderDetail?.pickup_address?.seller_mobile}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2 items-center">
+                          <MdOutlineWatchLater size={20} />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <h2 className="font-bold text-base">
+                            {t("open_hours")}
+                          </h2>
+                          <p className="font-medium">
+                            {`${t("today")} ${
+                              orderDetail?.pickup_address?.opening_time
+                            } - ${orderDetail?.pickup_address?.closing_time}`}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-3">
                   <h1 className="font-bold text-2xl">{t("items")}</h1>
                   <OrderItems

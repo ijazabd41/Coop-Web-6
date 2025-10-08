@@ -91,9 +91,14 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                       </button>
                     )}
                     {Number(product?.return_requested) === 7 && (
-                      <button className="text-[#DB3D26]">
-                        {t("return_request_cancel_by_delivery_boy")}
-                      </button>
+                      <>
+                        <button className="text-[#DB3D26]">
+                          {t("return_request_cancel_by_delivery_boy")}
+                        </button>
+                        <p className="text-xs">{`${t("sellerNote")}: ${
+                          product?.cancellation_reason
+                        }`}</p>
+                      </>
                     )}
                     {Number(product?.return_requested) === 8 && (
                       <button className="text-[#212529]">
@@ -101,9 +106,9 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                       </button>
                     )}
                     {Number(product?.active_status) === 8 && (
-                      <span className="text-[#DB3D26]">{`${t("total")} ${
+                      <span className="text-[#DB3D26]">{`${t("totkal")} ${
                         setting?.currency
-                      }${product?.sub_total} ${t("refunded")}`}</span>
+                      }${product?.refund_amount} ${t("refunded")}`}</span>
                     )}
                     {Number(product?.return_requested) === 3 && (
                       <>
