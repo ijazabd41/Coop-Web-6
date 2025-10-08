@@ -106,9 +106,14 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                       }${product?.sub_total} ${t("refunded")}`}</span>
                     )}
                     {Number(product?.return_requested) === 3 && (
-                      <button className=" text-red-500 ">
-                        {t("return_rejected")}
-                      </button>
+                      <>
+                        <button className=" text-red-500 ">
+                          {t("return_rejected")}
+                        </button>
+                        <p className="text-xs">{`${t("sellerNote")}: ${
+                          product?.return_remarks
+                        }`}</p>
+                      </>
                     )}
                   </div>
                 </td>

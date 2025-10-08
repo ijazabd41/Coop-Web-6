@@ -570,5 +570,6 @@
   "downloadPromptAppStore": "Download our app from App Store for the best experience",
   "betterExperienceInApp": "Get a better experience in our mobile app",
   "openInApp": "Open in App",
-  "refunded":"refunded"
+  "refunded":"refunded",
+  "sellerNote":"Seller Note"
 }

@@ -441,10 +441,14 @@ const Header = () => {
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
                         ? cart?.guestCartTotal?.toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 0
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0
                           )
                         : cart?.cartSubTotal?.toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 0
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0
                           )}
                     </span>
                   </div>

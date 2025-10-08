@@ -692,7 +692,7 @@ const ProductDetail = () => {
                     <div className="backgroundColor rounded-sm p-4 flex flex-col gap-4">
                       {product?.indicator ? (
                         product?.indicator == 1 ? (
-                          <div className="flex gap-4 items-center">
+                          <div className="flex gap-3 items-center">
                             <div className="h-[28px] w-[28px] relative object-cover">
                               <Image
                                 src={VegIcon}
@@ -704,7 +704,7 @@ const ProductDetail = () => {
                             <p> {t("vegetarian")}</p>
                           </div>
                         ) : (
-                          <div className="flex gap-4 items-center">
+                          <div className="flex gap-3 items-center">
                             <div className="h-[32px] w-[32px] relative object-cover">
                               <Image
                                 src={NonVegIcon}
