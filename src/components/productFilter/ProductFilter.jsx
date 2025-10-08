@@ -37,8 +37,6 @@ const Filter = ({
   const city = useSelector((state) => state.City);
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(null);
-  const [treeData, setTreeData] = useState([]);
-  const [expandedKeys, setExpandedKeys] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [brands, setbrands] = useState(null);
   const [totalBrands, setTotalBrands] = useState();

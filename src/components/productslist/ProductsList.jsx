@@ -141,6 +141,8 @@ const Products = () => {
   const handlePrices = async (result) => {
     if (
       filter?.price_filter?.min_price !== undefined &&
+      filter?.price_filter?.min_price !== null &&
+      filter?.price_filter?.max_price !== null &&
       filter?.price_filter?.max_price !== undefined
     ) {
       setValues([
