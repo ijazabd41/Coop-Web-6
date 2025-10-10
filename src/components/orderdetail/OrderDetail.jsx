@@ -111,6 +111,7 @@ const OrderDetail = () => {
                 {Number(
                   orderDetail?.active_status < 6 &&
                     parseInt(orderDetail?.otp) !== 0 &&
+                    orderDetail.order_type == "doorstep" &&
                     orderDetail?.otp !== null
                 ) ? (
                   <div className="flex flex-col items-start md:items-end">
