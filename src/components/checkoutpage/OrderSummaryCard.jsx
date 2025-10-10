@@ -50,7 +50,7 @@ const OrderSummaryCard = ({
         ) : (
           <span className="font-semibold ">
             {setting?.currency}{" "}
-            {cart?.cart?.sub_total?.toFixed(
+            {cart?.cartSubTotal?.toFixed(
               setting?.decimal_point ? setting?.decimal_point : 0
             )}
           </span>
@@ -123,7 +123,7 @@ const OrderSummaryCard = ({
         ) : (
           <span className="font-semibold ">
             {setting?.currency}{" "}
-            {cart?.cart?.sub_total?.toFixed(
+            {cart?.cartSubTotal?.toFixed(
               setting?.decimal_point ? setting?.decimal_point : 0
             )}
           </span>
