@@ -368,7 +368,7 @@ const ProductDetail = () => {
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}?isMobile=true`
     );
     toast.success(t("link_copied_to_clipboard"));
   };

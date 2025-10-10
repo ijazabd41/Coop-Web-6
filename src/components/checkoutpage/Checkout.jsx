@@ -770,90 +770,111 @@ const Checkout = () => {
                         )}
                       </div>
                     ) : (
-                      <div className="flex flex-col cardBorder rounded-sm mb-4">
-                        <div className="flex item-center gap-2 border-b p-4 ">
-                          <MdOutlineStorefront size={28} />
-                          <span className="font-bold text-base md:text-xl">
-                            {t("pickup_from_store")}
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-base font-bold ">
+                            {t("order_note_title")}
                           </span>
+                          <textarea
+                            name=""
+                            id=""
+                            className="cardBorder rounded-sm w-full p-2 outline-none"
+                            value={checkout?.orderNote}
+                            onChange={(e) => handleChangeOrderNote(e)}
+                            placeholder={t("order_note")}
+                            maxLength={256}
+                          ></textarea>
                         </div>
-                        <div className="flex flex-col h-full p-4   border-b gap-6">
-                          <div className="flex justify-between items-center">
-                            <div className="flex gap-2 items-center">
-                              <IoLocationOutline size={22} />
-                              <div className="flex flex-col gap-1">
-                                <h2 className="font-bold text-base">
-                                  {
-                                    checkoutData?.seller_self_pickup
-                                      ?.seller_name
-                                  }
-                                </h2>
-                                <p className="font-medium">
-                                  {
-                                    checkoutData?.seller_self_pickup
-                                      ?.pickup_store_address
-                                  }
-                                </p>
+                        <div className="flex flex-col cardBorder rounded-sm mb-4">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex item-center gap-2 border-b p-4 ">
+                              <MdOutlineStorefront size={28} />
+                              <span className="font-bold text-base md:text-xl">
+                                {t("pickup_from_store")}
+                              </span>
+                            </div>
+                            <div className="flex flex-col h-full p-4   border-b gap-6">
+                              <div className="flex justify-between items-center">
+                                <div className="flex gap-2 items-center">
+                                  <IoLocationOutline size={22} />
+                                  <div className="flex flex-col gap-1">
+                                    <h2 className="font-bold text-base">
+                                      {
+                                        checkoutData?.seller_self_pickup
+                                          ?.seller_name
+                                      }
+                                    </h2>
+                                    <p className="font-medium">
+                                      {
+                                        checkoutData?.seller_self_pickup
+                                          ?.pickup_store_address
+                                      }
+                                    </p>
+                                  </div>
+                                </div>
+                                <div>
+                                  <button
+                                    className="px-4 py-2 flex item-center footer text-white rounded-md gap-1"
+                                    onClick={() => {
+                                      handleLocationRedirect(
+                                        checkoutData?.seller_self_pickup
+                                          ?.pickup_latitude,
+                                        checkoutData?.seller_self_pickup
+                                          ?.pickup_longitude
+                                      );
+                                    }}
+                                  >
+                                    <IoLocationOutline size={22} />
+                                    {t("direction")}
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <div className="flex gap-2 items-center">
+                                  <FiPhoneCall size={20} />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <h2 className="font-bold text-base">
+                                    {t("phone")}
+                                  </h2>
+                                  <p className="font-medium">
+                                    {
+                                      checkoutData?.seller_self_pickup
+                                        ?.seller_mobile
+                                    }
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <div className="flex gap-2 items-center">
+                                  <MdOutlineWatchLater size={20} />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <h2 className="font-bold text-base">
+                                    {t("open_hours")}
+                                  </h2>
+                                  <p className="font-medium">
+                                    {`${t("today")} ${
+                                      checkoutData?.seller_self_pickup
+                                        .opening_time
+                                    } - ${
+                                      checkoutData?.seller_self_pickup
+                                        .closing_time
+                                    }`}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                            <div>
-                              <button
-                                className="px-4 py-2 flex item-center footer text-white rounded-md gap-1"
-                                onClick={() => {
-                                  handleLocationRedirect(
-                                    checkoutData?.seller_self_pickup
-                                      ?.pickup_latitude,
-                                    checkoutData?.seller_self_pickup
-                                      ?.pickup_longitude
-                                  );
-                                }}
-                              >
-                                <IoLocationOutline size={22} />
-                                {t("direction")}
-                              </button>
-                            </div>
                           </div>
-                          <div className="flex gap-2">
-                            <div className="flex gap-2 items-center">
-                              <FiPhoneCall size={20} />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <h2 className="font-bold text-base">
-                                {t("phone")}
-                              </h2>
-                              <p className="font-medium">
-                                {
-                                  checkoutData?.seller_self_pickup
-                                    ?.seller_mobile
-                                }
-                              </p>
-                            </div>
+
+                          <div className="flex justify-end m-4">
+                            <button
+                              onClick={handlePickupOrderStep}
+                              className="text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal"
+                            >
+                              {t("continue")}
+                            </button>
                           </div>
-                          <div className="flex gap-2">
-                            <div className="flex gap-2 items-center">
-                              <MdOutlineWatchLater size={20} />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <h2 className="font-bold text-base">
-                                {t("open_hours")}
-                              </h2>
-                              <p className="font-medium">
-                                {`${t("today")} ${
-                                  checkoutData?.seller_self_pickup.opening_time
-                                } - ${
-                                  checkoutData?.seller_self_pickup.closing_time
-                                }`}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-end m-4">
-                          <button
-                            onClick={handlePickupOrderStep}
-                            className="text-white primaryBackColor px-4 py-2 rounded-sm text-xl font-normal"
-                          >
-                            {t("continue")}
-                          </button>
                         </div>
                       </div>
                     )}

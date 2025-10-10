@@ -17,9 +17,9 @@ const MobileBottomSheet = ({ isOpen = true }) => {
 
   const androidAppLink = settings?.playstore_url;
   const iosAppLink = settings?.appstore_url;
-  const appName = process.env.NEXT_PUBLIC_WEB_NAME || "eGrocer";
+  const appName = process.env.NEXT_PUBLIC_WEB_NAME || "egrocer";
 
-  const appScheme = process.env.NEXT_PUBLIC_WEB_NAME || "eGrocer";
+  const appScheme = process.env.NEXT_PUBLIC_WEB_NAME || "egrocer";
 
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
   const isAndroid = /android/i.test(userAgent);

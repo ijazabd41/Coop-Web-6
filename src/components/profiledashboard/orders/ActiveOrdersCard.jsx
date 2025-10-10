@@ -80,7 +80,7 @@ const ActiveOrdersCard = ({ order }) => {
       case "9":
         return (
           <span className="p-2 text-center w-10/12 border-[1px] border-[#59AC77] rounded-sm text-base font-bold text-[#59AC77]">
-            {t("pickuped")}
+            {t("picked")}
           </span>
         );
       default:

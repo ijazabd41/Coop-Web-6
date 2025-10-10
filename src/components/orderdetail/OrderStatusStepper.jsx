@@ -21,7 +21,7 @@ const OrderStepper = ({ orderDetail }) => {
     7: { icon: StatusSeven, label: t("cancelled") },
     9: { icon: StatusThree, label: t("order_status_display_name_recieved") },
     10: { icon: StatusTwo, label: t("ready_to_pickup") },
-    11: { icon: StatusSix, label: t("pickuped") },
+    11: { icon: StatusSix, label: t("picked") },
   };
 
   const [steps, setSteps] = useState([]);
