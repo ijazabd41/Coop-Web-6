@@ -28,7 +28,7 @@ const HomePageSlider = ({ slider }) => {
       loop: slideCount > 1,
       align: "center",
       containScroll: "trimSnaps",
-      direction: language?.type === "rtl" ? "rtl" : "ltr",
+      direction: language?.type === "RTL" ? "rtl" : "ltr",
     },
     [autoplayPlugin]
   );
