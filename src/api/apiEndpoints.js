@@ -53,6 +53,8 @@ export const verifyContact = "verify_user";
 export const liveTracking = "live_tracking";
 export const verifyUserByPhoneNum = "verify_user_exist";
 export const orderStatusPhonepe = "order_status_phonepe";
+export const blogs = "blogs";
+export const blogCategories = "blog_categories";
 
 export const remove = "remove";
 export const add = "add";

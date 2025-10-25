@@ -1,6 +1,7 @@
 "use client";
 import api from "./axiosMiddleware";
 import * as apiEndPoints from "./apiEndpoints";
+import { ApiError } from "next/dist/server/api-utils";
 
 // Authentication API's
 export const registerUser = async ({
@@ -399,6 +400,7 @@ export const getAddress = async () => {
   const response = await api.get(`${apiEndPoints.getAddress}`);
   return response.data;
 };
+
 export const addAddress = async ({
   name,
   mobile,
@@ -521,7 +523,6 @@ export const getPromo = async ({ amount = 0 }) => {
   const response = await api.get(`${apiEndPoints.getPromoCode}`, { params });
   return response.data;
 };
-
 export const setPromoCode = async ({ promoCodeName, amount = 0 }) => {
   const params = { promo_code: promoCodeName, total: amount };
   const response = await api.post(
@@ -539,7 +540,6 @@ export const getTimeSlots = async () => {
   );
   return response.data;
 };
-
 export const placeOrder = async ({
   productVariantId,
   quantity,
@@ -584,7 +584,6 @@ export const placeOrder = async ({
   const response = await api.post(`${apiEndPoints.placeOrder}`, formData);
   return response.data;
 };
-
 export const initiateTrasaction = async ({
   orderId,
   paymentMethod,
@@ -607,7 +606,6 @@ export const initiateTrasaction = async ({
   );
   return response.data;
 };
-
 export const addTransaction = async ({
   orderId,
   transactionId,
@@ -631,7 +629,6 @@ export const addTransaction = async ({
   const response = await api.post(`${apiEndPoints.addTransaction}`, formData);
   return response.data;
 };
-
 export const deleteOrder = async ({ orderId }) => {
   const formData = new FormData();
   formData.append("order_id", orderId);
@@ -803,5 +800,31 @@ export const getOrderStatusPhonepe = async ({ token, transaction_id }) => {
   };
 
   const response = await api.get(apiEndPoints.orderStatusPhonepe, { params });
+  return response.data;
+};
+
+// Blogs section API's
+export const getBlogsCategories = async ({
+  offset = 0,
+  limit = 10,
+  search = "",
+}) => {
+  const params = {
+    limit,
+    offset,
+    ...(search != "" ? { search } : {}),
+  };
+
+  const response = await api.get(apiEndPoints.blogCategories, { params });
+  return response.data;
+};
+
+export const getBlogs = async ({ offset, limit, categoryId }) => {
+  const params = {
+    limit,
+    offset,
+    ...(categoryId ? { categoryId } : {}),
+  };
+  const response = await api.get(apiEndPoints.blogs, { params });
   return response.data;
 };
