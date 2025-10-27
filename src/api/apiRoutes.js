@@ -819,7 +819,7 @@ export const getBlogsCategories = async ({
   return response.data;
 };
 
-export const getBlogs = async ({ offset, limit, categoryId }) => {
+export const getBlogs = async ({ offset, limit, categoryId = 0 }) => {
   const params = {
     limit,
     offset,

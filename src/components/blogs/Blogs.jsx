@@ -12,11 +12,13 @@ const Blogs = () => {
 
   useEffect(() => {
     handleFetchBlogsCategoris();
+    handleFetchBlogs();
   }, []);
 
   const handleFetchBlogs = async () => {
     try {
-      const blogs = await api.getBlogs();
+      const blogs = await api.getBlogs(0, 10);
+      setBlogs(blogs?.data);
     } catch (error) {
       console.log("error", error);
     }
@@ -26,6 +28,7 @@ const Blogs = () => {
     try {
       const blogsCategories = await api.getBlogsCategories(0, 10);
       setBlogCategories(blogsCategories?.data);
+      setSelectedCategory(blogsCategories?.data?.[0]);
     } catch (error) {
       console.log("error", error);
     }
@@ -33,13 +36,13 @@ const Blogs = () => {
 
   return (
     <div className="container my-12">
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-8 grid grid-cols-2 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <BlogCard key={i} />
+      <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
+        <div className="md:col-span-8 col-span-12  grid md:grid-cols-2 grid-cols-1 gap-6">
+          {blogs?.map((blog, i) => (
+            <BlogCard key={i} blog={blog} />
           ))}
         </div>
-        <div className="col-span-4 flex flex-col gap-6">
+        <div className="col-span-12 md:col-span-4 flex flex-col gap-6">
           <BlogsCategories
             blogsCategories={blogsCategories}
             selectedCategory={selectedCategory}
