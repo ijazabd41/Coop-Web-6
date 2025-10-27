@@ -30,7 +30,7 @@ const BlogCard = ({ blog }) => {
           <div>
             <h2 className="font-bold text-xl ">{blog?.title}</h2>
             <h4
-              className="text-left"
+              className="blog-card-description"
               dangerouslySetInnerHTML={{
                 __html:
                   blog?.description?.length > 100

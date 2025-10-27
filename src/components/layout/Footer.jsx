@@ -168,6 +168,14 @@ const Footer = () => {
                   {t("faq")}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/blogs"
+                  className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                >
+                  {t("blogs")}
+                </Link>
+              </li>
             </ul>
             {setting?.social_media?.length > 0 && (
               <div className="flex flex-col">

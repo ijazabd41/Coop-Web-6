@@ -13,9 +13,9 @@ const BlogsCategories = ({
         {blogsCategories?.map((category, i) => {
           return (
             <div
-              onClick={() => setSelectedCategory(category?.name)}
+              onClick={() => setSelectedCategory(category?.id)}
               className={`flex justify-between p-4 items-center  rounded-lg font-bold text-base ${
-                selectedCategory == category?.name
+                selectedCategory == category?.id
                   ? "primaryBackColor text-white"
                   : "headerBackgroundColor textColor"
               }  cursor-pointer`}

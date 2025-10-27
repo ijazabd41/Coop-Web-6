@@ -666,3 +666,12 @@ height: 100% !important;
 vertical-align: middle;
 border-radius: 8px; 
 }
+
+.blog-description * {
+  text-align: left !important;
+}
+
+.blog-card-description * {
+  text-align: left !important;
+
+}

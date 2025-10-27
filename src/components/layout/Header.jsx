@@ -394,6 +394,14 @@ const Header = () => {
                   >
                     <li>{t("contact_us")}</li>
                   </Link>
+                  <Link
+                    href={"/blogs"}
+                    className={
+                      router.pathname === "/blogs" ? "primaryColor" : ""
+                    }
+                  >
+                    <li>{t("blogs")}</li>
+                  </Link>
                 </ul>
               </div>
               <div className="flex sm:order-1 md:order-1 lg:hidden hover:cursor-pointer">

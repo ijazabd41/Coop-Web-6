@@ -87,6 +87,14 @@ const MobileNavSidebar = ({ open, setOpen, handleLanguageChange }) => {
             >
               <li>{t("contact_us")}</li>
             </Link>
+            <Link
+              href={"/blogs"}
+              className={`p-4 text-start border-b border-dashed ${
+                router.pathname === "/blogs" ? "primaryColor" : ""
+              }`}
+            >
+              <li>{t("blogs")}</li>
+            </Link>
           </ul>
         </div>
 

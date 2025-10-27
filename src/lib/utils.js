@@ -29,6 +29,9 @@ export function formatCustomDate(dateString) {
   return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
 }
 
+
+
+
 export const isRtl = () => {
   const state = store.getState();
   const isLangRtl =

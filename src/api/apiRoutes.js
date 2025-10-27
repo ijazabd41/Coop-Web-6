@@ -819,12 +819,27 @@ export const getBlogsCategories = async ({
   return response.data;
 };
 
-export const getBlogs = async ({ offset, limit, categoryId = 0 }) => {
+export const getBlogs = async ({ offset, limit, slug, categoryId = null }) => {
   const params = {
     limit,
     offset,
-    ...(categoryId ? { categoryId } : {}),
+    slug,
+    ...(categoryId !== null ? { category_id: categoryId } : null),
   };
   const response = await api.get(apiEndPoints.blogs, { params });
+  return response.data;
+};
+
+export const setBlogCount = async ({ blogId }) => {
+  const formData = new FormData();
+  formData.append("blog_id", blogId);
+  const response = await api.post(apiEndPoints.blogViewCount, formData);
+  return response.data;
+};
+
+export const getMostViewedBlogs = async ({ limit = 5 }) => {
+  const response = await api.get(
+    `${apiEndPoints.blogs}/${apiEndPoints.mostViewedBlogs}`
+  );
   return response.data;
 };
