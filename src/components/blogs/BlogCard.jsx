@@ -4,6 +4,7 @@ import { GoDotFill } from "react-icons/go";
 import { BsArrowUpRightCircle } from "react-icons/bs";
 import { t } from "@/utils/translation";
 import { useRouter } from "next/navigation";
+import { formatOnlyDate } from "@/lib/utils";
 
 const BlogCard = ({ blog }) => {
   const router = useRouter();
@@ -12,7 +13,7 @@ const BlogCard = ({ blog }) => {
   };
 
   return (
-    <div className="flex flex-col p-4 gap-6 border rounded-lg">
+    <div className="flex flex-col p-4 gap-6 border rounded-lg h-fit">
       <div>
         <ImageWithPlaceholder
           className={"h-[264px] w-full rounded-lg"}
@@ -24,7 +25,7 @@ const BlogCard = ({ blog }) => {
         <div className="flex gap-2 items-center">
           <p>{blog?.category?.name}</p>
           <GoDotFill />
-          <p>Sep 28, 2025</p>
+          <p>{formatOnlyDate(blog?.created_at)}</p>
         </div>
         <div className="flex flex-col gap-2">
           <div>

@@ -5,14 +5,19 @@ import BlogsCategories from "./BlogsCategories";
 import RecentBlogs from "./RecentBlogs";
 import * as api from "@/api/apiRoutes";
 import BlogSkeleton, { BlogCardSkeleton } from "./BlogsSkeleton";
+import { t } from "@/utils/translation";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [blogsCategories, setBlogCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [mostViewedBlogs, setMostViewedBlogs] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [totalBlogs, setTotalBlogs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [blogsLoading, setBlogsLoading] = useState(false);
+
+  const BLOG_LIMIT = 1;
 
   useEffect(() => {
     handleFetchBlogsCategoris();
@@ -20,20 +25,34 @@ const Blogs = () => {
   }, []);
 
   useEffect(() => {
-    handleFetchBlogs();
+    setOffset(0);
+    handleFetchBlogs(false, 0);
   }, [selectedCategory]);
 
-  const handleFetchBlogs = async () => {
+  const handleFetchBlogs = async (isFetchMore = false, customOffset) => {
     setBlogsLoading(true);
     try {
-      const blogs = await api.getBlogs({ categoryId: selectedCategory });
-      setBlogs(blogs?.data);
+      const blogs = await api.getBlogs({
+        offset: customOffset,
+        limit: BLOG_LIMIT,
+        categoryId: selectedCategory,
+      });
+      if (isFetchMore) {
+        setBlogs((prev) => [...prev, ...blogs.data]);
+        setOffset((prev) => prev + BLOG_LIMIT);
+      } else {
+        setBlogs(blogs?.data);
+        setOffset((prev) => prev + BLOG_LIMIT);
+      }
       setBlogsLoading(false);
+      setTotalBlogs(blogs?.total);
     } catch (error) {
       setBlogsLoading(false);
       console.log("error", error);
     }
   };
+
+  console.log("offset", offset);
 
   const handleFetchBlogsCategoris = async () => {
     setLoading(true);
@@ -64,14 +83,28 @@ const Blogs = () => {
   ) : (
     <div className="container my-12">
       <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
-        <div className="md:col-span-8 col-span-12  grid md:grid-cols-2 grid-cols-1 gap-6">
-          {blogsLoading
-            ? Array.from({ length: 3 })?.map((_, i) => {
-                return <BlogCardSkeleton key={i} />;
-              })
-            : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
+        <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+            {blogsLoading
+              ? Array.from({ length: 3 })?.map((_, i) => (
+                  <BlogCardSkeleton key={i} />
+                ))
+              : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
+          </div>
+
+          {blogs?.length < 3 && (
+            <div className="w-full flex justify-center mt-6">
+              <button
+                className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                onClick={() => handleFetchBlogs(true, offset)}
+              >
+                {t("load_more")}
+              </button>
+            </div>
+          )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-6">
+
+        <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
           <BlogsCategories
             blogsCategories={blogsCategories}
             selectedCategory={selectedCategory}

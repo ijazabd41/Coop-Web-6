@@ -29,8 +29,19 @@ export function formatCustomDate(dateString) {
   return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
 }
 
+export const formatOnlyDate = (dateString) => {
+  if (!dateString) return;
 
+  const isoCompatibleString = dateString.replace(/Z+$/, "Z");
+  // NOTE: for removing the zz from created At which return Nan
+  // const isoCompatibleString = dateString.replace(" ", "T") + "Z";
+  const date = new Date(isoCompatibleString);
 
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
 export const isRtl = () => {
   const state = store.getState();
