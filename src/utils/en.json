@@ -572,10 +572,10 @@
   "openInApp": "Open in App",
   "refunded":"refunded",
   "sellerNote":"Seller Note",
-  "recent_blogs":"Recent Blogs",
   "readMore":"Read More",
   "published_date":"Published Date",
   "read_time":"Read Time",
   "minutes":"Minutes",
-  "blogs":"Blogs"
+  "blogs":"Blogs",
+  "topViewedBlogs":"Top Viewed Blogs"
 }
