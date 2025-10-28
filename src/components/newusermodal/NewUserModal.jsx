@@ -13,6 +13,7 @@ import {
   setCart,
   setCartProducts,
   setCartSubTotal,
+  setDoorStepDeliveryMode,
   setGuestCartTotal,
   setIsGuest,
   setSelfPickupMode,
@@ -156,6 +157,11 @@ const NewUserModal = ({
         dispatch(setCartProducts({ data: productsData }));
         dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
+        dispatch(
+          setDoorStepDeliveryMode({
+            data: cartData?.data?.doorstep_delivery_mode,
+          })
+        );
       } else {
         dispatch(setCart({ data: null }));
       }

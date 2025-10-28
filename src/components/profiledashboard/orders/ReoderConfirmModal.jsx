@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setCartProducts,
   setCartSubTotal,
+  setDoorStepDeliveryMode,
   setSelfPickupMode,
 } from "@/redux/slices/cartSlice";
 
@@ -55,6 +56,7 @@ const ReoderConfirmModal = ({
       if (cartData.status == 1) {
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
+        dispatch(setDoorStepDeliveryMode({data:cartData?.data?.doorstep_delivery_mode}))
         const productsData = cartData?.data?.cart?.map((product) => {
           return {
             product_id: product?.product_id,

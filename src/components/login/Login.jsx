@@ -13,6 +13,7 @@ import {
   setCart,
   setCartProducts,
   setCartSubTotal,
+  setDoorStepDeliveryMode,
   setGuestCartTotal,
   setIsGuest,
   setSelfPickupMode,
@@ -364,6 +365,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       if (response.status === 1) {
         dispatch(setCart({ data: response.data }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
+        dispatch(setDoorStepDeliveryMode({data:cartData?.data?.doorstep_delivery_mode}))
         const productsData = getProductData(response.data);
         dispatch(setCartProducts({ data: productsData }));
         dispatch(setCartSubTotal({ data: response?.data?.sub_total }));

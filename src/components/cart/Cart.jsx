@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setCartProducts,
   setCartSubTotal,
+  setDoorStepDeliveryMode,
   setSelfPickupMode,
 } from "@/redux/slices/cartSlice";
 import * as api from "@/api/apiRoutes";
@@ -74,7 +75,11 @@ const Cart = () => {
         setCartProductsData(cartData?.data?.cart);
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
-        dispatch(s);
+        dispatch(
+          setDoorStepDeliveryMode({
+            data: cartData?.data?.doorstep_delivery_mode,
+          })
+        );
         setCartData(cartData?.data);
         setLoading(false);
         setInitialLoad(false);

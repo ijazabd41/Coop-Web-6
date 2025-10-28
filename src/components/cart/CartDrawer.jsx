@@ -17,6 +17,7 @@ import {
   setCartProducts,
   setCartPromo,
   setCartSubTotal,
+  setDoorStepDeliveryMode,
   setGuestCartTotal,
   setSelfPickupMode,
 } from "@/redux/slices/cartSlice";
@@ -71,6 +72,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
         setCartProductsData(cartData?.data?.cart);
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
+        dispatch(setDoorStepDeliveryMode({data:cartData?.data?.doorstep_delivery_mode}))
         setCartData(cartData?.data);
         await handleApplyCoupon();
         const productsData = cartData?.data?.cart?.map((product) => {

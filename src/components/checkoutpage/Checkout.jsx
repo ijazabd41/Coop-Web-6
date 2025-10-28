@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { FaRegCalendarAlt, FaTruck } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import {
   Select,
   SelectContent,
@@ -45,7 +45,6 @@ import { useRouter } from "next/router";
 import { setCurrentUser } from "@/redux/slices/userSlice";
 import StripeModal from "./StripeModal";
 import PaystackPop from "@paystack/inline-js";
-import Loader from "../loader/Loader";
 import CheckoutSkeleton from "./CheckoutSkeleton";
 import { FiPhoneCall, FiTruck } from "react-icons/fi";
 import { MdOutlineStorefront, MdOutlineWatchLater } from "react-icons/md";
@@ -96,6 +95,9 @@ const Checkout = () => {
     fetchAddress();
     handleFetchTimeSlots();
     getCurrentUser();
+    const orderType =
+      cart?.doorstep_delivery_mode != 0 ? "doorstep" : "selfpickup";
+    handleOrderType(orderType);
   }, []);
 
   useEffect(() => {
@@ -225,7 +227,7 @@ const Checkout = () => {
   };
 
   const handleFilterTimeSlots = () => {
-    const currentDate = new Date(); // Current date and time
+    const currentDate = new Date();
     const userSelectedDate = new Date(
       checkout?.selectedDate ? checkout?.selectedDate : new Date()
     );
@@ -238,11 +240,8 @@ const Checkout = () => {
         .map(Number);
       lastOrderTime.setHours(hours, minutes, seconds);
 
-      // Check if the selected date is today
       const isToday =
         userSelectedDate.toDateString() === currentDate.toDateString();
-
-      // Disable slot only if it's today AND the current time is past the last order time
       const isDisabled = isToday && currentDate >= lastOrderTime;
 
       return {
@@ -251,7 +250,7 @@ const Checkout = () => {
       };
     });
 
-    setAvailableTimeSlot(updatedTimeSlots); // Update the state with filtered slots
+    setAvailableTimeSlot(updatedTimeSlots);
   };
 
   const handleFetchTimeSlots = async (selectedDate) => {
@@ -259,9 +258,9 @@ const Checkout = () => {
     try {
       const response = await api.getTimeSlots();
       const allTimeSlots = response?.data?.time_slots || [];
-      setTimeSlotsData(response?.data); // Store the full response data if needed
-      setTimeSlots(allTimeSlots); // Store the original time slots
-      handleFilterTimeSlots(selectedDate); // Filter the time slots based on the selected date
+      setTimeSlotsData(response?.data);
+      setTimeSlots(allTimeSlots);
+      handleFilterTimeSlots(selectedDate);
       setLoading(false);
     } catch (error) {
       console.log("Error", error);
@@ -664,15 +663,15 @@ const Checkout = () => {
                       <h2 className="font-bold text-base md:text-xl">
                         {t("choose_delivery_method")}
                       </h2>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor ">
+                        <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor">
                           <input
                             type="radio"
                             name="delivery"
                             value="doorstep"
                             checked={checkout?.orderType == "doorstep"}
                             className="mr-3 primaryAccentColor scale-150"
+                            disabled={cart?.doorstep_delivery_mode == 0}
                             onChange={(e) => handleOrderType(e.target.value)}
                           />
                           <div className="flex items-center space-x-3">
@@ -880,90 +879,97 @@ const Checkout = () => {
                     )}
                   </div>
                 )}
+
                 {/* step 2 */}
                 {checkout?.currentStep == 2 && (
                   <div className="col-span-12 md:col-span-8 lg:col-span-9">
                     <div className="flex flex-col cardBorder rounded-sm mb-4 w-full">
                       <div className="flex  justify-between backgroundColor p-4">
                         <span className="font-bold text-xl">
-                          {t("preferred_day_and_time")}
+                          {timeSlotsData?.time_slot_setting == "true"
+                            ? t("preferred_day_and_time")
+                            : t("order_note_title")}
                         </span>
                       </div>
                       <div className="flex flex-col p-4 gap-6">
-                        <div className="grid grid-cols-12 items-center gap-4">
-                          <div className="col-span-12  md:col-span-6 flex flex-col gap-1 ">
-                            <span className="text-base font-bold">
-                              {t("preferred_delivery_day")}
-                              <span className="text-red-500">*</span>
-                            </span>
-
-                            <Popover open={isPopoverOpen}>
-                              <PopoverTrigger
-                                className="cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between "
-                                onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-                              >
-                                {formatDate(checkout?.selectedDate)}
-                                <FaRegCalendarAlt />
-                              </PopoverTrigger>
-                              {timeSlotsData?.time_slots_is_enabled ==
-                                "true" && (
-                                <PopoverContent className="w-full p-0">
-                                  <Calendar
-                                    mode="single"
-                                    selected={checkout?.selectedDate}
-                                    onSelect={handleSelectedDate}
-                                    className="rounded-md w-full"
-                                    fromDate={new Date()}
-                                    toDate={(() => {
-                                      let date = new Date();
-                                      let allowedDays =
-                                        parseInt(
-                                          setting?.setting
-                                            ?.time_slots_allowed_days
-                                        ) || 15;
-                                      date.setDate(
-                                        date.getDate() + allowedDays
-                                      );
-                                      return date;
-                                    })()}
-                                  />
-                                </PopoverContent>
-                              )}
-                            </Popover>
-                          </div>
-                          {timeSlotsData?.time_slots_is_enabled == "true" && (
-                            <div className="col-span-12 md:col-span-6  flex flex-col gap-1">
-                              <span className="text-base font-bold ">
-                                {t("preferred_delivery_time")}
+                        {timeSlotsData?.time_slot_setting == "true" && (
+                          <div className="grid grid-cols-12 items-center gap-4">
+                            <div className="col-span-12  md:col-span-6 flex flex-col gap-1 ">
+                              <span className="text-base font-bold">
+                                {t("preferred_delivery_day")}
                                 <span className="text-red-500">*</span>
                               </span>
-                              <Select
-                                onValueChange={handleTimeSlotChange}
-                                value={selectedTimeSlot}
-                              >
-                                <SelectTrigger className="w-full py-5 cardBorder">
-                                  <SelectValue placeholder="Select a timezone">
-                                    {checkout?.timeSlot?.title}
-                                  </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {availabeleTimeSlot?.map((slot) => {
-                                    return (
-                                      <div key={slot?.id}>
-                                        <SelectItem
-                                          disabled={slot?.isDisabled}
-                                          value={slot}
-                                        >
-                                          {slot?.title}
-                                        </SelectItem>
-                                      </div>
-                                    );
-                                  })}
-                                </SelectContent>
-                              </Select>
+
+                              <Popover open={isPopoverOpen}>
+                                <PopoverTrigger
+                                  className="cardBorder w-full  px-4 py-2 rounded-sm items-center flex justify-between "
+                                  onClick={() =>
+                                    setIsPopoverOpen(!isPopoverOpen)
+                                  }
+                                >
+                                  {formatDate(checkout?.selectedDate)}
+                                  <FaRegCalendarAlt />
+                                </PopoverTrigger>
+                                {timeSlotsData?.time_slots_is_enabled ==
+                                  "true" && (
+                                  <PopoverContent className="w-full p-0">
+                                    <Calendar
+                                      mode="single"
+                                      selected={checkout?.selectedDate}
+                                      onSelect={handleSelectedDate}
+                                      className="rounded-md w-full"
+                                      fromDate={new Date()}
+                                      toDate={(() => {
+                                        let date = new Date();
+                                        let allowedDays =
+                                          parseInt(
+                                            setting?.setting
+                                              ?.time_slots_allowed_days
+                                          ) || 15;
+                                        date.setDate(
+                                          date.getDate() + allowedDays
+                                        );
+                                        return date;
+                                      })()}
+                                    />
+                                  </PopoverContent>
+                                )}
+                              </Popover>
                             </div>
-                          )}
-                        </div>
+                            {timeSlotsData?.time_slots_is_enabled == "true" && (
+                              <div className="col-span-12 md:col-span-6  flex flex-col gap-1">
+                                <span className="text-base font-bold ">
+                                  {t("preferred_delivery_time")}
+                                  <span className="text-red-500">*</span>
+                                </span>
+                                <Select
+                                  onValueChange={handleTimeSlotChange}
+                                  value={selectedTimeSlot}
+                                >
+                                  <SelectTrigger className="w-full py-5 cardBorder">
+                                    <SelectValue placeholder="Select a timezone">
+                                      {checkout?.timeSlot?.title}
+                                    </SelectValue>
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {availabeleTimeSlot?.map((slot) => {
+                                      return (
+                                        <div key={slot?.id}>
+                                          <SelectItem
+                                            disabled={slot?.isDisabled}
+                                            value={slot}
+                                          >
+                                            {slot?.title}
+                                          </SelectItem>
+                                        </div>
+                                      );
+                                    })}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            )}
+                          </div>
+                        )}
                         <div className="flex flex-col">
                           <span className="text-base font-bold ">
                             {t("order_note_title")}
