@@ -37,7 +37,6 @@ import BreadCrumb from "../breadcrumb/BreadCrumb";
 import Loader from "../loader/Loader";
 import { toast } from "react-toastify";
 import {
-  addGuestCartTotal,
   addtoGuestCart,
   setCart,
   setCartProducts,
@@ -54,6 +53,7 @@ import Link from "next/link";
 import ProductZoomImage from "./ProductZoomImage";
 import { useMediaQuery } from "react-responsive";
 import MobileBottomSheet from "../mobile-bottom-sheet/MobileBottomSheet";
+import { setFilterBySeller } from "@/redux/slices/productFilterSlice";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -373,6 +373,11 @@ const ProductDetail = () => {
     toast.success(t("link_copied_to_clipboard"));
   };
 
+  const handleProductListNavigation = (sellerId) => {
+    router.push(`/products`);
+    dispatch(setFilterBySeller({ data: sellerId }));
+  };
+
   return (
     <section>
       {isLoading ? (
@@ -481,9 +486,25 @@ const ProductDetail = () => {
                         {product?.name}
                       </h2>
                       <div className="flex gap-4 items-center flex-wrap">
+                        {product?.seller_name !== null && (
+                          <div className="p-4 backgroundColor rounded-sm flex gap-2">
+                            {/* <div className="flex text-xs"> */}
+                            <span text-base>{t("seller")} :</span>
+                            <span
+                              className="font-bold text-base cursor-pointer underline"
+                              onClick={() =>
+                                handleProductListNavigation(product?.seller_id)
+                              }
+                            >
+                              {product?.seller_name}
+                            </span>
+                            {/* </div> */}
+                          </div>
+                        )}
+
                         <div className="flex gap-4">
                           {ratingData?.average_rating > 0 ? (
-                            <div className="border-r-2 px-2">
+                            <div className="px-2">
                               <div className="flex gap-1 items-center">
                                 <div className="flex">
                                   {[1, 2, 3, 4, 5].map((star) => {
@@ -527,18 +548,7 @@ const ProductDetail = () => {
                             </div>
                           ) : null}
                         </div>
-                        {product?.seller_name !== null && (
-                          <div className="px-2 py-1">
-                            <div className="flex text-xs">
-                              <span>
-                                {t("seller")}:
-                                <span className="font-bold">
-                                  {product?.seller_name}
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        )}
+
                         {product?.fssai_lic_no !== "" && (
                           <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
                         )}

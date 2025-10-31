@@ -3,7 +3,6 @@ import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes";
 import RequestProductCard from "./requestedProduct/RequestProductCard";
 import RequestedProductModal from "./requestedProduct/RequestedProductModal";
-import { set } from "lodash";
 import CardSkeleton from "../skeleton/CardSkeleton";
 
 const RequestProducts = () => {

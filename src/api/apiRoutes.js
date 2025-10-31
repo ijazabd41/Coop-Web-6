@@ -205,6 +205,8 @@ export const getCategories = async ({
   return response.data;
 };
 
+
+
 export const getProductByFilter = async ({
   latitude,
   longitude,

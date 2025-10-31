@@ -14,6 +14,7 @@ export const getCity = "city";
 export const getShop = "shop";
 export const getBrands = "brands";
 export const getCategory = "categories";
+export const getSellers = "sellers";
 export const getSlider = "sliders";
 export const getOffer = "offers";
 export const getSection = "sections";

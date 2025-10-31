@@ -5,6 +5,7 @@ import {
   clearAllFilter,
   setFilterBrands,
   setFilterMinMaxPrice,
+  setFilterBySeller,
 } from "@/redux/slices/productFilterSlice";
 import * as api from "@/api/apiRoutes";
 import { t } from "@/utils/translation";
@@ -39,12 +40,15 @@ const Filter = ({
   const [categories, setCategories] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [brands, setbrands] = useState(null);
+  const [sellers, setSellers] = useState(null);
   const [totalBrands, setTotalBrands] = useState();
   const [brandOffset, setBrandOffset] = useState(0);
+  const [sellerOffset, setSellerOffset] = useState(0);
   const [tempMinPrice, setTempMinPrice] = useState(null);
   const [tempMaxPrice, setTempMaxPrice] = useState(null);
-  const [activeKey, setActiveKey] = useState(["1", "2", "3"]);
+  const [activeKey, setActiveKey] = useState(["1", "2", "3", "4"]);
   const brandLimit = 10;
+  const sellerLimit = 10;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -54,6 +58,9 @@ const Filter = ({
     if (categories == null) {
       fetchCategories();
     }
+    if (sellers == null) {
+      fetchSellers();
+    }
   }, []);
 
   const handleActiveKey = (key) => {
@@ -62,6 +69,30 @@ const Filter = ({
         ? prevActiveKeys.filter((item) => item !== key)
         : [...prevActiveKeys, key]
     );
+  };
+
+  const fetchSellers = async (sOffset) => {
+    setLoading(true);
+    try {
+      const result = await api.getSellers({
+        latitude: city?.city?.latitude,
+        longitude: city?.city?.longitude,
+        limit: sellerLimit,
+        offset: sOffset,
+      });
+      if (result.status === 1) {
+        if (sellers == null) {
+          setSellers(result?.data);
+        } else {
+          setSellers((prevSellers) => [...prevSellers, ...result?.data]);
+        }
+      }
+      setSellers(result?.data);
+    } catch (error) {
+      console.log("Error", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchCategories = async () => {
@@ -137,6 +168,11 @@ const Filter = ({
   const loadMoreBrands = () => {
     setBrandOffset((prevOffset) => prevOffset + brandLimit);
     fetchBrands(brandOffset + brandLimit); // Increase offset to fetch next set of brands
+  };
+
+  const loadMoreSellers = () => {
+    setSellerOffset((prevOffset) => prevOffset + brandLimit);
+    fetchSellers(sellerOffset + brandLimit);
   };
 
   return (
@@ -256,11 +292,70 @@ const Filter = ({
           >
             <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
               <div className="text-base font-medium textColor">
-                {t("priceRange")}
+                {t("sellers")}
               </div>
               <div
                 className={`transition-transform duration-250 ${
                   activeKey.includes("3") ? "rotate-0" : "-rotate-90"
+                }`}
+              >
+                <FaChevronDown />
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-2 pb-4 md:px-2 lg:px-4">
+              <div className="filter-row ">
+                {sellers?.map((seller) => {
+                  const isChecked = filter.seller_id === seller.id; // single selected seller
+                  return (
+                    <div
+                      key={seller.id}
+                      className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2"
+                    >
+                      <input
+                        type="radio"
+                        name="seller" // same name for all to ensure single selection
+                        className="h-4 w-4"
+                        checked={isChecked}
+                        onChange={() => {
+                          setProductResult([]);
+                          setOffset(0);
+                          dispatch(
+                            setFilterBySeller({
+                              data: seller.id,
+                            })
+                          );
+                        }}
+                      />
+                      <span className="text-sm font-normal textColor">
+                        {seller.name}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {sellers?.length < totalBrands && (
+                  <a
+                    className="brand-view-more textColor cursor-pointer"
+                    onClick={loadMoreSellers}
+                  >
+                    {t("showMore")}
+                  </a>
+                )}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+          <Collapsible
+            open={activeKey.includes("4")}
+            className="w-full bottomBorder"
+            onOpenChange={() => handleActiveKey("4")}
+          >
+            <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+              <div className="text-base font-medium textColor">
+                {t("priceRange")}
+              </div>
+              <div
+                className={`transition-transform duration-250 ${
+                  activeKey.includes("4") ? "rotate-0" : "-rotate-90"
                 }`}
               >
                 <FaChevronDown />

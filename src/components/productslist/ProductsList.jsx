@@ -79,6 +79,7 @@ const Products = () => {
     offset,
     city?.city,
     filter.grid_view,
+    filter?.seller_id,
   ]);
 
   const filterProductsFromApi = async (filter) => {
