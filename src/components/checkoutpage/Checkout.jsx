@@ -66,7 +66,6 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [showStripe, setShowStripe] = useState(false);
-  const [showOrderSuccess, setShowOrderSuccess] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
 
   // stripe variables
@@ -112,6 +111,7 @@ const Checkout = () => {
     checkout?.address,
     cart?.cartProducts,
     checkout?.orderType,
+    checkout?.timeSlot,
   ]);
 
   const getCurrentUser = async () => {
@@ -152,6 +152,7 @@ const Checkout = () => {
         checkout: 1,
         promocode_id: couponseCodeId,
         order_type: checkout?.orderType,
+        is_free_delivery: checkout?.timeSlot?.is_free_delivery,
       });
       if (response?.status == 1) {
         dispatch(setCartCheckout({ data: response?.data }));
@@ -959,7 +960,16 @@ const Checkout = () => {
                                             disabled={slot?.isDisabled}
                                             value={slot}
                                           >
-                                            {slot?.title}
+                                            <div className="flex justify-between items-center w-full min-w-0">
+                                              <p className="truncate">
+                                                {slot?.title}
+                                              </p>
+                                              <p className="whitespace-nowrap ml-64">
+                                                {slot?.is_free_delivery
+                                                  ? t("freedelivery")
+                                                  : ""}
+                                              </p>
+                                            </div>
                                           </SelectItem>
                                         </div>
                                       );

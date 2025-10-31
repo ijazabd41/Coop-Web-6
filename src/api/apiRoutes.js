@@ -319,12 +319,14 @@ export const getCart = async ({
   checkout = 0,
   promocode_id = 0,
   order_type = "doorstep",
+  is_free_delivery = 0,
 }) => {
   const params = {
     latitude: latitude,
     longitude: longitude,
     is_checkout: checkout,
     is_self_pickup: order_type == "doorstep" ? 0 : 1,
+    is_free_delivery,
   };
   if (promocode_id !== 0) {
     params.promocode_id = promocode_id;
@@ -332,6 +334,7 @@ export const getCart = async ({
   const response = await api.get(apiEndPoints.getCart, { params });
   return response.data;
 };
+
 export const addToBulkCart = async ({ variant_ids, quantities }) => {
   const params = { variant_ids: variant_ids, quantities: quantities };
   const response = await api.post(
@@ -341,6 +344,7 @@ export const addToBulkCart = async ({ variant_ids, quantities }) => {
   );
   return response.data;
 };
+
 export const addToCart = async ({ product_id, product_variant_id, qty }) => {
   const formData = new FormData();
   formData.append("product_id", product_id);
@@ -352,6 +356,7 @@ export const addToCart = async ({ product_id, product_variant_id, qty }) => {
   );
   return response.data;
 };
+
 export const removeFromCart = async ({
   product_id,
   product_variant_id,
@@ -367,6 +372,7 @@ export const removeFromCart = async ({
   );
   return response.data;
 };
+
 export const deleteCart = async () => {
   const formData = new FormData();
   formData.append("is_remove_all", 1);
@@ -376,6 +382,7 @@ export const deleteCart = async () => {
   );
   return response.data;
 };
+
 export const getGuestCart = async ({
   latitude,
   longitude,
@@ -733,6 +740,7 @@ export const updateReviewProduct = async ({
   );
   return response.data;
 };
+
 export const downloadInvoice = async ({ orderId }) => {
   const formData = new FormData();
   formData.append("order_id", orderId);
@@ -840,6 +848,33 @@ export const setBlogCount = async ({ blogId }) => {
 export const getMostViewedBlogs = async ({ limit = 5 }) => {
   const response = await api.get(
     `${apiEndPoints.blogs}/${apiEndPoints.mostViewedBlogs}`
+  );
+  return response.data;
+};
+
+export const setProductRequest = async ({ image, description }) => {
+  const formData = new FormData();
+  if (description) {
+    formData.append("description", description);
+  }
+  if (image) {
+    formData.append("image", image);
+  }
+  const response = await api.post(
+    `${apiEndPoints.userProductRequest}/${apiEndPoints?.add}`,
+    formData
+  );
+  return response.data;
+};
+
+export const getRequestedProducts = async ({ limit = 10, offset = 0 }) => {
+  const params = {
+    limit: limit,
+    offset: offset,
+  };
+  const response = await api.get(
+    `${apiEndPoints.userProductRequest}/${apiEndPoints?.list}`,
+    { params }
   );
   return response.data;
 };

@@ -577,5 +577,14 @@
   "read_time":"Read Time",
   "minutes":"Minutes",
   "blogs":"Blogs",
-  "topViewedBlogs":"Top Viewed Blogs"
+  "topViewedBlogs":"Top Viewed Blogs",
+  "freedelivery":"Free delivery",
+  "requestedProducts":"Requested Products",
+  "requestNewProduct":"Request Product",
+  "requestProduct":"Request Product",
+  "productDescription":"Product Description",
+  "productImage":"Product Image",
+  "submitRequest":"Submit Request",
+  "noRequestedProducts":"No Requested Products Found",
+  "rejectedReason":"Rejected Reason"
 }

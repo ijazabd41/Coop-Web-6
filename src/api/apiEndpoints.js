@@ -56,8 +56,9 @@ export const orderStatusPhonepe = "order_status_phonepe";
 export const blogs = "blogs";
 export const blogCategories = "blog_categories";
 export const blogViewCount = "blog_view_count";
-export const mostViewedBlogs = "most_viewed"
-
+export const mostViewedBlogs = "most_viewed";
+export const userProductRequest = "user_product_requests";
+export const list = "list";
 
 export const remove = "remove";
 export const add = "add";

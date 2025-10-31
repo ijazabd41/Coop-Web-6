@@ -11,11 +11,12 @@ import WalletHistory from "./wallet/WalletHistory";
 import TransactionHistory from "./transactions/TransactionHistory";
 import Notifications from "./Notifications";
 import { setCurrentUser } from "@/redux/slices/userSlice";
-import * as api from "@/api/apiRoutes"
+import * as api from "@/api/apiRoutes";
 import { useDispatch } from "react-redux";
 import ResetPassword from "./ResetPassword";
 import withAuth from "@/checkauth/CheckAuth";
 import CardSkeleton from "../skeleton/CardSkeleton";
+import RequestProducts from "./RequestProducts";
 
 const ProfileDashboard = () => {
   const dispatch = useDispatch();
@@ -24,29 +25,27 @@ const ProfileDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
-    const currentTab = router.pathname.split('/').pop();
-    setSelectedTab(currentTab || 'profile');
-
+    const currentTab = router.pathname.split("/").pop();
+    setSelectedTab(currentTab || "profile");
   }, [router.pathname]);
 
   useEffect(() => {
-    getCurrentUser()
-  }, [])
+    getCurrentUser();
+  }, []);
 
   const getCurrentUser = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await api.getUser();
       dispatch(setCurrentUser({ data: response.user }));
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log("error", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-  const activeTab = router.pathname.split('/').pop();
+  const activeTab = router.pathname.split("/").pop();
 
   return (
     <section>
@@ -60,12 +59,14 @@ const ProfileDashboard = () => {
             />
           </div>
 
-          <div className='col-span-12 md:col-span-9  '>
-            {loading ?
+          <div className="col-span-12 md:col-span-9  ">
+            {loading ? (
               <div className="flex flex-col gap-2">
                 <CardSkeleton height={50} />
                 <CardSkeleton height={800} />
-              </div> : <>
+              </div>
+            ) : (
+              <>
                 {activeTab == "profile" && <Profile />}
                 {activeTab == "resetpassword" && <ResetPassword />}
                 {activeTab == "address" && <Address />}
@@ -74,13 +75,20 @@ const ProfileDashboard = () => {
                 {activeTab == "wishlist" && <Wishlist />}
                 {activeTab == "wallethistory" && <WalletHistory />}
                 {activeTab == "transaction" && <TransactionHistory />}
-                {activeTab == "notifications" && <Notifications selectedTab={selectedTab} setSelectedTab={setSelectedTab} />}
-              </>}
+                {activeTab == "notifications" && (
+                  <Notifications
+                    selectedTab={selectedTab}
+                    setSelectedTab={setSelectedTab}
+                  />
+                )}
+                {activeTab == "requested-products" && <RequestProducts />}
+              </>
+            )}
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default withAuth(ProfileDashboard);

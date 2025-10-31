@@ -223,6 +223,18 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   {t("notification")}
                 </li>
               </Link>
+              <Link href={`/profile/requested-products`}>
+                <li
+                  className={`p-4  cursor-pointer  textColor ${
+                    activeTab == "requested-products"
+                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                      : "hover:primaryBackColor hover:text-white"
+                  }`}
+                  onClick={() => handleTabChange("requested-products")}
+                >
+                  {t("requestedProducts")}
+                </li>
+              </Link>
               <li
                 className={`p-4  cursor-pointer  textColor hover:primaryBackColor hover:text-white`}
                 onClick={() => handleShowReferAndEarn()}
