@@ -19,6 +19,7 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
             <div
               className="flex p-2 gap-2 headerBackgroundColor cursor-pointer rounded-lg"
               onClick={() => handleBlogNavigation(blog?.slug)}
+              key={blog?.id}
             >
               <ImageWithPlaceholder
                 className={"rounded-md h-24 w-32"}

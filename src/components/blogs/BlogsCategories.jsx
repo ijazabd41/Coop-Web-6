@@ -13,6 +13,7 @@ const BlogsCategories = ({
         {blogsCategories?.map((category, i) => {
           return (
             <div
+              key={category?.id}
               onClick={() => setSelectedCategory(category?.id)}
               className={`flex justify-between p-4 items-center  rounded-lg font-bold text-base ${
                 selectedCategory == category?.id

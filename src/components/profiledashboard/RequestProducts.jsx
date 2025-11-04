@@ -72,7 +72,10 @@ const RequestProducts = () => {
             })
           ) : requestedProducts.length > 0 ? (
             requestedProducts.map((request) => (
-              <div className="col-span-12  md:col-span-6 lg:col-span-4 flex ">
+              <div
+                className="col-span-12  md:col-span-6 lg:col-span-4 flex "
+                key={request?.id}
+              >
                 <RequestProductCard key={request.id} request={request} />
               </div>
             ))
