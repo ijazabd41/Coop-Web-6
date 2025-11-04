@@ -17,7 +17,7 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   const [blogsLoading, setBlogsLoading] = useState(false);
 
-  const BLOG_LIMIT = 1;
+  const BLOG_LIMIT = 10;
 
   useEffect(() => {
     handleFetchBlogsCategoris();
