@@ -92,7 +92,13 @@ const Blogs = () => {
               : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
           </div>
 
-          {blogs?.length < 3 && (
+          {blogs?.length == 0 && (
+            <div className="w-full flex justify-center md:mt-96">
+              <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+            </div>
+          )}
+
+          {blogs?.length < totalBlogs && (
             <div className="w-full flex justify-center mt-6">
               <button
                 className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"

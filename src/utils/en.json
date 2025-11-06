@@ -467,6 +467,7 @@
   "preferred_day_and_time": "Preferred Day & Time",
   "choose_date": "Choose Date",
   "preferred_delivery_day": "Preferred Delivery Day",
+  "estimage_delivery_date":"Estimate Delivery Date",
   "your_wallet": "Your Wallet",
   "hello": "Hello",
   "username_required": "Username Required",
@@ -586,5 +587,8 @@
   "productImage":"Product Image",
   "submitRequest":"Submit Request",
   "noRequestedProducts":"No Requested Products Found",
-  "rejectedReason":"Rejected Reason"
+  "rejectedReason":"Rejected Reason",
+  "noBlogFound":"Blogs Not Found",
+  "selfPickUpDisabledNote":"Note: Self-pickup is available only for single-seller orders, and only if the seller has enabled this option. For multi-seller orders,  only home delivery will be available.",
+  "doorStepDeliveryDisableNote":"Doorstep delivery is currently unavailable for this seller. Please select the Store Pickup option to collect your order directly from the seller’s store."
 }

@@ -53,7 +53,10 @@ import Link from "next/link";
 import ProductZoomImage from "./ProductZoomImage";
 import { useMediaQuery } from "react-responsive";
 import MobileBottomSheet from "../mobile-bottom-sheet/MobileBottomSheet";
-import { setFilterBySeller } from "@/redux/slices/productFilterSlice";
+import {
+  clearAllFilter,
+  setFilterBySeller,
+} from "@/redux/slices/productFilterSlice";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -374,6 +377,7 @@ const ProductDetail = () => {
   };
 
   const handleProductListNavigation = (sellerId) => {
+    dispatch(clearAllFilter());
     router.push(`/products`);
     dispatch(setFilterBySeller({ data: sellerId }));
   };

@@ -27,15 +27,17 @@ const BlogCard = ({ blog }) => {
           <GoDotFill />
           <p>{formatOnlyDate(blog?.created_at)}</p>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 min-h-42">
           <div>
-            <h2 className="font-bold text-xl ">{blog?.title}</h2>
+            <h2 className="font-bold text-xl ">
+              {blog?.title?.slice(0, 32) + "..."}
+            </h2>
             <h4
               className="blog-card-description"
               dangerouslySetInnerHTML={{
                 __html:
                   blog?.description?.length > 100
-                    ? blog.description.slice(0, 100) + "..."
+                    ? blog.description.slice(0, 50) + "..."
                     : blog?.description,
               }}
             ></h4>

@@ -5,7 +5,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 
-const RequestedProductModal = ({ showModal, setShowModal }) => {
+const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -34,6 +34,7 @@ const RequestedProductModal = ({ showModal, setShowModal }) => {
         setDescription("");
         removeImage();
         setLoading(false);
+        setFlag((prev) => !prev);
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -115,7 +116,7 @@ const RequestedProductModal = ({ showModal, setShowModal }) => {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading?t("loading") :t("submitRequest")}
+              {loading ? t("loading") : t("submitRequest")}
             </button>
           </div>
         </div>

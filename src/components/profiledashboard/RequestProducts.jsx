@@ -11,19 +11,21 @@ const RequestProducts = () => {
   const [offset, setOffset] = useState(0);
   const [totalRequests, setTotalRequests] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(false);
 
   const REQUEST_LIMIT = 9;
 
   useEffect(() => {
-    getRequestedProducts(false);
-  }, []);
+    setOffset(0);
+    getRequestedProducts(false, 0);
+  }, [flag]);
 
-  const getRequestedProducts = async (isFetchMore) => {
+  const getRequestedProducts = async (isFetchMore, bOffset) => {
     setLoading(true);
     try {
       const response = await api.getRequestedProducts({
         limit: REQUEST_LIMIT,
-        offset: offset,
+        offset: bOffset,
       });
       setTotalRequests(response.total);
       if (isFetchMore) {
@@ -89,7 +91,7 @@ const RequestProducts = () => {
           {totalRequests > requestedProducts.length && (
             <button
               className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3 my-2"
-              onClick={() => getRequestedProducts(true)}
+              onClick={() => getRequestedProducts(true, offset)}
             >
               {t("load_more")}
             </button>
@@ -100,6 +102,7 @@ const RequestProducts = () => {
       <RequestedProductModal
         showModal={showModal}
         setShowModal={setShowModal}
+        setFlag={setFlag}
       />
     </div>
   );

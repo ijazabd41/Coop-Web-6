@@ -177,6 +177,7 @@ const Checkout = () => {
     }
 
     dispatch(setSelectedDate({ data: date }));
+    dispatch(setTimeSlot({ data: null }));
     setIsPopoverOpen(false);
   };
 
@@ -297,7 +298,10 @@ const Checkout = () => {
   };
 
   const handleSecondStep = () => {
-    if (checkout?.selectedDate == null) {
+    if (
+      checkout?.selectedDate == null &&
+      timeSlotsData?.time_slot_setting == "true"
+    ) {
       toast.error(t("please_select_date"));
       return;
     } else if (
@@ -505,7 +509,8 @@ const Checkout = () => {
         return;
       } else if (
         checkout?.selectedDate == null &&
-        checkout?.orderType == "doorstep"
+        checkout?.orderType == "doorstep" &&
+        timeSlotsData?.time_slot_setting == "true"
       ) {
         toast.error("Please select date");
         return;
@@ -639,6 +644,16 @@ const Checkout = () => {
     window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
   };
 
+  const handleOptionsClick = () => {
+    if (cart?.doorstep_delivery_mode == 0) {
+      toast.error(t("doorStepDeliveryDisableNote"));
+    } else if (cart?.self_pickup_mode == 0) {
+      toast.error(t("selfPickUpDisabledNote"));
+    } else {
+      return;
+    }
+  };
+
   return loading == true ? (
     <CheckoutSkeleton />
   ) : (
@@ -665,51 +680,68 @@ const Checkout = () => {
                         {t("choose_delivery_method")}
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor">
-                          <input
-                            type="radio"
-                            name="delivery"
-                            value="doorstep"
-                            checked={checkout?.orderType == "doorstep"}
-                            className="mr-3 primaryAccentColor scale-150"
-                            disabled={cart?.doorstep_delivery_mode == 0}
-                            onChange={(e) => handleOrderType(e.target.value)}
-                          />
-                          <div className="flex items-center space-x-3">
-                            <div className=" rounded-md  primaryFilledColor addToCartColor p-3">
-                              <FiTruck size={22} />
+                        <div
+                          className="flex flex-col"
+                          onClick={() => handleOptionsClick()}
+                        >
+                          <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor">
+                            <input
+                              type="radio"
+                              name="delivery"
+                              value="doorstep"
+                              checked={checkout?.orderType == "doorstep"}
+                              className="mr-3 primaryAccentColor scale-150"
+                              disabled={cart?.doorstep_delivery_mode == 0}
+                              onChange={(e) => handleOrderType(e.target.value)}
+                            />
+                            <div className="flex items-center space-x-3">
+                              <div className=" rounded-md  primaryFilledColor addToCartColor p-3">
+                                <FiTruck size={22} />
+                              </div>
+                              <div>
+                                <p className="font-bold">
+                                  {t("home_delivery")}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {t("get_it_deliverd_to_your_address")}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-bold">{t("home_delivery")}</p>
-                              <p className="text-sm text-gray-500">
-                                {t("get_it_deliverd_to_your_address")}
-                              </p>
-                            </div>
-                          </div>
-                        </label>
+                          </label>
+                        </div>
+                        <div
+                          className="flex flex-col"
+                          onClick={() => handleOptionsClick()}
+                        >
+                          <label className="flex items-center p-4 border rounded-md cursor-pointer transition bodyBackgroundColor peer-disabled:disabledBackgroundColor">
+                            <input
+                              type="radio"
+                              name="delivery"
+                              value="selfpickup"
+                              disabled={cart?.self_pickup_mode == 0}
+                              checked={checkout?.orderType == "selfpickup"}
+                              className="mr-3 primaryAccentColor scale-150"
+                              onChange={(e) => handleOrderType(e.target.value)}
+                            />
 
-                        <label className="flex items-center p-4 border rounded-md cursor-pointer transition bodyBackgroundColor peer-disabled:disabledBackgroundColor">
-                          <input
-                            type="radio"
-                            name="delivery"
-                            value="selfpickup"
-                            disabled={cart?.self_pickup_mode == 0}
-                            checked={checkout?.orderType == "selfpickup"}
-                            className="mr-3 primaryAccentColor scale-150"
-                            onChange={(e) => handleOrderType(e.target.value)}
-                          />
-                          <div className="flex items-center space-x-3">
-                            <div className="p-3 rounded-md primaryFilledColor addToCartColor">
-                              <MdOutlineStorefront size={22} />
+                            <div className="flex items-center space-x-3">
+                              <div className="p-3 rounded-md primaryFilledColor addToCartColor">
+                                <MdOutlineStorefront size={22} />
+                              </div>
+                              <div>
+                                <p className="font-bold">{t("store_pickup")}</p>
+                                <p className="text-sm text-gray-500">
+                                  {t("pick_up_from_store")}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-bold">{t("store_pickup")}</p>
-                              <p className="text-sm text-gray-500">
-                                {t("pick_up_from_store")}
-                              </p>
-                            </div>
-                          </div>
-                        </label>
+                          </label>
+                          {cart?.self_pickup_mode == 0 && (
+                            <p className="text-xs text-red-600 px-2 my-1">
+                              {t("selfPickUpDisabledNote")}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -897,7 +929,9 @@ const Checkout = () => {
                           <div className="grid grid-cols-12 items-center gap-4">
                             <div className="col-span-12  md:col-span-6 flex flex-col gap-1 ">
                               <span className="text-base font-bold">
-                                {t("preferred_delivery_day")}
+                                {timeSlotsData?.time_slots_is_enabled == "true"
+                                  ? t("preferred_delivery_day")
+                                  : t("estimage_delivery_date")}
                                 <span className="text-red-500">*</span>
                               </span>
 
