@@ -32,11 +32,10 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let favicon = null;
       if (process.env.NEXT_PUBLIC_SEO === "true") {
         const seoData = response?.data.data || {};
-        console.log("seoData?.meta_keywords", seoData?.[0]?.meta_title);
         metaKeywords = seoData?.[0]?.meta_keywords || metaKeywords;
         metaTitle = seoData?.[0]?.meta_title || metaTitle;
         metaDescription = seoData?.[0]?.meta_description || metaDescription;
-        og_image = seoData?.[0]?.og_image || null;
+        og_image = seoData?.[0]?.image_url || null;
         favicon = seoData?.[0].favicon || null;
         if (seoData?.schema_markup) {
           markUpSchema =

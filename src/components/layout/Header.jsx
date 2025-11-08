@@ -96,6 +96,12 @@ const Header = () => {
   const [mobileNav, setMobileNav] = useState(false);
 
   useEffect(() => {
+    if (router?.pathname !== "/products") {
+      dispatch(setFilterSearch({ data: "" }));
+    }
+  }, []);
+
+  useEffect(() => {
     if (router?.pathname != "/checkout") {
       dispatch(clearCheckout());
     }

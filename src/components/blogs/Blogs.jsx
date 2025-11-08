@@ -86,7 +86,7 @@ const Blogs = () => {
         <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
           <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
             {blogsLoading
-              ? Array.from({ length: 3 })?.map((_, i) => (
+              ? Array?.from({ length: 3 })?.map((_, i) => (
                   <BlogCardSkeleton key={i} />
                 ))
               : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}

@@ -37,7 +37,7 @@ const BlogCard = ({ blog }) => {
               dangerouslySetInnerHTML={{
                 __html:
                   blog?.description?.length > 100
-                    ? blog.description.slice(0, 50) + "..."
+                    ? blog?.description?.slice(0, 50) + "..."
                     : blog?.description,
               }}
             ></h4>
