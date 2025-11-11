@@ -22,19 +22,19 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
               key={blog?.id}
             >
               <ImageWithPlaceholder
-                className={"rounded-md h-24 w-32"}
+                className={"rounded-md h-16 w-20 md:h-24 md:w-32"}
                 src={blog?.image_url}
               />
-              <div className="flex flex-col gap-2 ">
+              <div className="flex flex-col gap-2 overflow-hidden">
                 <p className="text-sm font-normal">
-                  {blog?.title?.slice(0, 45)}
+                  {blog?.title?.slice(0, 20)}
                 </p>
                 <h2
                   className="font-bold text-base blog-card-description"
                   dangerouslySetInnerHTML={{
                     __html:
-                      blog?.description?.length > 100
-                        ? blog.description.slice(0, 40) + "..."
+                      blog?.description?.length > 25
+                        ? blog.description.slice(0, 25) + "..."
                         : blog?.description,
                   }}
                 ></h2>
