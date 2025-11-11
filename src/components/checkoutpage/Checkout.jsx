@@ -191,7 +191,9 @@ const Checkout = () => {
       });
     } else {
       const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setDate(
+        tomorrow.getDate() + parseInt(timeSlotsData.delivery_estimate_days)
+      );
       const finalDate = tomorrow.toLocaleDateString("en-US", {
         day: "2-digit",
         month: "long",
