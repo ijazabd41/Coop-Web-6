@@ -35,10 +35,13 @@ const BlogCard = ({ blog }) => {
             <h4
               className="blog-card-description"
               dangerouslySetInnerHTML={{
-                __html:
-                  blog?.description?.length > 100
-                    ? blog?.description?.slice(0, 50) + "..."
-                    : blog?.description,
+                __html: (() => {
+                  const div = document.createElement("div");
+                  div.innerHTML = blog?.description || "";
+                  const text = div.textContent || div.innerText || "";
+
+                  return text.length > 50 ? text.slice(0, 50) + "..." : text;
+                })(),
               }}
             ></h4>
           </div>
