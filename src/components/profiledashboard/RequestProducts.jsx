@@ -60,29 +60,17 @@ const RequestProducts = () => {
         </button>
       </div>
       <div className="flex flex-col">
-        <div className="grid grid-cols-12 md:m-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:m-4">
           {loading ? (
-            Array?.from({ length: 6 })?.map((_, index) => {
-              return (
-                <div
-                  className="col-span-12  md:col-span-6 lg:col-span-4"
-                  key={index}
-                >
-                  <CardSkeleton height={200} padding="2px" key={index} />
-                </div>
-              );
-            })
+            Array.from({ length: 6 }).map((_, index) => (
+              <CardSkeleton height={200} padding="2px" key={index} />
+            ))
           ) : requestedProducts.length > 0 ? (
             requestedProducts.map((request) => (
-              <div
-                className="col-span-12  md:col-span-6 lg:col-span-4 flex "
-                key={request?.id}
-              >
-                <RequestProductCard key={request.id} request={request} />
-              </div>
+              <RequestProductCard key={request.id} request={request} />
             ))
           ) : (
-            <p className="textColor text-center w-full text-3xl col-span-12">
+            <p className="textColor text-center w-full text-3xl col-span-full">
               {t("noRequestedProducts")}
             </p>
           )}

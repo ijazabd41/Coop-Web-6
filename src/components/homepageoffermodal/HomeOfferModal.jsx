@@ -12,9 +12,6 @@ const HomeOfferModal = () => {
     const city = useSelector(state => state.City)
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // console.log("isModalOpen ->", isModalOpen)
-    // console.log("City ->", city)
-
     useEffect(() => {
         if (setting?.setting?.popup_enabled === "1" && city?.city !== null) {
             if (setting?.setting?.popup_always_show_home === "1") {
@@ -23,10 +20,8 @@ const HomeOfferModal = () => {
             } else if (setting?.setting?.popup_always_show_home === "0") {
                 // Show the modal only once
                 const hasPopupBeenSeen = setting?.isPopupSeen;
-                // console.log("isPopupSeen", setting?.isPopupSeen)
                 if (!hasPopupBeenSeen) {
                     setIsModalOpen(true);
-                    // console.log("Showing Popup...")
                 }
             }
         }

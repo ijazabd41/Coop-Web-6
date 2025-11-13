@@ -49,7 +49,6 @@ const paymentMethodsConfig = [
 const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
     const setting = useSelector(state => state.Setting)
-    // console.log(setting)
     const user = useSelector((state) => state?.User)
     const dispatch = useDispatch();
     const router = useRouter();
@@ -83,7 +82,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
   
     const handleSubmit = async () => {
-        console.log("amount", amount % 1 !== 0)
         if (amount === null) {
             toast.error(t("wallet_amount_required"));
             return;
@@ -137,7 +135,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
 
 
     const handlePayStackPayment = async (orderId = null, amount, capilizePaymeneMethod) => {
-        // console.log("In handlepaystack payment function:", amount, capilizePaymeneMethod)
         try {
             const handler = PaystackPop.setup({
                 key: setting.payment_setting && setting.payment_setting.paystack_public_key,
@@ -155,7 +152,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 },
                 callback: async function (res) {
                     try {
-                        // console.log("Paystack Response:", res)
                         // setPaymentLoading(true)
                         const response = await api.addTransaction({ orderId: "", transactionId: res.reference, paymentMethod: capilizePaymeneMethod, type: "wallet", walletAmount: amount })
                         if (response.status == 1) {
@@ -171,7 +167,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                             // setPaymentLoading(true)
                             toast.error(response.message);
                             setAddWalletModal(false);
-                            console.log("error", response)
                         }
                     } catch (error) {
                         console.log("Error", error)
@@ -221,7 +216,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 handler: async (res) => {
                     if (res.razorpay_payment_id) {
                         try {
-                            console.log("Adding Transaction");
                             const response = await api.addTransaction({
                                 // orderId: order_id,
                                 transactionId: res.razorpay_payment_id,
@@ -231,7 +225,6 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                             });
                             if (response.status === 1) {
                                 // toast.success(response.message);
-                                // console.log("Wallet Amount added", amount)
                                 dispatch(addUserBalance({ data: amount }));
                                 setAddWalletModal(false);
                                 // handleSuccessWalletAdd();
@@ -251,10 +244,7 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
                 modal: {
                     confirm_close: true,
                     ondismiss: async (reason) => {
-                        // console.log("In ondismiss payment close", reason);
                         if (reason === undefined) {
-                            // toast.error("Payment Failed");
-                            // console.log("modal dismissed")
                             setAddWalletModal(false);
                         }
                     },
@@ -279,15 +269,12 @@ const WalletBalanceModal = ({ addWalletModal, setAddWalletModal }) => {
             const rzpay = new window.Razorpay(options);
             rzpay.on("payment.cancel", (response) => {
                 alert("Payment Cancelled");
-                // console.log("In payment cancel")
                 toast.error("Payment Cancelled");
             });
 
             rzpay.on("payment.failed", (response) => {
                 setAddWalletModal(false);
-                // console.log("Failed Response",response);
                 router.push("/web-payment-status?type=wallet&status=failed")
-                // console.log(payment.failed)
             });
 
             rzpay.open();

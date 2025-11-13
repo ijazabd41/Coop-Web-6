@@ -230,7 +230,6 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
     } else if (Number(product.is_unlimited_stock)) {
       AddToGuestCart(product, product.id, variant, 1, 0, "add");
     } else {
-      console.log("variant?.status", variant?.status);
       if (variant?.status) {
         AddToGuestCart(product, product.id, variant, 1, 0, "add");
       } else {

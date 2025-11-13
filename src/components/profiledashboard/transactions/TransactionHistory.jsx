@@ -35,7 +35,6 @@ const TransactionHistory = () => {
             } else {
                 setLoading(false)
                 setLoadingMore(false)
-                console.log("Error", response.message)
             }
         } catch (error) {
             setLoading(false)

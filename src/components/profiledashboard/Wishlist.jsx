@@ -33,7 +33,6 @@ const Wishlist = () => {
             } else {
                 setLoading(false)
                 setTotal(0)
-                console.log(response.message)
             }
         } catch (error) {
             setLoading(false)

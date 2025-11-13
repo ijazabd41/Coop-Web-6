@@ -54,7 +54,6 @@ const PrevOrder = () => {
         setLoading(false);
         setPrevOrders([]);
         setLoadingMore(false);
-        console.log("Error", response);
       }
     } catch (error) {
       setLoading(false);

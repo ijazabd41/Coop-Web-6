@@ -12,19 +12,14 @@ const ImageWithPlaceholder = ({
   priority,
 }) => {
   const setting = useSelector((state) => state.Setting);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!src);
   const [isError, setIsError] = useState(false);
-
-  console.log(
-    " setting?.setting?.web_settings?.placeholder_image",
-    setting?.setting?.web_settings?.placeholder_image
-  );
 
   // NOTE:Change from nextjs Image to regular img to get rid of placeholder image error
   return (
     <img
       src={
-        isLoading || isError
+        !src || isLoading || isError
           ? setting?.setting?.web_settings?.placeholder_image
             ? setting?.setting?.web_settings?.placeholder_image
             : ImagePlaceholder

@@ -479,7 +479,6 @@ const Checkout = () => {
             } else {
               setPaymentLoading(false);
               toast.error(response.message);
-              console.log("error", response);
             }
           } catch (error) {
             console.log("Error", error);

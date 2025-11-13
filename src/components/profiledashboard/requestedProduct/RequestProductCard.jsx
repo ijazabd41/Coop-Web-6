@@ -20,18 +20,16 @@ const RequestProductCard = ({ request }) => {
               {request?.status}
             </span>
           </div>
-          {request?.image_url && (
-            <ImageWithPlaceholder
-              src={request.image_url}
-              alt="Requested product image"
-              className={"w-full h-48 rounded-md object-cover"}
-            />
-          )}
+          <ImageWithPlaceholder
+            src={request?.image_url}
+            alt="Requested product image"
+            className={"w-full h-48 rounded-md object-cover"}
+          />
         </div>
       </div>
       {request?.description && (
         <p
-          className={`text-sm textColor ${
+          className={`text-sm textColor break-words text-wrap ${
             request?.image_url ? "mt-2" : "mt-10"
           } p-2`}
         >
