@@ -62,7 +62,6 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                 </div>
                                 <div className='mt-6'>
                                     <Swiper
-
                                         key={rtl}
                                         spaceBetween={20}
                                         modules={[Navigation]}

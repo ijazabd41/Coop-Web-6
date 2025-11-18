@@ -6,6 +6,7 @@ import RecentBlogs from "./RecentBlogs";
 import * as api from "@/api/apiRoutes";
 import BlogSkeleton, { BlogCardSkeleton } from "./BlogsSkeleton";
 import { t } from "@/utils/translation";
+import BreadCrumb from "../breadcrumb/BreadCrumb";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -52,8 +53,6 @@ const Blogs = () => {
     }
   };
 
-  console.log("offset", offset);
-
   const handleFetchBlogsCategoris = async () => {
     setLoading(true);
     try {
@@ -81,45 +80,48 @@ const Blogs = () => {
   return loading ? (
     <BlogSkeleton />
   ) : (
-    <div className="container my-12">
-      <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
-        <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
-            {blogsLoading
-              ? Array?.from({ length: 3 })?.map((_, i) => (
-                  <BlogCardSkeleton key={i} />
-                ))
-              : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
+    <>
+      <BreadCrumb />
+      <div className="container my-12">
+        <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
+          <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+              {blogsLoading
+                ? Array?.from({ length: 3 })?.map((_, i) => (
+                    <BlogCardSkeleton key={i} />
+                  ))
+                : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
+            </div>
+
+            {blogs?.length == 0 && (
+              <div className="w-full flex justify-center md:mt-96">
+                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+              </div>
+            )}
+
+            {blogs?.length < totalBlogs && (
+              <div className="w-full flex justify-center mt-6">
+                <button
+                  className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                  onClick={() => handleFetchBlogs(true, offset)}
+                >
+                  {t("load_more")}
+                </button>
+              </div>
+            )}
           </div>
 
-          {blogs?.length == 0 && (
-            <div className="w-full flex justify-center md:mt-96">
-              <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
-            </div>
-          )}
-
-          {blogs?.length < totalBlogs && (
-            <div className="w-full flex justify-center mt-6">
-              <button
-                className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
-                onClick={() => handleFetchBlogs(true, offset)}
-              >
-                {t("load_more")}
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
-          <BlogsCategories
-            blogsCategories={blogsCategories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-          />
-          <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
+          <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
+            <BlogsCategories
+              blogsCategories={blogsCategories}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
+            <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -13,7 +13,7 @@ const BlogCard = ({ blog }) => {
   };
 
   return (
-    <div className="flex flex-col p-4 gap-6 border rounded-lg h-fit">
+    <div className="flex flex-col p-4 gap-6 border rounded-lg h-fit bodyBackgroundColor">
       <div>
         <ImageWithPlaceholder
           className={"h-[264px] w-full rounded-lg"}
@@ -39,7 +39,6 @@ const BlogCard = ({ blog }) => {
                   const div = document.createElement("div");
                   div.innerHTML = blog?.description || "";
                   const text = div.textContent || div.innerText || "";
-
                   return text.length > 50 ? text.slice(0, 50) + "..." : text;
                 })(),
               }}

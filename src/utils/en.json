@@ -590,5 +590,7 @@
   "rejectedReason":"Rejected Reason",
   "noBlogFound":"Blogs Not Found",
   "selfPickUpDisabledNote":"Note: Self-pickup is available only for single-seller orders, and only if the seller has enabled this option. For multi-seller orders,  only home delivery will be available.",
-  "doorStepDeliveryDisableNote":"Doorstep delivery is currently unavailable for this seller. Please select the Store Pickup option to collect your order directly from the seller’s store."
+  "doorStepDeliveryDisableNote":"Doorstep delivery is currently unavailable for this seller. Please select the Store Pickup option to collect your order directly from the seller’s store.",
+  "recentlyAddedBlogs":"Recently Added Blogs",
+  "recentlyAddedBlogsDesc":"Explore the latest articles curated to keep you informed, inspired, and up to date."
 }
