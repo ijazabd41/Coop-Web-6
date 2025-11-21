@@ -13,7 +13,7 @@ const BlogCard = ({ blog }) => {
   };
 
   return (
-    <div className="flex flex-col p-4 gap-6 border rounded-lg h-fit bodyBackgroundColor">
+    <div className="flex flex-col p-4 gap-4 border rounded-lg h-fit bodyBackgroundColor">
       <div>
         <ImageWithPlaceholder
           className={"h-[264px] w-full rounded-lg"}
@@ -21,28 +21,18 @@ const BlogCard = ({ blog }) => {
           alt={blog?.title}
         />
       </div>
-      <div className="flex gap-4 flex-col">
+      <div className="flex gap-2 flex-col">
         <div className="flex gap-2 items-center">
           <p>{blog?.category?.name}</p>
           <GoDotFill />
           <p>{formatOnlyDate(blog?.created_at)}</p>
         </div>
-        <div className="flex flex-col gap-2 min-h-42">
+        <div className="flex flex-col gap-2 min-h-14">
           <div>
             <h2 className="font-bold text-xl ">
               {blog?.title?.slice(0, 32) + "..."}
             </h2>
-            <h4
-              className="blog-card-description"
-              dangerouslySetInnerHTML={{
-                __html: (() => {
-                  const div = document.createElement("div");
-                  div.innerHTML = blog?.description || "";
-                  const text = div.textContent || div.innerText || "";
-                  return text.length > 50 ? text.slice(0, 50) + "..." : text;
-                })(),
-              }}
-            ></h4>
+            <h4 className="blog-card-description">{blog?.short_description}</h4>
           </div>
         </div>
       </div>

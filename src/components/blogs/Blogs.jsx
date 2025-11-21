@@ -92,7 +92,6 @@ const Blogs = () => {
                   ))
                 : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
             </div>
-
             {blogs?.length == 0 && (
               <div className="w-full flex justify-center md:mt-96">
                 <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>

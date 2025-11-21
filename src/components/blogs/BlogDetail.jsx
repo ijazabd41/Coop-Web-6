@@ -65,15 +65,9 @@ const BlogDetail = () => {
           <div className="container flex flex-col gap-6 py-10">
             <div className="flex flex-col gap-2">
               <h1 className="font-bold text-2xl">{blog?.title}</h1>
-              <p
-                className="font-medium !text-start blog-description"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    blog?.description?.length > 100
-                      ? blog.description.slice(0, 100) + "..."
-                      : blog?.description,
-                }}
-              ></p>
+              <p className="font-medium !text-start blog-description">
+                {blog?.short_description}
+              </p>
             </div>
             <div>
               <ImageWithPlaceholder
