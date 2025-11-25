@@ -60,6 +60,7 @@ export const blogViewCount = "blog_view_count";
 export const mostViewedBlogs = "most_viewed";
 export const userProductRequest = "user_product_requests";
 export const list = "list";
+export const blogTags = "blog_popular_tags";
 
 export const remove = "remove";
 export const add = "add";

@@ -7,12 +7,15 @@ import { formatCustomDate } from "@/lib/utils";
 import Loader from "../loader/Loader";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import RecentBlogsSwiper from "./RecentBlogsSwiper";
+import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import { PiMediumLogoFill } from "react-icons/pi";
 
 const BlogDetail = () => {
   const router = useRouter();
   const { slug } = router.query;
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState([]);
   const [recentBlogs, setRecentBlogs] = useState([]);
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const BlogDetail = () => {
       setBlog(blog?.data?.[0]);
       handleSetBlogCount(blog?.data?.[0]);
       handleFetchBlogs(blog?.data?.[0]?.id);
+      setTags(blog?.data?.[0]?.tag_names);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -69,9 +73,9 @@ const BlogDetail = () => {
                 {blog?.short_description}
               </p>
             </div>
-            <div>
+            <div className="w-full">
               <ImageWithPlaceholder
-                className={"h-full w-full rounded-md "}
+                className={" w-full aspect-video rounded-md  "}
                 src={blog?.image_url}
                 alt={blog?.title}
               />
@@ -98,10 +102,51 @@ const BlogDetail = () => {
             </div>
           </div>
         </div>
-        <div
-          className="container py-12 !text-start"
-          dangerouslySetInnerHTML={{ __html: blog?.description }}
-        ></div>
+        <div className="my-12">
+          <div
+            className="container  !text-start px-2 md:px-0"
+            dangerouslySetInnerHTML={{ __html: blog?.description }}
+          ></div>
+          {tags.length > 0 && (
+            <div className="container">
+              <div className="border my-10"></div>
+              <div className="w-full backgroundColor  border  p-4 rounded-xl flex  items-start md:items-center justify-between flex-col md:flex-row ">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold">{t("tags")}:</span>
+
+                  {tags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className=" bodyBackgroundColor  text-sm px-3 py-1 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-3 mt-4 md:mt-0">
+                  <span className="font-semibold ">{t("share")}:</span>
+
+                  <div className="p-2 rounded-full bodyBackgroundColor">
+                    <button className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white">
+                      <FaFacebookF size={16} />
+                    </button>
+                  </div>
+                  <div className="p-2 rounded-full bodyBackgroundColor">
+                    <button className="w-7 h-7 rounded-full bg-gray-800  flex items-center justify-center text-white">
+                      <FaLinkedinIn size={16} />
+                    </button>
+                  </div>
+                  <div className="p-2 rounded-full bodyBackgroundColor">
+                    <button className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white">
+                      <PiMediumLogoFill size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <RecentBlogsSwiper recentBlogs={recentBlogs} />
     </>

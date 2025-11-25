@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import {
   FaLink,
-  FaRegHeart,
   FaShoppingBasket,
   FaStar,
   FaStarHalfAlt,

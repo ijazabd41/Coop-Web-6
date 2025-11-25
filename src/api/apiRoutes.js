@@ -205,8 +205,6 @@ export const getCategories = async ({
   return response.data;
 };
 
-
-
 export const getProductByFilter = async ({
   latitude,
   longitude,
@@ -829,12 +827,19 @@ export const getBlogsCategories = async ({
   return response.data;
 };
 
-export const getBlogs = async ({ offset, limit, slug, categoryId = null }) => {
+export const getBlogs = async ({
+  offset,
+  limit,
+  slug,
+  categoryId = null,
+  tag_id = null,
+}) => {
   const params = {
     limit,
     offset,
     slug,
     ...(categoryId !== null ? { category_id: categoryId } : null),
+    ...(tag_id !== null ? { tag_id: tag_id } : null),
   };
   const response = await api.get(apiEndPoints.blogs, { params });
   return response.data;
@@ -878,5 +883,10 @@ export const getRequestedProducts = async ({ limit = 10, offset = 0 }) => {
     `${apiEndPoints.userProductRequest}/${apiEndPoints?.list}`,
     { params }
   );
+  return response.data;
+};
+
+export const getTags = async () => {
+  const response = await api.get(`${apiEndPoints.blogTags}`);
   return response.data;
 };

@@ -7,28 +7,41 @@ import * as api from "@/api/apiRoutes";
 import BlogSkeleton, { BlogCardSkeleton } from "./BlogsSkeleton";
 import { t } from "@/utils/translation";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
+import PopularBlogTags from "./PopularBlogTags";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [blogsCategories, setBlogCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
   const [mostViewedBlogs, setMostViewedBlogs] = useState([]);
   const [offset, setOffset] = useState(0);
   const [totalBlogs, setTotalBlogs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [blogsLoading, setBlogsLoading] = useState(false);
+  const [tags, setTags] = useState([]);
 
   const BLOG_LIMIT = 10;
 
   useEffect(() => {
     handleFetchBlogsCategoris();
     getMostViewedBlogs();
+    handleTagFetch();
   }, []);
 
   useEffect(() => {
     setOffset(0);
     handleFetchBlogs(false, 0);
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedTag]);
+
+  const handleTagFetch = async () => {
+    try {
+      const response = await api.getTags();
+      setTags(response?.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const handleFetchBlogs = async (isFetchMore = false, customOffset) => {
     setBlogsLoading(true);
@@ -37,6 +50,7 @@ const Blogs = () => {
         offset: customOffset,
         limit: BLOG_LIMIT,
         categoryId: selectedCategory,
+        tag_id: selectedTag,
       });
       if (isFetchMore) {
         setBlogs((prev) => [...prev, ...blogs.data]);
@@ -110,14 +124,29 @@ const Blogs = () => {
             )}
           </div>
 
-          <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
-            <BlogsCategories
-              blogsCategories={blogsCategories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
-            <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
-          </div>
+          {blogsCategories?.length > 0 &&
+            mostViewedBlogs?.length > 0 &&
+            tags?.length > 0 && (
+              <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
+                {blogsCategories?.length > 0 && (
+                  <BlogsCategories
+                    blogsCategories={blogsCategories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                  />
+                )}
+                {mostViewedBlogs?.length > 0 && (
+                  <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
+                )}
+                {tags?.length > 0 && (
+                  <PopularBlogTags
+                    tags={tags}
+                    setSelectedTag={setSelectedTag}
+                    selectedTag={selectedTag}
+                  />
+                )}
+              </div>
+            )}
         </div>
       </div>
     </>

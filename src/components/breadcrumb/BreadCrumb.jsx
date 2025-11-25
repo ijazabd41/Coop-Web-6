@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
 import { isRtl } from "@/lib/utils";
+import { t } from "@/utils/translation";
 
 const notFoundRoute = ["/order-detail"];
 
@@ -27,6 +28,9 @@ const BreadCrumb = () => {
   const handleNotFoundRoutes = (href) => {
     if (href === "/product") {
       return router.push("/products");
+    }
+    if (href == "/blog") {
+      return router.push("/blogs");
     }
     if (href === "/categories") {
       return router.push("/categories/all");
@@ -76,8 +80,11 @@ const BreadCrumb = () => {
             {breadcrumbs.length ? handleCheckBreadCrumb() : "Home"}
           </p>
           <div className="flex gap-1 items-center overflow-hidden ">
-            <Link href="/" className="text-sm font-bold capitalize">
-              Home
+            <Link
+              href="/"
+              className="text-sm font-bold capitalize primaryColor"
+            >
+              {t("home")}
             </Link>
 
             {breadcrumbs.map((crumb, index) => (
@@ -101,7 +108,7 @@ const BreadCrumb = () => {
                 ) : (
                   <div
                     onClick={() => handleNotFoundRoutes(crumb.href)}
-                    className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer"
+                    className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer primaryColor"
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
