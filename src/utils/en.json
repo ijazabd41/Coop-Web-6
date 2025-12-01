@@ -611,5 +611,11 @@
   "original_price":"Original Price",
   "discounted_price":"Discounted Price",
   "subscription_plan":"Subscription Plan",
-  "faqs_for_subscription":"Frequently Asked Questions"
+  "faqs_for_subscription":"Frequently Asked Questions",
+  "save_more_with_egrocermax":" Save More with eGrocerMAX",
+  "save_more_with_egrocermax_desc":" Unlock extra perks, save more, and shop more easily with the simple advantages of eGrocerMAX.",
+  "free_delivery":"Free Delivery",
+  "free_delivery_perks":" Save on every order and get your groceries delivered at no extra cost.",
+  "get_answer_to_common_queries":"Get answers to common queries",
+  "max_benefits":"MAX Benefits"
 }

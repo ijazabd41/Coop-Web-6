@@ -370,9 +370,13 @@ const ProductDetailModal = ({
                   <h2 className="font-bold text-2xl break-all">
                     {productDetails?.name}
                   </h2>
+                  {selectVariant?.few_quantity_left == true && (
+                    <p className="text-sm text-red-600 font-bold ">Few left</p>
+                  )}
                   <div className="flex items-center gap-1 flex-wrap">
                     <div className="flex gap-4">
-                      {ratingData?.average_rating > 0 ? (
+                      {ratingData?.average_rating > 0 &&
+                      product?.product_rating == true ? (
                         <div className="border-r-2 px-2">
                           <div className="flex gap-1 items-center">
                             <div className="flex">

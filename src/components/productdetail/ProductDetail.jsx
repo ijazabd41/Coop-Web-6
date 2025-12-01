@@ -106,7 +106,6 @@ const ProductDetail = () => {
   }, [product]);
 
   const handleAddRecentlyViewedProduct = async (product) => {
-    console.log("product", product?.id);
     try {
       if (user?.jwtToken) {
         await api.addRecentlyViewedProduct({ productId: product?.id });
@@ -120,7 +119,7 @@ const ProductDetail = () => {
     try {
       if (user?.jwtToken) {
         const res = await api.getRecentlyViewedProducts({
-          product_id: product?.id,
+          productId: product?.id,
         });
         if (res.status == 1) {
           setRecentlyVisitedProduct(res?.data);
@@ -518,6 +517,7 @@ const ProductDetail = () => {
                       <h2 className="font-bold text-2xl break-all">
                         {product?.name}
                       </h2>
+
                       <div className="flex gap-4 items-center flex-wrap">
                         {product?.seller_name !== null && (
                           <div className="p-4 backgroundColor rounded-sm flex gap-2">
@@ -605,6 +605,11 @@ const ProductDetail = () => {
                           </div>
                         )}
                       </div>
+                      {selectVariant?.few_quantity_left == true && (
+                        <p className="text-sm text-red-600 font-bold ">
+                          Few left
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-1">
                       {selectVariant?.discounted_price !== 0 &&

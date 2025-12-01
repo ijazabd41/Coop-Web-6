@@ -521,6 +521,9 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
             {product?.name}
           </h3>
+          {selectedVariant?.few_quantity_left == true && (
+            <p className="text-sm text-red-600 font-semibold">Few left</p>
+          )}
           {product?.average_rating > 0 && product?.product_rating == true ? (
             <div className="rating">
               <div className="flex">

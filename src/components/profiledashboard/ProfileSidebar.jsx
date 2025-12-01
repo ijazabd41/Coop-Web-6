@@ -98,6 +98,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     },
   ];
 
+  const handleEGrocerMaxClick = () => {
+    router.push("/profile/egrocermax");
+  };
+
   return (
     <div>
       <div className="cardBorder rounded-sm ">
@@ -150,6 +154,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     transform: `translateY(${(index - current) * 100}%)`,
                     opacity: index === current ? 1 : 0,
                   }}
+                  onClick={handleEGrocerMaxClick}
                 >
                   <div className="flex gap-2 items-center font-bold justify-between px-4 w-full">
                     <div className="flex gap-2 items-center">
@@ -217,7 +222,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               <Link href={`/profile/egrocermax`}>
                 <li
                   className={`p-4  cursor-pointer   ${
-                    activeTab == "address"
+                    activeTab == "egrocermax"
                       ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
                       : "hover:primaryBackColor hover:text-white"
                   }`}

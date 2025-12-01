@@ -104,7 +104,7 @@ const PlanSelectionModal = ({
                         {plan.name}
                       </span>
                       <span className="text-xs font-medium text-white primaryBackColor py-0.5 px-2 rounded-full">
-                        {plan.days} Days
+                        {plan.days} {t("days")}
                       </span>
                     </div>
                     <div className="textColor font-bold flex items-center">

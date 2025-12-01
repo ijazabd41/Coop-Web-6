@@ -48,11 +48,10 @@ const EgrocerMax = () => {
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">
-                Save More with eGrocerMAX
+                {t("save_more_with_egrocermax")}
               </h2>
               <p className="text-[#8BA2B3] text-base font-medium mt-1 leading-relaxed">
-                Unlock extra perks, save more, and shop more easily with the
-                simple advantages of eGrocerMAX.
+                {t("save_more_with_egrocermax_desc")}
               </p>
             </div>
           </div>
@@ -60,7 +59,7 @@ const EgrocerMax = () => {
           <div className="dashedBorder"></div>
 
           <div className=" my-6 flex flex-col gap-2">
-            <h3 className=" font-bold">MAX Benefits</h3>
+            <h3 className=" font-bold">{t("max_benefits")}</h3>
 
             <div
               style={{ backgroundColor: "var(--button-background-color)" }}
@@ -77,10 +76,11 @@ const EgrocerMax = () => {
                 />
               </div>
               <div className="flex-grow">
-                <h4 className="textColor font-bold text-base">Free Delivery</h4>
+                <h4 className="textColor font-bold text-base">
+                  {t("free_delivery")}
+                </h4>
                 <p className="subTextColor text-sm mt-0.5 leading-snug">
-                  Save on every order and get your groceries delivered at no
-                  extra cost.
+                  {t("free_delivery_perks")}
                 </p>
               </div>
             </div>
@@ -90,7 +90,7 @@ const EgrocerMax = () => {
             className="w-full mt-6 primaryBackColor hover:opacity-90 active:opacity-80 transition-opacity text-white font-normal text-xl py-3.5 rounded-lg flex items-center justify-center gap-2"
             onClick={() => setIsPlanModalOpen(true)}
           >
-            Choose Your Plan
+            {t("choose_your_plan")}
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -112,10 +112,10 @@ const EgrocerMax = () => {
             </div>
             <div>
               <h4 className="font-bold textColor text-sm">
-                Frequently Asked Questions
+                {t("faqs_for_subscription")}
               </h4>
               <p className="subTextColor text-xs mt-0.5">
-                Get answers to common queries
+                {t("get_answer_to_common_queries")}
               </p>
             </div>
           </div>
