@@ -114,6 +114,9 @@
   .primaryDashedBorder {
     border: 2px dashed var(--primary-color);
   }
+  .dashedBorder {
+    border: 1px dashed var(--nav-button-bg);
+  }
 
   .primaryColor {
     color: var(--primary-color);

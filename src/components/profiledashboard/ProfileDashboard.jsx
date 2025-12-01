@@ -6,6 +6,7 @@ import Address from "./Address";
 import ActiveOrders from "./orders/ActiveOrders";
 import OrderHistory from "./orders/PrevOrder";
 import Wishlist from "./Wishlist";
+import EgrocerMax from "./egrocermax/EgrocerMax";
 import { useRouter } from "next/router";
 import WalletHistory from "./wallet/WalletHistory";
 import TransactionHistory from "./transactions/TransactionHistory";
@@ -52,14 +53,14 @@ const ProfileDashboard = () => {
       <BreadCrumb />
       <div className="container px-2">
         <div className="grid grid-cols-12 gap-6 my-10">
-          <div className="md:col-span-3 hidden md:block">
+          <div className="md:col-span-4 hidden md:block">
             <ProfileSidebar
               setSelectedTab={setSelectedTab}
               selectedTab={selectedTab}
             />
           </div>
 
-          <div className="col-span-12 md:col-span-9  ">
+          <div className="col-span-12 md:col-span-8">
             {loading ? (
               <div className="flex flex-col gap-2">
                 <CardSkeleton height={50} />
@@ -69,6 +70,7 @@ const ProfileDashboard = () => {
               <>
                 {activeTab == "profile" && <Profile />}
                 {activeTab == "resetpassword" && <ResetPassword />}
+                {activeTab == "egrocermax" && <EgrocerMax />}
                 {activeTab == "address" && <Address />}
                 {activeTab == "activeorders" && <ActiveOrders />}
                 {activeTab == "orderhistory" && <OrderHistory />}

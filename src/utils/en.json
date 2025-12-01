@@ -594,5 +594,21 @@
   "recentlyAddedBlogs":"Recently Added Blogs",
   "recentlyAddedBlogsDesc":"Explore the latest articles curated to keep you informed, inspired, and up to date.",
   "tags":"Tags",
-  "popular_tags":"Popular Tags"
+  "popular_tags":"Popular Tags",
+  "egrocer_max":"Subscribe eGrocerMAX",
+  "egrocer_max_desc":"Enjoy free delivery, and exclusive member-only savings.",
+  "go_max_save_more":"Go MAX. Save More",
+  "free_delivery_desc":"Free Delivery Starts Here",
+  "egrocer_max_title":"eGrocerMAX",
+  "choose_your_plan":"Choose Your Plan",
+  "select_subscription_desc":" Select the perfect subscription for your needs",
+  "free_delivery_on":"Free Delivery on orders above",
+  "proceed_to_payment":"Proceed to Payment",
+  "complete_payment":"Complete Payment",
+  "please_select_a_plan":"Please select a plan",
+  "total_amount":"Total Amount",
+  "original_price":"Original Price",
+  "discounted_price":"Discounted Price",
+  "subscription_plan":"Subscription Plan",
+  "faqs_for_subscription":"Frequently Asked Questions"
 }

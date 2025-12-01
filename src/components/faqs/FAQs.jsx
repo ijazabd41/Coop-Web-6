@@ -5,6 +5,7 @@ import FAQCard from "./FAQCard";
 import { t } from "@/utils/translation";
 import CardSkeleton from "../skeleton/CardSkeleton";
 
+
 const FAQs = () => {
   const [faqs, setFaqs] = useState([]);
   const total_faqs_per_page = 7;
