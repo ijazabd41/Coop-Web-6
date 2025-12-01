@@ -890,3 +890,24 @@ export const getTags = async () => {
   const response = await api.get(`${apiEndPoints.blogTags}`);
   return response.data;
 };
+
+export const addRecentlyViewedProduct = async ({ productId }) => {
+  const formData = new FormData();
+  formData.append("product_id", productId);
+  const response = await api.post(
+    `${apiEndPoints.getSection}/${apiEndPoints.addRecentlyViewedProduct}`,
+    formData
+  );
+  return response.data;
+};
+
+export const getRecentlyViewedProducts = async ({ productId }) => {
+  const params = {
+    product_id: productId,
+  };
+  const response = await api.get(
+    `${apiEndPoints.getProducts}/${apiEndPoints.recentlyVisited}`,
+    { params }
+  );
+  return response.data;
+};

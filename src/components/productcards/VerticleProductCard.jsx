@@ -282,7 +282,6 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       toast.error(t("out_of_stock_message"));
     } else if (cart?.cartProducts?.length >= setting?.max_cart_items_count) {
       toast.error(t("maximum_cart_quantity_reach"));
-
     } else if (Number(product.is_unlimited_stock)) {
       addToCart(product.id, selectedVariant.id, 1);
     } else {
@@ -472,7 +471,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       product?.variants?.[0]?.stock == 0) ||
     (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) ||
     (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0);
-    
+
   return (
     <div>
       <Link
@@ -522,7 +521,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
             {product?.name}
           </h3>
-          {product?.average_rating > 0 ? (
+          {product?.average_rating > 0 && product?.product_rating == true ? (
             <div className="rating">
               <div className="flex">
                 <div className="flex">

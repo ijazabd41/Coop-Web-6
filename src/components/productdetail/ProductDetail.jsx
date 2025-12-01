@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,6 +56,7 @@ import {
   clearAllFilter,
   setFilterBySeller,
 } from "@/redux/slices/productFilterSlice";
+import RecentalyViewedProducts from "../productslist/RecentalyViewedProducts";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -86,6 +87,7 @@ const ProductDetail = () => {
   const [showSingleSellerModal, setSingleSellerModal] = useState(false);
   const [isVariantAvailable, setIsVariantAvailable] = useState(false);
   const [productNotAvailable, setProductNotAvailable] = useState(false);
+  const [recentlyVisitedProduct, setRecentlyVisitedProduct] = useState([]);
 
   const ratingsCount = 10;
 
@@ -103,6 +105,32 @@ const ProductDetail = () => {
     fetchRatings();
   }, [product]);
 
+  const handleAddRecentlyViewedProduct = async (product) => {
+    console.log("product", product?.id);
+    try {
+      if (user?.jwtToken) {
+        await api.addRecentlyViewedProduct({ productId: product?.id });
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  const handleFetchRecentlyViewedProducts = async (product) => {
+    try {
+      if (user?.jwtToken) {
+        const res = await api.getRecentlyViewedProducts({
+          product_id: product?.id,
+        });
+        if (res.status == 1) {
+          setRecentlyVisitedProduct(res?.data);
+        }
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
   const handleFetchBySlug = async () => {
     setIsLoading(true);
     try {
@@ -117,6 +145,8 @@ const ProductDetail = () => {
         setSelectedVariant(res?.data?.variants?.[0]);
         setProductImages([res?.data?.image_url, ...res?.data?.images]);
         setSelectedImage(res?.data?.image_url);
+        handleAddRecentlyViewedProduct(res?.data);
+        handleFetchRecentlyViewedProducts(res?.data);
       } else {
         setProductNotAvailable(true);
       }
@@ -506,7 +536,8 @@ const ProductDetail = () => {
                         )}
 
                         <div className="flex gap-4">
-                          {ratingData?.average_rating > 0 ? (
+                          {ratingData?.average_rating > 0 &&
+                          product?.product_rating == true ? (
                             <div className="px-2">
                               <div className="flex gap-1 items-center">
                                 <div className="flex">
@@ -857,6 +888,9 @@ const ProductDetail = () => {
             <ProductDescription product={product} ratingData={ratingData} />
           </div>
           <SimilarProducts slug={slug} tag_names={product?.tag_names} />
+          <RecentalyViewedProducts
+            recentalyViewedProducts={recentlyVisitedProduct}
+          />
         </>
       )}
       <SingleSellerConfirmationModal

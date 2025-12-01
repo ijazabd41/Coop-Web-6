@@ -501,7 +501,8 @@ const HorizontalProductCard = ({ product }) => {
               <h3 className="flex  text-[16px] font-bold leading-[1.2]  max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
                 {product?.name}
               </h3>
-              {product?.average_rating > 0 ? (
+              {product?.average_rating > 0 &&
+              product?.product_rating == true ? (
                 <div className="rating">
                   <div className="flex">
                     <div className="flex">

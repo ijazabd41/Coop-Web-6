@@ -9,7 +9,11 @@ import { IoMdStar } from "react-icons/io";
 import RatingUpdateModal from "./RatingUpdateModal";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 
-const OrderItems = ({ products, handleFetchOrderDetail }) => {
+const OrderItems = ({
+  products,
+  handleFetchOrderDetail,
+  isShowProductRating,
+}) => {
   const setting = useSelector((state) => state.Setting.setting);
   const user = useSelector((state) => state.User.user);
 
@@ -133,6 +137,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                 <td className="p-4 ">
                   <div className="flex gap-2 flex-col items-start">
                     {Number(product?.active_status) === 6 &&
+                    isShowProductRating &&
                     product?.return_requested === null ? (
                       userRating ? (
                         <div
@@ -143,7 +148,7 @@ const OrderItems = ({ products, handleFetchOrderDetail }) => {
                             className="px-4 py-2 hover:bg-[#6ac8931f] text-[#141A1F] bg-[#DB93051F] rounded-md flex gap-1 items-center font-medium text-sm "
                             onClick={() => handleShowUpdateRating(product)}
                           >
-                            Edit Review | {userRating?.rate}
+                            {t("edit_review")} | {userRating?.rate}
                             <IoMdStar size={20} fill="#DB9305" />
                           </button>
                         </div>

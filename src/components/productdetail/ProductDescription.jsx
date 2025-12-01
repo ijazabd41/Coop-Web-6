@@ -91,14 +91,16 @@ const ProductDescription = ({ product, ratingData }) => {
           >
             {t("product_desc_title")}
           </span>
-          <span
-            className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${
-              selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""
-            }`}
-            onClick={handleProductReviewSelect}
-          >
-            {t("rating_and_reviews")}
-          </span>
+          {product?.product_rating == true && (
+            <span
+              className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${
+                selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""
+              }`}
+              onClick={handleProductReviewSelect}
+            >
+              {t("rating_and_reviews")}
+            </span>
+          )}
         </div>
         <div className=" ">
           {selectedTab == 0 ? (
@@ -200,7 +202,6 @@ const ProductDescription = ({ product, ratingData }) => {
                       )}
                     </div>
 
-                    {/* Section 2 */}
                     <div className="col-span-12 md:col-span-8 gap-1 flex flex-col border-none :border-l-2 ">
                       <div className="md:ml-4 ml-0">
                         <h1 className="text-base font-bold">

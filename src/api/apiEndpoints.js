@@ -61,6 +61,8 @@ export const mostViewedBlogs = "most_viewed";
 export const userProductRequest = "user_product_requests";
 export const list = "list";
 export const blogTags = "blog_popular_tags";
+export const addRecentlyViewedProduct = "add_recently_visited_product";
+export const recentlyVisited = "recently_visited";
 
 export const remove = "remove";
 export const add = "add";
