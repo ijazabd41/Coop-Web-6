@@ -266,7 +266,7 @@ const WalletBalanceModal = ({
                 setAddWalletModal(false);
                 // handleSuccessWalletAdd();
                 router.push(
-                  "/web-payment-status?type=wallet&status_code=200&status=success"
+                  `/web-payment-status?type=${type}&status_code=200&status=success`
                 );
               } else {
                 toast.error(response.message);
@@ -312,7 +312,7 @@ const WalletBalanceModal = ({
 
       rzpay.on("payment.failed", (response) => {
         setAddWalletModal(false);
-        router.push("/web-payment-status?type=wallet&status=failed");
+        router.push(`/web-payment-status?type=${type}&status=failed`);
       });
 
       rzpay.open();

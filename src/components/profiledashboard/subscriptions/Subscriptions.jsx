@@ -45,8 +45,6 @@ const Subscription = () => {
     setIsFaqsModalOpen(true);
   }
 
-
-
   return (
     <div className="w-full mx-auto h-fit border-2 rounded-lg">
       {user?.has_active_subscription ? (
