@@ -42,6 +42,7 @@ const CheckoutForm = ({
   transactionId,
   setWalletModal,
   stripeOrderId,
+  type
 }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.User?.user);
@@ -50,7 +51,7 @@ const CheckoutForm = ({
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
-  const type = stripeOrderId ? "order" : "wallet";
+  // const type = stripeOrderId ? "order" : "wallet";
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -107,6 +108,7 @@ const CheckoutForm = ({
         walletAmount: amount,
         type: type,
         paymentMethod: "Stripe",
+        subscriptionPlanId: 3
       });
       if (type == "wallet") {
         dispatch(addUserBalance({ data: amount }));
@@ -156,6 +158,7 @@ const InjectedCheckoutForm = ({
   amount,
   setWalletModal,
   stripeOrderId,
+  type
 }) => {
   return (
     <ElementsConsumer>
@@ -169,6 +172,7 @@ const InjectedCheckoutForm = ({
           amount={amount}
           setWalletModal={setWalletModal}
           stripeOrderId={stripeOrderId}
+          type={type}
         />
       )}
     </ElementsConsumer>
@@ -183,6 +187,7 @@ const StripeModal = ({
   amount,
   setWalletModal,
   stripeOrderId,
+  type,
 }) => {
   const setting = useSelector((state) => state.Setting);
   const stripePromise = useMemo(() => {
@@ -220,6 +225,7 @@ const StripeModal = ({
               amount={amount}
               setWalletModal={setWalletModal}
               stripeOrderId={stripeOrderId}
+              type={type}
             />
           </Elements>
         </div>

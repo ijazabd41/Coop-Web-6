@@ -80,20 +80,31 @@ const WalletBalanceModal = ({
     }
   }, [addWalletModal]);
 
+
   const handleSubmit = async () => {
-    if (amount === null) {
-      toast.error(t("wallet_amount_required"));
-      return;
-    } else if (amount <= 0) {
-      toast.error(t("wallet_amount_must_be_greater_than_zero"));
-      return;
-    } else if (selectedPaymentMethod === undefined) {
-      toast.error(t("wallet_payment_method_required"));
-      return;
-    } else if (amount % 1 !== 0) {
-      toast.error(t("wallet_amount_cannot_be_decimal"));
-      return;
+    if (type == "wallet") {
+      if (amount === null) {
+        toast.error(t("wallet_amount_required"));
+        return;
+      } else if (amount <= 0) {
+        toast.error(t("wallet_amount_must_be_greater_than_zero"));
+        return;
+      } else if (selectedPaymentMethod === undefined) {
+        toast.error(t("wallet_payment_method_required"));
+        return;
+      } else if (amount % 1 !== 0) {
+        toast.error(t("wallet_amount_cannot_be_decimal"));
+        return;
+      }
     }
+
+    if (type == "subscription") {
+      if (selectedPlan?.id === null) {
+        toast.error(t("please_select_a_plan"));
+        return;
+      }
+    }
+
 
     const capitalizedPaymentMethod =
       selectedPaymentMethod.charAt(0).toUpperCase() +
@@ -101,8 +112,9 @@ const WalletBalanceModal = ({
     if (capitalizedPaymentMethod !== "Paystack") {
       const result = await api.initiateTrasaction({
         paymentMethod: capitalizedPaymentMethod,
-        type: "wallet",
+        type: type,
         walletAmount: amount,
+        subscriptionPlanId: selectedPlan?.id
       });
       if (result?.status === 1) {
         if (capitalizedPaymentMethod === "Razorpay") {
@@ -132,22 +144,24 @@ const WalletBalanceModal = ({
         setAddWalletModal(false);
       }
     } else {
-      handlePayStackPayment(null, amount, capitalizedPaymentMethod);
+      handlePayStackPayment(type, selectedPlan, amount, capitalizedPaymentMethod);
     }
   };
 
   const handlePayStackPayment = async (
-    orderId = null,
+    type,
+    selectedPlan,
     amount,
     capilizePaymeneMethod
   ) => {
+    const finalAmount = type === "subscription" ? selectedPlan?.price : amount;
     try {
       const handler = PaystackPop.setup({
         key:
           setting.payment_setting &&
           setting.payment_setting.paystack_public_key,
         email: user && user?.user?.email,
-        amount: parseFloat(amount) * 100,
+        amount: parseFloat(finalAmount) * 100,
         currency:
           setting?.payment_setting &&
           setting?.payment_setting?.paystack_currency_code,
@@ -164,10 +178,10 @@ const WalletBalanceModal = ({
           try {
             // setPaymentLoading(true)
             const response = await api.addTransaction({
-              orderId: "",
               transactionId: res.reference,
               paymentMethod: capilizePaymeneMethod,
-              type: "wallet",
+              type: type,
+              subscriptionPlanId: selectedPlan?.id,
               walletAmount: amount,
             });
             if (response.status == 1) {
@@ -176,7 +190,7 @@ const WalletBalanceModal = ({
               dispatch(addUserBalance({ data: amount }));
               setAddWalletModal(false);
               router.push(
-                "/web-payment-status?type=wallet&status_code=200&status=success"
+                `/web-payment-status?type=${type}&status_code=200&status=success`
               );
               // setIsOrderPlaced(true);
               // dispatch(setCartSubTotal({ data: 0 }));
@@ -242,7 +256,8 @@ const WalletBalanceModal = ({
                 paymentMethod:
                   selectedPaymentMethod.charAt(0).toUpperCase() +
                   selectedPaymentMethod.slice(1),
-                type: "wallet",
+                type: type,
+                subscriptionPlanId: 3,
                 walletAmount: amount,
               });
               if (response.status === 1) {
@@ -407,11 +422,10 @@ const WalletBalanceModal = ({
                     <div
                       key={method.key}
                       data-method={method.label}
-                      className={`p-2 flex justify-between items-center  rounded-sm ${
-                        selectedPaymentMethod === method.label
-                          ? "addToCartColor primaryBorder"
-                          : "cardBorder"
-                      }`}
+                      className={`p-2 flex justify-between items-center  rounded-sm ${selectedPaymentMethod === method.label
+                        ? "addToCartColor primaryBorder"
+                        : "cardBorder"
+                        }`}
                       onClick={() => handleSelectedPaymentMethod(method.label)}
                     >
                       <div className="flex gap-2 items-center">
@@ -460,6 +474,8 @@ const WalletBalanceModal = ({
         setShowStripe={setShowStripe}
         amount={amount}
         setWalletModal={setAddWalletModal}
+        type={type}
+      // subscriptionPlanId={subscriptionPlanId}
       />
     </div>
   );

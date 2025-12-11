@@ -6,7 +6,7 @@ import Address from "./Address";
 import ActiveOrders from "./orders/ActiveOrders";
 import OrderHistory from "./orders/PrevOrder";
 import Wishlist from "./Wishlist";
-import EgrocerMax from "./egrocermax/EgrocerMax";
+import Subscription from "./subscriptions/Subscriptions";
 import { useRouter } from "next/router";
 import WalletHistory from "./wallet/WalletHistory";
 import TransactionHistory from "./transactions/TransactionHistory";
@@ -70,7 +70,7 @@ const ProfileDashboard = () => {
               <>
                 {activeTab == "profile" && <Profile />}
                 {activeTab == "resetpassword" && <ResetPassword />}
-                {activeTab == "egrocermax" && <EgrocerMax />}
+                {activeTab == "subscription" && <Subscription />}
                 {activeTab == "address" && <Address />}
                 {activeTab == "activeorders" && <ActiveOrders />}
                 {activeTab == "orderhistory" && <OrderHistory />}

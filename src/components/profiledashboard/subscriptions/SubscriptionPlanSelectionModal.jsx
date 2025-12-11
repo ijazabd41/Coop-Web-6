@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { X, Truck, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { t } from "@/utils/translation";
+import * as api from "@/api/apiRoutes"
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+
+
 
 const PlanSelectionModal = ({
   isOpen,
@@ -13,32 +17,26 @@ const PlanSelectionModal = ({
   onSelectPlan,
   setAddWalletModal,
 }) => {
-  const plans = [
-    {
-      name: "MAX Lite",
-      days: 90,
-      currentPrice: 299.0,
-      oldPrice: 599.0,
-      deliveryThreshold: 500.0,
-      value: "MAX Lite",
-    },
-    {
-      name: "MAX Plus",
-      days: 180,
-      currentPrice: 499.0,
-      oldPrice: 1199.0,
-      deliveryThreshold: 200.0,
-      value: "MAX Plus",
-    },
-    {
-      name: "MAX Ultra",
-      days: 365,
-      currentPrice: 799.0,
-      oldPrice: 1999.0,
-      deliveryThreshold: 99.0,
-      value: "MAX Ultra",
-    },
-  ];
+
+  const [plans, setPlans] = useState([]);
+
+  const setting = useSelector((state) => state.Setting.setting);
+
+
+
+  useEffect(() => {
+    handleFetchPlans();
+  }, []);
+
+  const handleFetchPlans = async () => {
+    try {
+      const plans = await api.getSubscriptionPlans();
+      setPlans(plans?.data?.plans);
+    } catch (error) {
+      console.log("error", error)
+    }
+  };
+
 
   const getPlanCardStyle = (planValue) => {
     const isSelected = selectedPlan === planValue;
@@ -60,7 +58,7 @@ const PlanSelectionModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="p-6 focus-visible:outline-none focus:outline-none rounded-2xl shadow-2xl max-w-4xl w-full  "
+        className="p-6 focus-visible:outline-none focus:outline-none rounded-2xl shadow-2xl max-w-4xl w-full  overflow-scroll "
         style={{ backgroundColor: "var(--body-background-color)" }}
       >
         <DialogHeader>
@@ -85,17 +83,16 @@ const PlanSelectionModal = ({
           </DialogTitle>
         </DialogHeader>
         <div className="">
-          <div className="mt-6 space-y-4">
-            {plans.map((plan) => (
+          <div className="mt-6 space-y-4 h-[calc(100vh-20rem)] overflow-scroll">
+            {plans?.map((plan) => (
               <div
-                key={plan.value}
-                onClick={() => onSelectPlan(plan.value)}
-                style={getPlanCardStyle(plan.value)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  selectedPlan === plan.value
-                    ? "shadow-md"
-                    : "hover:border-gray-300"
-                }`}
+                key={plan.id}
+                onClick={() => onSelectPlan(plan)}
+                style={getPlanCardStyle(plan.id)}
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedPlan?.id === plan.id
+                  ? "shadow-md"
+                  : "hover:border-gray-300"
+                  }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
@@ -108,12 +105,15 @@ const PlanSelectionModal = ({
                       </span>
                     </div>
                     <div className="textColor font-bold flex items-center">
+
                       <span className="text-xl">
-                        ${plan.currentPrice.toFixed(2)}
+                        {setting?.currency}{plan.discounted_price > 0 ? plan.discounted_price.toFixed(2) : plan.price.toFixed(2)}
                       </span>
-                      <span className="text-sm line-through text-gray-400 ml-2">
-                        ${plan.oldPrice.toFixed(2)}
-                      </span>
+                      {plan.discounted_price > 0 &&
+                        <span className="text-sm line-through text-gray-400 ml-2">
+                          {setting?.currency}{plan.price.toFixed(2)}
+                        </span>
+                      }
                     </div>
                   </div>
 
@@ -121,12 +121,12 @@ const PlanSelectionModal = ({
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0`}
                     style={{
                       borderColor:
-                        selectedPlan === plan.value
+                        selectedPlan?.id === plan.id
                           ? "var(--primary-color)"
                           : "var(--border-color)",
                     }}
                   >
-                    {selectedPlan === plan.value && (
+                    {selectedPlan?.id === plan.id && (
                       <div className="w-2.5 h-2.5 rounded-full primaryBackColor" />
                     )}
                   </div>
@@ -137,8 +137,8 @@ const PlanSelectionModal = ({
                 >
                   <Truck className="w-5 h-5 subTextColor" />
                   <span className="text-sm subTextColor">
-                    {t("free_delivery_on")} **$
-                    {plan.deliveryThreshold.toFixed(2)}**
+                    {t("free_delivery_on")} {setting?.currency}
+                    {plan.free_delivery_above}
                   </span>
                 </div>
               </div>

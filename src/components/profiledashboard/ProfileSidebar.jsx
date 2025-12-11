@@ -98,8 +98,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     },
   ];
 
-  const handleEGrocerMaxClick = () => {
-    router.push("/profile/egrocermax");
+  const handleSubscriptionClick = () => {
+    router.push("/profile/subscription");
   };
 
   return (
@@ -149,12 +149,12 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               {slides.map((slide, index) => (
                 <div
                   key={slide.id}
-                  className={`absolute inset-0 flex items-center justify-center font-semibold transition-all duration-500 ease-in-out `}
+                  className={`absolute inset-0 flex items-center justify-center font-semibold transition-all duration-500 ease-in-out cursor-pointer `}
                   style={{
                     transform: `translateY(${(index - current) * 100}%)`,
                     opacity: index === current ? 1 : 0,
                   }}
-                  onClick={handleEGrocerMaxClick}
+                  onClick={handleSubscriptionClick}
                 >
                   <div className="flex gap-2 items-center font-bold justify-between px-4 w-full">
                     <div className="flex gap-2 items-center">
@@ -179,11 +179,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <ul>
               <Link href={`/profile`}>
                 <li
-                  className={`p-4  cursor-pointer   ${
-                    activeTab == "profile"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer   ${activeTab == "profile"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("profile")}
                 >
                   <span className="font-medium ml-12">{t("editProfile")}</span>
@@ -193,11 +192,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 (authType == "phone" && setting?.phone_auth_password == 1 && (
                   <Link href={`/profile/resetpassword`}>
                     <li
-                      className={`p-4  cursor-pointer   ${
-                        activeTab == "resetpassword"
-                          ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
-                          : "hover:primaryBackColor hover:text-white"
-                      }`}
+                      className={`p-4  cursor-pointer   ${activeTab == "resetpassword"
+                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
+                        : "hover:primaryBackColor hover:text-white"
+                        }`}
                       onClick={() => handleTabChange("profile")}
                     >
                       <span className="font-medium ml-12">
@@ -209,28 +207,31 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/address`}>
                 <li
-                  className={`p-4  cursor-pointer   ${
-                    activeTab == "address"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer   ${activeTab == "address"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("address")}
                 >
                   <span className="ml-12">{t("manage_address")}</span>
                 </li>
               </Link>
-              <Link href={`/profile/egrocermax`}>
-                <li
-                  className={`p-4  cursor-pointer   ${
-                    activeTab == "egrocermax"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
-                  onClick={() => handleTabChange("egrocermax")}
-                >
-                  <span className="ml-12">{t("egrocer_max_title")}</span>
-                </li>
-              </Link>
+              {user?.is_subscription_plans &&
+                (
+                  <Link href={`/profile/subscription`}>
+                    <li
+                      className={`p-4  cursor-pointer   ${activeTab == "subscription"
+                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
+                        : "hover:primaryBackColor hover:text-white"
+                        }`}
+                      onClick={() => handleTabChange("subscription")}
+                    >
+                      <span className="ml-12">{user?.subscription_name}</span>
+                    </li>
+                  </Link>
+                )
+              }
+
             </ul>
           </div>
 
@@ -243,11 +244,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <ul>
               <Link href={`/profile/activeorders`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "activeorders"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "activeorders"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("activeorders")}
                 >
                   <span className="ml-12">{t("active_orders")}</span>
@@ -256,11 +256,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/orderhistory`}>
                 <li
-                  className={`p-4  cursor-pointer  ${
-                    activeTab == "orderhistory"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  ${activeTab == "orderhistory"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("orderhistory")}
                 >
                   <span className="ml-12">{t("order_history")}</span>
@@ -268,11 +267,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </Link>
               <Link href={`/profile/wishlist`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "wishlist"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "wishlist"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("wishlist")}
                 >
                   <span className="ml-12">{t("my_wishlist")}</span>
@@ -296,22 +294,20 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </span>
               </li>
               <li
-                className={`p-4  cursor-pointer  textColor ${
-                  activeTab == "add-balance"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
-                }`}
+                className={`p-4  cursor-pointer  textColor ${activeTab == "add-balance"
+                  ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                  : "hover:primaryBackColor hover:text-white"
+                  }`}
                 onClick={handleWalletBalanceModal}
               >
                 <span className="ml-12">{t("addWalletBalance")}</span>
               </li>
               <Link href={`/profile/wallethistory`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "wallethistory"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "wallethistory"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("wallethistory")}
                 >
                   <span className="ml-12">{t("wallet_history")}</span>
@@ -320,11 +316,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/transaction`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "transaction"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "transaction"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("transaction")}
                 >
                   <span className="ml-12">{t("transaction_history")}</span>
@@ -342,11 +337,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <ul>
               <Link href={`/profile/notifications`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "notifications"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "notifications"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("notifications")}
                 >
                   <span className="ml-12">{t("notification")}</span>
@@ -354,11 +348,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </Link>
               <Link href={`/profile/requested-products`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${
-                    activeTab == "requested-products"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                      : "hover:primaryBackColor hover:text-white"
-                  }`}
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "requested-products"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
                   onClick={() => handleTabChange("requested-products")}
                 >
                   <span className="ml-12">{t("requestedProducts")}</span>

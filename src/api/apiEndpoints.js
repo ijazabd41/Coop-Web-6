@@ -63,6 +63,8 @@ export const list = "list";
 export const blogTags = "blog_popular_tags";
 export const addRecentlyViewedProduct = "add_recently_visited_product";
 export const recentlyVisited = "recently_visited";
+export const subscriptionPlans= "subscription_plans"
+export const userActivePlan = "user_active_plan"
 
 export const remove = "remove";
 export const add = "add";

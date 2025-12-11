@@ -1,6 +1,6 @@
 import MetaData from "@/components/metadata-component/MetaData";
-const EgrocerMax = dynamic(
-  () => import("@/components/pagecomponents/EgrocerMaxPage"),
+const Subscription = dynamic(
+  () => import("@/components/pagecomponents/SubscriptionPage"),
   { ssr: false }
 );
 import dynamic from "next/dynamic";
@@ -11,9 +11,9 @@ const index = () => {
     <div>
       <MetaData
         pageName="/profile/order-history"
-        title={`eGrocerMax - ${process.env.NEXT_PUBLIC_META_TITLE}`}
+        title={`Subscription - ${process.env.NEXT_PUBLIC_META_TITLE}`}
       />
-      <EgrocerMax />
+      <Subscription />
     </div>
   );
 };

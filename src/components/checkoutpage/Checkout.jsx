@@ -501,7 +501,7 @@ const Checkout = () => {
       String(checkout?.selectedPaymentMethod).slice(1);
     const status =
       checkout?.selectedPaymentMethod === "COD" ||
-      checkout?.selectedPaymentMethod === "wallet"
+        checkout?.selectedPaymentMethod === "wallet"
         ? 2
         : 1;
     try {
@@ -666,9 +666,8 @@ const Checkout = () => {
         ) : (
           <div className="flex justify-center flex-col items-center">
             <div
-              className={`flex w-full ${
-                checkout?.orderType == "doorstep" ? "lg:w-1/2" : "lg:w-1/4"
-              }`}
+              className={`flex w-full ${checkout?.orderType == "doorstep" ? "lg:w-1/2" : "lg:w-1/4"
+                }`}
             >
               <Stepper currentStep={checkout?.currentStep} />
             </div>
@@ -887,13 +886,11 @@ const Checkout = () => {
                                     {t("open_hours")}
                                   </h2>
                                   <p className="font-medium">
-                                    {`${t("today")} ${
-                                      checkoutData?.seller_self_pickup
-                                        .opening_time
-                                    } - ${
-                                      checkoutData?.seller_self_pickup
+                                    {`${t("today")} ${checkoutData?.seller_self_pickup
+                                      .opening_time
+                                      } - ${checkoutData?.seller_self_pickup
                                         .closing_time
-                                    }`}
+                                      }`}
                                   </p>
                                 </div>
                               </div>
@@ -948,28 +945,28 @@ const Checkout = () => {
                                 </PopoverTrigger>
                                 {timeSlotsData?.time_slots_is_enabled ==
                                   "true" && (
-                                  <PopoverContent className="w-full p-0">
-                                    <Calendar
-                                      mode="single"
-                                      selected={checkout?.selectedDate}
-                                      onSelect={handleSelectedDate}
-                                      className="rounded-md w-full"
-                                      fromDate={new Date()}
-                                      toDate={(() => {
-                                        let date = new Date();
-                                        let allowedDays =
-                                          parseInt(
-                                            setting?.setting
-                                              ?.time_slots_allowed_days
-                                          ) || 15;
-                                        date.setDate(
-                                          date.getDate() + allowedDays
-                                        );
-                                        return date;
-                                      })()}
-                                    />
-                                  </PopoverContent>
-                                )}
+                                    <PopoverContent className="w-full p-0">
+                                      <Calendar
+                                        mode="single"
+                                        selected={checkout?.selectedDate}
+                                        onSelect={handleSelectedDate}
+                                        className="rounded-md w-full"
+                                        fromDate={new Date()}
+                                        toDate={(() => {
+                                          let date = new Date();
+                                          let allowedDays =
+                                            parseInt(
+                                              setting?.setting
+                                                ?.time_slots_allowed_days
+                                            ) || 15;
+                                          date.setDate(
+                                            date.getDate() + allowedDays
+                                          );
+                                          return date;
+                                        })()}
+                                      />
+                                    </PopoverContent>
+                                  )}
                               </Popover>
                             </div>
                             {timeSlotsData?.time_slots_is_enabled == "true" && (
@@ -1087,6 +1084,7 @@ const Checkout = () => {
         clientSecret={stripeClientSecret}
         stripeTransId={stripeTransactionId}
         stripeOrderId={stripeOrderId}
+        type="order"
       />
       {/* <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> */}
     </section>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Layout from "../layout/Layout";
 import ProfileDashboard from "../profiledashboard/ProfileDashboard";
 import { useSelector } from "react-redux";
-const OrderHistoryPage = () => {
+const SubscriptionPage = () => {
   const language = useSelector((state) => state.Language.selectedLanguage);
 
   useEffect(() => {}, [language]);
@@ -13,4 +13,4 @@ const OrderHistoryPage = () => {
   );
 };
 
-export default OrderHistoryPage;
+export default SubscriptionPage;

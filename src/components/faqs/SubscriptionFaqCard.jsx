@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoMdArrowDropup } from "react-icons/io";
 
-const EgrocerMaxFaq = ({ faq }) => {
+const SubscriptionFaqCard = ({ faq }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Collapsible
@@ -36,9 +36,8 @@ const EgrocerMaxFaq = ({ faq }) => {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent
-        className={`p-3 ${
-          isOpen ? "border-t border-[var(--border-color)] mt-2 textColor " : ""
-        }`}
+        className={`p-3 ${isOpen ? "border-t border-[var(--border-color)] mt-2 textColor " : ""
+          }`}
       >
         {faq?.answer}
       </CollapsibleContent>
@@ -46,4 +45,4 @@ const EgrocerMaxFaq = ({ faq }) => {
   );
 };
 
-export default EgrocerMaxFaq;
+export default SubscriptionFaqCard;

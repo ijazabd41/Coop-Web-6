@@ -596,6 +596,7 @@ export const initiateTrasaction = async ({
   paymentMethod,
   type,
   walletAmount = 0,
+  subscriptionPlanId = 0,
 }) => {
   const formData = new FormData();
   if (orderId) {
@@ -604,8 +605,11 @@ export const initiateTrasaction = async ({
   formData.append("payment_method", paymentMethod);
   formData.append("type", type);
   formData.append("request_from", "website");
-  if (walletAmount != 0) {
+  if (type == "wallet" && walletAmount != 0) {
     formData.append("wallet_amount", walletAmount);
+  }
+  if(type == "subscription"){
+    formData.append("subscription_plan_id", subscriptionPlanId);
   }
   const response = await api.post(
     `${apiEndPoints.initiateTrasaction}`,
@@ -618,14 +622,21 @@ export const addTransaction = async ({
   transactionId,
   paymentMethod,
   type,
+  subscriptionPlanId = 0,
   walletAmount = 0,
 }) => {
   const formData = new FormData();
   if (orderId) {
     formData.append("order_id", orderId);
   }
-  if (walletAmount != 0) {
+  if (walletAmount != 0 && type == "wallet") {
     formData.append("wallet_amount", walletAmount);
+  }
+  if(type == "subscription"){
+    formData.append(
+      "subscription_plan_id",
+      subscriptionPlanId
+    )
   }
   formData.append("transaction_id", transactionId);
   formData.append("type", type);
@@ -909,5 +920,15 @@ export const getRecentlyViewedProducts = async ({ productId }) => {
     `${apiEndPoints.getProducts}/${apiEndPoints.recentlyVisited}`,
     { params }
   );
+  return response.data;
+};
+
+export const getSubscriptionPlans = async () => {
+  const response = await api.get(`${apiEndPoints.subscriptionPlans}`);
+  return response.data;
+};
+
+export const getUserActivePlan = async () => {
+  const response = await api.get(`${apiEndPoints.userActivePlan}`);
   return response.data;
 };

@@ -11,9 +11,12 @@ const withAuth = (WrappedComponent) => {
         const [authChecked, setAuthChecked] = useState(false)
 
         useEffect(() => {
-            const privateRoutes = ['/profile', '/checkout', '/profile/address', '/profile/activeorders', '/profile/orderhistory', '/profile/wishlist', '/profile/wallethistory', "/profile/transaction", '/profile/notifications'];
+            const privateRoutes = ['/profile', '/checkout', '/profile/address', '/profile/activeorders', '/profile/orderhistory', '/profile/wishlist', '/profile/wallethistory', "/profile/transaction", '/profile/notifications', '/profile/subscription'];
             const isPrivateRoute = privateRoutes.includes(router.pathname);
+
             if (isPrivateRoute && !user?.jwtToken) {
+                router.push("/");
+            } else if (router.pathname === "/profile/subscription" && !user?.user?.is_subscription_plans) {
                 router.push("/");
             } else {
                 setIsAuthorized(true)

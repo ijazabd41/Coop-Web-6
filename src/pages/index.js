@@ -19,7 +19,6 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           },
         }
       );
-
       let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
       let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
       let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;

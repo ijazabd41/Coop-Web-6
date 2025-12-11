@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { t } from "@/utils/translation";
-import EgrocerMaxFaq from "@/components/faqs/EgrocerMaxFaqCard";
+import SubscriptionsFaq from "@/components/faqs/SubscriptionFaqCard";
 
-const EgrocerMaxFaqs = ({ isOpen, setIsOpen }) => {
+const SubscriptionsFaqs = ({ isOpen, setIsOpen }) => {
   const onClose = () => {
     setIsOpen(false);
   };
@@ -42,12 +42,11 @@ const EgrocerMaxFaqs = ({ isOpen, setIsOpen }) => {
           <div className="mt-6 space-y-4">
             {Array.from({ length: 5 }).map((_, index) => (
               <div key={index} className="">
-                <EgrocerMaxFaq
+                <SubscriptionsFaq
                   faq={{
                     question: `Sample Question ${index + 1}`,
-                    answer: `This is a sample answer for question ${
-                      index + 1
-                    }. It provides detailed information regarding the query.`,
+                    answer: `This is a sample answer for question ${index + 1
+                      }. It provides detailed information regarding the query.`,
                   }}
                 />
               </div>
@@ -59,4 +58,4 @@ const EgrocerMaxFaqs = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default EgrocerMaxFaqs;
+export default SubscriptionsFaqs;
