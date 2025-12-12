@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 import { t } from "@/utils/translation";
 import SubscriptionsFaq from "@/components/faqs/SubscriptionFaqCard";
 
-const SubscriptionsFaqs = ({ isOpen, setIsOpen }) => {
+const SubscriptionsFaqs = ({ isOpen, setIsOpen, faqs, totalFaqs, faqLoading, fetchSubscriptionFaqs }) => {
   const onClose = () => {
     setIsOpen(false);
   };
@@ -17,7 +17,7 @@ const SubscriptionsFaqs = ({ isOpen, setIsOpen }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="p-6 focus-visible:outline-none focus:outline-none rounded-2xl shadow-2xl max-w-4xl w-full  "
+        className=" md:p-6 focus-visible:outline-none focus:outline-none shadow-2xl max-w-4xl w-full  "
         style={{ backgroundColor: "var(--body-background-color)" }}
       >
         <DialogHeader>
@@ -38,19 +38,28 @@ const SubscriptionsFaqs = ({ isOpen, setIsOpen }) => {
             </div>
           </DialogTitle>
         </DialogHeader>
-        <div>
-          <div className="mt-6 space-y-4">
-            {Array.from({ length: 5 }).map((_, index) => (
+        <div className="flex flex-col gap-4 items-center">
+          <div className="mt-6 space-y-4 overflow-y-auto overflow-x-hidden   w-full  h-[400px]">
+            {faqs.map((faq, index) => (
               <div key={index} className="">
                 <SubscriptionsFaq
                   faq={{
-                    question: `Sample Question ${index + 1}`,
-                    answer: `This is a sample answer for question ${index + 1
-                      }. It provides detailed information regarding the query.`,
+                    question: faq.question,
+                    answer: faq.answer
                   }}
                 />
               </div>
             ))}
+            <div className="col-span-12 mt-6 w-full flex justify-center mx-auto">
+              {totalFaqs > faqs?.length ? (
+                <button
+                  className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                  onClick={fetchSubscriptionFaqs}
+                >
+                  {t("load_more")}
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </DialogContent>

@@ -932,3 +932,12 @@ export const getUserActivePlan = async () => {
   const response = await api.get(`${apiEndPoints.userActivePlan}`);
   return response.data;
 };
+
+export const getSubscriptionFaqs = async ({ offset, limit }) => {
+  const params = {
+    offset,
+    limit,
+  };
+  const response = await api.get(`${apiEndPoints.subscriptionFaqs}`, { params });
+  return response.data;
+};

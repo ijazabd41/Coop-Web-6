@@ -23,10 +23,37 @@ const Subscription = () => {
   const [addWalletModal, setAddWalletModal] = useState(false);
   const [isFaqsModalOpen, setIsFaqsModalOpen] = useState(false);
   const [activePlan, setActivePlan] = useState([])
+  const [subscriptionFaqs, setSubscriptionFaqs] = useState([])
+  const [totalFaqs, setTotalFaqs] = useState(0)
+  const [offset, setOffset] = useState(0)
+  const [faqLoading, setFaqLoading] = useState(false)
+
+
+  const faqLimit = 2;
 
   useEffect(() => {
     getActivePlan();
+    fetchSubscriptionFaqs();
   }, []);
+
+  const fetchSubscriptionFaqs = async (isLoadMore = false) => {
+    try {
+      setFaqLoading(true)
+      const response = await api.getSubscriptionFaqs({ offset, limit: faqLimit })
+
+      setTotalFaqs(response.total)
+      if (isLoadMore) {
+        setSubscriptionFaqs([...subscriptionFaqs, ...response.data]);
+        setOffset(offset + faqLimit);
+      } else {
+        setSubscriptionFaqs(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFaqLoading(false)
+    }
+  }
 
   function onSelectPlan(plan) {
     setSelectedPlan(plan);
@@ -47,7 +74,7 @@ const Subscription = () => {
 
   return (
     <div className="w-full mx-auto h-fit border-2 rounded-lg">
-      {user?.has_active_subscription ? (
+      {user?.has_active_subscription == 1 ? (
         <div>
           <div className="rounded-lg overflow-hidden  bodyBackgroundColor p-4 w-full">
             <div className="footer p-4 flex items-center rounded-lg">
@@ -67,17 +94,17 @@ const Subscription = () => {
             </div>
 
             <div className="bg-[#FFDCC9] p-4  mt-4 rounded-lg flex items-center">
-              <div className="w-6 h-6 rounded-full bg-[#FFDCC9]  flex items-center justify-center mr-3 flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-[#FFDCC9]  flex items-center justify-center mr-3 flex-shrink-0">
                 <Image
                   src={DollarBag}
                   alt="dollar bag"
-                  className={`h-6 w-6 object-contain `}
+                  className={`h-12 w-12 object-contain `}
                   height={0}
                   width={0}
                 />
               </div>
               <p className=" font-semibold">
-                {t("you_saved")} <span className="textColor">{setting?.currency} {activePlan?.total_money_saved}</span> {t('on')} {activePlan?.deliveries_number} {t('deliveries')}
+                {t("you_saved")} <span className="textColor"> {setting?.currency}{activePlan?.total_money_saved}</span> {t('on')} {activePlan?.deliveries_number} {t('deliveries')}
               </p>
             </div>
 
@@ -112,7 +139,7 @@ const Subscription = () => {
                 <div className="backgroundColor p-3 rounded-lg flex items-center">
                   <FiTruck className="w-5 h-5  mr-3 flex-shrink-0" />
                   <p className="textColor text-sm">
-                    {t('free_delivery_on_orders_above')}<span className="font-semibold">{setting?.currency} {activePlan?.free_delivery_above}</span>
+                    {t('free_delivery_on_orders_above')}<span className="font-semibold"> {setting?.currency}{activePlan?.free_delivery_above}</span>
                   </p>
                 </div>
               </div>
@@ -124,7 +151,7 @@ const Subscription = () => {
                 borderColor: "var(--border-color)",
               }}
               onClick={handleFaqOpen}
-              className="rounded-2xl p-4 mt-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
+              className="rounded-lg p-4 mt-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
             >
               <div className="flex items-center gap-4">
                 <div
@@ -226,7 +253,7 @@ const Subscription = () => {
                 borderColor: "var(--border-color)",
               }}
               onClick={handleFaqOpen}
-              className="rounded-2xl p-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
+              className="rounded-lg p-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
             >
               <div className="flex items-center gap-4">
                 <div
@@ -250,9 +277,6 @@ const Subscription = () => {
           </div>
         </div>
       )}
-
-
-
       <PlanSelectionModal
         isOpen={isPlanModalOpen}
         onClose={() => setIsPlanModalOpen(false)}
@@ -266,7 +290,7 @@ const Subscription = () => {
         type="subscription"
         selectedPlan={selectedPlan}
       />
-      <SubscriptionsFaqs isOpen={isFaqsModalOpen} setIsOpen={setIsFaqsModalOpen} />
+      <SubscriptionsFaqs isOpen={isFaqsModalOpen} setIsOpen={setIsFaqsModalOpen} faqs={subscriptionFaqs} totalFaqs={totalFaqs} faqLoading={faqLoading} fetchSubscriptionFaqs={fetchSubscriptionFaqs} />
     </div>
   );
 };

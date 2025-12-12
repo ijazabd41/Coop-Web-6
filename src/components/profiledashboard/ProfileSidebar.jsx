@@ -13,6 +13,7 @@ import LightImage from "@/assets/Vector.png";
 import MoneyImage from "@/assets/bx-money.png";
 import BikeImage from "@/assets/bike.png";
 import { FaArrowRight } from "react-icons/fa";
+import { formatDate } from "@/utils/helperFunction"
 
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   const router = useRouter();
@@ -105,8 +106,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   return (
     <div>
       <div className="cardBorder rounded-sm ">
-        {/* Header Section */}
-        <div className="backgroundColor flex flex-col p-6 gap-6">
+        {user?.is_subscription_plans ? <div className="backgroundColor flex flex-col md:p-6 p-4 gap-6">
           <div className="flex items-center  gap-6">
             <div className="h-28 w-28 rounded-full border-2 bodyBackgroundColor flex items-center justify-center ">
               <Image
@@ -125,51 +125,84 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             </div>
           </div>
           <div className="dashedBorder px-4"></div>
-          <div className="flex gap-3 ">
-            <div className="p-2 primaryBackColor rounded-full border border-white h-9 w-9 ">
-              <Image
-                src={LightImage}
-                alt="light logo"
-                className={`h-5 w-5 object-contain `}
-                height={0}
-                width={0}
-              />
+          <div className="flex gap-6 flex-col">
+            <div className="flex gap-3">
+              <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-11 ">
+                <Image
+                  src={LightImage}
+                  alt="light logo"
+                  className={`h-6 w-6 object-contain `}
+                  height={0}
+                  width={0}
+                />
+              </div>
+              {user?.has_active_subscription == 1 ?
+                <div className="flex items-start w-full justify-between">
+                  <div className="flex flex-col">
+                    <h2 className="font-bold text-base">{user?.subscription_name}</h2>
+                    <p className="text-sm leading-[17px] font-normal">
+                      {`${t("expires_on")} ${formatDate(user?.subscription_expiry_date)}`}
+                    </p>
+                  </div>
+
+                  <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 rounded-full">
+                    {t("active")}
+                  </span>
+                </div> : <div className="flex flex-col w-3/4 ">
+                  <h2 className="font-bold text-base">{t("egrocer_max")}</h2>
+                  <p className="text-sm leading-[17px] font-normal ">
+                    {t("egrocer_max_desc")}
+                  </p>
+                </div>}
             </div>
-            <div className="flex flex-col w-3/4 ">
-              <h2 className="font-bold text-base">{t("egrocer_max")}</h2>
-              <p className="text-sm leading-[17px] font-normal ">
-                {t("egrocer_max_desc")}
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center ">
-            <div
-              className={`relative h-14 w-full max-w-sm overflow-hidden rounded border-[1.5px] transition-colors duration-500 ${slides[current].theme} rounded-md`}
-            >
-              {slides.map((slide, index) => (
-                <div
-                  key={slide.id}
-                  className={`absolute inset-0 flex items-center justify-center font-semibold transition-all duration-500 ease-in-out cursor-pointer `}
-                  style={{
-                    transform: `translateY(${(index - current) * 100}%)`,
-                    opacity: index === current ? 1 : 0,
-                  }}
-                  onClick={handleSubscriptionClick}
-                >
-                  <div className="flex gap-2 items-center font-bold justify-between px-4 w-full">
-                    <div className="flex gap-2 items-center">
-                      {slide.image}
-                      {slide.text}
-                    </div>
-                    <div>
-                      <FaArrowRight />
+            {!user?.has_active_subscription && <div className="flex justify-center ">
+              <div
+                className={`relative h-14 w-full max-w-sm overflow-hidden rounded border-[1.5px] transition-colors duration-500 ${slides[current].theme} rounded-md`}
+              >
+                {slides.map((slide, index) => (
+                  <div
+                    key={slide.id}
+                    className={`absolute inset-0 flex items-center justify-center font-semibold transition-all duration-500 ease-in-out cursor-pointer `}
+                    style={{
+                      transform: `translateY(${(index - current) * 100}%)`,
+                      opacity: index === current ? 1 : 0,
+                    }}
+                    onClick={handleSubscriptionClick}
+                  >
+                    <div className="flex gap-2 items-center font-bold justify-between px-4 w-full">
+                      <div className="flex gap-2 items-center">
+                        {slide.image}
+                        {slide.text}
+                      </div>
+                      <div>
+                        <FaArrowRight />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>}
+
+          </div>
+
+        </div> :
+          <div className="backgroundColor ">
+            <div className="flex items-center p-4">
+              <Image
+                src={user?.profile}
+                alt="Profile"
+                height={0}
+                width={0}
+                className="w-12 h-12 rounded-sm"
+              />
+              <div className="ml-3">
+                <p className="text-base textColor">{t("hello")},</p>
+                <p className="text-xl  font-semibold textColor">{user?.name}</p>
+              </div>
             </div>
           </div>
-        </div>
+        }
+
         <div className="">
           <div className=" ">
             <h3 className="text-base font-semibold textColor flex items-center cardBorder p-4">
