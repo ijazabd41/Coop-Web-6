@@ -29,7 +29,7 @@ const Subscription = () => {
   const [faqLoading, setFaqLoading] = useState(false)
 
 
-  const faqLimit = 2;
+  const faqLimit = 10;
 
   useEffect(() => {
     getActivePlan();

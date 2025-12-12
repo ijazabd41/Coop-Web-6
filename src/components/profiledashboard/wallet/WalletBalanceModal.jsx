@@ -251,20 +251,17 @@ const WalletBalanceModal = ({
           if (res.razorpay_payment_id) {
             try {
               const response = await api.addTransaction({
-                // orderId: order_id,
                 transactionId: res.razorpay_payment_id,
                 paymentMethod:
                   selectedPaymentMethod.charAt(0).toUpperCase() +
                   selectedPaymentMethod.slice(1),
                 type: type,
-                subscriptionPlanId: 3,
+                subscriptionPlanId: selectedPlan?.id,
                 walletAmount: amount,
               });
               if (response.status === 1) {
-                // toast.success(response.message);
                 dispatch(addUserBalance({ data: amount }));
                 setAddWalletModal(false);
-                // handleSuccessWalletAdd();
                 router.push(
                   `/web-payment-status?type=${type}&status_code=200&status=success`
                 );

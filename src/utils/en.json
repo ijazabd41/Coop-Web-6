@@ -628,5 +628,6 @@
   "active": "Active",
   "expires_on": "Expires On",
   "days_remaining": "Days Remaining",
-  "free_delivery_on_orders_above": "Free Delivery on orders above"
+  "free_delivery_on_orders_above": "Free Delivery on orders above",
+  "subscription_add_description": "Your subscription plan has been added successfully."
 }

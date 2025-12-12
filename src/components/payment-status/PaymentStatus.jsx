@@ -43,9 +43,12 @@ const PaymentStatus = () => {
   const isWalletTransaction = ({ type, order_id }) =>
     type === "wallet" || order_id?.startsWith("wallet-");
 
+  const isSubscriptionTransaction = ({ type, order_id }) =>
+    type === "subscription" || order_id?.startsWith("subscription-");
+
   useEffect(() => {
     setTimeout(() => {
-      if (type == "wallet") {
+      if (type == "wallet" || type == "subscription") {
         handleWalletClose();
       } else {
         handlePaymentClose();
@@ -61,7 +64,8 @@ const PaymentStatus = () => {
     }
     const paymentStatus = checkPaymentStatus(query);
     const isWallet = isWalletTransaction(query);
-    setType(isWallet ? "wallet" : "order");
+    const isSubscription = isSubscriptionTransaction(query);
+    setType(isWallet ? "wallet" : isSubscription ? "subscription" : "order");
     setStatus(paymentStatus);
   }, [query]);
 
@@ -132,15 +136,6 @@ const PaymentStatus = () => {
     }
   };
 
-  // const handleViewOrder = async () => {
-  //     const orderId = extractOrderNumber(query?.order_id);
-  //     dispatch(setCart({ data: [] }));
-  //     dispatch(clearCartPromo());
-  //     dispatch(setCartSubTotal({ data: 0 }));
-  //     dispatch(setCartProducts({ data: [] }));
-  //     dispatch(clearCheckout());
-  //     router.push(`/order-detail/${orderId}`);
-  // };
 
   const renderContent = () => {
     if (status == "success") {
@@ -167,20 +162,21 @@ const PaymentStatus = () => {
             <h1 className="text-2xl font-semibold">
               {type == "wallet"
                 ? t("wallet_add_description")
-                : t("order_placed_description")}
+                : type == "subscription"
+                  ? t("subscription_add_description")
+                  : t("order_placed_description")}
             </h1>
             <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
               <button
                 className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl"
                 onClick={
-                  type == "wallet" ? handleWalletClose : handlePaymentClose
+                  type == "wallet" || type == "subscription"
+                    ? handleWalletClose
+                    : handlePaymentClose
                 }
               >
                 {t("home")}
               </button>
-              {/* {(type == "order") ? (query?.payment_method === "COD" || query?.payment_method === "wallet") ? <></> : <button className="primaryBackColor text-white px-2 md:px-7 py-2 rounded-sm font-bold text-xl" onClick={handleViewOrder}>
-                                {t("view_order_details")}
-                            </button> : <></>} */}
             </div>
           </div>
         </div>
@@ -199,7 +195,7 @@ const PaymentStatus = () => {
             <h1 className="text-2xl">{t("order_failed_description")}</h1>
             <button
               className="mt-8 primaryBackColor text-white px-8 py-2 rounded-sm font-bold text-xl"
-              onClick={type == "wallet" ? handleWalletClose : handleFailedOrder}
+              onClick={type == "wallet" || type == "subscription" ? handleWalletClose : handleFailedOrder}
             >
               {t("home")}
             </button>
