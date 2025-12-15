@@ -124,7 +124,11 @@ const WalletBalanceModal = ({
           setStripeTransId(result?.data?.id);
           setShowStripe(true);
           // setAddWalletModal(false);
-        } else {
+        }
+        else if (capitalizedPaymentMethod == "Phonepe") {
+          dispatch(setPhonePeCheckoutDetails(result?.data));
+        }
+        else {
           const paymentUrls = {
             cashfree: result?.data?.redirectUrl,
             phonepe: result?.data?.redirectUrl,
