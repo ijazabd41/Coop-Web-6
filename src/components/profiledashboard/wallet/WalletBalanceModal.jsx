@@ -30,6 +30,7 @@ import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg";
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg";
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
 import StripeModal from "@/components/checkoutpage/StripeModal";
+import { setPhonePeCheckoutDetails } from "@/redux/slices/checkoutSlice";
 
 const paymentMethodsConfig = [
   { key: "razorpay_payment_method", label: "razorpay", image: RazorpayImage },
@@ -125,10 +126,10 @@ const WalletBalanceModal = ({
           setShowStripe(true);
           // setAddWalletModal(false);
         }
-        else if (capitalizedPaymentMethod == "Phonepe") {
-          dispatch(setPhonePeCheckoutDetails(result?.data));
-        }
         else {
+          if (capitalizedPaymentMethod == "Phonepe") {
+            dispatch(setPhonePeCheckoutDetails(result?.data));
+          }
           const paymentUrls = {
             cashfree: result?.data?.redirectUrl,
             phonepe: result?.data?.redirectUrl,
