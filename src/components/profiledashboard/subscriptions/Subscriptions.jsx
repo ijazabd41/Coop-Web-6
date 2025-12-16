@@ -144,34 +144,35 @@ const Subscription = () => {
                 </div>
               </div>
             </div>
+            {subscriptionFaqs?.length > 0 && (
+              <div
+                style={{
+                  backgroundColor: "var(--swiper-background-color)",
+                  borderColor: "var(--border-color)",
+                }}
+                onClick={handleFaqOpen}
+                className="rounded-lg p-4 mt-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    style={{ backgroundColor: "var(--light-primary-color)" }}
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                  >
+                    <HelpCircle className="w-5 h-5 md:w-6 md:h-6 primaryColor" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold textColor text-sm">
+                      {t("faqs_for_subscription")}
+                    </h4>
+                    <p className="subTextColor text-xs mt-0.5">
+                      {t("get_answer_to_common_queries")}
+                    </p>
+                  </div>
+                </div>
 
-            <div
-              style={{
-                backgroundColor: "var(--swiper-background-color)",
-                borderColor: "var(--border-color)",
-              }}
-              onClick={handleFaqOpen}
-              className="rounded-lg p-4 mt-4 flex items-center justify-between cursor-pointer cardBorder transition-colors"
-            >
-              <div className="flex items-center gap-4">
-                <div
-                  style={{ backgroundColor: "var(--light-primary-color)" }}
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                >
-                  <HelpCircle className="w-5 h-5 md:w-6 md:h-6 primaryColor" />
-                </div>
-                <div>
-                  <h4 className="font-bold textColor text-sm">
-                    {t("faqs_for_subscription")}
-                  </h4>
-                  <p className="subTextColor text-xs mt-0.5">
-                    {t("get_answer_to_common_queries")}
-                  </p>
-                </div>
+                <ArrowRight className="w-5 h-5 textColor" />
               </div>
-
-              <ArrowRight className="w-5 h-5 textColor" />
-            </div>
+            )}
           </div>
         </div>
       ) : (

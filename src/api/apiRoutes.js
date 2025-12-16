@@ -941,3 +941,26 @@ export const getSubscriptionFaqs = async ({ offset, limit }) => {
   const response = await api.get(`${apiEndPoints.subscriptionFaqs}`, { params });
   return response.data;
 };
+
+export const getMailSettings = async () => {
+    const response = await api.get(`${apiEndPoints.mailSettings}`);
+    return response.data;
+};
+
+export const updateMailSettings = async ({
+  status_ids,
+  mail_statuses,
+  mobile_statuses,
+  sms_status,
+}) => {
+  const formData = new FormData();
+  formData.append("status_ids", status_ids);
+  formData.append("mail_statuses", mail_statuses);
+  formData.append("mobile_statuses", mobile_statuses);
+  formData.append("sms_status", sms_status);
+  const response = await api.post(
+    `${apiEndPoints.mailSettings}/${apiEndPoints.save}`,
+    formData
+  );
+  return response.data;
+};

@@ -596,11 +596,10 @@
   "recentlyAddedBlogsDesc": "Explore the latest articles curated to keep you informed, inspired, and up to date.",
   "tags": "Tags",
   "popular_tags": "Popular Tags",
-  "egrocer_max": "Subscribe eGrocerMAX",
-  "egrocer_max_desc": "Enjoy free delivery, and exclusive member-only savings.",
+  "subscribe": "Subscribe",
+  "subscription_desc": "Enjoy free delivery, and exclusive member-only savings.",
   "go_max_save_more": "Go MAX. Save More",
   "free_delivery_desc": "Free Delivery Starts Here",
-  "egrocer_max_title": "eGrocerMAX",
   "choose_your_plan": "Choose Your Plan",
   "select_subscription_desc": " Select the perfect subscription for your needs",
   "free_delivery_on": "Free Delivery on orders above",
@@ -629,5 +628,9 @@
   "expires_on": "Expires On",
   "days_remaining": "Days Remaining",
   "free_delivery_on_orders_above": "Free Delivery on orders above",
-  "subscription_add_description": "Your subscription plan has been added successfully."
+  "subscription_add_description": "Your subscription plan has been added successfully.",
+  "notification_setting": "Notification Settings",
+  "save": "save",
+  "saving": "saving",
+  "notification_setting_success": "Notification Settings updated successfully"
 }

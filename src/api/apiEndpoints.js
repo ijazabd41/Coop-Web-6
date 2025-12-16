@@ -66,7 +66,10 @@ export const recentlyVisited = "recently_visited";
 export const subscriptionPlans= "subscription_plans"
 export const userActivePlan = "user_active_plan"
 export const subscriptionFaqs = "subscription_faqs"
+export const mailSettings = "mail_settings"
 
+
+export const save = "save";
 export const remove = "remove";
 export const add = "add";
 export const deleteItem = "delete";

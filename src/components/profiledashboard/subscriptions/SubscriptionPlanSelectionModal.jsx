@@ -147,7 +147,7 @@ const PlanSelectionModal = ({
         </div>
         <div className="mt-6 flex justify-end w-full">
           <button
-            className="w-64 items-center text-xl primaryBackColor  text-white py-2 px-4 rounded-md flex gap-6"
+            className="items-center text-xl primaryBackColor  text-white py-2 px-4 rounded-md flex gap-6"
             onClick={handleSetWalletModal}
           >
             {t("proceed_to_payment")}

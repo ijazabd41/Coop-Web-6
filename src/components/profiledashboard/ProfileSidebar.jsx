@@ -15,6 +15,7 @@ import BikeImage from "@/assets/bike.png";
 import { FaArrowRight } from "react-icons/fa";
 import { formatDate } from "@/utils/helperFunction"
 
+
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   const router = useRouter();
   const user = useSelector((state) => state.User.user);
@@ -28,11 +29,14 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+
 
   const handleTabChange = (tabName) => {
     setSelectedTab(tabName);
@@ -51,7 +55,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   const slides = [
     {
       id: 1,
-      text: t("egrocer_max"),
+      text: `${t("subscribe")} ${user?.subscription_name}`,
       image: (
         <div className="p-2 primaryBackColor rounded-full border border-white h-9 w-9 ">
           <Image
@@ -103,6 +107,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     router.push("/profile/subscription");
   };
 
+
   return (
     <div>
       <div className="cardBorder rounded-sm ">
@@ -149,9 +154,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     {t("active")}
                   </span>
                 </div> : <div className="flex flex-col w-3/4 ">
-                  <h2 className="font-bold text-base">{t("egrocer_max")}</h2>
+                  <h2 className="font-bold text-base">{user?.subscription_name}</h2>
                   <p className="text-sm leading-[17px] font-normal ">
-                    {t("egrocer_max_desc")}
+                    {t("subscription_desc")}
                   </p>
                 </div>}
             </div>
@@ -377,6 +382,17 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   onClick={() => handleTabChange("notifications")}
                 >
                   <span className="ml-12">{t("notification")}</span>
+                </li>
+              </Link>
+              <Link href={`/profile/notification-setting`}>
+                <li
+                  className={`p-4  cursor-pointer  textColor ${activeTab == "notification_setting"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
+                    : "hover:primaryBackColor hover:text-white"
+                    }`}
+                  onClick={() => handleTabChange("notification_setting")}
+                >
+                  <span className="ml-12">{t("notification_setting")}</span>
                 </li>
               </Link>
               <Link href={`/profile/requested-products`}>

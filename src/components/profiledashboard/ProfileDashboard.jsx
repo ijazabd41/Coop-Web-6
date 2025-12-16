@@ -18,6 +18,7 @@ import ResetPassword from "./ResetPassword";
 import withAuth from "@/checkauth/CheckAuth";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import RequestProducts from "./RequestProducts";
+import NotificationSetting from "./notification-setting/NotificationSetting";
 
 const ProfileDashboard = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const ProfileDashboard = () => {
                     setSelectedTab={setSelectedTab}
                   />
                 )}
+                {activeTab == "notification-setting" && <NotificationSetting />}
                 {activeTab == "requested-products" && <RequestProducts />}
               </>
             )}

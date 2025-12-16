@@ -53,8 +53,8 @@
 
 @layer utilities {
 
-  .subTextColor{
-    color:var(--sub-text-color)
+  .subTextColor {
+    color: var(--sub-text-color)
   }
 
   .textBackground {
@@ -94,6 +94,10 @@
     background-color: var(--primary-color);
   }
 
+  button.primaryBackColor[data-state="checked"] {
+    background-color: var(--primary-color) !important;
+  }
+
   .primaryAccentColor {
     accent-color: var(--primary-color);
   }
@@ -114,6 +118,7 @@
   .primaryDashedBorder {
     border: 2px dashed var(--primary-color);
   }
+
   .dashedBorder {
     border: 1px dashed var(--nav-button-bg);
   }
@@ -167,6 +172,7 @@
   .disabledBackgroundColor {
     background-color: var(--button-border-color);
   }
+
   .buttonBorder {
     border: 1px solid var(--button-border-color);
   }
@@ -356,7 +362,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background: var(--body-background-color) !important;
 }
 
-.react-tel-input .country-list{
+.react-tel-input .country-list {
   background-color: var(--body-background-color) !important;
 }
 
@@ -462,7 +468,7 @@ input[type=number] {
 }
 
 .custom-inner-image-zoom .iiz__img {
-  aspect-ratio:3/1;
+  aspect-ratio: 3/1;
   max-width: 100%;
   width: 100%;
   object-fit: cover;
@@ -537,7 +543,7 @@ input[type=number] {
 /* Text content */
 .pac-item-query {
   font-weight: 500;
-   color: var(--font-color) !important;
+  color: var(--font-color) !important;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -555,7 +561,7 @@ input[type=number] {
 }
 
 /* Secondary text (address details) - inline with main text */
-.pac-item-query .pac-matched + span {
+.pac-item-query .pac-matched+span {
   color: #5f6368;
   font-weight: 400;
   margin-left: 4px;
@@ -592,12 +598,12 @@ input[type=number] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 0;
   }
-  
+
   .pac-item {
     padding: 12px 16px;
     font-size: 16px;
   }
-  
+
   .pac-icon {
     width: 24px;
     height: 24px;
@@ -638,7 +644,7 @@ input[type=number] {
 }
 
 .pac-item:hover {
-   background-color: var(--swiper-background-color) !important;
+  background-color: var(--swiper-background-color) !important;
 }
 
 .pac-item:focus,
@@ -648,26 +654,26 @@ input[type=number] {
 
 
 .pac-container.pac-loading {
- background-color: var(--body-background-color) !important;
+  background-color: var(--body-background-color) !important;
 }
 
-.custom-img-wrapper > div {
-    cursor: crosshair;
-    width: auto;
-    font-size: 0px;
-    position: relative;
-    user-select: none;
-    height: 100% !important;
+.custom-img-wrapper>div {
+  cursor: crosshair;
+  width: auto;
+  font-size: 0px;
+  position: relative;
+  user-select: none;
+  height: 100% !important;
 }
 
-.my-custom-image-class{
-aspect-ratio: 3/1;
-max-width: 100%;
-width: 100%;
-/* object-fit: cover; */
-height: 100% !important;
-vertical-align: middle;
-border-radius: 8px; 
+.my-custom-image-class {
+  aspect-ratio: 3/1;
+  max-width: 100%;
+  width: 100%;
+  /* object-fit: cover; */
+  height: 100% !important;
+  vertical-align: middle;
+  border-radius: 8px;
 }
 
 .blog-description * {
@@ -675,9 +681,9 @@ border-radius: 8px;
 }
 
 .blog-card-description {
-  white-space: nowrap;        
-  overflow: hidden;            
-  text-overflow: ellipsis;     
-  display: block;              
-  max-width: 100%;             
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
 }
