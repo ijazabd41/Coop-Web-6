@@ -9,15 +9,18 @@ const RequestProductCard = ({ request }) => {
         <div className="relative">
           <div className="absolute top-2 left-2">
             <span
-              className={`${
-                request?.status == "pending"
-                  ? "bg-yellow-400"
-                  : request?.status == "rejected"
+              className={`${request?.status == "pending"
+                ? "bg-yellow-400"
+                : request?.status == "rejected"
                   ? "bg-red-400"
                   : "bg-green-400"
-              } text-white  px-2 py-1 rounded`}
+                } text-white  px-2 py-1 rounded`}
             >
-              {request?.status}
+              {request?.status == "pending"
+                ? t("pending")
+                : request?.status == "rejected"
+                  ? t("rejected")
+                  : t("approved")}
             </span>
           </div>
           <ImageWithPlaceholder
@@ -29,9 +32,8 @@ const RequestProductCard = ({ request }) => {
       </div>
       {request?.description && (
         <p
-          className={`text-sm textColor break-words text-wrap ${
-            request?.image_url ? "mt-2" : "mt-10"
-          } p-2`}
+          className={`text-sm textColor break-words text-wrap ${request?.image_url ? "mt-2" : "mt-10"
+            } p-2`}
         >
           {request?.description}
         </p>

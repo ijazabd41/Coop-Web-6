@@ -14,6 +14,7 @@ import MoneyImage from "@/assets/bx-money.png";
 import BikeImage from "@/assets/bike.png";
 import { FaArrowRight } from "react-icons/fa";
 import { formatDate } from "@/utils/helperFunction"
+import { ArrowRight } from "lucide-react";
 
 
 const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
@@ -132,35 +133,68 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           <div className="dashedBorder px-4"></div>
           <div className="flex gap-6 flex-col">
             <div className="flex gap-3">
-              <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-11 ">
-                <Image
-                  src={LightImage}
-                  alt="light logo"
-                  className={`h-6 w-6 object-contain `}
-                  height={0}
-                  width={0}
-                />
-              </div>
               {user?.has_active_subscription == 1 ?
-                <div className="flex items-start w-full justify-between">
-                  <div className="flex flex-col">
-                    <h2 className="font-bold text-base">{user?.subscription_name}</h2>
-                    <p className="text-sm leading-[17px] font-normal">
-                      {`${t("expires_on")} ${formatDate(user?.subscription_expiry_date)}`}
-                    </p>
+                <div className="flex items-start w-full justify-between ">
+                  <div className="flex gap-2">
+                    <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-11  ">
+                      <Image
+                        src={LightImage}
+                        alt="light logo"
+                        className={`h-6 w-6 object-contain `}
+                        height={0}
+                        width={0}
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <h2 className="font-bold text-base">{user?.user_subscription_plan_name}</h2>
+                      <p className="text-sm leading-[17px] font-normal">
+                        {`${t("expires_on")} ${formatDate(user?.subscription_expiry_date)}`}
+                      </p>
+                    </div>
                   </div>
-
                   <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 rounded-full">
                     {t("active")}
                   </span>
-                </div> : <div className="flex flex-col w-3/4 ">
-                  <h2 className="font-bold text-base">{user?.subscription_name}</h2>
-                  <p className="text-sm leading-[17px] font-normal ">
-                    {t("subscription_desc")}
-                  </p>
-                </div>}
+                </div> :
+                user?.has_active_subscription == 2 ?
+                  <div className="flex flex-col gap-6">
+                    <div className="flex items-start w-full justify-between gap-2">
+                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[62px] ">
+                        <Image
+                          src={LightImage}
+                          alt="light logo"
+                          className={`h-6 w-6 object-contain `}
+                          height={0}
+                          width={0}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <h2 className="font-bold text-base">{user?.subscription_name}</h2>
+                        <p className="text-sm leading-[17px] font-normal">
+                          {t("expired_plan_desc")}
+                        </p>
+                      </div>
+
+                      <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full">
+                        {t("expired")}
+                      </span>
+
+                    </div>
+                    <button className="primaryBackColor text-white text-xl font-semibold px-4 py-2 rounded-md flex items-center gap-2 justify-center" onClick={handleSubscriptionClick}>
+                      {`${t("renew")} ${user?.subscription_name}`}
+                      <ArrowRight className="w-5 h-5 text-white" />
+                    </button>
+                  </div>
+                  :
+
+                  <div className="flex flex-col w-3/4 ">
+                    <h2 className="font-bold text-base">{user?.subscription_name}</h2>
+                    <p className="text-sm leading-[17px] font-normal ">
+                      {t("subscription_desc")}
+                    </p>
+                  </div>}
             </div>
-            {!user?.has_active_subscription && <div className="flex justify-center ">
+            {user?.has_active_subscription == 0 && <div className="flex justify-center ">
               <div
                 className={`relative h-14 w-full max-w-sm overflow-hidden rounded border-[1.5px] transition-colors duration-500 ${slides[current].theme} rounded-md`}
               >

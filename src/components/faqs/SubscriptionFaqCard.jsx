@@ -19,8 +19,8 @@ const SubscriptionFaqCard = ({ faq }) => {
         className={`w-full flex justify-between gap-3 items-center p-2 font-bold`}
       >
         <div>
-          <h3 className="text-lg font-bold text-left md:text-center">
-            {faq?.question}
+          <h3 className="text-lg font-bold text-left md:text-center overflow-hidden">
+            {faq?.question?.substring(0, 80) + (faq?.question?.length > 80 ? "..." : "")}
           </h3>
         </div>
         <div className="flex items-center">

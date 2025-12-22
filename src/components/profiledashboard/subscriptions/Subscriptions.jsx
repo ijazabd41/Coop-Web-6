@@ -55,7 +55,7 @@ const Subscription = () => {
     }
   }
 
-  function onSelectPlan(plan) {
+  const onSelectPlan = (plan) => {
     setSelectedPlan(plan);
   }
 
@@ -68,7 +68,7 @@ const Subscription = () => {
     }
   }
 
-  function handleFaqOpen() {
+  const handleFaqOpen = () => {
     setIsFaqsModalOpen(true);
   }
 
@@ -118,21 +118,22 @@ const Subscription = () => {
                 </div>
 
                 <div className="grid  grid-cols-1 md:grid-cols-2  gap-4 border items-center  mb-4 p-2 rounded-lg">
-                  <div className="flex items-start md:border-r-2">
+                  <div className={`flex items-start ${activePlan?.days_remaining > 1 ? 'md:border-r-2' : ''}`}>
                     <FiCalendar className="w-5 h-5 subTextColor mr-2 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm subTextColor">{t('expires_on')}</p>
-                      <p className="font-semibold textColor">{user?.subscription_expiry_date}</p>
+                      <p className="font-semibold textColor">{activePlan?.days_remaining > 1 ? user?.subscription_expiry_date : t('today')}</p>
                     </div>
                   </div>
-
-                  <div className="flex items-start">
-                    <FiClock className="w-5 h-5 subTextColor mr-2 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm subTextColor">{t('days_remaining')}</p>
-                      <p className="font-semibold textColor">{activePlan?.days_remaining} {t('days')}</p>
+                  {activePlan?.days_remaining > 1 && (
+                    <div className="flex items-start">
+                      <FiClock className="w-5 h-5 subTextColor mr-2 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm subTextColor">{t('days_remaining')}</p>
+                        <p className="font-semibold textColor">{activePlan?.days_remaining} {activePlan?.days_remaining > 1 ? t('days') : t('day')}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
 

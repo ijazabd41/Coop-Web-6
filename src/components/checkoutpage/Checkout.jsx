@@ -645,10 +645,10 @@ const Checkout = () => {
     window.open(`https://www.google.com/maps?q=${lat},${lng}`, "_blank");
   };
 
-  const handleOptionsClick = () => {
-    if (cart?.doorstep_delivery_mode == 0) {
+  const handleOptionsClick = (type) => {
+    if (type == "doorstep" && cart?.doorstep_delivery_mode == 0) {
       toast.error(t("doorStepDeliveryDisableNote"));
-    } else if (cart?.self_pickup_mode == 0) {
+    } else if (type == "selfpickup" && cart?.self_pickup_mode == 0) {
       toast.error(t("selfPickUpDisabledNote"));
     } else {
       return;
@@ -682,7 +682,7 @@ const Checkout = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
                           className="flex flex-col"
-                          onClick={() => handleOptionsClick()}
+                          onClick={() => handleOptionsClick('doorstep')}
                         >
                           <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor">
                             <input
@@ -711,7 +711,7 @@ const Checkout = () => {
                         </div>
                         <div
                           className="flex flex-col"
-                          onClick={() => handleOptionsClick()}
+                          onClick={() => handleOptionsClick('selfpickup')}
                         >
                           <label className="flex items-center p-4 border rounded-md cursor-pointer transition bodyBackgroundColor peer-disabled:disabledBackgroundColor">
                             <input

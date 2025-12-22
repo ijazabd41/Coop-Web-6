@@ -380,7 +380,7 @@ const WalletBalanceModal = ({
                             {t("subscription_plan")}
                           </span>
                           <span className="font-bold text-base textColor">
-                            basic - 1 Month
+                            {selectedPlan?.name}
                           </span>
                         </div>
 
@@ -390,26 +390,27 @@ const WalletBalanceModal = ({
                           <span className="text-base font-medium ">
                             {t("original_price")}
                           </span>
-                          <span className=" font-semibold">100 </span>
+                          <span className=" font-semibold">{selectedPlan?.price} </span>
                         </div>
 
-                        <div
-                          className={"flex justify-between items-center py-2"}
-                        >
-                          <span className="text-base font-medium ">
-                            {t("discounted_price")}
-                          </span>
-                          <span className="font-semibold ">- 100</span>
-                        </div>
+                        {selectedPlan?.discounted_price && (
+                          <div
+                            className={"flex justify-between items-center py-2"}
+                          >
+                            <span className="text-base font-medium ">
+                              {t("discounted_price")}
+                            </span>
+                            <span className="font-semibold ">-{selectedPlan?.discounted_price}</span>
+                          </div>
+                        )}
                       </div>
-
                       <div
                         className={`flex justify-between items-center  bodyBackgroundColor p-3 rounded-md `}
                       >
                         <span className="text-lg font-bold textColor">
                           {t("total_amount")}
                         </span>
-                        <span className="text-lg font-bold textColor">200</span>
+                        <span className="text-lg font-bold textColor">{selectedPlan?.discounted_price ? selectedPlan?.price - selectedPlan?.discounted_price : selectedPlan?.price}</span>
                       </div>
                     </div>
                   )}

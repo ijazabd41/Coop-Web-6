@@ -371,6 +371,7 @@
   "non-returnable": "Non-Returnable",
   "returnable": "Product is returnable in ",
   "days": "days",
+  "day": "day",
   "midtrans": "Midtrans",
   "wallet_recharge_successfull": "Wallet Recharge Successfull",
   "timeslots_not_enabled": "Please enable timeslots from admin panel to get the delivery",
@@ -632,5 +633,10 @@
   "notification_setting": "Notification Settings",
   "save": "save",
   "saving": "saving",
-  "notification_setting_success": "Notification Settings updated successfully"
+  "notification_setting_success": "Notification Settings updated successfully",
+  "expired_plan_desc": "Your membership has ended. Renew to unlock benefits again.",
+  "expired": "Expired",
+  "renew": "Renew",
+  "rejected": "Rejected",
+  "approved": "Approved"
 }

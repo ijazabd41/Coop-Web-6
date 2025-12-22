@@ -114,7 +114,8 @@ const Profile = () => {
                                 defaultValue={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
-                                disabled={authType == "google"}
+                            // NOTE: remove due to tester suggestion in 2.0.4 update 
+                            // disabled={authType == "google"}
                             />
                         </div>
                         <div className="mb-4">

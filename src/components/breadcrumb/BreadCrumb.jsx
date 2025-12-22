@@ -69,6 +69,10 @@ const BreadCrumb = () => {
       return "Wallet History";
     }
 
+    if (breadcrumbs[1]?.label === "requested-products") {
+      return "Requested Products";
+    }
+
     return breadcrumbs[1]?.label;
   };
 
