@@ -638,5 +638,6 @@
   "expired": "Expired",
   "renew": "Renew",
   "rejected": "Rejected",
-  "approved": "Approved"
+  "approved": "Approved",
+  "few_quantity_left":"Only a few left"
 }

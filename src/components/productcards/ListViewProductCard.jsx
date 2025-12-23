@@ -503,7 +503,7 @@ const ListViewProductCard = ({ product }) => {
               {product?.name}
             </h3>
             {selectedVariant?.few_quantity_left == true && (
-              <p className="text-sm text-red-600 font-semibold">Few left</p>
+              <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
             )}
             {product?.average_rating > 0 && product?.product_rating == true ? (
               <div className="rating">

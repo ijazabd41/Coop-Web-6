@@ -607,7 +607,7 @@ const ProductDetail = () => {
                       </div>
                       {selectVariant?.few_quantity_left == true && (
                         <p className="text-sm text-red-600 font-bold ">
-                          Few left
+                          {t("few_quantity_left")}
                         </p>
                       )}
                     </div>

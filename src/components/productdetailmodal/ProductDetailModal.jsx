@@ -371,12 +371,12 @@ const ProductDetailModal = ({
                     {productDetails?.name}
                   </h2>
                   {selectVariant?.few_quantity_left == true && (
-                    <p className="text-sm text-red-600 font-bold ">Few left</p>
+                    <p className="text-sm text-red-600 font-bold ">{t("few_quantity_left")}</p>
                   )}
                   <div className="flex items-center gap-1 flex-wrap">
                     <div className="flex gap-4">
                       {ratingData?.average_rating > 0 &&
-                      product?.product_rating == true ? (
+                        product?.product_rating == true ? (
                         <div className="border-r-2 px-2">
                           <div className="flex gap-1 items-center">
                             <div className="flex">
@@ -384,11 +384,10 @@ const ProductDetailModal = ({
                                 <FaStar
                                   key={star}
                                   size={15}
-                                  className={`${
-                                    star <= ratingData?.average_rating
-                                      ? "fill-yellow-400 text-yellow-400"
-                                      : "fill-gray-200 text-gray-200"
-                                  }`}
+                                  className={`${star <= ratingData?.average_rating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "fill-gray-200 text-gray-200"
+                                    }`}
                                 />
                               ))}
                             </div>
@@ -443,7 +442,7 @@ const ProductDetailModal = ({
                         className="h-full w-full aspect-square rounded-sm"
                       />
                       {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
+                        selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                           {calculateDiscount(
@@ -503,7 +502,7 @@ const ProductDetailModal = ({
                   <div className=" col-span-12 md:col-span-7 flex flex-col gap-6">
                     <div className="flex items-center gap-1">
                       {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
+                        selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <>
                           <h2 className="font-bold text-3xl ">
@@ -535,11 +534,10 @@ const ProductDetailModal = ({
                           const price = variant?.price;
                           return (
                             <div
-                              className={`flex flex-col col-span-6 md:col-span-4 lg:col-span-3 mr-2 my-1 text-center rounded-sm   justify-center items-center cursor-pointer ${
-                                selectVariant.id == variant.id
-                                  ? "primaryBorder addToCartColor"
-                                  : "cardBorder"
-                              }`}
+                              className={`flex flex-col col-span-6 md:col-span-4 lg:col-span-3 mr-2 my-1 text-center rounded-sm   justify-center items-center cursor-pointer ${selectVariant.id == variant.id
+                                ? "primaryBorder addToCartColor"
+                                : "cardBorder"
+                                }`}
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
@@ -552,7 +550,7 @@ const ProductDetailModal = ({
                                     : price}
                                 </p>
                                 {discountPrice != 0 &&
-                                discountPrice !== price ? (
+                                  discountPrice !== price ? (
                                   <p className="line-through">
                                     {currency}
                                     {price}
@@ -611,7 +609,7 @@ const ProductDetailModal = ({
                           onClick={handleProductLikes}
                         >
                           {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id) ? (
+                            favoriteProducts?.includes(product?.id) ? (
                             <BiSolidHeart size={20} />
                           ) : (
                             <BiHeart size={20} />
@@ -621,7 +619,7 @@ const ProductDetailModal = ({
                         <span className="text-nowrap">
                           {" "}
                           {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id)
+                            favoriteProducts?.includes(product?.id)
                             ? t("removeTowishlist")
                             : t("addToWishlist")}
                         </span>

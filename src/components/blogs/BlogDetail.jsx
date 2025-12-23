@@ -7,11 +7,21 @@ import { formatCustomDate } from "@/lib/utils";
 import Loader from "../loader/Loader";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import RecentBlogsSwiper from "./RecentBlogsSwiper";
-import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+
 import { PiMediumLogoFill } from "react-icons/pi";
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinShareButton,
+  LinkedinIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from "react-share";
+import { usePathname } from "next/navigation";
 
 const BlogDetail = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { slug } = router.query;
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -128,19 +138,44 @@ const BlogDetail = () => {
                   <span className="font-semibold ">{t("share")}:</span>
 
                   <div className="p-2 rounded-full bodyBackgroundColor">
-                    <button className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white">
-                      <FaFacebookF size={16} />
-                    </button>
+                    <FacebookShareButton
+                      url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                        pathname
+                      )}`}
+                      className="w-8 h-8 rounded-full bg-gray-800  flex items-center justify-center text-white"
+                    >
+                      <FacebookIcon className="h-8 w-8 rounded-full  "
+                        bgStyle={{ fill: "#374151" }}
+                        iconFillColor="#ffffff"
+                      />
+                    </FacebookShareButton>
+                  </div>
+
+                  <div className="p-2 rounded-full bodyBackgroundColor">
+                    <LinkedinShareButton
+                      url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                        pathname
+                      )}`}
+                      className="w-8 h-8 rounded-full bg-gray-800  flex items-center justify-center text-white"
+                    >
+                      <LinkedinIcon className="h-8 w-8 rounded-full  "
+                        bgStyle={{ fill: "#374151" }}
+                        iconFillColor="#ffffff"
+                      />
+                    </LinkedinShareButton>
                   </div>
                   <div className="p-2 rounded-full bodyBackgroundColor">
-                    <button className="w-7 h-7 rounded-full bg-gray-800  flex items-center justify-center text-white">
-                      <FaLinkedinIn size={16} />
-                    </button>
-                  </div>
-                  <div className="p-2 rounded-full bodyBackgroundColor">
-                    <button className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white">
-                      <PiMediumLogoFill size={16} />
-                    </button>
+                    <WhatsappShareButton
+                      url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
+                        pathname
+                      )}`}
+                      className="w-8 h-8 rounded-full bg-gray-800  flex items-center justify-center text-white"
+                    >
+                      <WhatsappIcon className="h-8 w-8 rounded-full  "
+                        bgStyle={{ fill: "#374151" }}
+                        iconFillColor="#ffffff"
+                      />
+                    </WhatsappShareButton>
                   </div>
                 </div>
               </div>

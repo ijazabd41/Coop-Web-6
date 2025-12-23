@@ -951,7 +951,12 @@ const Checkout = () => {
                                         selected={checkout?.selectedDate}
                                         onSelect={handleSelectedDate}
                                         className="rounded-md w-full"
-                                        fromDate={new Date()}
+                                        // TODO: need to check
+                                        fromDate={(() => {
+                                          let date = new Date();
+                                          date.setDate(date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1));
+                                          return date;
+                                        })()}
                                         toDate={(() => {
                                           let date = new Date();
                                           let allowedDays =
@@ -960,7 +965,7 @@ const Checkout = () => {
                                                 ?.time_slots_allowed_days
                                             ) || 15;
                                           date.setDate(
-                                            date.getDate() + allowedDays
+                                            date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1) + allowedDays
                                           );
                                           return date;
                                         })()}

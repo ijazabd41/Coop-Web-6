@@ -113,7 +113,7 @@ const Subscription = () => {
               <h3 className="text-xl font-bold  mb-3">{t('current_plan')}</h3>
               <div className="border p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-4 ">
-                  <p className="text-lg font-semibold textColor">{user?.subscription_name}</p>
+                  <p className="text-lg font-semibold textColor">{activePlan?.plan_name}</p>
                   <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 rounded-full">{t('active')}</span>
                 </div>
 
