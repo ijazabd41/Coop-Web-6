@@ -951,7 +951,7 @@ const Checkout = () => {
                                         selected={checkout?.selectedDate}
                                         onSelect={handleSelectedDate}
                                         className="rounded-md w-full"
-                                        // TODO: need to check
+                                        // NOTE: change in version 2.0.4
                                         fromDate={(() => {
                                           let date = new Date();
                                           date.setDate(date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1));
