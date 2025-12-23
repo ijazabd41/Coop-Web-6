@@ -273,6 +273,10 @@ const Checkout = () => {
   };
 
   const handleTimeSlotChange = (value) => {
+    if (value.isDisabled == true) {
+      toast.error(t("please_select_valid_time_slot"));
+      return;
+    }
     setSelectedTimeSlot(value);
     dispatch(setTimeSlot({ data: value }));
   };
@@ -994,8 +998,13 @@ const Checkout = () => {
                                       return (
                                         <div key={slot?.id}>
                                           <SelectItem
-                                            disabled={slot?.isDisabled}
                                             value={slot}
+                                            style={{
+                                              opacity: slot.isDisabled == "true" ? 0.0 : 1,
+                                            }}
+                                            className={`
+                                              ${slot.isDisabled == true ? "opacity-10 cursor-not-allowed text-gray-500 hover:text-gray-500" : ""}
+                                            `}
                                           >
                                             <div className="flex justify-between items-center w-full min-w-0">
                                               <p className="truncate">

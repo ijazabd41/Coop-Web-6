@@ -639,5 +639,6 @@
   "renew": "Renew",
   "rejected": "Rejected",
   "approved": "Approved",
-  "few_quantity_left":"Only a few left"
+  "few_quantity_left": "Only a few left",
+  "please_select_valid_time_slot": "Sorry, this slot is currently unavailable."
 }
