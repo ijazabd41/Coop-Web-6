@@ -93,7 +93,7 @@ const Subscription = () => {
               </div>
             </div>
 
-            <div className="bg-[#FFDCC9] p-4  mt-4 rounded-lg flex items-center">
+            <div className="bg-[#FFDCC9] p-4  mt-4 rounded-lg flex items-center ">
               <div className="w-12 h-12 rounded-full bg-[#FFDCC9]  flex items-center justify-center mr-3 flex-shrink-0">
                 <Image
                   src={DollarBag}
@@ -103,8 +103,8 @@ const Subscription = () => {
                   width={0}
                 />
               </div>
-              <p className=" font-semibold">
-                {t("you_saved")} <span className="textColor"> {setting?.currency}{activePlan?.total_money_saved}</span> {t('on')} {activePlan?.deliveries_number} {t('deliveries')}
+              <p className=" font-semibold text-black">
+                {t("you_saved")} <span> {setting?.currency}{activePlan?.total_money_saved}</span> {t('on')} {activePlan?.deliveries_number} {t('deliveries')}
               </p>
             </div>
 

@@ -94,7 +94,7 @@ const SearchComponent = ({
                       md:z-10 md:bodyBackgroundColor md:top-12 md:left-0 shadow-[0_0_16px_gray]
                     "
           >
-            {router?.pathname !== "/products" &&
+            {(router?.pathname !== "/products" && filter?.search) &&
               filter?.search_product?.map((product, idx) => (
                 <SearchProductCard key={idx} product={product} />
               ))}

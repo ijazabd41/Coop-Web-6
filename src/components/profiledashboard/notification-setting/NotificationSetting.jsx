@@ -68,6 +68,10 @@ const NotificationSetting = () => {
                     </div>
                 </div>
                 <div>
+                    <div className='flex items-center justify-end gap-4 my-2'>
+                        <div>{t("email")}</div>
+                        <div>{t("mobileText")}</div>
+                    </div>
                     {mailSettings?.map((item, index) => (
                         <div key={item?.id} className='flex items-center justify-between py-2 border p-4 rounded-md my-2'>
                             <h2 className='font-medium text-lg fontColor '>{item?.status_name?.substring(0, 16)}</h2>
