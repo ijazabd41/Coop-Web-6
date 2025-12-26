@@ -1,16 +1,16 @@
 import { t } from "@/utils/translation";
 import { ArrowRight, HelpCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import LightImage from "@/assets/Vector-filled.png";
+import LightImage from "@/assets/Vector-filled.svg";
 import Image from "next/image";
-import BikeImage from "@/assets/bike.png";
+import BikeImage from "@/assets/bike.svg";
 import PlanSelectionModal from "./SubscriptionPlanSelectionModal";
 import WalletBalanceModal from "../wallet/WalletBalanceModal";
 import SubscriptionsFaqs from "./SubscriptionsFaqs";
 import { useSelector } from "react-redux";
 import { FiCalendar, FiClock, FiTruck } from "react-icons/fi";
-import RightTick from "@/assets/right-tick.png"
-import DollarBag from "@/assets/dollar-bag.png"
+import RightTick from "@/assets/right-tick.svg"
+import DollarBag from "@/assets/dollar-bag.svg"
 import * as api from "@/api/apiRoutes"
 
 const Subscription = () => {
@@ -82,7 +82,7 @@ const Subscription = () => {
                 <Image
                   src={RightTick}
                   alt="right tick"
-                  className={`h-12 w-12 object-contain `}
+                  className={`h-9 w-9 object-contain `}
                   height={0}
                   width={0}
                 />

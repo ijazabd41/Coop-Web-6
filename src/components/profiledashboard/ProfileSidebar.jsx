@@ -9,9 +9,9 @@ import LogoutModal from "../logoutmodal/LogoutModal";
 import DeleteModal from "../deleteModal/DeleteModal";
 import { BiCartAlt, BiCog, BiUserCircle, BiWallet } from "react-icons/bi";
 import ReferAndEarnModal from "@/components/refer-and-earn/ReferAndEarnModal";
-import LightImage from "@/assets/Vector.png";
-import MoneyImage from "@/assets/bx-money.png";
-import BikeImage from "@/assets/bike.png";
+import LightImage from "@/assets/Vector.svg";
+import MoneyImage from "@/assets/bx-money.svg";
+import BikeImage from "@/assets/bike.svg";
 import { FaArrowRight } from "react-icons/fa";
 import { formatDate } from "@/utils/helperFunction"
 import { ArrowRight } from "lucide-react";
@@ -84,13 +84,13 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           />
         </div>
       ),
-      theme: "border-blue-500 bg-[#0186D81F] text-blue-800",
+      theme: "border-blue-500 bg-[#0186D81F] text-[#0186D8]",
     },
     {
       id: 3,
       text: t("free_delivery_desc"),
       image: (
-        <div className="p-2 bg-[#DB9305] rounded-full border border-white h-9 w-9 ">
+        <div className="p-2 bg-[#DB9305] rounded-full border  border-white h-9 w-9 ">
           <Image
             src={BikeImage}
             alt="light logo"
@@ -100,7 +100,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           />
         </div>
       ),
-      theme: "border-orange-500 bg-[#DB93051F] text-orange-800",
+      theme: "border-orange-500 bg-[#DB93051F] text-[#DB9305]",
     },
   ];
 
@@ -120,7 +120,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 alt="Profile"
                 width={80}
                 height={80}
-                className="h-24 w-24 rounded-full object-cover"
+                className="h-[100px] w-[100px] rounded-full object-cover"
               />
             </div>
             <div className="w-1/2 ">
@@ -136,7 +136,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               {user?.has_active_subscription == 1 ?
                 <div className="flex items-start w-full justify-between ">
                   <div className="flex gap-2">
-                    <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-11  ">
+                    <div className="p-2 primaryBackColor rounded-full border border-white   ">
                       <Image
                         src={LightImage}
                         alt="light logo"
