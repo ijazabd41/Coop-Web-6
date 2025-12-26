@@ -390,19 +390,17 @@ const WalletBalanceModal = ({
                           <span className="text-base font-medium ">
                             {t("original_price")}
                           </span>
-                          <span className=" font-semibold">{selectedPlan?.price} </span>
-                        </div>
-
-                        {selectedPlan?.discounted_price && (
-                          <div
-                            className={"flex justify-between items-center py-2"}
-                          >
-                            <span className="text-base font-medium ">
-                              {t("discounted_price")}
+                          <span className=" font-semibold ">
+                            <span className="text-xl">
+                              {setting?.setting?.currency}{selectedPlan?.discounted_price > 0 ? selectedPlan?.discounted_price : selectedPlan?.price}
                             </span>
-                            <span className="font-semibold ">-{selectedPlan?.discounted_price}</span>
-                          </div>
-                        )}
+                            {selectedPlan?.discounted_price > 0 &&
+                              <span className="text-sm line-through text-gray-400 ml-2">
+                                {setting?.setting?.currency}{selectedPlan?.price?.toFixed(2)}
+                              </span>
+                            }
+                          </span>
+                        </div>
                       </div>
                       <div
                         className={`flex justify-between items-center  bodyBackgroundColor p-3 rounded-md `}
@@ -410,7 +408,7 @@ const WalletBalanceModal = ({
                         <span className="text-lg font-bold textColor">
                           {t("total_amount")}
                         </span>
-                        <span className="text-lg font-bold textColor">{selectedPlan?.discounted_price ? selectedPlan?.price - selectedPlan?.discounted_price : selectedPlan?.price}</span>
+                        <span className="text-lg font-bold textColor">{selectedPlan?.discounted_price ? selectedPlan?.discounted_price : selectedPlan?.price}</span>
                       </div>
                     </div>
                   )}

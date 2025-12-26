@@ -20,7 +20,7 @@ const SubscriptionFaqCard = ({ faq }) => {
       >
         <div>
           <h3 className="text-lg font-bold text-left md:text-center overflow-hidden">
-            {faq?.question?.substring(0, 80) + (faq?.question?.length > 80 ? "..." : "")}
+            {faq?.question}
           </h3>
         </div>
         <div className="flex items-center">

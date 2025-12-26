@@ -969,7 +969,7 @@ const Checkout = () => {
                                                 ?.time_slots_allowed_days
                                             ) || 15;
                                           date.setDate(
-                                            date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1) + allowedDays
+                                            date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1) + (allowedDays - 1)
                                           );
                                           return date;
                                         })()}
