@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
 import Filter from "../productFilter/ProductFilter";
@@ -30,22 +31,17 @@ const Products = () => {
   const city = useSelector((state) => state.City);
 
   const filter = useSelector((state) => state.ProductFilter);
-  const [productResult, setProductResult] = useState([]);
-  const [offset, setOffset] = useState(0);
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [values, setValues] = useState([]);
   const [isLoader, setisLoader] = useState(false);
-  const [totalProducts, settotalProducts] = useState(null);
   const [isGridView, setIsGridView] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
   const total_products_per_page = 12;
 
-  useEffect(() => {
-    filterProductsFromApi({
+  const fetchProducts = async ({ pageParam = 0 }) => {
+    const filterParams = {
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
       category_ids:
@@ -60,7 +56,7 @@ const Products = () => {
         ?.filter((obj) => obj.checked)
         .map((obj) => obj["size"])
         .join(","),
-      offset: offset,
+      offset: pageParam,
       unit_ids: filter?.search_sizes
         ?.filter((obj) => obj.checked)
         .map((obj) => obj["unit_id"])
@@ -68,76 +64,49 @@ const Products = () => {
       seller_id: filter?.seller_id,
       country_id: filter?.country_id,
       section_id: filter?.section_id,
-    });
-  }, [
-    filter.search,
-    filter.category_id,
-    filter.brand_ids,
-    filter.sort_filter,
-    filter?.search_sizes,
-    filter?.price_filter,
-    offset,
-    city?.city,
-    filter.grid_view,
-    filter?.seller_id,
-  ]);
+    };
 
-  const filterProductsFromApi = async (filter) => {
-    try {
-      if (offset === 0) {
-        setLoading(true);
-      } else {
-        setIsLoadMoreLoading(true);
-      }
-      // setLoading(true);
-      const result = await api.getProductByFilter({
-        latitude: city.city.latitude,
-        longitude: city.city.longitude,
-        filters: filter,
-      });
-      if (result.status === 1) {
-        if (filter?.search) {
-          setOffset(0);
-        }
-        handlePrices(result);
-        if (
-          (filter.category_ids ||
-            filter.brand_ids ||
-            filter.price_filter?.min_price ||
-            filter.price_filter?.max_price ||
-            filter?.search) &&
-          offset == 0
-        ) {
-          setProductResult(result.data);
-        } else {
-          if (offset === 0) {
-            setProductResult(result.data);
-          } else {
-            setProductResult((prevProduct) => [...prevProduct, ...result.data]);
-          }
-        }
-        // setSizes(result.sizes);
-        settotalProducts(result.total);
-        // setShowPriceFilter(true);÷
-        setLoading(false);
-        setIsLoadMoreLoading(false);
-      } else {
-        setProductResult([]);
-        settotalProducts(0);
-        setSizes([]);
-        // setShowPriceFilter(false);
-        setLoading(false);
-        setIsLoadMoreLoading(false);
-      }
-    } catch (error) {
-      const regex = /Failed to fetch/g;
-      if (regex.test(error.message)) {
-        console.log("Network Error");
-        setNetworkError(true);
-      }
-      console.log(error.message);
-    }
+    return await api.getProductByFilter({
+      latitude: city.city.latitude,
+      longitude: city.city.longitude,
+      filters: filterParams,
+    });
   };
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["products", filter, city.city.latitude, city.city.longitude],
+    queryFn: fetchProducts,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.data || lastPage.data.length < total_products_per_page) {
+        return undefined;
+      }
+      return allPages.length * total_products_per_page;
+    },
+    initialPageParam: 0,
+  });
+
+  const productResult = data?.pages?.flatMap((page) => page.data) || [];
+  const totalProducts = data?.pages?.[0]?.total || 0;
+  const loading = isLoading;
+  const isLoadMoreLoading = isFetchingNextPage;
+
+  // Dummy setters for Filter component
+  const setProductResult = () => { };
+  const setOffset = () => { };
+
+  useEffect(() => {
+    if (data?.pages?.[0]) {
+      handlePrices(data.pages[0]);
+    }
+  }, [data]);
 
   const handlePrices = async (result) => {
     if (
@@ -179,12 +148,10 @@ const Products = () => {
   };
 
   const handleFetchMore = async () => {
-    setOffset((offSet) => offSet + total_products_per_page);
+    fetchNextPage();
   };
 
   const sortProduct = async (value) => {
-    setProductResult([]);
-    setOffset(0);
     dispatch(setFilterSort({ data: value }));
   };
 
@@ -267,11 +234,10 @@ const Products = () => {
                       </div>
                       <div className="flex  gap-4 items-center">
                         <span
-                          className={`${
-                            filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
+                          className={`${filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white p-1.5"
+                            : ""
+                            } hover:cursor-pointer`}
                         >
                           <BsFillGrid3X3GapFill
                             size={23}
@@ -279,11 +245,10 @@ const Products = () => {
                           />
                         </span>
                         <span
-                          className={`${
-                            !filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white  p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
+                          className={`${!filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white  p-1.5"
+                            : ""
+                            } hover:cursor-pointer`}
                         >
                           <FaThList size={23} onClick={handleListViewChange} />
                         </span>

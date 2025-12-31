@@ -8,6 +8,10 @@ import { useRouter } from "next/router";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -31,13 +35,15 @@ export default function App({ Component, pageProps }) {
   return (
     <main>
       <ErrorBoundary>
-        <Provider store={store}>
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <Suspense fallback={<Loader screen="full" />}>
-              <Component {...pageProps} />
-            </Suspense>
-          </ThemeProvider>
-        </Provider>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <ThemeProvider attribute="class" defaultTheme="light">
+              <Suspense fallback={<Loader screen="full" />}>
+                <Component {...pageProps} />
+              </Suspense>
+            </ThemeProvider>
+          </Provider>
+        </QueryClientProvider>
       </ErrorBoundary>
     </main>
   );
