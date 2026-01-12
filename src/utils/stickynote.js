@@ -2,6 +2,7 @@ import { store } from "@/redux/store";
 import { t } from "@/utils/translation";
 
 export const createStickyNote = () => {
+  if (typeof window !== "undefined" && sessionStorage.getItem("hide-unsupported-browser-note") === "true") return;
   if (document.getElementById("unsupported-browser-note")) return;
 
   const setting = store.getState()?.Setting?.setting;
@@ -49,6 +50,7 @@ export const createStickyNote = () => {
   closeButton.innerHTML = "×";
   closeButton.onclick = function () {
     document.body.removeChild(stickyNote);
+    sessionStorage.setItem("hide-unsupported-browser-note", "true");
   };
   stickyNote.appendChild(closeButton);
 

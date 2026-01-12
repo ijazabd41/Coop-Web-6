@@ -32,8 +32,10 @@ const getMessagingInstance = async () => {
       messaging = getMessaging(app);
       return messaging;
     } else {
-      console.log("Firebase Messaging is not supported in this browser.");
-      createStickyNote();
+      if (typeof window !== "undefined" && sessionStorage.getItem("hide-unsupported-browser-note") !== "true") {
+        console.log("Firebase Messaging is not supported in this browser.");
+        createStickyNote();
+      }
       return null;
     }
   } catch (err) {
