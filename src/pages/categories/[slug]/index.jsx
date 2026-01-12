@@ -12,6 +12,12 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
   serverSidePropsFunction = async (context) => {
     const { slug } = context.params;
     const lang = context.query.lang;
+    console.log("language", lang)
+    console.log("context.query.lang", context.query.lang)
+    console.log("slug", slug)
+    console.log("resolvedUrl:", context.resolvedUrl);
+    console.log("req.url:", context.req.url);
+    console.log("query:", context.query);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/categories/get_seo_things`,

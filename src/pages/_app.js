@@ -51,8 +51,7 @@ function AppContent({ Component, pageProps }) {
           lang: selectedLanguage.code,
         },
       },
-      undefined,
-      { shallow: true }
+      undefined
     );
   }, [selectedLanguage?.code, router]);
 
