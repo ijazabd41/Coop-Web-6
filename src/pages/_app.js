@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense } from "react";
 import "@/styles/globals.css";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "@/redux/store";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "@/components/loader/Loader";
@@ -12,11 +12,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
-export default function App({ Component, pageProps }) {
+function AppContent({ Component, pageProps }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const selectedLanguage = useSelector(
+    (state) => state.Language.selectedLanguage
+  );
+
   useEffect(() => {
-    // Show loader on route change start
     const handleStart = () => setLoading(true);
     const handleComplete = () => setLoading(false);
 
@@ -32,6 +35,37 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
+  useEffect(() => {
+    if (!selectedLanguage?.code) return;
+
+    const currentLang = router.query.lang;
+
+    // Prevent infinite loop
+    if (currentLang === selectedLanguage.code) return;
+
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          lang: selectedLanguage.code,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [selectedLanguage?.code, router]);
+
+  return (
+    <>
+      {loading && <Loader screen="full" />}
+      <Component {...pageProps} />
+    </>
+  );
+}
+
+export default function App({ Component, pageProps }) {
+
   return (
     <main>
       <ErrorBoundary>
@@ -39,7 +73,7 @@ export default function App({ Component, pageProps }) {
           <Provider store={store}>
             <ThemeProvider attribute="class" defaultTheme="light">
               <Suspense fallback={<Loader screen="full" />}>
-                <Component {...pageProps} />
+                <AppContent Component={Component} pageProps={pageProps} />
               </Suspense>
             </ThemeProvider>
           </Provider>

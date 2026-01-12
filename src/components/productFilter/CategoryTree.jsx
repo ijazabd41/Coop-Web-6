@@ -14,7 +14,7 @@ const CategoryTree = ({
   // Transform categories into tree structure
   const transformCategoryData = (categories) => {
     return categories?.map((category) => ({
-      title: category.name,
+      title: category?.translations?.name,
       key: category.id,
       children:
         category.cat_active_childs?.length > 0

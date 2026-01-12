@@ -4,16 +4,14 @@ const CategoriesPages = dynamic(
   { ssr: false }
 );
 import dynamic from "next/dynamic";
-
 import MetaData from "@/components/metadata-component/MetaData";
 import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
-
 let serverSidePropsFunction = null;
-
 if (process.env.NEXT_PUBLIC_SEO == "true") {
   serverSidePropsFunction = async (context) => {
     const { slug } = context.params;
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/categories/get_seo_things`,
@@ -21,9 +19,11 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             slug: slug,
           },
+          headers: {
+            "Content-Language": lang,
+          }
         }
       );
-
       let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
       let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
       let markUpSchema = "";
@@ -85,7 +85,7 @@ const Categories = ({
         ogUrl={pageUrl}
         ogImage={og_image}
         favicon={favicon}
-        // key={`meta-${slug}`}
+      // key={`meta-${slug}`}
       />
       <CategoriesPages />
     </div>

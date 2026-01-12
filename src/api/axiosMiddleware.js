@@ -15,15 +15,22 @@ const getStoredToken = async () => {
   return state?.User?.jwtToken;
 };
 
+const getStoredLanguage = async () => {
+  const state = store.getState();
+  return state?.Language?.selectedLanguage;
+};
+
 api.interceptors.request.use(
   async (config) => {
     try {
       const authToken = await getStoredToken();
+      const language = await getStoredLanguage();
       if (authToken) {
         config.headers.Authorization = `Bearer ${authToken}`;
       }
       config.headers["Content-Type"] = "multipart/form-data";
       config.headers["x-access-key"] = access_key;
+      config.headers["Content-Language"] = language?.code;
       return config;
     } catch (error) {
       console.error("Error in token retrival", error);

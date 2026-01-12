@@ -55,7 +55,6 @@ import SearchComponent from "../search/SearchComponent";
 import { useMediaQuery } from "react-responsive";
 import { IoIosCloseCircle } from "react-icons/io";
 import { setSelectedLanguage } from "@/redux/slices/languageSlice";
-import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import Image from "next/image";
 import MobileNavSidebar from "../mobile-nav-sidebar/MobileNavSidebar";
 
@@ -276,8 +275,8 @@ const Header = () => {
                                   // Special handling for WeChat icon
                                   <i className="fab fa-weixin"></i>
                                 ) : social?.icon
-                                    .toLowerCase()
-                                    .includes("twitter") ? (
+                                  .toLowerCase()
+                                  .includes("twitter") ? (
                                   // Special handling for TikTok icon
                                   <FaXTwitter className={`${social?.icon}`} />
                                 ) : (
@@ -455,15 +454,15 @@ const Header = () => {
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
                         ? cart?.guestCartTotal?.toFixed(
-                            setting?.setting?.decimal_point
-                              ? setting?.setting?.decimal_point
-                              : 0
-                          )
+                          setting?.setting?.decimal_point
+                            ? setting?.setting?.decimal_point
+                            : 0
+                        )
                         : cart?.cartSubTotal?.toFixed(
-                            setting?.setting?.decimal_point
-                              ? setting?.setting?.decimal_point
-                              : 0
-                          )}
+                          setting?.setting?.decimal_point
+                            ? setting?.setting?.decimal_point
+                            : 0
+                        )}
                     </span>
                   </div>
                 </div>
@@ -707,11 +706,10 @@ const Header = () => {
             >
               <IoHomeOutline
                 size={24}
-                className={`h-10 w-10 ${
-                  mobileActiveKey == 1
-                    ? "primaryBackColor text-white  "
-                    : "bg-[#55AE7B14] primaryColor "
-                }p-2 rounded-full`}
+                className={`h-10 w-10 ${mobileActiveKey == 1
+                  ? "primaryBackColor text-white  "
+                  : "bg-[#55AE7B14] primaryColor "
+                  }p-2 rounded-full`}
               />
               <span className="text-sm">{t("home")}</span>
             </div>
@@ -722,11 +720,10 @@ const Header = () => {
             >
               <IoSearchOutline
                 size={24}
-                className={`h-10 w-10 ${
-                  mobileActiveKey == 2
-                    ? "primaryBackColor text-white "
-                    : "bg-[#55AE7B14] primaryColor "
-                } p-2 rounded-full`}
+                className={`h-10 w-10 ${mobileActiveKey == 2
+                  ? "primaryBackColor text-white "
+                  : "bg-[#55AE7B14] primaryColor "
+                  } p-2 rounded-full`}
               />
               <span className="text-sm">{t("search")}</span>
             </div>
@@ -737,11 +734,10 @@ const Header = () => {
             >
               <FaRegUser
                 size={24}
-                className={`h-10 w-10 ${
-                  mobileActiveKey == 3
-                    ? "primaryBackColor text-white "
-                    : "bg-[#55AE7B14] primaryColor "
-                } p-2 rounded-full`}
+                className={`h-10 w-10 ${mobileActiveKey == 3
+                  ? "primaryBackColor text-white "
+                  : "bg-[#55AE7B14] primaryColor "
+                  } p-2 rounded-full`}
               />
               <span className="text-sm">
                 {user?.jwtToken ? t("profile") : t("login")}

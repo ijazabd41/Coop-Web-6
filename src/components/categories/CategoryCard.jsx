@@ -9,7 +9,7 @@ const CategoryCard = ({ category }) => {
                 <div className='relative h-[122px] w-[122px]'>
                     <ImageWithPlaceholder src={category.image_url} alt='Category Image' className='rounded-full w-full h-full object-cover p-2' />
                 </div>
-                <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full truncate">{category.name}</div>
+                <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full truncate">{category?.translations?.name}</div>
             </div>
         </div>
     )

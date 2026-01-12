@@ -35,7 +35,7 @@ const Homepage = () => {
         if (city) {
             fetchShop()
         }
-    }, [city])
+    }, [city, language])
 
     const fetchShop = async () => {
         setLoading(true)
