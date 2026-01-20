@@ -291,7 +291,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         });
         if (
           response?.status == 1 &&
-          response?.message == t("otp_valid_but_user_invalid")
+          response?.message == "otp_valid_but_user_invalid"
         ) {
           setShowNewUser(true);
           setShowLogin(false);
@@ -302,20 +302,20 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setEmail("");
         } else if (response?.status == 1) {
           const tokenSet = await dispatch(
-            setTokenThunk(res?.data?.access_token)
+            setTokenThunk(response?.data?.access_token)
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: "phone" }));
-          if (res?.data?.user?.status == 1) {
+          if (response?.data?.user?.status == 1) {
             dispatch(setIsGuest({ data: false }));
           }
           await handleFetchSetting();
           if (
             cart?.isGuest === true &&
             cart?.guestCart?.length !== 0 &&
-            res?.data?.user?.status == 1
+            response?.data?.user?.status == 1
           ) {
-            await addToBulkCart(res?.data.access_token);
+            await addToBulkCart(response?.data.access_token);
           }
           await fetchCart();
           setError("");
@@ -365,7 +365,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       if (response.status === 1) {
         dispatch(setCart({ data: response.data }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
-        dispatch(setDoorStepDeliveryMode({data:cartData?.data?.doorstep_delivery_mode}))
+        dispatch(setDoorStepDeliveryMode({ data: cartData?.data?.doorstep_delivery_mode }))
         const productsData = getProductData(response.data);
         dispatch(setCartProducts({ data: productsData }));
         dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
@@ -927,7 +927,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   </div>
 
                   {setting?.google_login == 1 &&
-                  (setting?.email_login == 1 || setting?.phone_login == 1) ? (
+                    (setting?.email_login == 1 || setting?.phone_login == 1) ? (
                     <div className="flex items-center justify-between my-4 gap-2">
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                       <span className=" text-[#4B6272] font-bold text-base">
