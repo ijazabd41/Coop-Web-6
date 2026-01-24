@@ -112,8 +112,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   return (
     <div>
       <div className="cardBorder rounded-sm ">
-        {user?.is_subscription_plans ? <div className="backgroundColor flex flex-col md:p-6 p-4 gap-6">
-          <div className="flex items-center  gap-6">
+        {user?.is_subscription_plans ? <div className="backgroundColor flex flex-col md:p-1 lg:p-6 p-4 gap-6">
+          <div className="flex items-center  gap-6 md:gap-2 lg:gap-6">
             <div className="h-28 w-28 rounded-full border-2 bodyBackgroundColor flex items-center justify-center ">
               <Image
                 src={user?.profile}
@@ -125,7 +125,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             </div>
             <div className="w-1/2 ">
               <p className="text-base font-bold ">{t("hello")},</p>
-              <p className="text-xl  font-bold textColor">
+              <p className="text-xl md:text-lg lg:text-xl  font-bold textColor">
                 {user?.name?.slice(0, 16)}
               </p>
             </div>
@@ -158,8 +158,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </div> :
                 user?.has_active_subscription == 2 ?
                   <div className="flex flex-col gap-6">
-                    <div className="flex items-start w-full justify-between gap-2">
-                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[62px] ">
+                    <div className="flex items-start w-full justify-between gap-2 md:flex-wrap lg:flex-nowrap">
+                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[62px] md:w-[30px] lg:w-[62px]">
                         <Image
                           src={LightImage}
                           alt="light logo"
@@ -175,12 +175,12 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </p>
                       </div>
 
-                      <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full">
+                      <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full ">
                         {t("expired")}
                       </span>
 
                     </div>
-                    <button className="primaryBackColor text-white text-xl font-semibold px-4 py-2 rounded-md flex items-center gap-2 justify-center" onClick={handleSubscriptionClick}>
+                    <button className="primaryBackColor text-white text-xl md:text-[16px] lg:text-xl font-semibold px-4 md:px-0 lg:px-4 py-2 rounded-md flex items-center gap-2 justify-center w-auto md:w-[208px] lg:w-auto" onClick={handleSubscriptionClick}>
                       {`${t("renew")} ${user?.subscription_name}`}
                       <ArrowRight className="w-5 h-5 text-white" />
                     </button>
@@ -257,7 +257,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("profile")}
                 >
-                  <span className="font-medium ml-12">{t("editProfile")}</span>
+                  <span className="font-medium ml-12 md:ml-[0] lg:ml-12">{t("editProfile")}</span>
                 </li>
               </Link>
               {authType == "email" ||
@@ -270,7 +270,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         }`}
                       onClick={() => handleTabChange("profile")}
                     >
-                      <span className="font-medium ml-12">
+                      <span className="font-medium ml-12 md:ml-[0] lg:ml-12">
                         {t("resetPassword")}
                       </span>
                     </li>
@@ -285,7 +285,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("address")}
                 >
-                  <span className="ml-12">{t("manage_address")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("manage_address")}</span>
                 </li>
               </Link>
               {user?.is_subscription_plans &&
@@ -298,7 +298,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         }`}
                       onClick={() => handleTabChange("subscription")}
                     >
-                      <span className="ml-12">{user?.subscription_name}</span>
+                      <span className="ml-12 md:ml-[0] lg:ml-12">{user?.subscription_name}</span>
                     </li>
                   </Link>
                 )
@@ -322,7 +322,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("activeorders")}
                 >
-                  <span className="ml-12">{t("active_orders")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("active_orders")}</span>
                 </li>
               </Link>
 
@@ -334,7 +334,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("orderhistory")}
                 >
-                  <span className="ml-12">{t("order_history")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("order_history")}</span>
                 </li>
               </Link>
               <Link href={`/profile/wishlist`}>
@@ -345,7 +345,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("wishlist")}
                 >
-                  <span className="ml-12">{t("my_wishlist")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("my_wishlist")}</span>
                 </li>
               </Link>
             </ul>
@@ -358,8 +358,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               {`${t("payment")} ${t("manage")}`}
             </h3>
             <ul>
-              <li className="flex justify-between items-center p-4 rounded  textColor">
-                <span className="ml-12">{t("walletBalance")}</span>
+              <li className="flex flex-nowrap md:flex-wrap lg:flex-nowrap justify-between items-center p-4 rounded  textColor">
+                <span className="ml-12 md:ml-[0] lg:ml-12">{t("walletBalance")}</span>
                 <span className="text-base text-orange-600 font-medium  bg-[#EB9C001F] p-1 rounded-sm">
                   {setting?.currency}
                   {user?.balance}
@@ -372,7 +372,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   }`}
                 onClick={handleWalletBalanceModal}
               >
-                <span className="ml-12">{t("addWalletBalance")}</span>
+                <span className="ml-12 md:ml-[0] lg:ml-12">{t("addWalletBalance")}</span>
               </li>
               <Link href={`/profile/wallethistory`}>
                 <li
@@ -382,7 +382,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("wallethistory")}
                 >
-                  <span className="ml-12">{t("wallet_history")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("wallet_history")}</span>
                 </li>
               </Link>
 
@@ -394,7 +394,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("transaction")}
                 >
-                  <span className="ml-12">{t("transaction_history")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("transaction_history")}</span>
                 </li>
               </Link>
             </ul>
@@ -415,7 +415,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("notifications")}
                 >
-                  <span className="ml-12">{t("notification")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("notification")}</span>
                 </li>
               </Link>
               <Link href={`/profile/notification-setting`}>
@@ -426,7 +426,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("notification_setting")}
                 >
-                  <span className="ml-12">{t("notification_setting")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("notification_setting")}</span>
                 </li>
               </Link>
               <Link href={`/profile/requested-products`}>
@@ -437,26 +437,26 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     }`}
                   onClick={() => handleTabChange("requested-products")}
                 >
-                  <span className="ml-12">{t("requestedProducts")}</span>
+                  <span className="ml-12 md:ml-[0] lg:ml-12">{t("requestedProducts")}</span>
                 </li>
               </Link>
               <li
                 className={`p-4  cursor-pointer  textColor hover:primaryBackColor hover:text-white`}
                 onClick={() => handleShowReferAndEarn()}
               >
-                <span className="ml-12">{t("referandearn")}</span>
+                <span className="ml-12 md:ml-[0] lg:ml-12">{t("referandearn")}</span>
               </li>
               <li
                 className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}
                 onClick={() => setShowLogout(true)}
               >
-                <span className="ml-12">{t("logout")}</span>
+                <span className="ml-12 md:ml-[0] lg:ml-12">{t("logout")}</span>
               </li>
               <li
                 className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}
                 onClick={() => setShowDelete(true)}
               >
-                <span className="ml-12">{t("delete_account")}</span>
+                <span className="ml-12 md:ml-[0] lg:ml-12">{t("delete_account")}</span>
               </li>
             </ul>
           </div>

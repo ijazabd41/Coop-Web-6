@@ -353,16 +353,16 @@ const Header = () => {
         <div className="headerBackgroundColor pb-3 relative">
           <div className="center-header headerBackgroundColor container">
             <div className="  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2">
-              <div className=" aspect-square relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]">
-                <Link href={"/"}>
+              <div className="  relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]">
+                <Link href={"/"} className="relative block w-full h-full">
                   {setting?.setting?.web_settings?.web_logo && (
                     <Image
-                      src={setting?.setting?.web_settings?.web_logo}
+                     src={setting.setting.web_settings.web_logo}
                       alt="Logo"
-                      width={0}
-                      height={0}
-                      className="h-full lg:full w-full lg:w-full object-contain"
-                      priority={true}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 140px, 170px"
+                      className="object-contain"
                     />
                   )}
                 </Link>

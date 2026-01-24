@@ -4,6 +4,7 @@ import fs from 'fs'
 const nextConfig = {
 
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,7 +19,7 @@ const nextConfig = {
         pathname: '/public/storage/**',
       }
     ],
-    unoptimized: true
+    // unoptimized: true
   },
 
   experimental: {

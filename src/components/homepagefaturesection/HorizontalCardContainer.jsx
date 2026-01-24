@@ -53,8 +53,10 @@ const HorizontalCardContainer = ({ section }) => {
             <div className='containers'>
                 {promotionImage && promotionImage?.map((offer) => {
                     return (
-                        <div className='relative' key={offer?.id}>
-                            <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                       <div className='relative w-full' key={offer?.id}>
+                            <Image 
+                                src={offer?.image_url} alt='Offer image' width={1920} height={1080} quality={90} sizes="100vw" className='object-cover w-full h-auto rounded-sm'   
+                            />
                         </div>
                     )
                 })}

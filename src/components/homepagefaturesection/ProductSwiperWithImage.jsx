@@ -58,7 +58,7 @@ const ProductSwiperWithImage = ({ section }) => {
                             {/* Image Section */}
                             <div className='md:col-span-3'>
                                 <div className='aspect-square w-full h-full relative '>
-                                    <Image src={section?.banner_web_url} height={0} width={0} alt='Logo' className='object-cover h-full w-full rounded-tl-md rounded-bl-md' />
+                                    <Image src={section?.banner_web_url} fill sizes="(max-width: 768px) 100vw, 300px" priority={true} quality={85} alt='Logo' className='object-cover  rounded-tl-md rounded-bl-md' />
                                 </div>
                             </div>
                             {/* Swiper Section */}
