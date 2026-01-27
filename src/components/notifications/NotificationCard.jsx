@@ -30,9 +30,8 @@ const NotificationCard = ({ notification }) => {
           <Image
             src={notification?.image_url}
             alt="notificationImg"
-            loading="lazy"
-            height={0}
-            width={0}
+            height={96}
+            width={96}
             className="h-12 w-12"
           />
         ) : (

@@ -28,8 +28,8 @@ const HomeOfferSection = ({ offer }) => {
       <ImageWithPlaceholder
         src={offer?.image_url}
         alt="Offer image"
-        height={0}
-        width={0}
+        width={800} 
+        height={270}
         className="object-contain max-h-[270px] h-full w-full rounded-sm"
         handleOnClick={handleOfferClick}
       />

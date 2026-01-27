@@ -591,8 +591,8 @@ const ProductDetail = () => {
                             <div className="text-xs">
                               {product?.fssai_lic_img && (
                                 <Image
-                                  width={0}
-                                  height={0}
+                                  width={100}
+                                  height={100}
                                   src={product?.fssai_lic_img}
                                   className="w-9 h-9 object-contain"
                                   alt="fssaiImage"

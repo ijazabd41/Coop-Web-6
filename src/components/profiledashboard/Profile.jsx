@@ -72,13 +72,13 @@ const Profile = () => {
                 <form className='w-[90%] md:w-1/2' onSubmit={handleProfileUpdate}>
                     <div className="flex justify-center ">
                         <div className="relative">
-                            <div className="w-24 h-24  rounded-md flex items-center justify-center overflow-hidden">
+                            <div className="relative w-24 h-24  rounded-md flex items-center justify-center overflow-hidden">
                                 <Image
                                     src={profileImage ? URL.createObjectURL(profileImage) : user?.profile}
                                     alt="profile image"
-                                    height={0}
-                                    width={0}
-                                    className="h-full w-full object-cover"
+                                    fill
+                                    className="h-full w-full object-cover rounded-md"
+                                    sizes="96px"
                                 />
                             </div>
                             <label

@@ -97,6 +97,7 @@ const HomePageSlider = ({ slider }) => {
                   className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] "
                   width={1200}
                   height={650}
+                  
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

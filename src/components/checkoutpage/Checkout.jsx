@@ -296,7 +296,8 @@ const Checkout = () => {
 
   const handleFirstStep = () => {
     if (checkOutError) {
-      toast.error(t(checkOutErrorMsg));
+      toast.error(checkOutErrorMsg);
+      // toast.error(t(checkOutErrorMsg));
       return;
     } else {
       dispatch(setCurrentStep({ data: 2 }));

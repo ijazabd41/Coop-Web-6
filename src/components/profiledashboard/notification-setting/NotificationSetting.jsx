@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes"
 import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
 import Loader from '@/components/loader/Loader';
 import { toast } from 'react-toastify';
 

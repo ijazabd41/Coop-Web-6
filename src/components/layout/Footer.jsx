@@ -73,10 +73,11 @@ const Footer = () => {
                 {setting?.web_settings?.play_store_logo && (
                   <Image
                     className="w-full h-full"
-                    width={0}
-                    height={0}
+                    width={160}
+                    height={48}
                     src={setting?.web_settings?.play_store_logo}
                     alt="playStoreLogo"
+                    quality={95}
                   />
                 )}
               </Link>
@@ -90,10 +91,11 @@ const Footer = () => {
                 {setting?.web_settings?.ios_store_logo && (
                   <Image
                     className="w-full h-full"
-                    width={0}
-                    height={0}
+                    width={160}
+                    height={48}
                     src={setting?.web_settings?.ios_store_logo}
                     alt="appStoreLogo"
+                    quality={95}
                   />
                 )}
               </Link>
