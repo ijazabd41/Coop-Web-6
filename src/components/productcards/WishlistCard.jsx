@@ -200,7 +200,7 @@ const WishlistCard = ({
 
     if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
       toast.error(t("out_of_stock_message"));
-    } else if (quantity >= product?.total_allowed_quantity) {
+    } else if (productQty >= Number(product?.total_allowed_quantity)) {
       toast.error(t("max_cart_limit_error"));
     } else if (Number(product.is_unlimited_stock)) {
       addToCart(product.id, product?.variants[0].id, 1);
