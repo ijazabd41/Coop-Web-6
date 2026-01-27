@@ -357,7 +357,7 @@ const Header = () => {
                 <Link href={"/"} className="relative block w-full h-full">
                   {setting?.setting?.web_settings?.web_logo && (
                     <Image
-                     src={setting.setting.web_settings.web_logo}
+                     src={setting?.setting?.web_settings?.web_logo}
                       alt="Logo"
                       fill
                       priority
