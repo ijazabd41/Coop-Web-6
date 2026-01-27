@@ -17,7 +17,7 @@ const ImageWithPlaceholder = ({
 
   // NOTE:Change from nextjs Image to regular img to get rid of placeholder image error
   return (
-    <img
+    <Image
       src={
         !src || isLoading || isError
           ? setting?.setting?.web_settings?.placeholder_image
@@ -26,9 +26,10 @@ const ImageWithPlaceholder = ({
           : src
       }
       alt={alt}
-      width={0}
-      height={0}
+      width={1200}
+      height={1000}
       priority={priority}
+      sizes="(max-width: 640px) 100vw, (max-width:1024px)50vw, 1200px"
       className={className}
       onClick={handleOnClick}
       onLoad={() => {
