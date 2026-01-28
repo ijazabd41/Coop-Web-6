@@ -230,9 +230,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               <Image
                 src={user?.profile}
                 alt="Profile"
-                height={0}
-                width={0}
-                className="w-12 h-12 rounded-sm"
+                height={48}
+                width={48}
+                className="rounded-sm"
+                unoptimized
               />
               <div className="ml-3">
                 <p className="text-base textColor">{t("hello")},</p>

@@ -37,13 +37,14 @@ const MobileNavSidebar = ({ open, setOpen, handleLanguageChange }) => {
       >
         <SheetHeader>
           <SheetTitle className="flex justify-between px-4 py-4 items-center border-b">
-            <div className="w-36 h-9">
+            <div className="w-36 h-9 relative">
               <Image
                 src={setting?.web_settings?.web_logo}
-                alt={"mobileLogo"}
-                className="w-full h-full object-contain"
-                width={0}
-                height={0}
+                alt="mobileLogo"
+                fill
+                sizes="144px"
+                priority
+                className="object-contain"
               />
             </div>
             <SheetTrigger className="focus:outline-none">

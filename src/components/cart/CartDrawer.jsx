@@ -285,9 +285,10 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                 <Image
                   src={NoCartData}
                   alt="No Cart Data"
-                  height={0}
-                  width={0}
-                  className="h-full w-full"
+                  width={512}
+                  height={325}
+                  sizes="(max-width: 768px) 240px, 320px"
+                  className="object-contain"
                 />
                 <h1 className="font-bold text-[22px] text-center py-2">
                   {t("empty_cart_list_message")}

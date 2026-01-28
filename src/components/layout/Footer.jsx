@@ -381,8 +381,10 @@ const Footer = () => {
                         <Image
                           src={method?.image}
                           alt={method?.label}
-                          width={0}
-                          height={0}
+                          width={32} 
+                          height={32} 
+                          className="object-contain"
+                          unoptimized={true}
                         />
                       </div>
                     ))}

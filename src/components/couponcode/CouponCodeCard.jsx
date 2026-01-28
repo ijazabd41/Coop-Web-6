@@ -29,13 +29,13 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
     <div className="">
       <div className="w-full p-2 cardBorder  my-2 rounded-sm">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16  flex-shrink-0">
+          <div className="w-16 h-16  flex-shrink-0 relative">
             <Image
               src={coupon?.image_url}
               alt="Promo image"
-              height={0}
-              width={0}
-              className="h-full w-full object-cover"
+              fill
+              sizes="64px"
+              className="object-cover"
             />
           </div>
           <div className="flex-grow">

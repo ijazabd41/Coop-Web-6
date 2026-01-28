@@ -248,7 +248,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
                 <div className='col-span-4 '>
                     <div className='h-full w-full object-cover aspect-square relative'>
-                        <ImageWithPlaceholder src={product?.image_url} alt='Image' className='h-full w-full object-cover' />
+                        <ImageWithPlaceholder src={product?.image_url} alt='Image' fill sizes="(max-width: 640px) 50vw,(max-width: 1024px) 25vw,25vw" className='h-full w-full object-cover' />
                     </div>
                 </div>
                 <div className='col-span-8'>

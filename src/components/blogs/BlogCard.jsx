@@ -16,9 +16,13 @@ const BlogCard = ({ blog }) => {
     <div className="flex flex-col p-4 gap-4 border rounded-lg h-fit bodyBackgroundColor">
       <div>
         <ImageWithPlaceholder
-          className={"h-[264px] w-full rounded-lg"}
+          className="h-[264px] w-full rounded-lg object-cover "
           src={blog?.image_url}
           alt={blog?.title}
+          width={390}
+          height={264}
+          quality={90}
+          sizes="(max-width: 640px) 100vw, 390px"
         />
       </div>
       <div className="flex gap-2 flex-col">

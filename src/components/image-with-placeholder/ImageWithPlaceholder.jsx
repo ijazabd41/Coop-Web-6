@@ -10,6 +10,10 @@ const ImageWithPlaceholder = ({
   className,
   handleOnClick,
   priority,
+  sizes,
+  quality,
+  width,
+  height,
 }) => {
   const setting = useSelector((state) => state.Setting);
   const [isLoading, setIsLoading] = useState(!src);
@@ -26,10 +30,11 @@ const ImageWithPlaceholder = ({
           : src
       }
       alt={alt}
-      width={1200}
-      height={1000}
+      {...(width && height
+        ? { width, height }
+        : {fill: true, sizes: sizes || "100vw" })}
+      quality={quality ?? 75}
       priority={priority}
-      sizes="(max-width: 640px) 100vw, (max-width:1024px)50vw, 1200px"
       className={className}
       onClick={handleOnClick}
       onLoad={() => {

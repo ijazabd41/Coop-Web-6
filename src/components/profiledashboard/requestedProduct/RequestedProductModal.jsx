@@ -4,6 +4,8 @@ import { t } from "@/utils/translation";
 import { IoIosCloseCircle } from "react-icons/io";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
+import Image from "next/image";
+
 
 const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
   const [description, setDescription] = useState("");
@@ -95,9 +97,11 @@ const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
               />
             ) : (
               <div className="relative inline-block mt-2">
-                <img
+                <Image
                   src={preview}
                   alt="Preview"
+                  width={160}
+                  height={160}
                   className="w-40 h-40 object-cover rounded-md border"
                 />
                 <button

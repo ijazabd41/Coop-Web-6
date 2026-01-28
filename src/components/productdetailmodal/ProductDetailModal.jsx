@@ -418,10 +418,10 @@ const ProductDetailModal = ({
                         <div className="text-xs">
                           {productDetails?.fssai_lic_img && (
                             <Image
-                              width={0}
-                              height={0}
+                              width={36}
+                              height={36}
                               src={productDetails?.fssai_lic_img}
-                              className="w-9 h-9 object-contain"
+                              className="object-contain"
                               alt="fssaiImage"
                             />
                           )}
