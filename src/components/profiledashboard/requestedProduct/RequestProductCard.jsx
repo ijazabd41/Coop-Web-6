@@ -27,6 +27,8 @@ const RequestProductCard = ({ request }) => {
             src={request?.image_url}
             alt="Requested product image"
             className={"w-full h-48 rounded-md object-cover"}
+            height={500}
+            width={500}
           />
         </div>
       </div>

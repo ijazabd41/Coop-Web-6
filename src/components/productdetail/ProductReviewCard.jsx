@@ -31,7 +31,7 @@ const ProductReviewCard = ({ review }) => {
             <div className="flex gap-4 p-4 border-b-2   max-w-full">
                 {/* User Image */}
                 <div className="w-12 h-12  rounded">
-                    <ImageWithPlaceholder src={review?.user?.profile} alt={review?.user?.name} className='h-full w-full rounded-sm' />
+                    <ImageWithPlaceholder src={review?.user?.profile} alt={review?.user?.name} height={100} width={100} className='h-full w-full rounded-sm' />
                 </div>
 
                 {/* Review Content */}
@@ -60,7 +60,7 @@ const ProductReviewCard = ({ review }) => {
                     <div className="flex gap-2 flex-wrap">
                         {review?.images?.map((image, index) => {
                             return (<div className="w-16 h-16 rounded" key={index}>
-                                <ImageWithPlaceholder src={image?.image_url} alt="Rating image" className='h-full w-full rounded' handleOnClick={() => handleLightBox(index)} />
+                                <ImageWithPlaceholder src={image?.image_url} alt="Rating image" height={200} width={200} className='h-full w-full rounded' handleOnClick={() => handleLightBox(index)} />
                             </div>)
                         })}
                     </div>

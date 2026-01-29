@@ -440,6 +440,9 @@ const ProductDetailModal = ({
                         src={selectedImage}
                         alt={productDetails.name}
                         className="h-full w-full aspect-square rounded-sm"
+                        width={424}
+                        height={424}
+                        quality={75}
                       />
                       {selectVariant?.discounted_price !== 0 &&
                         selectVariant?.discounted_price !==
@@ -488,9 +491,11 @@ const ProductDetailModal = ({
                               <ImageWithPlaceholder
                                 src={image}
                                 alt={productDetails.name}
+                                height={600}
+                                width={600}
                                 className="h-full w-full aspect-square rounded-sm"
                                 handleOnClick={() =>
-                                  handleChangeCoverImage(image)
+                                handleChangeCoverImage(image)
                                 }
                               />
                             </div>

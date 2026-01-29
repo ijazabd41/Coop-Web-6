@@ -29,7 +29,9 @@ const HomeOfferSection = ({ offer }) => {
         src={offer?.image_url}
         alt="Offer image"
         width={800} 
-        height={270}
+        height={300}
+        quality={90}
+        priority={true}
         className="object-contain max-h-[270px] h-full w-full rounded-sm"
         handleOnClick={handleOfferClick}
       />

@@ -335,9 +335,10 @@ const CartProductCard = ({
           <ImageWithPlaceholder
             src={product?.image_url}
             alt={product?.name}
-            fill
-            sizes="64px"
-            className=" object-cover"
+            width={380}
+            height={380}
+            
+            className="w-16 h-16 object-cover  flex-shrink-0"
           />
         </div>
         <div>

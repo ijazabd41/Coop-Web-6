@@ -72,8 +72,17 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
 
         <div className="space-y-6">
           {/* Illustration */}
-          <div>
-            <ImageWithPlaceholder src={ReferAndImage} alt="Refer&earnimage" />
+          <div className="flex items-center justify-center">
+            <div className="w-[190px] h-[150px] md:w-[390px] md:h-[288px] relative">
+              <ImageWithPlaceholder
+                src={ReferAndImage}
+                alt="Refer & Earn image"
+                fill
+                sizes="(max-width: 768px) 190px, 390px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
           {/* Referral Code */}
           <div className="primaryDashedBorder rounded-lg p-4">

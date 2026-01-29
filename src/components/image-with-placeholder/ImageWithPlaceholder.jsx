@@ -33,7 +33,7 @@ const ImageWithPlaceholder = ({
       {...(width && height
         ? { width, height }
         : {fill: true, sizes: sizes || "100vw" })}
-      quality={quality ?? 75}
+      quality={quality}
       priority={priority}
       className={className}
       onClick={handleOnClick}

@@ -130,8 +130,8 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
                             {oldRatingImages?.map((image, index) => (
                                 <div key={index} className="relative">
                                     <Image
-                                        height={0}
-                                        width={0}
+                                        height={200}
+                                        width={200}
                                         src={image?.image_url}
                                         alt={`Preview ${index + 1}`}
                                         className="w-24 h-24 object-cover rounded-md"

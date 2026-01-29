@@ -116,8 +116,8 @@ const ProductRatingModal = ({
               {images.map((src, index) => (
                 <div key={index} className="relative">
                   <Image
-                    height={0}
-                    width={0}
+                    height={200}
+                    width={200}
                     src={URL.createObjectURL(src)}
                     alt={`Preview ${index + 1}`}
                     className="w-24 h-24 object-cover rounded-md"

@@ -279,8 +279,8 @@ const Products = () => {
                         <Image
                           src={NoOrderSvg}
                           alt="Product not found"
-                          height={0}
-                          width={0}
+                          width={320}
+                          height={320}
                           className="h-full w-full"
                         />
                       </div>

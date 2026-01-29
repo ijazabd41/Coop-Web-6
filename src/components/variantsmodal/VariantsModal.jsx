@@ -369,6 +369,8 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                 <ImageWithPlaceholder
                   src={product?.image_url}
                   alt={product?.name}
+                  width={200}
+                  height={200}
                   className="h-full w-full"
                 />
               </div>

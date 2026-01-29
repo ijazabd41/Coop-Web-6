@@ -185,6 +185,8 @@ const ProductDescription = ({ product, ratingData }) => {
                                     alt="Rating image"
                                     className="h-full w-full"
                                     handleOnClick={() => handleLightBox(index)}
+                                    height={400}
+                                    width={400}
                                   />
                                   {index === 5 && (
                                     <div
@@ -223,8 +225,8 @@ const ProductDescription = ({ product, ratingData }) => {
                       <ImageWithPlaceholder
                         src={NoReviewImage}
                         alt="No review found"
-                        height={0}
-                        width={0}
+                        height={112}
+                        width={112}
                       />
                     </div>
                     <h2 className="text-xl md:text-2xl font-bold">

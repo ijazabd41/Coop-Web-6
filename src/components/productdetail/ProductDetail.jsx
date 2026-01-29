@@ -445,6 +445,8 @@ const ProductDetail = () => {
                         <ImageWithPlaceholder
                           src={selectedImage}
                           alt={product?.name}
+                          width={430}
+                          height={430}
                           className="h-full w-full aspect-square rounded-sm"
                         />
                       ) : (
@@ -501,6 +503,8 @@ const ProductDetail = () => {
                               <ImageWithPlaceholder
                                 src={image}
                                 alt={product?.name}
+                                height={600}
+                                width={600}
                                 className="h-full w-full aspect-square rounded-sm"
                                 handleOnClick={() =>
                                   handleChangeCoverImage(image)

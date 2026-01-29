@@ -16,7 +16,7 @@ const SearchProductCard = ({ product }) => {
         <Link href={`/product/${product?.slug}`} onClick={() => handleSearchProductClick()} className="w-full">
             <div className="flex items-center gap-3 px-3 py-1 border-b-2">
                 <div className="w-8 h-8">
-                    <ImageWithPlaceholder src={product?.image_url} className="w-full h-full object-cover rounded-sm" alt="product image" />
+                    <ImageWithPlaceholder src={product?.image_url} width={150} height={150} className="w-full h-full object-cover rounded-sm" alt="product image" />
                 </div>
                 <div className="flex flex-col">
                     <div className="text-xl font-semibold max-w-[150px] truncate">{product?.name}</div>

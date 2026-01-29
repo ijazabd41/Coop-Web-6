@@ -37,7 +37,7 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
     setShowCouponCode(false);
   };
   return (
-    <Sheet open={showCouponCode}>
+    <Sheet open={showCouponCode} modal={false}>
       <SheetContent
         className="p-0 w-full sm:w-[900px] overflow-y-auto"
         side={language?.type == "RTL" ? "left" : "right"}
@@ -72,6 +72,8 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                 src={NoCouponFound}
                 alt={"Image not found"}
                 className="h-64 w-64"
+                width={400}
+                height={400}
               />
               <p className="text-xl text-center  font-bold">
                 {t("no_coupon_code_available")}
