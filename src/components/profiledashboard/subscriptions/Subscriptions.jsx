@@ -83,8 +83,8 @@ const Subscription = () => {
                   src={RightTick}
                   alt="right tick"
                   className={`h-9 w-9 object-contain `}
-                  height={0}
-                  width={0}
+                  height={30.58}
+                  width={32}
                 />
               </div>
               <div className="text-white">
@@ -99,8 +99,8 @@ const Subscription = () => {
                   src={DollarBag}
                   alt="dollar bag"
                   className={`h-12 w-12 object-contain `}
-                  height={0}
-                  width={0}
+                  height={22.86}
+                  width={22.86}
                 />
               </div>
               <p className=" font-semibold text-black">
@@ -195,8 +195,9 @@ const Subscription = () => {
                       src={LightImage}
                       alt="light logo"
                       className={`h-12 w-12 object-contain `}
-                      height={0}
-                      width={0}
+                      height={48}
+                      width={40}
+                      unoptimized
                     />
                   </div>
                 </div>
@@ -227,6 +228,7 @@ const Subscription = () => {
                       src={BikeImage}
                       className={`h-8 w-8 object-contain `}
                       alt="light logo"
+                      unoptimized
                     />
                   </div>
                   <div className="flex-grow">

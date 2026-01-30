@@ -122,8 +122,9 @@ const PrevOrder = () => {
             <Image
               src={OrderNotFoundImage}
               alt="Order Not found"
-              height={0}
-              width={0}
+              width={298}
+              height={298}
+              unoptimized
               className="h-1/2 w-1/2"
             />
             <h2 className="text-2xl font-bold">{t("no_order")}</h2>

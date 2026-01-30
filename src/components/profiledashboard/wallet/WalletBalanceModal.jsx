@@ -433,8 +433,9 @@ const WalletBalanceModal = ({
                         <Image
                           src={method.image}
                           className="h-8 w-8"
-                          height={0}
-                          width={0}
+                          height={32}
+                          width={32}
+                          unoptimized
                           alt={t(method.label)}
                         />
                         <p className="font-medium text-base">

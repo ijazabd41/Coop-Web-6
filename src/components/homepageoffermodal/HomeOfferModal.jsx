@@ -44,7 +44,7 @@ const HomeOfferModal = () => {
                     <div className='bg-transparent'>
                         <div className='h-full w-full'>
                             <Link href={setting?.setting?.popup_url || "#"} target="_blank" className="focus-visible:outline-none" onClick={handleClose}>
-                                <Image src={setting?.setting?.popup_image} alt='Offer image' height={0} width={0} className='h-full w-full object-contain focus-visible:outline-none' />
+                                <Image src={setting?.setting?.popup_image} alt='Offer image' height={1000} width={1000} className='h-full w-full object-contain focus-visible:outline-none' />
                             </Link>
                         </div>
                     </div>

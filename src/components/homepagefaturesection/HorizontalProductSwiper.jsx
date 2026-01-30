@@ -112,7 +112,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                 return (
                     <div className='container mb-6' key={offer?.id}>
                         <div className='relative' >
-                            <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                            <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
                         </div>
                     </div>
                 )

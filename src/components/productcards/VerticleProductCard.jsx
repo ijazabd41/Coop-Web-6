@@ -486,6 +486,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               src={product.image_url}
               width={400}
               height={400}
+              priority
             />
             {selectedVariant?.discounted_price !== 0 &&
             selectedVariant?.discounted_price !== selectedVariant?.price ? (

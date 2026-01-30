@@ -63,8 +63,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             src={LightImage}
             alt="light logo"
             className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            height={20}
+            width={20}
+            unoptimized
           />
         </div>
       ),
@@ -78,9 +79,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           <Image
             src={MoneyImage}
             alt="light logo"
-            className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            className={`h-6 w-6 object-contain `}
+            height={20}
+            width={20}
           />
         </div>
       ),
@@ -95,8 +96,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             src={BikeImage}
             alt="light logo"
             className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            height={20}
+            width={20}
           />
         </div>
       ),
@@ -141,8 +142,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         src={LightImage}
                         alt="light logo"
                         className={`h-6 w-6 object-contain `}
-                        height={0}
-                        width={0}
+                        height={20}
+                        width={20}
                       />
                     </div>
                     <div className="flex flex-col">
@@ -159,13 +160,13 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 user?.has_active_subscription == 2 ?
                   <div className="flex flex-col gap-6">
                     <div className="flex items-start w-full justify-between gap-2 md:flex-wrap lg:flex-nowrap">
-                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[62px] md:w-[30px] lg:w-[62px]">
+                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[69px] sm:w-[55px] md:w-[40px] lg:w-[82px] xl:w-[55px]">
                         <Image
                           src={LightImage}
                           alt="light logo"
                           className={`h-6 w-6 object-contain `}
-                          height={0}
-                          width={0}
+                          height={24}
+                          width={24}
                         />
                       </div>
                       <div className="flex flex-col">

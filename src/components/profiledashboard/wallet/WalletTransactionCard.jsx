@@ -7,9 +7,9 @@ const WalletTransactionCard = ({ transaction }) => {
   const setting = useSelector((state) => state.Setting.setting);
   return (
     <div>
-      <div className="border rounded-lg cardBorder p-4 m-4 md:p-2 lg:p-1.7">
+      <div className="border rounded-lg cardBorder pt-4 m-4 ">
         {/* Header: Transaction ID and Date */}
-        <div className="flex justify-between  text-sm mb-3">
+        <div className="flex justify-between  text-sm mb-3 px-4">
           <div>
             <p className="font-semibold text-nowrap">{t("transaction_id")}</p>
             <p className=" font-bold">{transaction?.id}</p>
@@ -21,7 +21,7 @@ const WalletTransactionCard = ({ transaction }) => {
         </div>
 
         {/* Message Section */}
-        <div className="border-t pt-3 mb-4">
+        <div className="border-t pt-3 mb-4 px-4">
           <p className="font-semibold  mb-1">{t("message")}</p>
           <p className="font-bold  leading-snug line-clamp-1">
             {transaction?.message}
@@ -29,7 +29,7 @@ const WalletTransactionCard = ({ transaction }) => {
         </div>
 
         {/* Transaction Amount Section */}
-        <div className=" p-3 rounded-lg flex justify-between items-center backgroundColor">
+        <div className="px-4 py-3 cardBorder rounded-br-lg rounded-bl-lg flex justify-between items-center backgroundColor">
           <div>
             <p className=" text-sm">
               {t("transaction")} {t("amount")}

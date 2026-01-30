@@ -69,8 +69,8 @@ const OrderItems = ({
                   <ImageWithPlaceholder
                     src={product?.image_url}
                     alt="Products"
-                    width={150}
-                    height={150}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 backColor rounded-md"
                   />
                   <div className="max-w-full overflow-hidden">
