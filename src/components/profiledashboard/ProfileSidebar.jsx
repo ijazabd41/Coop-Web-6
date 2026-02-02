@@ -159,22 +159,25 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </div> :
                 user?.has_active_subscription == 2 ?
                   <div className="flex flex-col gap-6">
-                    <div className="flex items-start w-full justify-between gap-2 md:flex-wrap lg:flex-nowrap">
-                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[69px] sm:w-[55px] md:w-[40px] lg:w-[82px] xl:w-[55px]">
-                        <Image
-                          src={LightImage}
-                          alt="light logo"
-                          className={`h-6 w-6 object-contain `}
-                          height={24}
-                          width={24}
-                        />
+                    <div className="flex  md:flex-col lg:flex-row items-start w-full justify-between gap-2 ">
+                      <div className="flex gap-[12px] ">
+                        <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-10  shrink-0">
+                          <Image
+                            src={LightImage}
+                            alt="light logo"
+                            className={`h-6 w-6 object-contain `}
+                            height={24}
+                            width={24}
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <h2 className="font-bold text-base">{user?.subscription_name}</h2>
+                          <p className="text-sm leading-[17px] font-normal">
+                            {t("expired_plan_desc")}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <h2 className="font-bold text-base">{user?.subscription_name}</h2>
-                        <p className="text-sm leading-[17px] font-normal">
-                          {t("expired_plan_desc")}
-                        </p>
-                      </div>
+                      
 
                       <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full ">
                         {t("expired")}

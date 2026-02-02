@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import * as api from "@/api/apiRoutes";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -401,10 +401,9 @@ const NewAddressModal = ({
         <DialogHeader>
           <div className="flex flex-row justify-between items-center">
             <h2 className="font-bold text-xl">{t("new_address")}</h2>
-            <IoIosCloseCircle
-              size={32}
-              onClick={() => handleHideAddressModal()}
-            />
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+              <RiCloseFill size={22} onClick={() => handleHideAddressModal()}/>
+            </div>
           </div>
         </DialogHeader>
         <div className="p-2 ">

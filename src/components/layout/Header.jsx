@@ -23,6 +23,7 @@ import {
   IoSearchOutline,
   IoLanguage,
 } from "react-icons/io5";
+import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from "../cart/CartDrawer";
@@ -36,6 +37,7 @@ import {
   BiCartAlt,
   BiUserCircle,
   BiWallet,
+  BiCart 
 } from "react-icons/bi";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import Link from "next/link";
@@ -256,7 +258,7 @@ const Header = () => {
           <div className="container  flex justify-between items-center h-[40px] px-2">
             <div className="w-[50%]">
               {setting?.setting?.social_media?.length > 0 && (
-                <div className="flex items-center">
+                <div className="flex items-center whitespace-nowrap">
                   <p>{t("follow_us")}</p>
                   <div className="flex">
                     <ul className="flex gap-0 px-[16px] py-[8px]">
@@ -419,7 +421,7 @@ const Header = () => {
                 >
                   {/* <span className='p-3 iconBackgroundColor rounded-full '><IoCartOutline size={24} className='iconsColor' /></span> */}
                   <span className="p-3 iconBackgroundColor rounded-full relative">
-                    <IoCartOutline size={24} className="iconsColor" />
+                    <BiCart  size={24} className="iconsColor" />
                     {cart.isGuest == true ? (
                       <p
                         className={
@@ -437,7 +439,7 @@ const Header = () => {
                       <p
                         className={
                           cart?.cartProducts?.length != 0
-                            ? "flex absolute bodyTextColor top-[-7px] right-0   textBackground rounded-full text-center h-5 w-5 items-center justify-center p-1 font-bold text-sm"
+                            ? "flex absolute bodyTextColor top-[-7px] right-0 textBackground rounded-full text-center h-5 w-5 items-center justify-center p-1 font-bold text-sm"
                             : "none"
                         }
                       >
@@ -472,7 +474,7 @@ const Header = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger className="flex items-center border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
                           <span className="p-3 iconBackgroundColor rounded-full">
-                            <IoPersonOutline size={24} className="iconsColor" />
+                            <LuUser  size={24} className="iconsColor" />
                           </span>
                           {t("profile")}
                         </DropdownMenuTrigger>
@@ -545,7 +547,7 @@ const Header = () => {
                     onClick={handleLoginOpen}
                   >
                     <span className="p-3 iconBackgroundColor rounded-full">
-                      <IoPersonOutline size={24} className="iconsColor" />
+                      <LuUser  size={24} className="iconsColor" />
                     </span>
                     <div className="flex ">
                       <span className="text-base font-bold">{t("login")}</span>
@@ -553,7 +555,7 @@ const Header = () => {
                   </div>
                 )}
               </div>
-              <div className="flex  md:hidden gap-2 order-3 items-center">
+              <div className="flex md:hidden gap-2 order-3 items-center">
                 <div>
                   {themes?.theme == "light" ? (
                     <CiSun

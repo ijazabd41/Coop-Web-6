@@ -67,7 +67,7 @@ const WalletHistory = () => {
                             )
                         }) : transactions?.length > 0 ? transactions?.map((transaction) => {
                             return (
-                                <div className='col-span-12  md:col-span-6 xl:col-span-6 ' key={transaction?.id}>
+                                <div className='col-span-12  md:col-span-6 xl:col-span-6 p-4 md:p-2 lg:p-4' key={transaction?.id}>
                                     <WalletTransactionCard transaction={transaction} />
                                 </div>
                             )

@@ -36,7 +36,7 @@ import { app, auth } from "@/utils/firebase";
 import * as api from "@/api/apiRoutes";
 import { setTokenThunk } from "@/redux/thunk/loginthunk";
 import NewUserModal from "../newusermodal/NewUserModal";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import Register from "../register/Register";
 import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
@@ -807,8 +807,8 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                 className="aspect-square w-full h-full object-cover"
               />
             </div> */}
-            <div>
-              <IoIosCloseCircle size={32} onClick={() => handleHideLogin()} />
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+              <RiCloseFill size={22} onClick={() => handleHideLogin()} />
             </div>
           </DialogHeader>
           <div className="">

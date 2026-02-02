@@ -44,7 +44,7 @@ const ProductSwiperWithImage = ({ section }) => {
                         <div className='flex justify-between items-center mb-3'>
                             <div>
                                 <h2 className='textColor text-2xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.title} </h2>
-                                <p>{section?.short_description}</p>
+                                <p className='shortDescriptionText'>{section?.short_description}</p>
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>

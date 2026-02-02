@@ -24,7 +24,7 @@ import {
   FacebookIcon,
   FacebookShareButton,
 } from "react-share";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import {
   addtoGuestCart,
   setCart,
@@ -350,10 +350,10 @@ const ProductDetailModal = ({
       <Dialog open={showDetailModal}>
         <DialogContent className="max-w-xl lg:max-w-screen-lg overflow-y-scroll max-h-screen ">
           <button
-            className="absolute top-4 right-4 z-10"
+            className="absolute top-4 right-4 z-10 closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer"
             onClick={handleHideDetailModal}
           >
-            <IoIosCloseCircle size={32} />
+            <RiCloseFill size={22} />
           </button>
           {/* <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end">
             {" "}
@@ -510,7 +510,7 @@ const ProductDetailModal = ({
                         selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <>
-                          <h2 className="font-bold text-3xl ">
+                          <h2 className="font-bold text-3xl primaryColor">
                             {currency}
                             {selectVariant?.discounted_price}
                           </h2>
@@ -547,7 +547,7 @@ const ProductDetailModal = ({
                               onClick={() => handleChangeVariant(variant)}
                             >
                               <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
-                              <span className="flex gap-1 text-[13px] line-clamp-1">
+                              <span className="flex gap-1 text-[13px]  line-clamp-1">
                                 <p>
                                   {currency}
                                   {discountPrice != 0 && discountPrice !== price
@@ -608,16 +608,16 @@ const ProductDetailModal = ({
                         </div>
                       )}
 
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center ">
                         <span
-                          className="rounded-full border-2 p-2"
+                          className="rounded-full buttonBorder p-2 hover:primaryBorder"
                           onClick={handleProductLikes}
                         >
                           {favoriteProducts &&
                             favoriteProducts?.includes(product?.id) ? (
-                            <BiSolidHeart size={20} />
+                            <BiSolidHeart size={20} className="primaryFilledColor"/>
                           ) : (
-                            <BiHeart size={20} />
+                            <BiHeart size={20} className="svgColors hover:primaryColor"/>
                           )}
                         </span>
 

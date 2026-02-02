@@ -490,7 +490,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
             />
             {selectedVariant?.discounted_price !== 0 &&
             selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-medium left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-medium left-2 lg:left-4 leading-[16px] px-2 py-1 absolute text-center uppercase top-2 lg:top-4">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
                   selectedVariant?.price
@@ -508,13 +508,13 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
                   favoriteProducts?.includes(product?.id) ? (
                     <BiSolidHeart size={20} className="primaryFilledColor" />
                   ) : (
-                    <BiHeart size={20} />
+                    <BiHeart size={20} className="svgColors  hover:primaryColor"/>
                   )}
                 </span>
               </li>
               <li className="buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor">
                 <div onClick={handleShowDetailModal}>
-                  <GoEye size={20} />
+                  <GoEye size={20} className="svgColors  hover:primaryColor"/>
                 </div>
               </li>
             </ul>
@@ -553,11 +553,11 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
             selectedVariant?.discounted_price !== selectedVariant?.price ? (
               <>
                 {" "}
-                <p className="textColortext-base font-bold">
+                <p className="textColor text-base font-bold">
                   {setting?.currency}
                   {selectedVariant?.discounted_price}
                 </p>
-                <p className="textColor text-[14px] font-normal leading-[17px] m-1 line-through">
+                <p className="SecondaryTextColor text-[14px] font-normal leading-[17px] m-1 line-through">
                   {setting?.currency}
                   {selectedVariant?.price}
                 </p>
@@ -574,7 +574,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           <div className="flex gap-0 md:gap-3 h-[80px] md:h-[44px] w-full flex-col md:flex-row">
             <button
               onClick={(e) => handleShowVariantModal(e, product)}
-              className="md:w-1/2 w-full flex items-center my-[5px] justify-between  rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
+              className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
             >
               {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
               {productsVariants?.length > 1 ? (

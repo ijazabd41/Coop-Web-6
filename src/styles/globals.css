@@ -21,6 +21,8 @@
   --category-card-bg: #fff;
   --nav-button-bg: #8BA2B3;
   --sub-text-color: #595F65;
+  --secondary-text-color:rgba(20, 26, 31, 0.66);  
+  --short-description-text-color:#5C788C;
 }
 
 .dark {
@@ -41,6 +43,8 @@
   --border-color: #4a4949;
   --shimmer-highlight-color: #363e48;
   --brand-bg-color: #40454A;
+  --secondary-text-color:rgba(255,255,255,0.66);
+  --short-description-text-color:#fff;
 }
 
 /* .container {
@@ -57,6 +61,14 @@
     color: var(--sub-text-color)
   }
 
+  .SecondaryTextColor{
+    color: var(--secondary-text-color)
+  }
+
+  .shortDescriptionText{
+    color: var(--short-description-text-color);
+  }
+ 
   .textBackground {
     background-color: var(--font-color);
   }
@@ -177,7 +189,9 @@
     border: 1px solid var(--button-border-color);
   }
 
-
+  .svgColors {
+    color:var(--button-border-color);
+  }
 
   .bottomBorder {
     border-bottom: 1px solid var(--border-color);
@@ -372,6 +386,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .react-tel-input .country-list .country.highlight {
   background-color: var(--bs-body-bg) !important;
+}
+.closeButtonBg {
+  background-color: var(--swiper-background-color);
 }
 
 @layer base {

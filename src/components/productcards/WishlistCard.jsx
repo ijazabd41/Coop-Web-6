@@ -297,7 +297,7 @@ const WishlistCard = ({
                 {setting?.currency}
                 {product?.variants[0]?.discounted_price}
               </p>
-              <p className="textColor text-[14px] font-normal leading-[17px] m-1 line-through">
+              <p className="SecondaryTextColor text-[14px] font-normal leading-[17px] m-1 line-through">
                 {setting?.currency}
                 {product?.variants[0]?.price}
               </p>

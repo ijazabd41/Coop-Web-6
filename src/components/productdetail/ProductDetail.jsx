@@ -421,6 +421,9 @@ const ProductDetail = () => {
           <ImageWithPlaceholder
             src={ProductNotFoundImage}
             alt={"not product found"}
+            unoptimized
+            loading="lazy"
+            fetchPriority="low"
           />
           <p className="text-3xl font-bold w-1/3 text-center">
             {t("oops")} {t("product_is_either_unavailable_or_does_not_exist")}

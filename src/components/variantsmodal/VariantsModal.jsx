@@ -3,7 +3,7 @@ import { FaShoppingBasket } from "react-icons/fa";
 import * as api from "@/api/apiRoutes";
 import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import {
   addGuestCartTotal,
@@ -359,8 +359,8 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
         <DialogContent className="max-w-xl ">
           <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
             {t("chooseVariant")}
-            <div>
-              <IoIosCloseCircle size={32} onClick={handleHideVariantModal} />
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] ">
+              <RiCloseFill  size={22} onClick={handleHideVariantModal} />
             </div>
           </DialogHeader>
           <div className="p-2 md:p-6">

@@ -34,7 +34,7 @@ const VerticleCardContainer = ({ section }) => {
                     <div className='flex justify-between items-center mb-3'>
                         <div>
                             <h2 className='text-2xl font-bold'>{section?.title}</h2>
-                            <p className='text-base font-[500]'>{section?.short_description}</p>
+                            <p className='text-base font-[500] shortDescriptionText'>{section?.short_description}</p>
                         </div>
 
                         <div>

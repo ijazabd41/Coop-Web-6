@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
 import Image from 'next/image';
 import Link from 'next/link';
-import { IoIosCloseCircle } from 'react-icons/io';
+import { RiCloseFill } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsPopupSeen } from '@/redux/slices/settingSlice';
 
@@ -38,7 +38,7 @@ const HomeOfferModal = () => {
                 <DialogContent className='bg-transparent border-none shadow-none focus-visible:outline-none focus-within:border-none' onInteractOutside={(e) => e.preventDefault()} aria-describedby={undefined}>
                     <DialogHeader>
                         <DialogTitle>
-                            <div className='flex justify-end'><IoIosCloseCircle className='w-12 h-12 textColor cursor-pointer' onClick={handleClose} /></div>
+                            <div className='flex justify-end'><RiCloseFill className='w-12 h-12 textColor closeButtonBg rounded-full p-[8px]  cursor-pointer' onClick={handleClose} /></div>
                         </DialogTitle>
                     </DialogHeader>
                     <div className='bg-transparent'>

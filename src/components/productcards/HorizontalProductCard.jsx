@@ -467,7 +467,7 @@ const HorizontalProductCard = ({ product }) => {
             />
             {selectedVariant?.discounted_price !== 0 &&
             selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
                   selectedVariant?.price
@@ -477,23 +477,23 @@ const HorizontalProductCard = ({ product }) => {
             ) : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
               <li
-                className="buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
+                className="buttonBorder hover:primaryBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
                 onClick={handleProductLikes}
               >
                 <span>
                   {favoriteProducts &&
                   favoriteProducts?.includes(product?.id) ? (
-                    <BiSolidHeart size={20} />
+                    <BiSolidHeart size={20} className="primaryFilledColor"/>
                   ) : (
-                    <BiHeart size={20} />
+                    <BiHeart size={20} className="svgColors  hover:primaryColor"/>
                   )}
                 </span>
               </li>
               <li
-                className="buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
+                className="buttonBorder hover:primaryBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
                 onClick={handleShowDetailModal}
               >
-                <FaRegEye size={18} className="fontColor" />
+                <FaRegEye size={18} className=" svgColors  hover:primaryColor" />
               </li>
             </ul>
           </div>
@@ -542,7 +542,7 @@ const HorizontalProductCard = ({ product }) => {
                     </p>
                   </>
                 ) : (
-                  <p className="text-base font-bold">
+                  <p className="text-base font-bold ">
                     {setting?.currency}
                     {selectedVariant?.price}
                   </p>
@@ -552,7 +552,7 @@ const HorizontalProductCard = ({ product }) => {
             {!isProductAvailabel ? (
               <div className="flex gap-3  w-full flex-col ">
                 <button
-                  className=" w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground "
+                  className=" w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground  SecondaryTextColor"
                   onClick={(e) => handleShowVariantModal(e, product)}
                 >
                   {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
@@ -567,7 +567,8 @@ const HorizontalProductCard = ({ product }) => {
                 {isProductAlreadyAdded ? (
                   <div className="flex justify-between w-full">
                     <button
-                      className="rounded-[2px] primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg "
+                      className="rounded-[2px] primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg shrink-0
+ "
                       onClick={handleQuantityDecrease}
                     >
                       <BiMinus />
@@ -581,7 +582,8 @@ const HorizontalProductCard = ({ product }) => {
                       className="text-center w-full"
                     />
                     <button
-                      className="rounded-[2px] primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg "
+                      className="rounded-[2px] primaryBackColor h-[38px] w-8 p-1 flex items-center justify-center font-bold text-white text-lg shrink-0
+"
                       onClick={handleQuantityIncrease}
                     >
                       <BiPlus />

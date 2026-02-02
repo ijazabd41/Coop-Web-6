@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { t } from "@/utils/translation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import * as api from "@/api/apiRoutes";
@@ -302,8 +302,8 @@ const ForgetPasswordModal = ({
       <DialogContent>
         <DialogHeader className="flex justify-between items-center flex-row">
           <h1 className="font-bold text-xl">{t("forget_password")}</h1>
-          <div>
-            <IoIosCloseCircle size={32} onClick={() => handleShowModal()} />
+          <div className="closeButtonBg rounded-full p-[8px] cursor-pointer">
+            <RiCloseFill size={22} onClick={() => handleShowModal()} />
           </div>
         </DialogHeader>
         <div>
