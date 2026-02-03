@@ -456,7 +456,7 @@ const ProductDetail = () => {
                         <ProductZoomImage image={selectedImage} />
                       )}
                       {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
+                        selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 absolute text-center uppercase  top-3">
                           {calculateDiscount(
@@ -471,9 +471,8 @@ const ProductDetail = () => {
                     </div>
                     <div
                       dir={language?.type}
-                      className={`mt-[10px] ${
-                        language?.type == "RTL" ? "flex-row-reverse" : ""
-                      }`}
+                      className={`mt-[10px] ${language?.type == "RTL" ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <Swiper
                         spaceBetween={10}
@@ -522,7 +521,7 @@ const ProductDetail = () => {
                   <div className="col-span-12 md:col-span-8 flex flex-col gap-6">
                     <div className="pb-6 border-b-2 flex flex-col gap-2">
                       <h2 className="font-bold text-2xl break-all">
-                        {product?.name}
+                        {product?.translations?.name}
                       </h2>
 
                       <div className="flex gap-4 items-center flex-wrap">
@@ -536,7 +535,7 @@ const ProductDetail = () => {
                                 handleProductListNavigation(product?.seller_id)
                               }
                             >
-                              {product?.seller_name}
+                              {product?.seller?.translations?.name}
                             </span>
                             {/* </div> */}
                           </div>
@@ -544,7 +543,7 @@ const ProductDetail = () => {
 
                         <div className="flex gap-4">
                           {ratingData?.average_rating > 0 &&
-                          product?.product_rating == true ? (
+                            product?.product_rating == true ? (
                             <div className="px-2">
                               <div className="flex gap-1 items-center">
                                 <div className="flex">
@@ -620,7 +619,7 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
+                        selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <>
                           <h2 className="font-bold text-3xl ">
@@ -654,11 +653,10 @@ const ProductDetail = () => {
                           const price = variant?.price;
                           return (
                             <div
-                              className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${
-                                selectVariant?.id == variant?.id
-                                  ? "primaryBorder addToCartColor"
-                                  : "cardBorder"
-                              }`}
+                              className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${selectVariant?.id == variant?.id
+                                ? "primaryBorder addToCartColor"
+                                : "cardBorder"
+                                }`}
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
@@ -671,7 +669,7 @@ const ProductDetail = () => {
                                     : price}
                                 </p>
                                 {discountPrice != 0 &&
-                                discountPrice !== price ? (
+                                  discountPrice !== price ? (
                                   <p className="line-through">
                                     {currency}
                                     {price}
@@ -730,7 +728,7 @@ const ProductDetail = () => {
                           onClick={handleProductLikes}
                         >
                           {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id) ? (
+                            favoriteProducts?.includes(product?.id) ? (
                             <BiSolidHeart size={20} />
                           ) : (
                             <BiHeart size={20} />
@@ -739,7 +737,7 @@ const ProductDetail = () => {
                         <span>
                           {" "}
                           {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id)
+                            favoriteProducts?.includes(product?.id)
                             ? t("removeTowishlist")
                             : t("addToWishlist")}
                         </span>

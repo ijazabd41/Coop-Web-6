@@ -436,11 +436,11 @@ const HorizontalProductCard = ({ product }) => {
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty;
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&
@@ -463,10 +463,10 @@ const HorizontalProductCard = ({ product }) => {
               src={product.image_url}
               width={700}
               height={700}
-              
+
             />
             {selectedVariant?.discounted_price !== 0 &&
-            selectedVariant?.discounted_price !== selectedVariant?.price ? (
+              selectedVariant?.discounted_price !== selectedVariant?.price ? (
               <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
@@ -482,10 +482,10 @@ const HorizontalProductCard = ({ product }) => {
               >
                 <span>
                   {favoriteProducts &&
-                  favoriteProducts?.includes(product?.id) ? (
-                    <BiSolidHeart size={20} className="primaryFilledColor"/>
+                    favoriteProducts?.includes(product?.id) ? (
+                    <BiSolidHeart size={20} className="primaryFilledColor" />
                   ) : (
-                    <BiHeart size={20} className="svgColors  hover:primaryColor"/>
+                    <BiHeart size={20} className="svgColors  hover:primaryColor" />
                   )}
                 </span>
               </li>
@@ -502,13 +502,13 @@ const HorizontalProductCard = ({ product }) => {
           <div className="flex flex-col  justify-between">
             <div className="flex flex-col h-[100px] justify-between">
               <h3 className="flex  text-[16px] font-bold leading-[1.2]  max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
-                {product?.name}
+                {product?.translations?.name}
               </h3>
               {selectedVariant?.few_quantity_left == true && (
                 <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
               )}
               {product?.average_rating > 0 &&
-              product?.product_rating == true ? (
+                product?.product_rating == true ? (
                 <div className="rating">
                   <div className="flex">
                     <div className="flex">
@@ -516,11 +516,10 @@ const HorizontalProductCard = ({ product }) => {
                         <FaStar
                           key={star}
                           size={15}
-                          className={`${
-                            star <= product?.average_rating
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "fill-gray-200 text-gray-200"
-                          }`}
+                          className={`${star <= product?.average_rating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "fill-gray-200 text-gray-200"
+                            }`}
                         />
                       ))}
                     </div>
@@ -529,7 +528,7 @@ const HorizontalProductCard = ({ product }) => {
               ) : null}
               <div className="flex">
                 {selectedVariant?.discounted_price !== 0 &&
-                selectedVariant?.discounted_price !== selectedVariant?.price ? (
+                  selectedVariant?.discounted_price !== selectedVariant?.price ? (
                   <>
                     {" "}
                     <p className=" text-base font-bold">
