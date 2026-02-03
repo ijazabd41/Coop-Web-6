@@ -19,7 +19,7 @@ import { t } from "@/utils/translation";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { FaCaretDown } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -47,8 +47,8 @@ const MobileNavSidebar = ({ open, setOpen, handleLanguageChange }) => {
                 className="object-contain"
               />
             </div>
-            <SheetTrigger className="focus:outline-none">
-              <IoIosCloseCircle size={32} />
+            <SheetTrigger className="focus:outline-none closeButtonBg rounded-full p-[8px]">
+              <RiCloseFill size={22} />
             </SheetTrigger>
           </SheetTitle>
         </SheetHeader>

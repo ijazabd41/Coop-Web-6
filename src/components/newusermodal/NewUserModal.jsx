@@ -6,7 +6,7 @@ import Image from "next/image";
 import Logo from "/public/logo.png";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import {
   addtoGuestCart,
@@ -188,8 +188,8 @@ const NewUserModal = ({
           <div className="">
             <h1 className="text-3xl font-bold">{t("register")}</h1>
           </div>
-          <div>
-            <IoIosCloseCircle size={32} onClick={() => setShowNewUser(false)} />
+          <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+            <RiCloseFill size={22} onClick={() => setShowNewUser(false)} />
           </div>
         </DialogHeader>
         <div>

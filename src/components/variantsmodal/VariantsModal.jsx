@@ -359,7 +359,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
         <DialogContent className="max-w-xl ">
           <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
             {t("chooseVariant")}
-            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] ">
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
               <RiCloseFill  size={22} onClick={handleHideVariantModal} />
             </div>
           </DialogHeader>

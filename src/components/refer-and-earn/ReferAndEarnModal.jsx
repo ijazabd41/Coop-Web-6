@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import ReferAndImage from "@/assets/referandearnimage.svg";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import { t } from "@/utils/translation";
@@ -53,9 +53,9 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
     <Dialog open={showReferAndEarn} onOpenChange={setShowReferAndEarn}>
       <DialogContent className="lg:max-w-2xl md:max-w-xl max-w-sm">
         <DialogHeader className="flex items-end">
-          <div className="flex">
-            <IoIosCloseCircle
-              size={32}
+          <div className="flex closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+            <RiCloseFill
+              size={22}
               onClick={() => setShowReferAndEarn(false)}
               className=""
             />

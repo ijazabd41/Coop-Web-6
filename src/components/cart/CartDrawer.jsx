@@ -9,7 +9,7 @@ import {
 import CartProductsCard from "./CartDrawerProductsCard";
 import { useSelector } from "react-redux";
 import * as api from "@/api/apiRoutes";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import NoCartData from "@/assets/Empty_Cart.svg";
 import Image from "next/image";
 import {
@@ -168,10 +168,10 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
           <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
             <SheetTitle className="text-2xl font-bold flex flex-row items-center p-2 justify-between">
               <p className="text-2xl font-bold">{t("shoppingCart")}</p>
-              <div>
-                <IoIosCloseCircle
+              <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+                <RiCloseFill
                   className="hover:cursor-pointer"
-                  size={32}
+                  size={22}
                   onClick={() => setShowCart(false)}
                 />
               </div>

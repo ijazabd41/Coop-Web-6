@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
 import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { MdOutlineStar } from "react-icons/md";
 import { TbCameraPlus } from "react-icons/tb";
 import Image from "next/image";
@@ -70,8 +71,8 @@ const ProductRatingModal = ({
       <DialogContent>
         <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
           {t("rate_the_product")}
-          <div>
-            <IoIosCloseCircle size={32} onClick={handleHideRatingModal} />
+          <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+            <RiCloseFill size={22} onClick={handleHideRatingModal} />
           </div>
         </DialogHeader>
         <div className="">

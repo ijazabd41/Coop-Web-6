@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import Filter from "./ProductFilter";
 import { t } from "@/utils/translation";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 
 const FilterDrawer = ({
@@ -34,9 +34,9 @@ const FilterDrawer = ({
         <SheetHeader className="px-0 py-3  flex justify-between text-left ">
           <SheetTitle className="text-2xl font-bold flex flex-row items-center p-0 justify-between">
             <p className="text-2xl font-bold">{t("filter")}</p>
-            <div>
-              <IoIosCloseCircle
-                size={32}
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+              <RiCloseFill
+                size={22}
                 onClick={() => setShowFilter(false)}
               />
             </div>

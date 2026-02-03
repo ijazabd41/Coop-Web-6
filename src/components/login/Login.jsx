@@ -807,7 +807,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                 className="aspect-square w-full h-full object-cover"
               />
             </div> */}
-            <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
               <RiCloseFill size={22} onClick={() => handleHideLogin()} />
             </div>
           </DialogHeader>

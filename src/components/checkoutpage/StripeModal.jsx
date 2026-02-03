@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import {
   useStripe,
   useElements,
@@ -201,9 +201,9 @@ const StripeModal = ({
         <DialogHeader>
           <div className="flex flex-row justify-between items-center">
             <p className="text-2xl font-bold">{t("stripe")}</p>
-            <div>
-              <IoIosCloseCircle
-                size={32}
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+              <RiCloseFill
+                size={22}
                 onClick={() => setShowStripe(false)}
               />
             </div>

@@ -55,7 +55,7 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import SearchComponent from "../search/SearchComponent";
 import { useMediaQuery } from "react-responsive";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { setSelectedLanguage } from "@/redux/slices/languageSlice";
 import Image from "next/image";
 import MobileNavSidebar from "../mobile-nav-sidebar/MobileNavSidebar";
@@ -661,8 +661,8 @@ const Header = () => {
             <SheetHeader>
               <SheetTitle className="flex justify-between px-4 py-2 items-center">
                 {t("search")}
-                <SheetTrigger className="focus:outline-none">
-                  <IoIosCloseCircle size={32} />
+                <SheetTrigger className="focus:outline-none closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+                  <RiCloseFill size={22} />
                 </SheetTrigger>
               </SheetTitle>
               <SheetDescription>

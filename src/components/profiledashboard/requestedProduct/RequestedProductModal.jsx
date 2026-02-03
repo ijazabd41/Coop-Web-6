@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
 import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -53,11 +54,13 @@ const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="flex justify-between items-center flex-row">
           <h1 className="font-bold text-xl">{t("requestProduct")}</h1>
-          <IoIosCloseCircle
-            size={32}
-            className="cursor-pointer hover:text-gray-500 transition"
+          <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+          <RiCloseFill
+            size={22}
+            className="cursor-pointer hover:text-gray-500 transition "
             onClick={() => setShowModal(false)}
           />
+          </div>
         </DialogHeader>
 
         <div className="mt-4">
