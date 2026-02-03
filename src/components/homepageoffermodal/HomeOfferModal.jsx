@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
 import Image from 'next/image';
 import Link from 'next/link';
-import { IoIosCloseCircle } from 'react-icons/io';
+import { RiCloseFill } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsPopupSeen } from '@/redux/slices/settingSlice';
 
@@ -38,13 +38,13 @@ const HomeOfferModal = () => {
                 <DialogContent className='bg-transparent border-none shadow-none focus-visible:outline-none focus-within:border-none' onInteractOutside={(e) => e.preventDefault()} aria-describedby={undefined}>
                     <DialogHeader>
                         <DialogTitle>
-                            <div className='flex justify-end'><IoIosCloseCircle className='w-12 h-12 textColor cursor-pointer' onClick={handleClose} /></div>
+                            <div className='flex justify-end'><RiCloseFill className='w-12 h-12 textColor closeButtonBg rounded-full p-[8px]  cursor-pointer' onClick={handleClose} /></div>
                         </DialogTitle>
                     </DialogHeader>
                     <div className='bg-transparent'>
                         <div className='h-full w-full'>
                             <Link href={setting?.setting?.popup_url || "#"} target="_blank" className="focus-visible:outline-none" onClick={handleClose}>
-                                <Image src={setting?.setting?.popup_image} alt='Offer image' height={0} width={0} className='h-full w-full object-contain focus-visible:outline-none' />
+                                <Image src={setting?.setting?.popup_image} alt='Offer image' height={1000} width={1000} className='h-full w-full object-contain focus-visible:outline-none' />
                             </Link>
                         </div>
                     </div>

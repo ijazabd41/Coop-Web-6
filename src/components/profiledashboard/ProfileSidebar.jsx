@@ -63,8 +63,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             src={LightImage}
             alt="light logo"
             className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            height={20}
+            width={20}
+            unoptimized
           />
         </div>
       ),
@@ -78,9 +79,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           <Image
             src={MoneyImage}
             alt="light logo"
-            className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            className={`h-6 w-6 object-contain `}
+            height={20}
+            width={20}
           />
         </div>
       ),
@@ -95,8 +96,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             src={BikeImage}
             alt="light logo"
             className={`h-5 w-5 object-contain `}
-            height={0}
-            width={0}
+            height={20}
+            width={20}
           />
         </div>
       ),
@@ -141,8 +142,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         src={LightImage}
                         alt="light logo"
                         className={`h-6 w-6 object-contain `}
-                        height={0}
-                        width={0}
+                        height={20}
+                        width={20}
                       />
                     </div>
                     <div className="flex flex-col">
@@ -158,22 +159,25 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </div> :
                 user?.has_active_subscription == 2 ?
                   <div className="flex flex-col gap-6">
-                    <div className="flex items-start w-full justify-between gap-2 md:flex-wrap lg:flex-nowrap">
-                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-[62px] md:w-[30px] lg:w-[62px]">
-                        <Image
-                          src={LightImage}
-                          alt="light logo"
-                          className={`h-6 w-6 object-contain `}
-                          height={0}
-                          width={0}
-                        />
+                    <div className="flex  md:flex-col lg:flex-row items-start w-full justify-between gap-2 ">
+                      <div className="flex gap-[12px] ">
+                        <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-10  shrink-0">
+                          <Image
+                            src={LightImage}
+                            alt="light logo"
+                            className={`h-6 w-6 object-contain `}
+                            height={24}
+                            width={24}
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <h2 className="font-bold text-base">{user?.subscription_name}</h2>
+                          <p className="text-sm leading-[17px] font-normal">
+                            {t("expired_plan_desc")}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <h2 className="font-bold text-base">{user?.subscription_name}</h2>
-                        <p className="text-sm leading-[17px] font-normal">
-                          {t("expired_plan_desc")}
-                        </p>
-                      </div>
+                      
 
                       <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full ">
                         {t("expired")}
@@ -230,9 +234,10 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               <Image
                 src={user?.profile}
                 alt="Profile"
-                height={0}
-                width={0}
-                className="w-12 h-12 rounded-sm"
+                height={48}
+                width={48}
+                className="rounded-sm"
+                unoptimized
               />
               <div className="ml-3">
                 <p className="text-base textColor">{t("hello")},</p>

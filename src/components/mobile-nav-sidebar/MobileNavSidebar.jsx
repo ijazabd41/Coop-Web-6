@@ -19,7 +19,7 @@ import { t } from "@/utils/translation";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { FaCaretDown } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -37,17 +37,18 @@ const MobileNavSidebar = ({ open, setOpen, handleLanguageChange }) => {
       >
         <SheetHeader>
           <SheetTitle className="flex justify-between px-4 py-4 items-center border-b">
-            <div className="w-36 h-9">
+            <div className="w-36 h-9 relative">
               <Image
                 src={setting?.web_settings?.web_logo}
-                alt={"mobileLogo"}
-                className="w-full h-full object-contain"
-                width={0}
-                height={0}
+                alt="mobileLogo"
+                fill
+                sizes="144px"
+                priority
+                className="object-contain"
               />
             </div>
-            <SheetTrigger className="focus:outline-none">
-              <IoIosCloseCircle size={32} />
+            <SheetTrigger className="focus:outline-none closeButtonBg rounded-full p-[8px]">
+              <RiCloseFill size={22} />
             </SheetTrigger>
           </SheetTitle>
         </SheetHeader>

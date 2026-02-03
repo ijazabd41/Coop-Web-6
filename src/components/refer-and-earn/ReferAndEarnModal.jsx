@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import ReferAndImage from "@/assets/referandearnimage.svg";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import { t } from "@/utils/translation";
@@ -53,9 +53,9 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
     <Dialog open={showReferAndEarn} onOpenChange={setShowReferAndEarn}>
       <DialogContent className="lg:max-w-2xl md:max-w-xl max-w-sm">
         <DialogHeader className="flex items-end">
-          <div className="flex">
-            <IoIosCloseCircle
-              size={32}
+          <div className="flex closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+            <RiCloseFill
+              size={22}
               onClick={() => setShowReferAndEarn(false)}
               className=""
             />
@@ -72,8 +72,17 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
 
         <div className="space-y-6">
           {/* Illustration */}
-          <div>
-            <ImageWithPlaceholder src={ReferAndImage} alt="Refer&earnimage" />
+          <div className="flex items-center justify-center">
+            <div className="w-[190px] h-[150px] md:w-[390px] md:h-[288px] relative">
+              <ImageWithPlaceholder
+                src={ReferAndImage}
+                alt="Refer & Earn image"
+                fill
+                sizes="(max-width: 768px) 190px, 390px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
           {/* Referral Code */}
           <div className="primaryDashedBorder rounded-lg p-4">

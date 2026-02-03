@@ -88,6 +88,8 @@ const BlogDetail = () => {
                 className={" w-full aspect-video rounded-md  "}
                 src={blog?.image_url}
                 alt={blog?.title}
+                height={600}
+                width={1000}
               />
             </div>
             <div className="p-3 flex flex-col md:flex-row  gap-2 md:gap-10 bodyBackgroundColor rounded-lg">

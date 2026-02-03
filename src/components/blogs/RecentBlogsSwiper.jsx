@@ -24,7 +24,7 @@ const RecentBlogsSwiper = ({ recentBlogs }) => {
                   <h2 className="textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0">
                     {t("recentlyAddedBlogs")}
                   </h2>
-                  <p className="">{t("recentlyAddedBlogsDesc")}</p>
+                  <p className="shortDescriptionText">{t("recentlyAddedBlogsDesc")}</p>
                 </div>
                 <div className="flex  gap-0 md:gap-4 items-center flex-col md:flex-row">
                   <div

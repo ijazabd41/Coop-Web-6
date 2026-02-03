@@ -331,15 +331,18 @@ const CartProductCard = ({
     <div className="grid grid-cols-12 items-center gap-4 p-4 border-b min-w-[600px]">
       {/* Product Image and Details */}
       <div className="col-span-4 flex space-x-4">
-        <div className="w-16 h-16 rounded-sm">
+        <div className="relative w-16 h-16 rounded-sm flex-shrink-0">
           <ImageWithPlaceholder
             src={product?.image_url}
             alt={product?.name}
-            className="h-full w-full object-cover"
+            width={380}
+            height={380}
+            
+            className="w-16 h-16 object-cover  flex-shrink-0"
           />
         </div>
         <div>
-          <h3 className="text-base font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[170px]">
+          <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
             {product?.name}
           </h3>
 

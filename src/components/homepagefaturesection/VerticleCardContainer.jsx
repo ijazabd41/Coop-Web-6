@@ -34,7 +34,7 @@ const VerticleCardContainer = ({ section }) => {
                     <div className='flex justify-between items-center mb-3'>
                         <div>
                             <h2 className='text-2xl font-bold'>{section?.title}</h2>
-                            <p className='text-base font-[500]'>{section?.short_description}</p>
+                            <p className='text-base font-[500] shortDescriptionText'>{section?.short_description}</p>
                         </div>
 
                         <div>
@@ -59,7 +59,7 @@ const VerticleCardContainer = ({ section }) => {
                 return (
                     <div className='container mb-6' key={index}>
                         <div className='relative' key={offer?.id}>
-                            <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                            <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
                         </div>
                     </div>
                 )

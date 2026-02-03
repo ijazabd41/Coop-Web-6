@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from 'react-icons/io';
+import { RiCloseFill } from "react-icons/ri";
 import { t } from '@/utils/translation';
 import { toast } from 'react-toastify';
 import * as api from "@/api/apiRoutes"
@@ -47,8 +47,8 @@ const ReturnReasonModal = ({ showReturnModal, setShowReturnModal, selectedProduc
             <DialogContent>
                 <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
                     {t("return_reason")}
-                    <div>
-                        <IoIosCloseCircle size={32} onClick={handleHideReturnModal} />
+                    <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+                        <RiCloseFill size={22} onClick={handleHideReturnModal} />
                     </div>
                 </DialogHeader>
                 <div className='flex flex-col gap-2'>

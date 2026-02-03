@@ -232,11 +232,13 @@ const WishlistCard = ({
       <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
         {/* Product Image and Details */}
         <div className="col-span-4 flex space-x-5">
-          <div className="w-16 h-16 rounded-sm">
+          <div className="w-16 h-16 rounded-sm flex-shrink-0">
             <ImageWithPlaceholder
               src={product?.image_url}
               alt="Image"
               className="h-full w-full object-cover"
+              height={400}
+              width={400}
             />
           </div>
           <div className="flex flex-col">
@@ -295,7 +297,7 @@ const WishlistCard = ({
                 {setting?.currency}
                 {product?.variants[0]?.discounted_price}
               </p>
-              <p className="textColor text-[14px] font-normal leading-[17px] m-1 line-through">
+              <p className="SecondaryTextColor text-[14px] font-normal leading-[17px] m-1 line-through">
                 {setting?.currency}
                 {product?.variants[0]?.price}
               </p>

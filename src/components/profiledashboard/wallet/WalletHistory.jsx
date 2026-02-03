@@ -67,12 +67,12 @@ const WalletHistory = () => {
                             )
                         }) : transactions?.length > 0 ? transactions?.map((transaction) => {
                             return (
-                                <div className='col-span-12  md:col-span-6 lg:col-span-4 ' key={transaction?.id}>
+                                <div className='col-span-12  md:col-span-6 xl:col-span-6 p-4 md:p-2 lg:p-4' key={transaction?.id}>
                                     <WalletTransactionCard transaction={transaction} />
                                 </div>
                             )
                         }) : <div className=' col-span-12 h-full w-full flex items-center justify-center flex-col gap-2 p-2'>
-                            <Image src={NoTransactionFound} alt='Transactions Not found' height={0} width={0} className='h-3/4 w-3/4' />
+                            <Image src={NoTransactionFound} alt='Transactions Not found' height={320} width={320} unoptimized className='h-3/4 w-3/4' />
                             <h2 className='text-2xl font-bold'>{t("no_transaction")}</h2>
                         </div>}
                         {loadingMore ?

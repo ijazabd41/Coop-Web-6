@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setShop } from "@/redux/slices/shopSlice";
 import Loader from "../loader/Loader";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { darkThemeStyles } from "@/utils/mapColor";
 
 const Location = ({ showLocation, setShowLocation }) => {
@@ -421,9 +421,9 @@ const Location = ({ showLocation, setShowLocation }) => {
               {setting.setting?.default_city == null && city?.city == null ? (
                 <></>
               ) : (
-                <div>
-                  <IoIosCloseCircle
-                    size={32}
+                <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+                  <RiCloseFill
+                    size={22}
                     onClick={() => handleShowModal()}
                   />
                 </div>

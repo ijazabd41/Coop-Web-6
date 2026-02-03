@@ -10,6 +10,10 @@ const ImageWithPlaceholder = ({
   className,
   handleOnClick,
   priority,
+  sizes,
+  quality,
+  width,
+  height,
 }) => {
   const setting = useSelector((state) => state.Setting);
   const [isLoading, setIsLoading] = useState(!src);
@@ -17,7 +21,7 @@ const ImageWithPlaceholder = ({
 
   // NOTE:Change from nextjs Image to regular img to get rid of placeholder image error
   return (
-    <img
+    <Image
       src={
         !src || isLoading || isError
           ? setting?.setting?.web_settings?.placeholder_image
@@ -26,8 +30,10 @@ const ImageWithPlaceholder = ({
           : src
       }
       alt={alt}
-      width={0}
-      height={0}
+      {...(width && height
+        ? { width, height }
+        : {fill: true, sizes: sizes || "100vw" })}
+      quality={quality}
       priority={priority}
       className={className}
       onClick={handleOnClick}

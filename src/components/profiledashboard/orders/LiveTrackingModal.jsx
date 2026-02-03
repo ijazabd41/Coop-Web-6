@@ -1,6 +1,6 @@
 import React, { use, useCallback, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes";
 import { useSelector } from "react-redux";
@@ -150,8 +150,8 @@ const LiveTrackingModal = ({
       <DialogContent className="w-full ">
         <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
           {t("livetracking")}
-          <div>
-            <IoIosCloseCircle size={32} onClick={handleHideLiveTracking} />
+          <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
+            <RiCloseFill size={22} onClick={handleHideLiveTracking} />
           </div>
         </DialogHeader>
         <div className="flex flex-col gap-4">

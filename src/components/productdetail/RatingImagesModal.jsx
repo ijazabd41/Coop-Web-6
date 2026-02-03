@@ -35,7 +35,12 @@ const RatingImagesModal = ({ showImagesModal, setShowImagesModal, images }) => {
                                     <ImageWithPlaceholder
                                         src={image}
                                         alt="Rating image"
-                                        className="h-full w-full"
+                                        width={96}
+                                        height={96}
+                                        sizes="96px"
+                                        quality={75}
+                                        loading="lazy"
+                                        className="h-full w-full object-cover"
                                         onClick={() => handleLightBox(index)}
                                     /></div>
                             )

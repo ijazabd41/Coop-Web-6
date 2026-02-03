@@ -48,7 +48,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                                 <div className='flex justify-between items-center mb-3 '>
                                     <div className='w-1/2'>
                                         <h2 className='textColor text-xl sm:text-3xl font-extrabold  leading-[29px] m-0'>{section?.title}</h2>
-                                        <p className=''>{section?.short_description}</p>
+                                        <p className='shortDescriptionText'>{section?.short_description}</p>
                                     </div>
                                     <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                         <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>
@@ -112,7 +112,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                 return (
                     <div className='container mb-6' key={offer?.id}>
                         <div className='relative' >
-                            <Image src={offer?.image_url} alt='Offer image' height={0} width={0} className='object-contain h-full w-full rounded-sm' />
+                            <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
                         </div>
                     </div>
                 )

@@ -27,6 +27,7 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { GoEye } from "react-icons/go";
 
 const ListViewProductCard = ({ product }) => {
   const dispatch = useDispatch();
@@ -456,18 +457,27 @@ const ListViewProductCard = ({ product }) => {
     <div>
       <Link
         href={`/product/${product?.slug}`}
-        className="grid grid-cols-12 items-center w-full p-3 group border-2 headerBackgroundColor rounded-md"
+        className="flex flex-col md:flex-row w-full justify-between  group cardBorder headerBackgroundColor rounded-md"
       >
-        <div className="col-span-6 md:col-span-2">
-          <div className="relative h-1/2 w-full  object-cover">
+        <div className="flex">
+          <div className="flex-shrink-0 w-[160px] h-[160px] md:w-[160px] md:h-[160px] lg:w-[220px] lg:h-[220px] p-[10px] lg:p-[12px]">
+          <div className="relative aspect-square w-full">
             <ImageWithPlaceholder
               src={product.image_url}
               alt={product.name}
-              className="w-full h-full aspect-square rounded-sm"
+              width={400}
+              height={400}
+              className="w-full h-full aspect-square rounded-sm object-cover"
+              sizes="
+                (max-width: 640px) 50vw,
+                (max-width: 1024px) 33vw,
+                400px
+              "
+              quality={75}
             />
             {selectedVariant?.discounted_price !== 0 &&
             selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-0 leading-[16px] px-2 py-1 absolute text-center uppercase top-0">
+              <span className="bg-[#db3d26] rounded-[4px]  text-white text-[14px] font-bold left-2 leading-none px-2 py-1 absolute text-center uppercase top-2 whitespace-nowrap">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
                   selectedVariant?.price
@@ -477,63 +487,66 @@ const ListViewProductCard = ({ product }) => {
             ) : null}
             <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
               <li
-                className="buttonBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
+                className="buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
                 onClick={handleProductLikes}
               >
                 <span>
                   {favoriteProducts &&
                   favoriteProducts?.includes(product?.id) ? (
-                    <BiSolidHeart size={20} />
+                    <BiSolidHeart size={20} className="primaryFilledColor"/>
                   ) : (
-                    <BiHeart size={20} />
+                    <BiHeart size={20} className="svgColors hover:primaryColor"/>
                   )}
                 </span>
               </li>
-              <li className="buttonBorder  rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor hover:cursor-pointer">
+              <li className="buttonBorder hover:primaryBorder   rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor hover:cursor-pointer">
                 <span onClick={handleShowDetailModal}>
-                  <FaRegEye size={18} className="fontColor" />
+                  <FaRegEye size={18}  className="svgColors hover:primaryColor"/>
                 </span>
               </li>
+              
             </ul>
           </div>
         </div>
-        <div className="col-span-6 md:col-span-8 px-2">
-          <div className="flex flex-col items-start justify-between h-[100px]">
-            <h3 className="flex  text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
-              {product?.name}
-            </h3>
-            {selectedVariant?.few_quantity_left == true && (
-              <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
-            )}
-            {product?.average_rating > 0 && product?.product_rating == true ? (
-              <div className="rating">
-                <div className="flex">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <FaStar
-                        key={star}
-                        size={15}
-                        className={`${
-                          star <= product?.average_rating
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "fill-gray-200 text-gray-200"
-                        }`}
-                      />
-                    ))}
+        <div className="flex flex-col justify-center flex-1 px-1 md:px-2">
+          <div className="flex flex-col items-start gap-[24px]">
+            <div className="flex flex-col justify-between">
+                <h3 className="flex text-[14px] md:text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
+                  {product?.name}
+                </h3>
+                {selectedVariant?.few_quantity_left == true && (
+                  <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
+                )}
+                {product?.average_rating > 0 && product?.product_rating == true ? (
+                  <div className="rating">
+                    <div className="flex">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <FaStar
+                            key={star}
+                            size={15}
+                            className={`${
+                              star <= product?.average_rating
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "fill-gray-200 text-gray-200"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ) : null}
+                ) : null}
+            </div>
             <div className="flex">
               {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (
                 <>
                   {" "}
-                  <p className=" text-base font-bold">
+                  <p className=" text-base font-bold textColor">
                     {setting?.currency}
                     {selectedVariant?.discounted_price}
                   </p>
-                  <p className=" text-[14px] font-normal leading-[17px] m-1 line-through">
+                  <p className=" text-[14px] font-normal leading-[17px] m-1 line-through SecondaryTextColor">
                     {setting?.currency}
                     {selectedVariant?.price}
                   </p>
@@ -547,11 +560,12 @@ const ListViewProductCard = ({ product }) => {
             </div>
           </div>
         </div>
-        <div className="col-span-12 md:col-span-2 ">
+        </div>
+        <div className="flex-shrink-0 w-full md:w-[140px] lg:w-[170px] xl:w-[200px]  flex items-center justify-center  p-3 md:border-l md:border-[var(--border-color)]">
           {!isProductAvailabel ? (
-            <div className="flex  gap-2  w-full md:flex-col mt-2  md:mb-0 items-center">
+            <div className="flex  gap-[12px] w-full md:w-[150px] w-full md:flex-col md:mb-0 items-center">
               <button
-                className="w-full  flex items-center  justify-center rounded-[4px] p-2 buttonBackground line-clamp-1"
+                className="w-full SecondaryTextColor flex items-center  justify-between rounded-[4px] p-2 buttonBackground line-clamp-1"
                 onClick={(e) => handleShowVariantModal(e, product)}
               >
                 {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
@@ -563,7 +577,7 @@ const ListViewProductCard = ({ product }) => {
                   <></>
                 )}
               </button>
-              <div className="flex gap-0 md:gap-3   md:h-[38px] w-full h-full flex-col md:flex-row">
+              <div className="flex gap-0 md:gap-3 md:h-[38px] w-full h-full flex-col md:flex-row">
                 {isProductAlreadyAdded ? (
                   <div className=" w-full cardBorder  flex justify-between rounded-sm  ">
                     <button

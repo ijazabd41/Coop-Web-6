@@ -376,13 +376,14 @@ const Footer = () => {
                     enabledPaymentMethods.slice(0, 4)?.map((method, idx) => (
                       <div
                         key={idx}
-                        className="w-8 h-8 bg-white/[0.24] rounded-sm flex justify-center items-center"
+                        className="w-8 h-8 bg-white/[0.24] rounded-sm flex justify-center items-center relative"
                       >
                         <Image
                           src={method?.image}
                           alt={method?.label}
-                          width={0}
-                          height={0}
+                          fill 
+                          className="object-contain"
+                          unoptimized={true}
                         />
                       </div>
                     ))}

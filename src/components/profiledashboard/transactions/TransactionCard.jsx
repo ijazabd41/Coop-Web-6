@@ -31,10 +31,10 @@ const TransactionCard = ({ transaction }) => {
     };
 
     return (
-        <div className='col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-4'>
-            <div className="border rounded-lg  cardBorder p-4 m-4 md:m-2 lg:m-1.5">
+        <div className='col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-6'>
+            <div className="border rounded-lg  cardBorder pt-4 m-4 md:m-2 lg:m-1.5">
                 {/* Header: Transaction ID and Date */}
-                <div className="flex justify-between  text-sm mb-3">
+                <div className="flex justify-between  text-sm mb-3 px-4">
                     <div>
                         <p className="font-semibold">{t("transaction")}</p>
                         <p className=" font-bold">{transaction?.id}</p>
@@ -46,14 +46,18 @@ const TransactionCard = ({ transaction }) => {
                 </div>
 
                 {/* Payment Method */}
-                <div className="flex items-center gap-2 border-t pt-3 pb-3">
-                    <Image
+                <div className="flex items-center gap-2 border-t pt-3 pb-3 px-4">
+                    <div className='h-[48px] w-[48px] p-[8px] cardBorder rounded-[4px]'>
+                        <Image
                         src={paymentMethodsConfig[transaction.type]}
                         alt="PayPal"
-                        className="h-10 w-10"
-                        height={0}
-                        width={0}
-                    />
+                        className="h-8 w-8  object-cover" 
+                        height={48}
+                        width={48}
+                        unoptimized
+                       />
+                    </div>
+                    
                     <div>
                         <p className=" text-sm">{t("payment_method")}</p>
                         <p className=" font-semibold">{transaction?.type}</p>
@@ -61,7 +65,7 @@ const TransactionCard = ({ transaction }) => {
                 </div>
 
                 {/* Transaction Amount Section */}
-                <div className=" p-1 rounded-lg flex justify-between items-center backgroundColor">
+                <div className="cardBorder rounded-br-lg rounded-bl-lg p-1 px-4 flex justify-between items-center backgroundColor">
                     <div>
                         <p className=" text-sm">{t("transaction")} {t("amount")}</p>
                         <p className="text-2xl font-bold">{setting?.currency}{transaction?.amount?.toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}</p>

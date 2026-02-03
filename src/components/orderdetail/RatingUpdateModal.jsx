@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { IoIosCloseCircle } from 'react-icons/io';
+import { RiCloseFill } from "react-icons/ri";
 import { t } from '@/utils/translation';
 import { TbCameraPlus } from 'react-icons/tb';
 import * as api from "@/api/apiRoutes"
@@ -91,8 +92,8 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
             <DialogContent>
                 <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
                     {t("update_rating")}
-                    <div>
-                        <IoIosCloseCircle size={32} onClick={handleHideUpdateRatingModal} />
+                    <div className='closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer'>
+                        <RiCloseFill size={22} onClick={handleHideUpdateRatingModal} />
                     </div>
                 </DialogHeader>
                 <div>
@@ -130,8 +131,8 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
                             {oldRatingImages?.map((image, index) => (
                                 <div key={index} className="relative">
                                     <Image
-                                        height={0}
-                                        width={0}
+                                        height={500}
+                                        width={500}
                                         src={image?.image_url}
                                         alt={`Preview ${index + 1}`}
                                         className="w-24 h-24 object-cover rounded-md"
@@ -147,8 +148,8 @@ const RatingUpdateModal = ({ showUpdateRating, setShowUpdateRating, ratingId, ha
                             {newRatingImages?.map((src, index) => (
                                 <div key={index} className="relative">
                                     <Image
-                                        height={0}
-                                        width={0}
+                                        height={100}
+                                        width={100}
                                         src={URL.createObjectURL(src)}
                                         alt={`Preview ${index + 1}`}
                                         className="w-24 h-24 object-cover rounded-md"

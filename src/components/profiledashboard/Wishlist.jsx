@@ -69,7 +69,7 @@ const Wishlist = () => {
                             </div>
                         )
                     }) : <div className=' col-span-12 h-full w-full flex items-center justify-center flex-col gap-2 p-2'>
-                        <Image src={NoWishListImage} alt='Your wishlist is Empty' height={0} width={0} className='h-1/2 w-1/2' />
+                        <Image src={NoWishListImage} alt='Your wishlist is Empty' height={302} width={302} unoptimized className='h-1/2 w-1/2' />
                         <h2 className='text-2xl font-bold'>{t("enter_wishlist_message")}</h2>
                     </div>}
                 {(total > wishlistProducts?.length) &&

@@ -247,8 +247,8 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
         <div>
             <div className='grid grid-cols-12 p-2 cardBorder mx-2 my-1 gap-2 rounded-sm '>
                 <div className='col-span-4 '>
-                    <div className='h-full w-full object-cover aspect-square relative'>
-                        <ImageWithPlaceholder src={product?.image_url} alt='Image' className='h-full w-full object-cover' />
+                    <div className='h-[105.66px] sm:h-full w-full object-cover aspect-square relative'>
+                        <ImageWithPlaceholder src={product?.image_url} alt='Image' fill sizes="(max-width: 640px) 60vw,(max-width: 1024px) 25vw,25vw" className='h-full w-full object-cover' />
                     </div>
                 </div>
                 <div className='col-span-8'>
@@ -263,7 +263,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                         <div className='mt-2'>
                             <span className='flex items-center gap-1'>{product?.measurement} {product?.unit_code}</span>
                         </div>
-                        <div className='flex justify-between items-center mt-4'>
+                        <div className='flex justify-between items-center mt-3 md:mt-4'>
                             <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>
                                 <button className='text-2xl font-bold px-1' onClick={handleQuantityDecrease}><FiMinus size={20} /></button>
                                 <span className='w-full text-center'>{addedQuantity}</span>

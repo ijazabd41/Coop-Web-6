@@ -9,7 +9,7 @@ import { t } from "@/utils/translation";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import * as api from "@/api/apiRoutes";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { addUserBalance } from "@/redux/slices/userSlice";
@@ -340,9 +340,9 @@ const WalletBalanceModal = ({
                 {type == "wallet" ? t("add_to_wallet") : t("complete_payment")}
               </h1>
             </DialogTitle>
-            <div>
-              <IoIosCloseCircle
-                size={32}
+            <div className="closeButtonBg rounded-full p-[8px] cursor-pointer">
+              <RiCloseFill
+                size={22}
                 onClick={() => setAddWalletModal(false)}
               />
             </div>
@@ -433,8 +433,9 @@ const WalletBalanceModal = ({
                         <Image
                           src={method.image}
                           className="h-8 w-8"
-                          height={0}
-                          width={0}
+                          height={32}
+                          width={32}
+                          unoptimized
                           alt={t(method.label)}
                         />
                         <p className="font-medium text-base">

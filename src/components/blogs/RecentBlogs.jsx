@@ -24,6 +24,8 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
               <ImageWithPlaceholder
                 className={"rounded-md h-16 w-20 md:h-24 md:w-32"}
                 src={blog?.image_url}
+                width={390}
+                height={264}
               />
               <div className="flex flex-col gap-2 overflow-hidden">
                 <p className="text-sm font-normal">

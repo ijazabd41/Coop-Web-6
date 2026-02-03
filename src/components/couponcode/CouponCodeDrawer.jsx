@@ -6,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiCloseFill } from "react-icons/ri";
 import { t } from "@/utils/translation";
 import CouponCodeCard from "./CouponCodeCard";
 import { useSelector } from "react-redux";
@@ -37,7 +37,7 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
     setShowCouponCode(false);
   };
   return (
-    <Sheet open={showCouponCode}>
+    <Sheet open={showCouponCode} modal={false}>
       <SheetContent
         className="p-0 w-full sm:w-[900px] overflow-y-auto"
         side={language?.type == "RTL" ? "left" : "right"}
@@ -45,9 +45,9 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
         <SheetHeader className="px-0 py-3 border-[1px] flex justify-between text-left">
           <SheetTitle className="text-2xl p-2 font-bold flex flex-row items-center  justify-between">
             <p className="text-2xl font-bold">{t("coupons")}</p>
-            <div>
-              <IoIosCloseCircle
-                size={32}
+            <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+              <RiCloseFill
+                size={22}
                 onClick={() => handleHideCouponCode(false)}
               />
             </div>
@@ -72,6 +72,8 @@ const CouponCodeDrawer = ({ showCouponCode, setShowCouponCode }) => {
                 src={NoCouponFound}
                 alt={"Image not found"}
                 className="h-64 w-64"
+                width={400}
+                height={400}
               />
               <p className="text-xl text-center  font-bold">
                 {t("no_coupon_code_available")}

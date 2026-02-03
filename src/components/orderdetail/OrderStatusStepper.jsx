@@ -58,8 +58,8 @@ const OrderStepper = ({ orderDetail }) => {
               <Image
                 src={status?.icon?.src}
                 alt="icon"
-                height={0}
-                width={0}
+                height={24}
+                width={24}
                 className="h-2/3 w-full"
               />
             </div>

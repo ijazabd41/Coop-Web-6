@@ -125,11 +125,11 @@ const Cart = () => {
           <div className="flex items-center justify-center h-full my-auto mx-10">
             <div className="flex items-center justify-center flex-col gap-2 my-4">
               <Image
-                src={NoCartData}
-                alt="No Cart Data"
-                height={0}
-                width={0}
-                className="h-full w-full"
+                 src={NoCartData}
+                  alt="No Cart Data"
+                  width={512}
+                  height={325}
+                  className="object-contain"
               />
               <h1 className="font-bold text-[22px] text-center py-2">
                 {t("empty_cart_list_message")}
