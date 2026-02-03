@@ -562,12 +562,12 @@ const ListViewProductCard = ({ product }) => {
         </div>
         <div className="flex-shrink-0 w-full md:w-[140px] lg:w-[170px] xl:w-[200px]  flex items-center justify-center  p-3 md:border-l md:border-[var(--border-color)]">
           {!isProductAvailabel ? (
-            <div className="flex  gap-[12px] w-full md:w-[150px] w-full md:flex-col md:mb-0 items-center">
+            <div className="flex  gap-[12px] w-full md:w-[150px]  md:flex-col md:mb-0 items-center">
               <button
                 className="w-full SecondaryTextColor flex items-center  justify-between rounded-[4px] p-2 buttonBackground line-clamp-1"
                 onClick={(e) => handleShowVariantModal(e, product)}
               >
-                {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
+                {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
                 {productsVariants?.length > 1 ? (
                   <div>
                     <MdArrowDropDown size={22} />

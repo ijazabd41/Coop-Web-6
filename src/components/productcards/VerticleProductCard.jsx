@@ -575,7 +575,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               onClick={(e) => handleShowVariantModal(e, product)}
               className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
             >
-              {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
+              {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
               {productsVariants?.length > 1 ? (
                 <div>
                   <MdArrowDropDown size={16} />

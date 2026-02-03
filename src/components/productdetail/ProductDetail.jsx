@@ -660,7 +660,7 @@ const ProductDetail = () => {
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
-                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
+                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</p>
                               <span className="flex gap-1 text-[13px] line-clamp-1 font-semibold">
                                 <p>
                                   {currency}

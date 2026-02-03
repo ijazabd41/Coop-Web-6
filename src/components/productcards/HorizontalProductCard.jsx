@@ -554,7 +554,7 @@ const HorizontalProductCard = ({ product }) => {
                   className=" w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground  SecondaryTextColor"
                   onClick={(e) => handleShowVariantModal(e, product)}
                 >
-                  {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
+                  {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
                   {productsVariants?.length > 1 ? (
                     <div>
                       <MdArrowDropDown size={22} />

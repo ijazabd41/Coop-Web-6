@@ -44,11 +44,11 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   const addedQuantity = (variant) => {
     return cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == variant?.id
-        )?.qty
+        (prdct) => prdct?.product_variant_id == variant?.id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == variant?.id
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == variant?.id
+      )?.qty;
   };
 
   const isVariantAvailable = (variant) => {
@@ -360,7 +360,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
           <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-between">
             {t("chooseVariant")}
             <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
-              <RiCloseFill  size={22} onClick={handleHideVariantModal} />
+              <RiCloseFill size={22} onClick={handleHideVariantModal} />
             </div>
           </DialogHeader>
           <div className="p-2 md:p-6">
@@ -375,7 +375,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                 />
               </div>
               <h3 className="font-medium text-base leading-[24px] break-all">
-                {product?.name}
+                {product?.translations?.name}
               </h3>
             </div>
             <div>
@@ -388,7 +388,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                     className="flex justify-between items-center px-4 py-2"
                     key={variant?.id}
                   >
-                    <div className="font-medium text-lg">{`${variant?.measurement} ${variant?.stock_unit_name}`}</div>
+                    <div className="font-medium text-lg">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</div>
                     <div className="flex items-center gap-1">
                       <div className="flex items-center gap-3 font-bold text-base ">
                         {setting?.setting?.currency}

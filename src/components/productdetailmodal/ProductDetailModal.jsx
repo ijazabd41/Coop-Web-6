@@ -355,12 +355,6 @@ const ProductDetailModal = ({
           >
             <RiCloseFill size={22} />
           </button>
-          {/* <DialogHeader className="font-bold text-2xl text-start flex flex-row justify-end">
-            {" "}
-            <div>
-              <IoIosCloseCircle size={32} onClick={handleHideDetailModal} />
-            </div>
-          </DialogHeader> */}
           <div className=" ">
             {loading ? (
               <Loader />
@@ -368,7 +362,7 @@ const ProductDetailModal = ({
               <div className="flex flex-col p-1 md:p-6 justify-center md:justify-start mx-auto">
                 <div className="pb-6 border-b-2">
                   <h2 className="font-bold text-2xl break-all">
-                    {productDetails?.name}
+                    {productDetails?.translations?.name}
                   </h2>
                   {selectVariant?.few_quantity_left == true && (
                     <p className="text-sm text-red-600 font-bold ">{t("few_quantity_left")}</p>
@@ -402,7 +396,7 @@ const ProductDetailModal = ({
                             <span>
                               {t("seller")}:
                               <span className="font-bold">
-                                {productDetails?.seller_name}
+                                {product?.seller?.translations?.name}
                               </span>
                             </span>
                           </div>
@@ -495,7 +489,7 @@ const ProductDetailModal = ({
                                 width={600}
                                 className="h-full w-full aspect-square rounded-sm"
                                 handleOnClick={() =>
-                                handleChangeCoverImage(image)
+                                  handleChangeCoverImage(image)
                                 }
                               />
                             </div>
@@ -546,7 +540,7 @@ const ProductDetailModal = ({
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
-                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.stock_unit_name}`}</p>
+                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</p>
                               <span className="flex gap-1 text-[13px]  line-clamp-1">
                                 <p>
                                   {currency}
@@ -615,9 +609,9 @@ const ProductDetailModal = ({
                         >
                           {favoriteProducts &&
                             favoriteProducts?.includes(product?.id) ? (
-                            <BiSolidHeart size={20} className="primaryFilledColor"/>
+                            <BiSolidHeart size={20} className="primaryFilledColor" />
                           ) : (
-                            <BiHeart size={20} className="svgColors hover:primaryColor"/>
+                            <BiHeart size={20} className="svgColors hover:primaryColor" />
                           )}
                         </span>
 
