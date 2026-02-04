@@ -9,7 +9,8 @@ import VerticleProductCard from '../productcards/VerticleProductCard';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { setFilterSection } from '@/redux/slices/productFilterSlice';
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
+
 import { useRouter } from 'next/router';
 import { t } from '@/utils/translation';
 import { isRtl } from '@/lib/utils';
@@ -34,6 +35,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
 
     const handleViewAll = () => {
         dispatch(setFilterSection({ data: section?.id }))
+        dispatch(setListingSource({ data: "all" }));
         router.push("/products")
     }
 

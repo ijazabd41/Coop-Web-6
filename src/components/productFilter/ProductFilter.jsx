@@ -32,6 +32,7 @@ const Filter = ({
   setMinPrice,
   setMaxPrice,
   setShowFilter = () => {},
+  hideCategory,
 }) => {
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
@@ -201,34 +202,38 @@ const Filter = ({
               </p>
             </div>
           </div>
-          <Collapsible
-            open={activeKey.includes("1")}
-            className="w-full bottomBorder"
-            onOpenChange={() => handleActiveKey("1")}
-          >
-            <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-              <div className="text-start font-medium textColor md:text-base">
-                {t("product_category")}
-              </div>
-              <div
-                className={`transition-transform duration-250 ${
-                  activeKey.includes("1") ? "rotate-0" : "-rotate-90"
-                }`}
-              >
-                <FaChevronDown />
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="filter-row">
-                <CategoryTree
-                  categories={categories}
-                  selectedCategories={selectedCategories}
-                  onCategoryChange={handleCategoryChange}
-                  initialFilter={filter}
-                />
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+          {!hideCategory && (
+  <Collapsible
+    open={activeKey.includes("1")}
+    className="w-full bottomBorder"
+    onOpenChange={() => handleActiveKey("1")}
+  >
+    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+      <div className="text-start font-medium textColor md:text-base">
+        {t("product_category")}
+      </div>
+      <div
+        className={`transition-transform duration-250 ${
+          activeKey.includes("1") ? "rotate-0" : "-rotate-90"
+        }`}
+      >
+        <FaChevronDown />
+      </div>
+    </CollapsibleTrigger>
+
+    <CollapsibleContent>
+      <div className="filter-row">
+        <CategoryTree
+          categories={categories}
+          selectedCategories={selectedCategories}
+          onCategoryChange={handleCategoryChange}
+          initialFilter={filter}
+        />
+      </div>
+    </CollapsibleContent>
+  </Collapsible>
+)}
+
           {brands && brands?.length > 0 && (
             <Collapsible
               open={activeKey.includes("2")}

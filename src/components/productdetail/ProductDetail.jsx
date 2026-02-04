@@ -421,7 +421,8 @@ const ProductDetail = () => {
           <ImageWithPlaceholder
             src={ProductNotFoundImage}
             alt={"not product found"}
-            unoptimized
+            width={400}
+            height={400}
             loading="lazy"
             fetchPriority="low"
           />

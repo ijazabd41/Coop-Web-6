@@ -14,7 +14,8 @@ const initialState = {
   country_id: "",
   search_product: [],
   selectedCategories: [],
-  searchedCategory: ""
+  searchedCategory: "",
+  listing_source: "all"
 };
 
 export const productFilterReducer = createSlice({
@@ -81,6 +82,9 @@ export const productFilterReducer = createSlice({
     setSearchedCategory: (state, action) => {
       state.searchedCategory = action.payload.data;
     },
+    setListingSource: (state, action) => {
+      state.listing_source = action.payload.data;
+    },
   },
 });
 
@@ -100,6 +104,7 @@ export const {
   setProductBySearch,
   setSelectedCategories,
   setSearchedCategory,
+  setListingSource,
 } = productFilterReducer.actions;
 
 export default productFilterReducer.reducer;

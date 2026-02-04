@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFilterCategory,
   setSelectedCategories,
+  setListingSource,
+  setSearchedCategory,
 } from "@/redux/slices/productFilterSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { t } from "@/utils/translation";
@@ -55,17 +57,25 @@ const Category = () => {
     setIsLoading(false);
   };
 
+  // const handleCategoryClick = (category) => {
+  //   dispatch(setSelectedCategories({ data: category?.id }));
+  //   dispatch(setListingSource({ data: "category" }));
+  //   if (category?.has_child) {
+  //     router.push(`/categories/${category?.slug}`);
+  //   } else {
+  //     const cats = [...selectedCategories, category?.id];
+  //     dispatch(setFilterCategory({ data: cats.join(",") }));
+  //     router.push(`/products`);
+  //   }
+  // };
   const handleCategoryClick = (category) => {
-    dispatch(setSelectedCategories({ data: category?.id }));
+  dispatch(setListingSource({ data: "category" }));
 
-    if (category?.has_child) {
-      router.push(`/categories/${category?.slug}`);
-    } else {
-      const cats = [...selectedCategories, category?.id];
-      dispatch(setFilterCategory({ data: cats.join(",") }));
-      router.push(`/products`);
-    }
-  };
+  // FORCE STRING
+  dispatch(setFilterCategory({ data: String(category.id) }));
+
+  router.push("/products");
+};
 
   const totalPages = Math.ceil(totalCategories / categoryPerPage);
 

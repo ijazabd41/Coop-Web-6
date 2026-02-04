@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories } from '@/redux/slices/productFilterSlice';
+import { setSelectedCategories,setListingSource,setSearchedCategory } from '@/redux/slices/productFilterSlice';
 import { isRtl } from '@/lib/utils';
 
 const CategoriesContainer = ({ categories }) => {
@@ -19,16 +19,22 @@ const CategoriesContainer = ({ categories }) => {
     const router = useRouter();
     const selectedCategories = useSelector(state => state.ProductFilter?.selectedCategories);
     const language = useSelector(state => state.Language.selectedLanguage)
+    // const handleCategoryClick = (category) => {
+    //     dispatch(setSelectedCategories({ data: category?.id }))
+    //     dispatch(setSelectedCategories({ data: category?.id }));
+    //     if (category?.has_child) {
+    //         router.push(`/categories/${category?.slug}`)
+    //     } else {
+    //         const cats = [...selectedCategories, category?.id];
+    //         dispatch(setFilterCategory({ data: cats.join(",") }))
+    //         router.push(`/products`)
+    //     }
+    // }
     const handleCategoryClick = (category) => {
-        dispatch(setSelectedCategories({ data: category?.id }))
-        if (category?.has_child) {
-            router.push(`/categories/${category?.slug}`)
-        } else {
-            const cats = [...selectedCategories, category?.id];
-            dispatch(setFilterCategory({ data: cats.join(",") }))
-            router.push(`/products`)
-        }
-    }
+     dispatch(setListingSource({ data: "category" }));
+     dispatch(setFilterCategory({ data: String(category.id) }));
+     router.push("/products");
+   };
     return (
         <section>
             <div className='container feature-section' dir={language?.type}>
