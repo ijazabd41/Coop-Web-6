@@ -8,7 +8,8 @@ import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import CategoryCard from '../categories/CategoryCard'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories,setListingSource,setSearchedCategory } from '@/redux/slices/productFilterSlice';
+import { setSelectedCategories,setListingSource,setSearchedCategory,setCategorySlug } from '@/redux/slices/productFilterSlice';
+import CategoryFlowBreadcrumb from "../categories/CategoryFlowBreadcrumb";
 import {
   Select,
   SelectContent,
@@ -50,17 +51,29 @@ const Products = () => {
   const [isLoader, setisLoader] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
+  const {
+  listing_source,
+  category_id,
+  category_slug,
+  selectedCategories,
+  searchedCategory,
+} = useSelector((state) => state.ProductFilter);
 
   const total_products_per_page = 12;
   const rtl = isRtl();
+  const isCategoryListing = listing_source === "category";
+  const resolvedCategory = filter?.category_id === "NaN" || filter?.category_id === "all categories" ? null : filter?.category_id;
+
   const fetchProducts = async ({ pageParam = 0 }) => {
+    console.log(category_id)
     const filterParams = {
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
-      category_ids:
-        filter?.category_id == "NaN" || filter?.category_id == "all categories"
-          ? null
-          : filter?.category_id,
+      ...(resolvedCategory && (
+      isCategoryListing
+        ? { category_id: resolvedCategory }
+        : { category_ids: resolvedCategory }
+    )),
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
       search: filter?.search,
@@ -106,12 +119,7 @@ const Products = () => {
     initialPageParam: 0,
   });
 
-  const {
-  listing_source,
-  category_id,
-  selectedCategories,
-  searchedCategory,
-} = useSelector((state) => state.ProductFilter);
+  
 
 
   const productResult = data?.pages?.flatMap((page) => page.data) || [];
@@ -180,22 +188,23 @@ const Products = () => {
   
 useEffect(() => {
   const fetchSubCategories = async () => {
-    if (listing_source !== "category" || !category_id) {
+    if (listing_source !== "category" || !category_slug) {
       setSubCategories([]);
       return;
     }
-
+    console.log(category_slug)
     try {
       setIsSubCatLoading(true);
-      console.log("Fetching children for Category ID:", category_id);
       const res = await api.getCategories({
-        id: category_id,
+        slug: category_slug,
       });
-      console.log("API Response for sub-levels:", res?.data);
-      const currentCategory = res?.data?.[0];
-      const children = currentCategory?.cat_active_childs || [];
+      
+      const currentCategory = res?.data;
+      const subCats = Array.isArray(currentCategory)
+        ? currentCategory
+        : currentCategory?.cat_active_childs ?? [];
 
-      setSubCategories(children ?? []);
+      setSubCategories(subCats);
     } catch (err) {
       console.error("Failed to fetch subcategories", err);
       setSubCategories([]);
@@ -205,14 +214,36 @@ useEffect(() => {
   };
 
   fetchSubCategories();
-}, [listing_source, category_id]);
+}, [listing_source, category_slug]);
 
+const buildCategoryFlow = (category) => {
+  const flow = [];
+
+  let current = category;
+  while (current) {
+    flow.unshift({
+      id: current.id,
+      name: current.name || current?.translations?.name,
+      slug: current.slug,
+    });
+
+    current = current.parent || null; // OR mapped parent
+  }
+
+  return flow;
+};
+
+  
   const handleCategoryClick = (category) => {
-    dispatch(setListingSource({ data: "category" }));
-    dispatch(setFilterCategory({ data: String(category.id) }));
-    dispatch(setSearchedCategory({ data: category }));
-    router.push("/products");
-  };
+  dispatch(setListingSource({ data: "category" }));
+  dispatch(setFilterCategory({ data: category.id }));
+  dispatch(setSelectedCategories({ data: category.id }));
+  dispatch(setSearchedCategory({ data: category })); // ✅ ONLY category
+  dispatch(setCategorySlug({ data: category.slug }));
+  router.push("/products");
+};
+
+  
 
   return (
     <section>
@@ -226,7 +257,7 @@ useEffect(() => {
             onClick={() => setShowFilter(true)}
           >
 
-      
+
             <IoFilter />
             {t("filter")}
           </div>
@@ -247,15 +278,19 @@ useEffect(() => {
               />
             </div>
             <div className="col-span-12 md:col-span-9">
+              {listing_source === "category" && (
+                  <CategoryFlowBreadcrumb />
+                )}
               <div className="flex flex-col gap-6">
+                 {listing_source === "category" &&(     <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
+                          <p>{category_slug}</p>
+                      </div>)}
                 {listing_source === "category" && subCategories.length > 0 && (
                   <div className='container' dir={language?.type}>
-                                <div className="flex justify-between items-center p-0 w-full mb-3">
-                                    <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
-                                        <p>{t('shop_by')} {t('categories')}</p>
-                                    </div>
+                                <div className="flex justify-between items-center p-0 w-full ">
+                                    
 
-                                    <div className="flex items-center mt-6">
+                                    <div className="flex items-center ">
                                         {/* {categories?.categoriess?.length > 5 ? ( */}
                                         <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
                                           

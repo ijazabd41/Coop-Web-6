@@ -9,6 +9,8 @@ import {
   setSelectedCategories,
   setListingSource,
   setSearchedCategory,
+  setCategorySlug,
+  setFilterProducts,
 } from "@/redux/slices/productFilterSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { t } from "@/utils/translation";
@@ -68,12 +70,12 @@ const Category = () => {
   //     router.push(`/products`);
   //   }
   // };
-  const handleCategoryClick = (category) => {
+const handleCategoryClick = (category) => {
   dispatch(setListingSource({ data: "category" }));
-
-  // FORCE STRING
-  dispatch(setFilterCategory({ data: String(category.id) }));
-
+  dispatch(setFilterCategory({ data: category.id }));
+  // dispatch(setSelectedCategories({ data: category.id }));
+  dispatch(setSearchedCategory({ data: category }));
+  dispatch(setCategorySlug({ data: category.slug })); 
   router.push("/products");
 };
 

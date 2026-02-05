@@ -9,6 +9,7 @@ import { Navigation } from "swiper/modules";
 import { t } from "@/utils/translation"
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterBrands } from '@/redux/slices/productFilterSlice';
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/router';
 import { isRtl } from '@/lib/utils';
 const BrandSlider = ({ brands }) => {
@@ -18,6 +19,7 @@ const BrandSlider = ({ brands }) => {
     const language = useSelector(state => state.Language.selectedLanguage)
     const handleBrandClick = (brand) => {
         dispatch(setFilterBrands({ data: [brand?.id] }))
+        dispatch(setListingSource({ data: "all" }));
         router.push(`/products`)
     }
 

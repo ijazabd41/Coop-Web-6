@@ -15,7 +15,8 @@ const initialState = {
   search_product: [],
   selectedCategories: [],
   searchedCategory: "",
-  listing_source: "all"
+  listing_source: "all",
+  category_slug: ""
 };
 
 export const productFilterReducer = createSlice({
@@ -71,7 +72,8 @@ export const productFilterReducer = createSlice({
       state.price_filter = null;
       state.search_product = [];
       state.selectedCategories = [];
-      state.searchedCategory = ""
+      state.searchedCategory = "";
+     
     },
     setSelectedCategories: (state, action) => {
       state.selectedCategories = [
@@ -84,6 +86,9 @@ export const productFilterReducer = createSlice({
     },
     setListingSource: (state, action) => {
       state.listing_source = action.payload.data;
+    },
+    setCategorySlug: (state, action) => {
+      state.category_slug = action.payload.data;
     },
   },
 });
@@ -105,6 +110,7 @@ export const {
   setSelectedCategories,
   setSearchedCategory,
   setListingSource,
+  setCategorySlug,
 } = productFilterReducer.actions;
 
 export default productFilterReducer.reducer;

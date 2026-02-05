@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories,setListingSource,setSearchedCategory } from '@/redux/slices/productFilterSlice';
+import { setSelectedCategories,setListingSource,setSearchedCategory,setCategorySlug } from '@/redux/slices/productFilterSlice';
 import { isRtl } from '@/lib/utils';
 
 const CategoriesContainer = ({ categories }) => {
@@ -30,11 +30,14 @@ const CategoriesContainer = ({ categories }) => {
     //         router.push(`/products`)
     //     }
     // }
-    const handleCategoryClick = (category) => {
-     dispatch(setListingSource({ data: "category" }));
-     dispatch(setFilterCategory({ data: String(category.id) }));
-     router.push("/products");
-   };
+  const handleCategoryClick = (category) => {
+    dispatch(setListingSource({ data: "category" }));
+    dispatch(setFilterCategory({ data: category.id }));
+    // dispatch(setSelectedCategories({ data: category.id }));
+    dispatch(setSearchedCategory({ data: category }));
+    dispatch(setCategorySlug({ data: category.slug })); 
+    router.push("/products");
+  };
     return (
         <section>
             <div className='container feature-section' dir={language?.type}>
