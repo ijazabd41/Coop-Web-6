@@ -501,8 +501,8 @@ const HorizontalProductCard = ({ product }) => {
         <div className="col-span-6">
           <div className="flex flex-col  justify-between">
             <div className="flex flex-col h-[100px] justify-between">
-              <h3 className="flex  text-[16px] font-bold leading-[1.2]  max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
-                {product?.translations?.name}
+              <h3 className="flex  text-[16px] font-bold   max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
+                {product?.translations?.name ?? product?.name}
               </h3>
               {selectedVariant?.few_quantity_left == true && (
                 <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>

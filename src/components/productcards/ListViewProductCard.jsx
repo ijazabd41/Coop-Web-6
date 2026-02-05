@@ -512,7 +512,7 @@ const ListViewProductCard = ({ product }) => {
             <div className="flex flex-col items-start gap-[24px]">
               <div className="flex flex-col justify-between">
                 <h3 className="flex text-[14px] md:text-[16px] font-bold mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
-                  {product?.translations?.name}
+                  {product?.translations?.name ?? product?.name}
                 </h3>
                 {selectedVariant?.few_quantity_left == true && (
                   <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
@@ -567,7 +567,7 @@ const ListViewProductCard = ({ product }) => {
                 className="w-full SecondaryTextColor flex items-center  justify-between rounded-[4px] p-2 buttonBackground line-clamp-1"
                 onClick={(e) => handleShowVariantModal(e, product)}
               >
-                {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
+                {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
                 {productsVariants?.length > 1 ? (
                   <div>
                     <MdArrowDropDown size={22} />

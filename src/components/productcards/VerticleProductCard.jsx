@@ -522,7 +522,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         </div>
         <div className="h-[100px] flex flex-col justify-between ">
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
-            {product?.translations?.name}
+            {product?.translations?.name ?? product?.name}
           </h3>
           {selectedVariant?.few_quantity_left == true && (
             <p className="text-sm text-red-600 font-semibold">{t("few_quantity_left")}</p>
@@ -575,7 +575,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               onClick={(e) => handleShowVariantModal(e, product)}
               className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
             >
-              {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
+              {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
               {productsVariants?.length > 1 ? (
                 <div>
                   <MdArrowDropDown size={16} />

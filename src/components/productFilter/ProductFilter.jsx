@@ -31,7 +31,7 @@ const Filter = ({
   setValues,
   setMinPrice,
   setMaxPrice,
-  setShowFilter = () => {},
+  setShowFilter = () => { },
 }) => {
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
@@ -211,9 +211,8 @@ const Filter = ({
                 {t("product_category")}
               </div>
               <div
-                className={`transition-transform duration-250 ${
-                  activeKey.includes("1") ? "rotate-0" : "-rotate-90"
-                }`}
+                className={`transition-transform duration-250 ${activeKey.includes("1") ? "rotate-0" : "-rotate-90"
+                  }`}
               >
                 <FaChevronDown />
               </div>
@@ -240,9 +239,8 @@ const Filter = ({
                   {t("brands")}
                 </div>
                 <div
-                  className={`transition-transform duration-250 ${
-                    activeKey.includes("2") ? "rotate-0" : "-rotate-90"
-                  }`}
+                  className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"
+                    }`}
                 >
                   <FaChevronDown />
                 </div>
@@ -265,7 +263,7 @@ const Filter = ({
                           }}
                         />
                         <span className="text-sm font-normal textColor">
-                          {brand.name}
+                          {brand?.translations?.name ?? brand?.name}
                         </span>
                       </div>
                     );
@@ -295,9 +293,8 @@ const Filter = ({
                 {t("sellers")}
               </div>
               <div
-                className={`transition-transform duration-250 ${
-                  activeKey.includes("3") ? "rotate-0" : "-rotate-90"
-                }`}
+                className={`transition-transform duration-250 ${activeKey.includes("3") ? "rotate-0" : "-rotate-90"
+                  }`}
               >
                 <FaChevronDown />
               </div>
@@ -327,7 +324,7 @@ const Filter = ({
                         }}
                       />
                       <span className="text-sm font-normal textColor">
-                        {seller.name}
+                        {seller?.translations?.name ?? seller?.name}
                       </span>
                     </div>
                   );
@@ -354,9 +351,8 @@ const Filter = ({
                 {t("priceRange")}
               </div>
               <div
-                className={`transition-transform duration-250 ${
-                  activeKey.includes("4") ? "rotate-0" : "-rotate-90"
-                }`}
+                className={`transition-transform duration-250 ${activeKey.includes("4") ? "rotate-0" : "-rotate-90"
+                  }`}
               >
                 <FaChevronDown />
               </div>
