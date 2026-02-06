@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories,setListingSource,setSearchedCategory,setCategorySlug } from '@/redux/slices/productFilterSlice';
+import { setSelectedCategories,setListingSource,setSearchedCategory,setCategorySlug,setCategoryBreadcrumb } from '@/redux/slices/productFilterSlice';
 import { isRtl } from '@/lib/utils';
 
 const CategoriesContainer = ({ categories }) => {
@@ -30,14 +30,30 @@ const CategoriesContainer = ({ categories }) => {
     //         router.push(`/products`)
     //     }
     // }
-  const handleCategoryClick = (category) => {
-    dispatch(setListingSource({ data: "category" }));
-    dispatch(setFilterCategory({ data: category.id }));
-    // dispatch(setSelectedCategories({ data: category.id }));
-    dispatch(setSearchedCategory({ data: category }));
-    dispatch(setCategorySlug({ data: category.slug })); 
-    router.push("/products");
-  };
+    const categoryBreadcrumb = useSelector(
+      (state) => state.ProductFilter.categoryBreadcrumb
+    );
+ const handleCategoryClick = (category) => {
+   const exists = categoryBreadcrumb.find(c => c.id === category.id);
+ 
+   const newBreadcrumb = exists
+     ? categoryBreadcrumb
+     : [
+         ...categoryBreadcrumb,
+         {
+           id: category.id,
+           name: category.translations?.name || category.name,
+           slug: category.slug,
+         },
+       ];
+ 
+   dispatch(setListingSource({ data: "category" }));
+   dispatch(setFilterCategory({ data: category.id }));
+   dispatch(setCategorySlug({ data: category.slug }));
+   dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+ 
+   router.push("/products");
+ };
     return (
         <section>
             <div className='container feature-section' dir={language?.type}>

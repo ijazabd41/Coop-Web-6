@@ -16,7 +16,8 @@ const initialState = {
   selectedCategories: [],
   searchedCategory: "",
   listing_source: "all",
-  category_slug: ""
+  category_slug: "",
+  categoryBreadcrumb: [],
 };
 
 export const productFilterReducer = createSlice({
@@ -63,17 +64,23 @@ export const productFilterReducer = createSlice({
       state.seller_id = action.payload.data;
     },
     clearAllFilter: (state, action) => {
+      const { preserveCategory } = action.payload || {};
       state.country_id = "";
       state.brand_ids = [];
       state.seller_id = "";
-      state.category_id = "";
+      // state.category_id = "";
       state.section_id = null;
       state.search = null;
       state.price_filter = null;
       state.search_product = [];
       state.selectedCategories = [];
       state.searchedCategory = "";
-     
+      if (!preserveCategory) {
+        state.category_id = "";
+        state.category_slug = "";
+        state.categoryBreadcrumb = [];
+        state.listing_source = "all";
+      }
     },
     setSelectedCategories: (state, action) => {
       state.selectedCategories = [
@@ -89,6 +96,9 @@ export const productFilterReducer = createSlice({
     },
     setCategorySlug: (state, action) => {
       state.category_slug = action.payload.data;
+    },
+    setCategoryBreadcrumb: (state, action) => {
+      state.categoryBreadcrumb = action.payload.data;
     },
   },
 });
@@ -111,6 +121,7 @@ export const {
   setSearchedCategory,
   setListingSource,
   setCategorySlug,
+  setCategoryBreadcrumb,
 } = productFilterReducer.actions;
 
 export default productFilterReducer.reducer;

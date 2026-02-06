@@ -33,6 +33,7 @@ const Filter = ({
   setMaxPrice,
   setShowFilter = () => {},
   hideCategory,
+  disableFilter,
 }) => {
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
@@ -68,7 +69,7 @@ const Filter = ({
     setActiveKey((prevActiveKeys) =>
       prevActiveKeys.includes(key)
         ? prevActiveKeys.filter((item) => item !== key)
-        : [...prevActiveKeys, key]
+        : [...prevActiveKeys, key],
     );
   };
 
@@ -191,7 +192,15 @@ const Filter = ({
                   setSelectedCategories([]);
                   setMinPrice(null);
                   setMaxPrice(null);
-                  dispatch(clearAllFilter());
+                  if (disableFilter) {
+                    dispatch(
+                      clearAllFilter({
+                        preserveCategory: filter.listing_source === "category",
+                      }),
+                    );
+                  } else {
+                    dispatch(clearAllFilter());
+                  }
                   // dispatch(resetSelectedCategories())
                   setOffset(0);
                   setShowFilter(false);
@@ -203,36 +212,36 @@ const Filter = ({
             </div>
           </div>
           {!hideCategory && (
-  <Collapsible
-    open={activeKey.includes("1")}
-    className="w-full bottomBorder"
-    onOpenChange={() => handleActiveKey("1")}
-  >
-    <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-      <div className="text-start font-medium textColor md:text-base">
-        {t("product_category")}
-      </div>
-      <div
-        className={`transition-transform duration-250 ${
-          activeKey.includes("1") ? "rotate-0" : "-rotate-90"
-        }`}
-      >
-        <FaChevronDown />
-      </div>
-    </CollapsibleTrigger>
+            <Collapsible
+              open={activeKey.includes("1")}
+              className="w-full bottomBorder"
+              onOpenChange={() => handleActiveKey("1")}
+            >
+              <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                <div className="text-start font-medium textColor md:text-base">
+                  {t("product_category")}
+                </div>
+                <div
+                  className={`transition-transform duration-250 ${
+                    activeKey.includes("1") ? "rotate-0" : "-rotate-90"
+                  }`}
+                >
+                  <FaChevronDown />
+                </div>
+              </CollapsibleTrigger>
 
-    <CollapsibleContent>
-      <div className="filter-row">
-        <CategoryTree
-          categories={categories}
-          selectedCategories={selectedCategories}
-          onCategoryChange={handleCategoryChange}
-          initialFilter={filter}
-        />
-      </div>
-    </CollapsibleContent>
-  </Collapsible>
-)}
+              <CollapsibleContent>
+                <div className="filter-row">
+                  <CategoryTree
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    onCategoryChange={handleCategoryChange}
+                    initialFilter={filter}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
 
           {brands && brands?.length > 0 && (
             <Collapsible
@@ -327,7 +336,7 @@ const Filter = ({
                           dispatch(
                             setFilterBySeller({
                               data: seller.id,
-                            })
+                            }),
                           );
                         }}
                       />
@@ -400,7 +409,7 @@ const Filter = ({
                           min_price: tempMinPrice,
                           max_price: tempMaxPrice,
                         },
-                      })
+                      }),
                     );
                   }}
                 >

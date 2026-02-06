@@ -1,42 +1,53 @@
-import { useSelector } from "react-redux";
-import Link from "next/link";
-
-const buildCategoryFlow = (category) => {
-  const flow = [];
-  let current = category;
-
-  while (current) {
-    flow.unshift({
-      id: current.id,
-      name: current.translations?.name || current.name,
-      slug: current.slug,
-    });
-    current = current.parent || null;
-  }
-
-  return flow;
-};
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import {
+  setListingSource,
+  setFilterCategory,
+  setCategorySlug,
+  setCategoryBreadcrumb,
+} from "@/redux/slices/productFilterSlice";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { isRtl } from "@/lib/utils";
+import { t } from "@/utils/translation";
 
 const CategoryFlowBreadcrumb = () => {
-  const { searchedCategory } = useSelector(
-    (state) => state.ProductFilter
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const rtl = isRtl();
+
+  const categoryBreadcrumb = useSelector(
+    (state) => state.ProductFilter.categoryBreadcrumb,
   );
 
-  if (!searchedCategory) return null;
+  if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return null;
 
-  const categoryFlow = buildCategoryFlow(searchedCategory);
+  const handleBreadcrumbClick = (cat, index) => {
+    // breadcrumb till clicked level
+    const newBreadcrumb = categoryBreadcrumb.slice(0, index + 1);
+
+    dispatch(setListingSource({ data: "category" }));
+    dispatch(setFilterCategory({ data: cat.id }));
+    dispatch(setCategorySlug({ data: cat.slug }));
+    dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+
+    router.push("/products");
+  };
 
   return (
     <div className="flex gap-2 text-sm text-gray-600 mb-3 flex-wrap">
-      {categoryFlow.map((cat, index) => (
+      {categoryBreadcrumb.map((cat, index) => (
         <span key={cat.id} className="flex items-center gap-2">
-          <Link
-            href={`/products?category=${cat.slug}`}
+          <button
+            onClick={() => handleBreadcrumbClick(cat, index)}
             className="hover:text-primary font-medium"
           >
             {cat.name}
-          </Link>
-          {index < categoryFlow.length - 1 && <span>→</span>}
+          </button>
+          {index < categoryBreadcrumb.length - 1 && (
+            <span>
+              {rtl ? <FaChevronLeft size={14} /> : <FaChevronRight size={14} />}
+            </span>
+          )}
         </span>
       ))}
     </div>

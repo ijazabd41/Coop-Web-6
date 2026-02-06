@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import Link from 'next/link';
+import Link from "next/link";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
 import Filter from "../productFilter/ProductFilter";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import CategoryCard from '../categories/CategoryCard'
-import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import { setSelectedCategories,setListingSource,setSearchedCategory,setCategorySlug } from '@/redux/slices/productFilterSlice';
+import CategoryCard from "../categories/CategoryCard";
+import { setFilterCategory } from "@/redux/slices/productFilterSlice";
+import {
+  setSelectedCategories,
+  setListingSource,
+  setSearchedCategory,
+  setCategorySlug,
+  setCategoryBreadcrumb,
+} from "@/redux/slices/productFilterSlice";
 import CategoryFlowBreadcrumb from "../categories/CategoryFlowBreadcrumb";
 import {
   Select,
@@ -17,11 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import 'swiper/css';
-import 'swiper/css/navigation';
+import "swiper/css";
+import "swiper/css/navigation";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
 import ListViewProductCard from "../productcards/ListViewProductCard";
@@ -36,7 +42,7 @@ import {
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
-import { isRtl } from '@/lib/utils';
+import { isRtl } from "@/lib/utils";
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -52,28 +58,47 @@ const Products = () => {
   const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
   const {
-  listing_source,
-  category_id,
-  category_slug,
-  selectedCategories,
-  searchedCategory,
-} = useSelector((state) => state.ProductFilter);
-
+    listing_source,
+    category_id,
+    category_slug,
+    selectedCategories,
+    searchedCategory,
+  } = useSelector((state) => state.ProductFilter);
+  const categoryBreadcrumb = useSelector(
+    (state) => state.ProductFilter.categoryBreadcrumb,
+  );
+  const currentCategoryName =
+    categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.name;
   const total_products_per_page = 12;
   const rtl = isRtl();
   const isCategoryListing = listing_source === "category";
-  const resolvedCategory = filter?.category_id === "NaN" || filter?.category_id === "all categories" ? null : filter?.category_id;
+  const ancestorCategoryIds = (categoryBreadcrumb) => {
+    if (!Array.isArray(categoryBreadcrumb) || categoryBreadcrumb.length === 0) {
+      return null;
+    }
+    return categoryBreadcrumb.map((category) => category.id).join(",");
+  };
+  const resolvedParentsCategory =
+    filter?.category_id === "NaN" || filter?.category_id === "all categories"
+      ? null
+      : ancestorCategoryIds(categoryBreadcrumb);
+  const resolvedCategory =
+    filter?.category_id === "NaN" || filter?.category_id === "all categories"
+      ? null
+      : filter?.category_id;
+
+  const finalCategoryIds = isCategoryListing
+    ? resolvedParentsCategory
+    : resolvedCategory;
 
   const fetchProducts = async ({ pageParam = 0 }) => {
-    console.log(category_id)
+    console.log(category_id);
     const filterParams = {
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
-      ...(resolvedCategory && (
-      isCategoryListing
-        ? { category_id: resolvedCategory }
-        : { category_ids: resolvedCategory }
-    )),
+      ...(finalCategoryIds && {
+        category_ids: finalCategoryIds,
+      }),
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
       search: filter?.search,
@@ -119,17 +144,14 @@ const Products = () => {
     initialPageParam: 0,
   });
 
-  
-
-
   const productResult = data?.pages?.flatMap((page) => page.data) || [];
   const totalProducts = data?.pages?.[0]?.total || 0;
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
-  const language = useSelector(state => state.Language.selectedLanguage)
+  const language = useSelector((state) => state.Language.selectedLanguage);
   // Dummy setters for Filter component
-  const setProductResult = () => { };
-  const setOffset = () => { };
+  const setProductResult = () => {};
+  const setOffset = () => {};
 
   useEffect(() => {
     if (data?.pages?.[0]) {
@@ -185,65 +207,59 @@ const Products = () => {
   };
 
   const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
-  
-useEffect(() => {
-  const fetchSubCategories = async () => {
-    if (listing_source !== "category" || !category_slug) {
-      setSubCategories([]);
-      return;
-    }
-    console.log(category_slug)
-    try {
-      setIsSubCatLoading(true);
-      const res = await api.getCategories({
-        slug: category_slug,
-      });
-      
-      const currentCategory = res?.data;
-      const subCats = Array.isArray(currentCategory)
-        ? currentCategory
-        : currentCategory?.cat_active_childs ?? [];
 
-      setSubCategories(subCats);
-    } catch (err) {
-      console.error("Failed to fetch subcategories", err);
-      setSubCategories([]);
-    } finally {
-      setIsSubCatLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      if (listing_source !== "category" || !category_slug) {
+        setSubCategories([]);
+        return;
+      }
+      console.log(category_slug);
+      try {
+        setIsSubCatLoading(true);
+        const res = await api.getCategories({
+          slug: category_slug,
+        });
 
-  fetchSubCategories();
-}, [listing_source, category_slug]);
+        const currentCategory = res?.data;
+        const subCats = Array.isArray(currentCategory)
+          ? currentCategory
+          : (currentCategory?.cat_active_childs ?? []);
 
-const buildCategoryFlow = (category) => {
-  const flow = [];
+        setSubCategories(subCats);
+      } catch (err) {
+        console.error("Failed to fetch subcategories", err);
+        setSubCategories([]);
+      } finally {
+        setIsSubCatLoading(false);
+      }
+    };
 
-  let current = category;
-  while (current) {
-    flow.unshift({
-      id: current.id,
-      name: current.name || current?.translations?.name,
-      slug: current.slug,
-    });
+    fetchSubCategories();
+  }, [listing_source, category_slug]);
 
-    current = current.parent || null; // OR mapped parent
-  }
-
-  return flow;
-};
-
-  
+ 
   const handleCategoryClick = (category) => {
-  dispatch(setListingSource({ data: "category" }));
-  dispatch(setFilterCategory({ data: category.id }));
-  dispatch(setSelectedCategories({ data: category.id }));
-  dispatch(setSearchedCategory({ data: category })); // ✅ ONLY category
-  dispatch(setCategorySlug({ data: category.slug }));
-  router.push("/products");
-};
+    const exists = categoryBreadcrumb.find((c) => c.id === category.id);
 
-  
+    const newBreadcrumb = exists
+      ? categoryBreadcrumb
+      : [
+          ...categoryBreadcrumb,
+          {
+            id: category.id,
+            name: category.translations?.name || category.name,
+            slug: category.slug,
+          },
+        ];
+
+    dispatch(setListingSource({ data: "category" }));
+    dispatch(setFilterCategory({ data: category.id }));
+    dispatch(setCategorySlug({ data: category.slug }));
+    dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+
+    router.push("/products");
+  };
 
   return (
     <section>
@@ -256,8 +272,6 @@ const buildCategoryFlow = (category) => {
             className="w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold hover:cursor-pointer"
             onClick={() => setShowFilter(true)}
           >
-
-
             <IoFilter />
             {t("filter")}
           </div>
@@ -275,78 +289,82 @@ const buildCategoryFlow = (category) => {
                 setMinPrice={setMinPrice}
                 setisLoader={setisLoader}
                 hideCategory={listing_source === "category"}
+                disableFilter={listing_source === "category"}
               />
             </div>
             <div className="col-span-12 md:col-span-9">
-              {listing_source === "category" && (
-                  <CategoryFlowBreadcrumb />
-                )}
+              {listing_source === "category" && <CategoryFlowBreadcrumb />}
               <div className="flex flex-col gap-6">
-                 {listing_source === "category" &&(     <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
-                          <p>{category_slug}</p>
-                      </div>)}
+                {listing_source === "category" && (
+                  <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
+                    <p>{currentCategoryName}</p>
+                  </div>
+                )}
                 {listing_source === "category" && subCategories.length > 0 && (
-                  <div className='container' dir={language?.type}>
-                                <div className="flex justify-between items-center p-0 w-full ">
-                                    
+                  <div className="container" dir={language?.type}>
+                    <div className="flex justify-between items-center p-0 w-full ">
+                      <div className="flex items-center ">
+                        {/* {categories?.categoriess?.length > 5 ? ( */}
+                        <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
+                          <div
+                            className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}
+                          >
+                            <button className=" group category-button-next swiperBorderColor rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                              <IoMdArrowBack
+                                className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
+                                size={20}
+                              />
+                            </button>
+                            <button className=" group category-button-prev swiperBorderColor rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                              <IoMdArrowForward
+                                className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
+                                size={20}
+                              />
+                            </button>
+                          </div>
+                        </div>
+                        {/* ) : null} */}
+                      </div>
+                    </div>
 
-                                    <div className="flex items-center ">
-                                        {/* {categories?.categoriess?.length > 5 ? ( */}
-                                        <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
-                                          
-                                            <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>
-                                                <button className=" group category-button-next swiperBorderColor rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                                                    <IoMdArrowBack className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} />
-                                                </button>
-                                                <button className=" group category-button-prev swiperBorderColor rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                                                    <IoMdArrowForward className='swiperNavButtonColor group-hover:text-white transition-colors duration-200' size={20} />
-                                                </button>
-                                            </div>
-
-                                        </div>
-                                        {/* ) : null} */}
-                                    </div>
-                                </div>
-
-                                <div className="mt-6">
-                                    <Swiper
-                                      key={rtl}
-                                      modules={[Navigation]}
-                                      spaceBetween={20}
-                                      slidesPerView={1.5}
-                                      navigation={{
-                                        nextEl: ".category-button-prev",
-                                        prevEl: ".category-button-next",
-                                      }}
-                                      breakpoints={{
-                                        0: { slidesPerView: 1.5 },
-                                        320: { slidesPerView: 2.2 },
-                                        375: { slidesPerView: 2.3 },
-                                        425: { slidesPerView: 4 },
-                                        768: { slidesPerView: 4 },
-                                        1024: { slidesPerView: 6 },
-                                      }}
-                                    >
-                                      {isSubCatLoading ? (
-                                        <SwiperSlide>
-                                          <div className="p-4 text-sm opacity-60">
-                                            {t("loading")}
-                                          </div>
-                                        </SwiperSlide>
-                                      ) : (
-                                        subCategories.map((category) => (
-                                          <SwiperSlide
-                                            key={category.id}
-                                            onClick={() => handleCategoryClick(category)}
-                                          >
-                                            <CategoryCard category={category} />
-                                          </SwiperSlide>
-                                        ))
-                                      )}
-                                    </Swiper>
-                                  </div>
-
-                  </div> 
+                    <div className="mt-6">
+                      <Swiper
+                        key={rtl}
+                        modules={[Navigation]}
+                        spaceBetween={20}
+                        slidesPerView={1.5}
+                        navigation={{
+                          nextEl: ".category-button-prev",
+                          prevEl: ".category-button-next",
+                        }}
+                        breakpoints={{
+                          0: { slidesPerView: 1.5 },
+                          320: { slidesPerView: 2.2 },
+                          375: { slidesPerView: 2.3 },
+                          425: { slidesPerView: 4 },
+                          768: { slidesPerView: 4 },
+                          1024: { slidesPerView: 6 },
+                        }}
+                      >
+                        {isSubCatLoading ? (
+                          <SwiperSlide>
+                            <div className="p-4 text-sm opacity-60">
+                              {t("loading")}
+                            </div>
+                          </SwiperSlide>
+                        ) : (
+                          subCategories.map((category) => (
+                            <SwiperSlide
+                              key={category.id}
+                              onClick={() => handleCategoryClick(category)}
+                            >
+                              <CategoryCard category={category} />
+                            </SwiperSlide>
+                          ))
+                        )}
+                      </Swiper>
+                    </div>
+                  </div>
                 )}
                 {loading ? (
                   <CardSkeleton height={70} />
@@ -394,10 +412,11 @@ const buildCategoryFlow = (category) => {
                       </div>
                       <div className="flex  gap-4 items-center">
                         <span
-                          className={`${filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white p-1.5"
-                            : ""
-                            } hover:cursor-pointer`}
+                          className={`${
+                            filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white p-1.5"
+                              : ""
+                          } hover:cursor-pointer`}
                         >
                           <BsFillGrid3X3GapFill
                             size={23}
@@ -405,10 +424,11 @@ const buildCategoryFlow = (category) => {
                           />
                         </span>
                         <span
-                          className={`${!filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white  p-1.5"
-                            : ""
-                            } hover:cursor-pointer`}
+                          className={`${
+                            !filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white  p-1.5"
+                              : ""
+                          } hover:cursor-pointer`}
                         >
                           <FaThList size={23} onClick={handleListViewChange} />
                         </span>
