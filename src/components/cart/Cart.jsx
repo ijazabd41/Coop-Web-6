@@ -171,7 +171,7 @@ const Cart = () => {
               </p>
             </div>
             <div className="grid grid-cols-12 gap-4 mt-6">
-              <div className="col-span-12 md:col-span-8 cardBorder rounded-sm w-full overflow-hidden">
+              <div className="col-span-12 lg:col-span-8 cardBorder rounded-sm w-full overflow-hidden">
                 <div className="w-full overflow-x-auto">
                   <div className="grid grid-cols-12 gap-4 min-w-[600px] p-4 font-medium border-b border-gray-300">
                     <div className="col-span-4 font-bold">{t("product")}</div>
@@ -213,7 +213,7 @@ const Cart = () => {
                   })}
                 </div>
               </div>
-              <div className="col-span-12 md:col-span-4">
+              <div className="col-span-12 lg:col-span-4">
                 <CartCouponCard setShowCouponCode={setShowCouponCode} />
               </div>
             </div>

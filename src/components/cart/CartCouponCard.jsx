@@ -39,7 +39,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
     );
 
   return (
-    <div className="max-w-sm p-4  border  rounded-md cardBorder">
+    <div className="max-w-[702px] p-4  border  rounded-md cardBorder">
       {user?.jwtToken && (
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-sm font-medium ">{t("have_coupon")}</h3>
@@ -122,15 +122,15 @@ const CartCouponCard = ({ setShowCouponCode }) => {
               )}
         </p>
       </div>
-
+              
       <button
-        className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded "
+        className="w-full py-2 mb-2 text-sm font-medium text-white primaryBackColor rounded md:w-[270px] lg:w-full"
         onClick={handleToCheckOut}
       >
         {t("proceed_to_checkout")}
       </button>
       <button
-        className="w-full py-2 rounded-sm text-sm font-medium  hover:primaryBackColor hover:text-white"
+        className="w-full py-2 rounded-sm text-sm font-medium  hover:primaryBackColor hover:text-white md:w-[270px] lg:w-full"
         onClick={handleToProducts}
       >
         {t("continue_shopping")}

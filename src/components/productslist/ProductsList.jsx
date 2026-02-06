@@ -338,10 +338,10 @@ const Products = () => {
                           prevEl: ".category-button-next",
                         }}
                         breakpoints={{
-                          0: { slidesPerView: 1.5 },
-                          320: { slidesPerView: 2.2 },
+                          0: { slidesPerView: 2 },
+                          320: { slidesPerView: 2.5 },
                           375: { slidesPerView: 2.3 },
-                          425: { slidesPerView: 4 },
+                          425: { slidesPerView: 3 },
                           768: { slidesPerView: 4 },
                           1024: { slidesPerView: 6 },
                         }}

@@ -22,7 +22,6 @@ const CategoryFlowBreadcrumb = () => {
   if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return null;
 
   const handleBreadcrumbClick = (cat, index) => {
-    // breadcrumb till clicked level
     const newBreadcrumb = categoryBreadcrumb.slice(0, index + 1);
 
     dispatch(setListingSource({ data: "category" }));
@@ -34,7 +33,7 @@ const CategoryFlowBreadcrumb = () => {
   };
 
   return (
-    <div className="flex gap-2 text-sm text-gray-600 mb-3 flex-wrap">
+    <div className="flex gap-2 text-sm SecondaryTextColor mb-3 flex-wrap">
       {categoryBreadcrumb.map((cat, index) => (
         <span key={cat.id} className="flex items-center gap-2">
           <button
