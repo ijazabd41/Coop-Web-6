@@ -70,7 +70,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
 
                 </div>
                 {(address?.is_default === 1 && !finalOrderAddress) && (
-                    <p className="text-sm mb-2">{t('default_address_msg')}</p>
+                    <p className="text-sm mb-2 SecondaryTextColor">{t('default_address_msg')}</p>
                 )}
 
                 <p className="text-sm mb-4 font-semibold">{formattedAddress}</p>

@@ -106,13 +106,13 @@ const ActiveOrdersCard = ({ order }) => {
     <div className="w-full   ">
       <div className="py-3 px-4">
         <div className="w-full cardBorder rounded-md">
-          <div className="flex flex-col gap-3 md:gap-0 md:grid grid-cols-12 p-4 border-b-2">
-            <div className="col-span-1">
-              <p className="font-normal text-sm">{t("order")}</p>
+          <div className="flex flex-col gap-3 lg:gap-0 md:grid grid-cols-12 p-4 border-b-2">
+            <div className="col-span-2">
+              <p className="font-normal text-sm SecondaryTextColor">{t("order")}</p>
               <p className="font-bold text-sm">{order?.id}</p>
             </div>
-            <div className="col-span-2">
-              <p className="font-normal text-sm">{t("order_type")}</p>
+            <div className="col-span-3">
+              <p className="font-normal text-sm SecondaryTextColor">{t("order_type")}</p>
               <p className="font-bold text-sm">
                 {" "}
                 {order?.order_type == "doorstep"
@@ -120,21 +120,21 @@ const ActiveOrdersCard = ({ order }) => {
                   : t("store_pickup")}
               </p>
             </div>
-            <div className="col-span-6">
-              <p className="font-normal text-sm">{t("orderDate")}</p>
+            <div className="col-span-4">
+              <p className="font-normal text-sm SecondaryTextColor">{t("orderDate")}</p>
               <p className="font-bold text-sm">
                 {formatCustomDate(order?.date)}
               </p>
             </div>
 
             <div className="col-span-3 flex flex-col items-start md:items-end">
-              <p className="font-normal text-sm">{t("orderStatus")}</p>
+              <p className="font-normal text-sm SecondaryTextColor">{t("orderStatus")}</p>
               {getOrderStatus()}
             </div>
           </div>
           <div className="p-4">
             <div className="flex justify-between gap-2 md:gap-0 mb-4 w-full">
-              <div className="flex items-start gap-2 w-full">
+              <div className="flex  gap-2 w-full">
                 <div
                   className={`relative aspect-square shrink-0 ${
                     orderFirstItem?.image_url
@@ -147,12 +147,12 @@ const ActiveOrdersCard = ({ order }) => {
                       src={orderFirstItem?.image_url}
                       alt="demo image"
                       fill
-                      className="h-full w-full rounded-sm"
+                      className="h-full w-full rounded-sm cardBorder p-[4px]"
                     />
                   )}
                 </div>
-                <div className="flex flex-col md:flex-row justify-between w-full">
-                  <div className="flex-grow">
+                <div className="flex flex-col md:flex-row justify-between md:justify-center md:items-center w-full">
+                  <div className="flex-grow"> 
                     <p className="font-bold text-base text-ellipsis overflow-hidden w-32">
                       {orderFirstItem?.name}
                     </p>
@@ -163,12 +163,12 @@ const ActiveOrdersCard = ({ order }) => {
 
                   <div className="md:ml-auto md:mt-0">
                     {orderFirstItem?.discounted_price != 0 ? (
-                      <div className="flex gap-1">
+                      <div className="flex md:flex-col gap-1">
                         <p className="text-base font-bold">
                           {setting?.setting?.currency}
                           {orderFirstItem?.discounted_price}
                         </p>
-                        <p className="text-base font-normal line-through">
+                        <p className="text-base font-normal line-through SecondaryTextColor">
                           {setting?.setting?.currency}
                           {orderFirstItem?.price}
                         </p>
@@ -189,12 +189,12 @@ const ActiveOrdersCard = ({ order }) => {
               </button>
             )}
           </div>
-          <div className="backgroundColor">
+          <div className="backgroundColor topBorder rounded-sm">
             <div
               className={`flex justify-between p-4 flex-col md:flex-row gap-1 md:gap-0`}
             >
-              <div className="flex gap-1 items-center">
-                <span>
+              <div className="flex md:flex-col gap-1">
+                <span className="SecondaryTextColor">
                   {t("total")} {t("Credit")}{" "}
                 </span>
                 <span className="font-bold text-lg">

@@ -197,6 +197,10 @@
     border-bottom: 1px solid var(--border-color);
   }
 
+  .topBorder {
+    border-top: 1px solid var(--border-color);
+  }
+
   .textPrimaryColor {
     color: var(--primary-color);
   }

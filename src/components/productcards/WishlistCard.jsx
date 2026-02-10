@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaMinus, FaPlus, FaShoppingBasket } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { BiTrash } from "react-icons/bi";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -37,7 +37,7 @@ const WishlistCard = ({
           ...quantities,
           [product.product_id]: existingQty + product.qty,
         };
-      }, {})
+      }, {}),
     ).map(([productId, qty]) => ({
       product_id: parseInt(productId),
       qty,
@@ -49,7 +49,7 @@ const WishlistCard = ({
       const response = await api.removeFromFavorite({ product_id: prdctId });
       if (response.status == 1) {
         const updateProducts = wishlistProducts?.filter(
-          (prdct) => prdct?.id != prdctId
+          (prdct) => prdct?.id != prdctId,
         );
         setWishlistProducts(updateProducts);
         setTotal((prevTotal) => prevTotal - 1);
@@ -77,7 +77,7 @@ const WishlistCard = ({
   const handleQuantityDecrease = (e) => {
     if (
       cart?.cartProducts?.find(
-        (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
+        (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
       ).qty == 1
     ) {
       removeFromCart(product?.id, product?.variants[0]?.id);
@@ -86,8 +86,8 @@ const WishlistCard = ({
         product.id,
         product?.variants[0].id,
         cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
-        )?.qty - 1
+          (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
+        )?.qty - 1,
       );
     }
   };
@@ -102,7 +102,7 @@ const WishlistCard = ({
         const updatedProducts = cart?.cartProducts?.filter(
           (product) =>
             product?.product_id != productId &&
-            product?.product_variant_id != variantId
+            product?.product_variant_id != variantId,
         );
         dispatch(setCartSubTotal({ data: response?.sub_total }));
         dispatch(setCartProducts({ data: updatedProducts }));
@@ -115,7 +115,7 @@ const WishlistCard = ({
   };
   const handleValidateAddExistingProduct = (productQuantity, product) => {
     const productQty = productQuantity?.find(
-      (prdct) => prdct?.product_id == product?.id
+      (prdct) => prdct?.product_id == product?.id,
     )?.qty;
     if (Number(product.is_unlimited_stock)) {
       if (productQty < Number(product?.total_allowed_quantity)) {
@@ -123,8 +123,8 @@ const WishlistCard = ({
           product.id,
           product?.variants[0]?.id,
           cart?.cartProducts?.find(
-            (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
-          )?.qty + 1
+            (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
+          )?.qty + 1,
         );
       } else {
         toast.error(t("max_cart_limit_error"));
@@ -139,8 +139,8 @@ const WishlistCard = ({
           product.id,
           product?.variants[0]?.id,
           cart?.cartProducts?.find(
-            (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
-          )?.qty + 1
+            (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
+          )?.qty + 1,
         );
       }
     }
@@ -158,7 +158,7 @@ const WishlistCard = ({
           cart?.cartProducts?.find(
             (product) =>
               product?.product_id == productId &&
-              product?.product_variant_id == productVId
+              product?.product_variant_id == productVId,
           )?.qty == undefined
         ) {
           dispatch(setCart({ data: response }));
@@ -195,7 +195,7 @@ const WishlistCard = ({
 
   const handleValidateAddNewProduct = (productQuantity, product) => {
     const productQty = productQuantity?.find(
-      (prdct) => prdct?.product_id == product?.id
+      (prdct) => prdct?.product_id == product?.id,
     )?.qty;
 
     if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
@@ -221,10 +221,10 @@ const WishlistCard = ({
   const isProductAlreadyAdded =
     cart?.isGuest === false &&
     cart?.cartProducts?.find(
-      (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
+      (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
     )?.qty > 0;
   const addedQuantity = cart?.cartProducts?.find(
-    (prdct) => prdct?.product_variant_id == product?.variants[0]?.id
+    (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
   )?.qty;
 
   return (
@@ -232,7 +232,7 @@ const WishlistCard = ({
       <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
         {/* Product Image and Details */}
         <div className="col-span-4 flex space-x-5">
-          <div className="w-16 h-16 rounded-sm flex-shrink-0">
+          <div className="w-[72px] h-[72px] rounded-sm cardBorder p-[4px] flex-shrink-0">
             <ImageWithPlaceholder
               src={product?.image_url}
               alt="Image"
@@ -316,7 +316,7 @@ const WishlistCard = ({
             className="text-red-600 hover:text-red-800"
             onClick={() => handleRemoveFromWishlist(product?.id)}
           >
-            <RiDeleteBin6Line size={26} />
+            <BiTrash size={26} />
           </button>
         </div>
       </div>

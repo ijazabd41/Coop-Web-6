@@ -10,7 +10,7 @@ import {
   setGuestCartTotal,
 } from "@/redux/slices/cartSlice";
 import { toast } from "react-toastify";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { BiTrash } from "react-icons/bi";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import { t } from "@/utils/translation";
@@ -400,7 +400,7 @@ const CartProductCard = ({
           className="text-red-600 hover:text-red-800"
           onClick={handleRemoveItem}
         >
-          <RiDeleteBinLine size={26} />
+          <BiTrash size={26} />
         </button>
       </div>
     </div>

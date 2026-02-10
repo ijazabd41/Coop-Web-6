@@ -171,7 +171,7 @@ const Cart = () => {
               </p>
             </div>
             <div className="grid grid-cols-12 gap-4 mt-6">
-              <div className="col-span-12 lg:col-span-8 cardBorder rounded-sm w-full overflow-hidden">
+              <div className="col-span-12 lg:col-span-8 cardBorder rounded-sm w-full overflow-hidden self-start">
                 <div className="w-full overflow-x-auto">
                   <div className="grid grid-cols-12 gap-4 min-w-[600px] p-4 font-medium border-b border-gray-300">
                     <div className="col-span-4 font-bold">{t("product")}</div>
