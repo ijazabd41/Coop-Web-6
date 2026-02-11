@@ -98,6 +98,11 @@ const Blogs = () => {
       <BreadCrumb />
       <div className="container my-12">
         <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
+          {blogs?.length == 0 && (
+              <div className="w-full flex col-span-12 justify-center ">
+                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+              </div>
+            )}
           <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               {blogsLoading
@@ -106,12 +111,6 @@ const Blogs = () => {
                   ))
                 : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
             </div>
-            {blogs?.length == 0 && (
-              <div className="w-full flex justify-center md:mt-96">
-                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
-              </div>
-            )}
-
             {blogs?.length < totalBlogs && (
               <div className="w-full flex justify-center mt-6">
                 <button

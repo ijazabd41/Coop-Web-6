@@ -256,9 +256,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <ul>
               <Link href={`/profile`}>
                 <li
-                  className={`p-4  cursor-pointer   ${activeTab == "profile"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "profile"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("profile")}
                 >
@@ -269,9 +269,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 (authType == "phone" && setting?.phone_auth_password == 1 && (
                   <Link href={`/profile/resetpassword`}>
                     <li
-                      className={`p-4  cursor-pointer   ${activeTab == "resetpassword"
-                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor"
-                        : "hover:primaryBackColor hover:text-white"
+                      className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "resetpassword"
+                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor opacity-100"
+                        : "hover:primaryBackColor hover:text-white hover:opacity-100"
                         }`}
                       onClick={() => handleTabChange("profile")}
                     >
@@ -284,9 +284,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/address`}>
                 <li
-                  className={`p-4  cursor-pointer   ${activeTab == "address"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "address"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("address")}
                 >
@@ -297,9 +297,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 (
                   <Link href={`/profile/subscription`}>
                     <li
-                      className={`p-4  cursor-pointer   ${activeTab == "subscription"
-                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor"
-                        : "hover:primaryBackColor hover:text-white"
+                      className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "subscription"
+                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                        : "hover:primaryBackColor hover:text-white hover:opacity-100"
                         }`}
                       onClick={() => handleTabChange("subscription")}
                     >
@@ -321,9 +321,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <ul>
               <Link href={`/profile/activeorders`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "activeorders"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "activeorders"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("activeorders")}
                 >
@@ -333,9 +333,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/orderhistory`}>
                 <li
-                  className={`p-4  cursor-pointer  ${activeTab == "orderhistory"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "orderhistory"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("orderhistory")}
                 >
@@ -344,9 +344,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </Link>
               <Link href={`/profile/wishlist`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "wishlist"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "wishlist"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("wishlist")}
                 >
@@ -371,9 +371,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </span>
               </li>
               <li
-                className={`p-4  cursor-pointer  textColor ${activeTab == "add-balance"
-                  ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                  : "hover:primaryBackColor hover:text-white"
+                className={`p-4  cursor-pointer  opacity-[0.76] ${activeTab == "add-balance"
+                  ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                  : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                 onClick={handleWalletBalanceModal}
               >
@@ -381,9 +381,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </li>
               <Link href={`/profile/wallethistory`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "wallethistory"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "wallethistory"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("wallethistory")}
                 >
@@ -393,9 +393,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
               <Link href={`/profile/transaction`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "transaction"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "transaction"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("transaction")}
                 >
@@ -407,16 +407,16 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
 
           {/* Other Settings Section */}
           <div className="">
-            <h3 className="text-base font-semibold textColor  flex items-center  p-4 cardBorder">
+            <h3 className="text-base font-semibold flex items-center  p-4 cardBorder">
               <BiCog className="mr-2 textColor" size={20} />{" "}
               {`${t("address_type_other")} ${t("setting")}`}
             </h3>
             <ul>
               <Link href={`/profile/notifications`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "notifications"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "notifications"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("notifications")}
                 >
@@ -425,9 +425,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </Link>
               <Link href={`/profile/notification-setting`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "notification_setting"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4 cursor-pointer opacity-[0.76] ${activeTab == "notification-setting"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("notification_setting")}
                 >
@@ -436,9 +436,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               </Link>
               <Link href={`/profile/requested-products`}>
                 <li
-                  className={`p-4  cursor-pointer  textColor ${activeTab == "requested-products"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4"
-                    : "hover:primaryBackColor hover:text-white"
+                  className={`p-4  cursor-pointer opacity-[0.76] ${activeTab == "requested-products"
+                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                   onClick={() => handleTabChange("requested-products")}
                 >
@@ -446,19 +446,19 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 </li>
               </Link>
               <li
-                className={`p-4  cursor-pointer  textColor hover:primaryBackColor hover:text-white`}
+                className={`p-4  cursor-pointer  textColor opacity-[0.76] hover:primaryBackColor hover:text-white hover:opacity-100`}
                 onClick={() => handleShowReferAndEarn()}
               >
                 <span className="ml-12 md:ml-[0] lg:ml-12">{t("referandearn")}</span>
               </li>
               <li
-                className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}
+                className={`p-4 rounded cursor-pointer opacity-[0.76] hover:primaryBackColor hover:text-white textColor hover:opacity-100`}
                 onClick={() => setShowLogout(true)}
               >
                 <span className="ml-12 md:ml-[0] lg:ml-12">{t("logout")}</span>
               </li>
               <li
-                className={`p-4 rounded cursor-pointer hover:primaryBackColor hover:text-white textColor`}
+                className={`p-4 rounded cursor-pointer opacity-[0.76] hover:primaryBackColor hover:text-white textColor hover:opacity-100`}
                 onClick={() => setShowDelete(true)}
               >
                 <span className="ml-12 md:ml-[0] lg:ml-12">{t("delete_account")}</span>

@@ -167,6 +167,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                         ? "addToCartColor"
                         : ""
                     }`}
+                    onClick={()=>{handleSelectedPaymentMethod("COD")}}
                   >
                     <div className="flex gap-2 items-center">
                       <Image
@@ -201,6 +202,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                         ? "addToCartColor"
                         : ""
                     }`}
+                    onClick={()=>{handleSelectedPaymentMethod(method.label)}}
                   >
                     <div className="flex gap-2 items-center">
                       <Image
