@@ -156,7 +156,7 @@ const CartProductCard = ({
                   if (
                     cartProduct?.product_id == product?.product_id &&
                     cartProduct?.product_variant_id ==
-                      product?.product_variant_id
+                    product?.product_variant_id
                   ) {
                     return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                   } else {
@@ -204,7 +204,7 @@ const CartProductCard = ({
                   if (
                     cartProduct?.product_id == product?.product_id &&
                     cartProduct?.product_variant_id ==
-                      product?.product_variant_id
+                    product?.product_variant_id
                   ) {
                     return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                   } else {
@@ -321,11 +321,11 @@ const CartProductCard = ({
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id
-        )?.qty
+        (prdct) => prdct?.product_variant_id == product?.product_variant_id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == product?.product_variant_id
+      )?.qty;
 
   return (
     <div className="grid grid-cols-12 items-center gap-4 p-4 border-b min-w-[600px]">
@@ -337,17 +337,16 @@ const CartProductCard = ({
             alt={product?.name}
             width={380}
             height={380}
-            
             className="w-16 h-16 object-cover  flex-shrink-0"
           />
         </div>
         <div>
           <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
-            {product?.name}
+            {product?.product?.translations?.name}
           </h3>
 
           <p className="text-xs font-normal">
-            {product?.measurement} {product?.unit_code}
+            {product?.measurement} {product?.unit?.translations?.short_code}
           </p>
         </div>
       </div>

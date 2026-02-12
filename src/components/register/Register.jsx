@@ -175,6 +175,7 @@ const Register = ({
       phoneNumber?.length < countryCode.length ||
       phoneNumber?.slice(1) === countryCode
     ) {
+      // FIXME: translate this error message
       setError("Please enter phone number!");
       setErrorType("phone");
       setIsLoading(false);

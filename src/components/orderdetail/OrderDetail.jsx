@@ -61,6 +61,7 @@ const OrderDetail = () => {
       } else if (error.message) {
         toast.error(error.message);
       } else {
+        // FIXME: translate this error message
         toast.error("Something went wrong!");
       }
     }

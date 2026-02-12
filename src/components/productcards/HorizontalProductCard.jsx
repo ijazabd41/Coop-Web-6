@@ -137,6 +137,7 @@ const HorizontalProductCard = ({ product }) => {
       console.log("error", error);
     }
   };
+  
   const AddToGuestCart = (
     product,
     productId,

@@ -255,13 +255,13 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                     <div className='flex flex-col justify-between h-full'>
                         <div className="flex items-center justify-between">
                             <h2 className="text-base font-bold whitespace-nowrap overflow-hidden text-ellipsis w-[80%]">
-                                {product?.name}
+                                {product?.product?.translations?.name}
                             </h2>
                             <IoClose size={20} onClick={handleRemoveItem} />
                         </div>
 
                         <div className='mt-2'>
-                            <span className='flex items-center gap-1'>{product?.measurement} {product?.unit_code}</span>
+                            <span className='flex items-center gap-1'>{product?.measurement} {product?.unit?.translations?.short_code}</span>
                         </div>
                         <div className='flex justify-between items-center mt-3 md:mt-4'>
                             <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>
@@ -269,10 +269,6 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                                 <span className='w-full text-center'>{addedQuantity}</span>
                                 <button className='text-2xl font-bold px-1' onClick={() => handleQuantityIncrease()}><FiPlus size={20} /></button>
                             </div>
-                            {/* <div className='flex gap-1 items-center'>
-                                {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? <> <h2 className='text-base font-bold'> {setting?.currency}{product?.discounted_price}</h2>
-                                    <p className='text-sm font-normal line-through'>{setting?.currency} {product?.price}</p></> : <h2 className='text-base font-bold'>{setting?.currency} {product?.price}</h2>}
-                            </div> */}
 
                             <div className='flex flex-col sm:flex-row gap-1 items-start sm:items-center'>
                                 {product?.discounted_price != 0 && product?.discounted_price !== product?.price ? (
