@@ -49,6 +49,8 @@ const Filter = ({
   const [sellerOffset, setSellerOffset] = useState(0);
   const [tempMinPrice, setTempMinPrice] = useState(null);
   const [tempMaxPrice, setTempMaxPrice] = useState(null);
+  const [defaultMinPrice, setDefaultMinPrice] = useState(minPrice);
+  const [defaultMaxPrice, setDefaultMaxPrice] = useState(maxPrice);
   const [activeKey, setActiveKey] = useState(["1", "2", "3", "4"]);
   const brandLimit = 10;
   const sellerLimit = 10;
@@ -183,6 +185,11 @@ const Filter = ({
     fetchSellers(sellerOffset + brandLimit);
   };
 
+  useEffect(() => {
+    setDefaultMinPrice(minPrice);
+    setDefaultMaxPrice(maxPrice);
+  }, [minPrice, maxPrice]);
+
   return (
     <>
       {loadingCategories || loadingBrands || loadingSellers ? (
@@ -196,10 +203,12 @@ const Filter = ({
                 className="m-0 text-sm font-normal text-[#DB3D26] cursor-pointer"
                 onClick={() => {
                   setSelectedCategories([]);
-                  setMinPrice(values[0]);
-                  setMaxPrice(values[1]);
-                  setTempMinPrice(minPrice);
-                  setTempMaxPrice(maxPrice);
+                  setMinPrice(defaultMinPrice);
+                  setMaxPrice(defaultMaxPrice);
+                  setValues([defaultMinPrice, defaultMaxPrice]);
+                  setTempMinPrice(defaultMinPrice);
+                  setTempMaxPrice(defaultMaxPrice);
+
                   if (disableFilter) {
                     dispatch(
                       clearAllFilter({
