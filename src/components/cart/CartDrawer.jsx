@@ -31,6 +31,7 @@ import Loader from "../loader/Loader";
 import CartDrawerSkeletons, {
   AppliedCouponSkeleton,
 } from "./CartDrawerLoading.jsx";
+import { setListingSource } from "@/redux/slices/productFilterSlice";
 
 const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
   const dispatch = useDispatch();
@@ -72,7 +73,11 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
         setCartProductsData(cartData?.data?.cart);
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
-        dispatch(setDoorStepDeliveryMode({data:cartData?.data?.doorstep_delivery_mode}))
+        dispatch(
+          setDoorStepDeliveryMode({
+            data: cartData?.data?.doorstep_delivery_mode,
+          }),
+        );
         setCartData(cartData?.data);
         await handleApplyCoupon();
         const productsData = cartData?.data?.cart?.map((product) => {
@@ -156,6 +161,9 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
     setCouponLoading(true);
     dispatch(clearCartPromo());
     setCouponLoading(false);
+  };
+  const handleShopNow = () => {
+    dispatch(setListingSource({ data: "all" }));
   };
 
   return (
@@ -252,14 +260,18 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                       {cart.isGuest
                         ? cart?.guestCartTotal
                         : isCouponApplied
-                        ? (
-                            cart?.cartSubTotal - cart?.promo_code?.discount
-                          )?.toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 0
-                          )
-                        : cart?.cartSubTotal.toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 0
-                          )}
+                          ? (
+                              cart?.cartSubTotal - cart?.promo_code?.discount
+                            )?.toFixed(
+                              setting?.decimal_point
+                                ? setting?.decimal_point
+                                : 0,
+                            )
+                          : cart?.cartSubTotal.toFixed(
+                              setting?.decimal_point
+                                ? setting?.decimal_point
+                                : 0,
+                            )}
                     </span>
                   </div>
                 </div>
@@ -299,6 +311,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                 <Link
                   href="/products"
                   className="primaryBackColor text-white font-bold p-1 rounded-sm"
+                  onClick={handleShopNow}
                 >
                   {t("empty_cart_list_button_name")}
                 </Link>
