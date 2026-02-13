@@ -32,14 +32,14 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let favicon = null;
       if (process.env.NEXT_PUBLIC_SEO === "true") {
         const seoData = response?.data.data || {};
-        metaKeywords = seoData?.[0]?.meta_keywords || metaKeywords;
-        metaTitle = seoData?.[0]?.meta_title || metaTitle;
-        metaDescription = seoData?.[0]?.meta_description || metaDescription;
+        metaKeywords = seoData?.[0]?.translations?.meta_keywords || metaKeywords;
+        metaTitle = seoData?.[0]?.translations?.meta_title || metaTitle;
+        metaDescription = seoData?.[0]?.translations?.meta_description || metaDescription;
         og_image = seoData?.[0]?.image_url || null;
         favicon = seoData?.[0].favicon || null;
-        if (seoData?.schema_markup) {
+        if (seoData?.translations?.schema_markup) {
           markUpSchema =
-            extractJSONFromMarkup(seoData?.[0]?.schema_markup) || "";
+            extractJSONFromMarkup(seoData?.[0]?.translations?.schema_markup) || "";
         }
       }
       return {

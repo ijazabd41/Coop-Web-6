@@ -29,15 +29,15 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
               />
               <div className="flex flex-col gap-2 overflow-hidden">
                 <p className="text-sm font-normal">
-                  {blog?.title?.slice(0, 20)}
+                  {blog?.translations?.title?.slice(0, 20)}
                 </p>
                 <h2
                   className="font-bold text-base blog-card-description"
                   dangerouslySetInnerHTML={{
                     __html:
-                      blog?.description?.length > 25
-                        ? blog.description.slice(0, 25) + "..."
-                        : blog?.description,
+                      blog?.translations?.description?.length > 25
+                        ? blog?.translations?.description?.slice(0, 25) + "..."
+                        : blog?.translations?.description,
                   }}
                 ></h2>
               </div>

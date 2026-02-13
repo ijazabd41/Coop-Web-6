@@ -18,7 +18,7 @@ const BlogCard = ({ blog }) => {
         <ImageWithPlaceholder
           className="h-[264px] w-full rounded-lg object-cover "
           src={blog?.image_url}
-          alt={blog?.title}
+          alt={blog?.translations?.title}
           width={390}
           height={264}
           quality={90}
@@ -27,16 +27,16 @@ const BlogCard = ({ blog }) => {
       </div>
       <div className="flex gap-2 flex-col">
         <div className="flex gap-2 items-center">
-          <p>{blog?.category?.name}</p>
+          <p>{blog?.category?.translations?.name}</p>
           <GoDotFill />
           <p>{formatOnlyDate(blog?.created_at)}</p>
         </div>
         <div className="flex flex-col gap-2 min-h-14">
           <div>
             <h2 className="font-bold text-xl ">
-              {blog?.title?.slice(0, 32) + "..."}
+              {blog?.translations?.title?.slice(0, 32) + "..."}
             </h2>
-            <h4 className="blog-card-description">{blog?.short_description}</h4>
+            <h4 className="blog-card-description">{blog?.translations?.short_description}</h4>
           </div>
         </div>
       </div>
