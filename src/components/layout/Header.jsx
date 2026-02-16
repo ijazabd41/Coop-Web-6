@@ -25,6 +25,7 @@ import {
 } from "react-icons/io5";
 import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
+import { BiCaretRight } from "react-icons/bi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import CartDrawer from "../cart/CartDrawer";
 import Login from "../login/Login";
@@ -37,9 +38,10 @@ import {
   BiCartAlt,
   BiUserCircle,
   BiWallet,
-  BiCart 
+  BiCart,
 } from "react-icons/bi";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { LuMapPin } from "react-icons/lu";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { setCity } from "@/redux/slices/citySlice";
@@ -169,6 +171,7 @@ const Header = () => {
       console.log("error", error);
     }
   };
+  console.log(city);
 
   const handleCartOpen = () => {
     if (router.pathname == "/checkout") {
@@ -277,8 +280,8 @@ const Header = () => {
                                   // Special handling for WeChat icon
                                   <i className="fab fa-weixin"></i>
                                 ) : social?.icon
-                                  .toLowerCase()
-                                  .includes("twitter") ? (
+                                    .toLowerCase()
+                                    .includes("twitter") ? (
                                   // Special handling for TikTok icon
                                   <FaXTwitter className={`${social?.icon}`} />
                                 ) : (
@@ -352,7 +355,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="headerBackgroundColor pb-3 relative">
+        <div className="headerBackgroundColor pb-0 md:pb-3 relative">
           <div className="center-header headerBackgroundColor container">
             <div className="  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2">
               <div className="  relative order-2 lg:order-1 h-[38px] lg:h-[45px] w-[140px] lg:w-[170px]">
@@ -421,7 +424,7 @@ const Header = () => {
                 >
                   {/* <span className='p-3 iconBackgroundColor rounded-full '><IoCartOutline size={24} className='iconsColor' /></span> */}
                   <span className="p-3 iconBackgroundColor rounded-full relative">
-                    <BiCart  size={24} className="iconsColor" />
+                    <BiCart size={24} className="iconsColor" />
                     {cart.isGuest == true ? (
                       <p
                         className={
@@ -456,15 +459,15 @@ const Header = () => {
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
                         ? cart?.guestCartTotal?.toFixed(
-                          setting?.setting?.decimal_point
-                            ? setting?.setting?.decimal_point
-                            : 0
-                        )
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0,
+                          )
                         : cart?.cartSubTotal?.toFixed(
-                          setting?.setting?.decimal_point
-                            ? setting?.setting?.decimal_point
-                            : 0
-                        )}
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0,
+                          )}
                     </span>
                   </div>
                 </div>
@@ -474,7 +477,7 @@ const Header = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger className="flex items-center border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
                           <span className="p-3 iconBackgroundColor rounded-full">
-                            <LuUser  size={24} className="iconsColor" />
+                            <LuUser size={24} className="iconsColor" />
                           </span>
                           {t("profile")}
                         </DropdownMenuTrigger>
@@ -547,7 +550,7 @@ const Header = () => {
                     onClick={handleLoginOpen}
                   >
                     <span className="p-3 iconBackgroundColor rounded-full">
-                      <LuUser  size={24} className="iconsColor" />
+                      <LuUser size={24} className="iconsColor" />
                     </span>
                     <div className="flex ">
                       <span className="text-base font-bold">{t("login")}</span>
@@ -603,17 +606,22 @@ const Header = () => {
             </div>
           </div>
           <div className="bottom-header ">
-            <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 mb-4 px-2 ">
+            <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 mb-2 md:mb-4 px-2 ">
               {/* First column: col-3 equivalent */}
               <div
-                className="col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer"
+                className="col-span-11 md:col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer"
                 onClick={handleOpenLocation}
               >
-                <span className="p-3 iconBackgroundColor  rounded-full">
-                  <IoLocationOutline size={24} className="iconsColor" />
+                <span className="p-3 iconBackgroundColor hidden md:block rounded-full">
+                  <IoLocationOutline size={24} className="iconsColor " />
+                </span>
+                <span className="block md:hidden">
+                  <LuMapPin size={24} />
                 </span>
                 <div className="flex flex-col">
-                  <span className="text-sm ">{t("deliver_to")}</span>
+                  <span className="text-sm shortDescriptionText">
+                    {t("deliver_to")}
+                  </span>
                   <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap w-40">
                     <>
                       {city.status === "fulfill" ? (
@@ -630,6 +638,9 @@ const Header = () => {
                     </>
                   </span>
                 </div>
+              </div>
+              <div className="block md:hidden">
+                <BiCaretRight size={18} />
               </div>
               <div className="hidden md:block lg:col-span-6 md:col-span-8">
                 <SearchComponent
@@ -708,10 +719,11 @@ const Header = () => {
             >
               <IoHomeOutline
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 1
-                  ? "primaryBackColor text-white  "
-                  : "bg-[#55AE7B14] primaryColor "
-                  }p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 1
+                    ? "primaryBackColor text-white  "
+                    : "bg-[#55AE7B14] primaryColor "
+                }p-2 rounded-full`}
               />
               <span className="text-sm">{t("home")}</span>
             </div>
@@ -722,10 +734,11 @@ const Header = () => {
             >
               <IoSearchOutline
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 2
-                  ? "primaryBackColor text-white "
-                  : "bg-[#55AE7B14] primaryColor "
-                  } p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 2
+                    ? "primaryBackColor text-white "
+                    : "bg-[#55AE7B14] primaryColor "
+                } p-2 rounded-full`}
               />
               <span className="text-sm">{t("search")}</span>
             </div>
@@ -736,10 +749,11 @@ const Header = () => {
             >
               <FaRegUser
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 3
-                  ? "primaryBackColor text-white "
-                  : "bg-[#55AE7B14] primaryColor "
-                  } p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 3
+                    ? "primaryBackColor text-white "
+                    : "bg-[#55AE7B14] primaryColor "
+                } p-2 rounded-full`}
               />
               <span className="text-sm">
                 {user?.jwtToken ? t("profile") : t("login")}

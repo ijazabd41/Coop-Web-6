@@ -9,14 +9,14 @@ const WalletTransactionCard = ({ transaction }) => {
     <div>
       <div className="border rounded-lg cardBorder">
         {/* Header: Transaction ID and Date */}
-        <div className="flex justify-between  text-sm  p-[16px]">
+        <div className="flex justify-between  text-sm  p-[16px] gap-[16px]">
           <div>
-            <p className="font-semibold text-nowrap text-sm">{t("transaction_id")}</p>
+            <p className="SecondaryTextColor text-nowrap text-sm">{t("transaction_id")}</p>
             <p className=" font-bold">{transaction?.id}</p>
           </div>
-          <div className="text-right">
-            <p className="font-semibold break-words">{t("date")}</p>
-            <p className="">{formatCustomDate(transaction?.created_at)}</p>
+          <div className="text-left md:text-right">
+            <p className="SecondaryTextColor break-words">{t("date")}</p>
+            <p className="font-bold">{formatCustomDate(transaction?.created_at)}</p>
           </div>
         </div>
 
@@ -31,10 +31,10 @@ const WalletTransactionCard = ({ transaction }) => {
         {/* Transaction Amount Section */}
         <div className="py-3 cardBorder rounded-br-lg rounded-bl-lg flex justify-between items-center backgroundColor p-[16px]">
           <div>
-            <p className=" text-sm">
+            <p className=" text-sm SecondaryTextColor">
               {t("transaction")} {t("amount")}
             </p>
-            <p className="text-2xl font-bold">
+            <p className="text-xl lg:text-2xl font-bold">
               {setting?.currency}
               {transaction?.amount?.toFixed(
                 setting?.decimal_point ? setting?.decimal_point : 0

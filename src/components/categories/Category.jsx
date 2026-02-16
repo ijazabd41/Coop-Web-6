@@ -8,9 +8,7 @@ import {
   setFilterCategory,
   setSelectedCategories,
   setListingSource,
-  setSearchedCategory,
   setCategorySlug,
-  setFilterProducts,
   setCategoryBreadcrumb,
 } from "@/redux/slices/productFilterSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";

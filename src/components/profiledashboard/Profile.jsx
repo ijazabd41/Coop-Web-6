@@ -130,16 +130,16 @@ const Profile = () => {
   };
 
   return (
-    <div className="w-full mx-auto h-fit border-2   rounded-lg   ">
+    <div className="w-full mx-auto h-fit border-2 rounded-lg">
       <div className="w-full backgroundColor">
         <h2 className="text-2xl font-semibold  p-4">{t("editProfile")}</h2>
       </div>
-      <div className="items-center flex flex-col">
+      <div className="items-center  flex flex-col">
         <form
           className="w-full  justify-center items-center flex flex-col"
           onSubmit={handleProfileUpdate}
         >
-          <div className="w-[90%] md:w-1/2 pt-[48px] pb-[48px] gap-[48px]">
+          <div className="flex flex-col w-[90%] md:w-1/2 pt-[48px] pb-[48px] gap-[48px]">
             <div className="flex justify-center ">
               <div className="relative">
                 <div className="relative w-36 h-36  rounded-md flex items-center justify-center overflow-hidden">

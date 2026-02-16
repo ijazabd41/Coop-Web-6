@@ -131,8 +131,8 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 />
               </div>
               <div className="w-1/2 ">
-                <p className="text-base font-bold ">{t("hello")},</p>
-                <p className="text-xl md:text-lg lg:text-xl  font-bold textColor">
+                <p className="text-[14px] SecondaryTextColor">{t("hello")},</p>
+                <p className="text-xl md:text-[16px] lg:text-xl  font-bold textColor">
                   {user?.name?.slice(0, 16)}
                 </p>
               </div>
@@ -141,9 +141,9 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <div className="flex gap-6 flex-col">
               <div className="flex gap-3">
                 {user?.has_active_subscription == 1 ? (
-                  <div className="flex items-start w-full justify-between ">
-                    <div className="flex gap-2">
-                      <div className="p-2 primaryBackColor rounded-full border border-white   ">
+                  <div className="flex items-start w-full justify-between md:gap-1 lg:justify-between">
+                    <div className="flex gap-2 md:gap-1 lg:gap-2">
+                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-10  shrink-0">
                         <Image
                           src={LightImage}
                           alt="light logo"
@@ -153,7 +153,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <h2 className="font-bold text-base">
+                        <h2 className="font-bold text-base text-nowrap">
                           {user?.user_subscription_plan_name}
                         </h2>
                         <p className="text-sm leading-[17px] font-normal">
@@ -161,7 +161,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </p>
                       </div>
                     </div>
-                    <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 rounded-full">
+                    <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 md:px-2 md:py-0.5 lg:px-3 lg:py-1  rounded-full">
                       {t("active")}
                     </span>
                   </div>

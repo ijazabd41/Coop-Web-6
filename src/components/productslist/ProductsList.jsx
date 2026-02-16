@@ -6,12 +6,11 @@ import { t } from "@/utils/translation";
 import Filter from "../productFilter/ProductFilter";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import CategoryCard from "../categories/CategoryCard";
+import SubCategorySwiper from "../categories/SubCategorySwiper";
+
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
 import {
-  setSelectedCategories,
   setListingSource,
-  setSearchedCategory,
   setCategorySlug,
   setCategoryBreadcrumb,
 } from "@/redux/slices/productFilterSlice";
@@ -24,8 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/router";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
@@ -41,7 +39,7 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
-import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
+
 import { isRtl } from "@/lib/utils";
 
 const Products = () => {
@@ -296,75 +294,14 @@ const Products = () => {
               {listing_source === "category" && <CategoryFlowBreadcrumb />}
               <div className="flex flex-col gap-6">
                 {listing_source === "category" && (
-                  <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
-                    <p>{currentCategoryName}</p>
-                  </div>
-                )}
-                {listing_source === "category" && subCategories.length > 0 && (
-                  <div className="container" dir={language?.type}>
-                    <div className="flex justify-between items-center p-0 w-full ">
-                      <div className="flex items-center ">
-                        {/* {categories?.categoriess?.length > 5 ? ( */}
-                        <div className="flex justify-end items-center gap-4 flex-col md:flex-row">
-                          <div
-                            className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}
-                          >
-                            <button className=" group category-button-next swiperBorderColor rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                              <IoMdArrowBack
-                                className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
-                                size={20}
-                              />
-                            </button>
-                            <button className=" group category-button-prev swiperBorderColor rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
-                              <IoMdArrowForward
-                                className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
-                                size={20}
-                              />
-                            </button>
-                          </div>
-                        </div>
-                        {/* ) : null} */}
-                      </div>
-                    </div>
-
-                    <div className="mt-6">
-                      <Swiper
-                        key={rtl}
-                        modules={[Navigation]}
-                        spaceBetween={20}
-                        slidesPerView={1.5}
-                        navigation={{
-                          nextEl: ".category-button-prev",
-                          prevEl: ".category-button-next",
-                        }}
-                        breakpoints={{
-                          0: { slidesPerView: 2 },
-                          320: { slidesPerView: 2.5 },
-                          375: { slidesPerView: 2.3 },
-                          425: { slidesPerView: 3 },
-                          768: { slidesPerView: 4 },
-                          1024: { slidesPerView: 6 },
-                        }}
-                      >
-                        {isSubCatLoading ? (
-                          <SwiperSlide>
-                            <div className="p-4 text-sm opacity-60">
-                              {t("loading")}
-                            </div>
-                          </SwiperSlide>
-                        ) : (
-                          subCategories.map((category) => (
-                            <SwiperSlide
-                              key={category.id}
-                              onClick={() => handleCategoryClick(category)}
-                            >
-                              <CategoryCard category={category} />
-                            </SwiperSlide>
-                          ))
-                        )}
-                      </Swiper>
-                    </div>
-                  </div>
+                  <SubCategorySwiper
+                    title={currentCategoryName}
+                    subCategories={subCategories}
+                    isLoading={isSubCatLoading}
+                    languageType={language?.type}
+                    rtl={rtl}
+                    onCategoryClick={handleCategoryClick}
+                  />
                 )}
                 {loading ? (
                   <CardSkeleton height={70} />

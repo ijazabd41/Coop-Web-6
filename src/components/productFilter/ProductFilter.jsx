@@ -45,6 +45,7 @@ const Filter = ({
   const [brands, setbrands] = useState(null);
   const [sellers, setSellers] = useState(null);
   const [totalBrands, setTotalBrands] = useState();
+  const [totalSeller, setTotalSeller] =useState();
   const [brandOffset, setBrandOffset] = useState(0);
   const [sellerOffset, setSellerOffset] = useState(0);
   const [tempMinPrice, setTempMinPrice] = useState(null);
@@ -66,7 +67,7 @@ const Filter = ({
       fetchCategories();
     }
     if (sellers == null) {
-      fetchSellers();
+      fetchSellers(0);
     }
   }, []);
 
@@ -78,7 +79,7 @@ const Filter = ({
     );
   };
 
-  const fetchSellers = async (sOffset) => {
+  const fetchSellers = useCallback(async (sOffset) => {
     setLoadingSellers(true);
     try {
       const result = await api.getSellers({
@@ -93,14 +94,15 @@ const Filter = ({
         } else {
           setSellers((prevSellers) => [...prevSellers, ...result?.data]);
         }
+        setTotalSeller(result?.total);
       }
-      setSellers(result?.data);
+      // setSellers(result?.data);
     } catch (error) {
       console.log("Error", error);
     } finally {
       setLoadingSellers(false);
     }
-  };
+  },[city?.city?.latitude, city?.city?.longitude]);
 
   const fetchCategories = async () => {
     setLoadingCategories(true);
@@ -181,8 +183,8 @@ const Filter = ({
   };
 
   const loadMoreSellers = () => {
-    setSellerOffset((prevOffset) => prevOffset + brandLimit);
-    fetchSellers(sellerOffset + brandLimit);
+    setSellerOffset((prevOffset) => prevOffset + sellerLimit);
+    fetchSellers(sellerOffset + sellerLimit);
   };
 
   useEffect(() => {
@@ -364,14 +366,16 @@ const Filter = ({
                   );
                 })}
 
-                {sellers?.length < totalBrands && (
-                  <a
-                    className="brand-view-more textColor cursor-pointer"
-                    onClick={loadMoreSellers}
-                  >
-                    {t("showMore")}
-                  </a>
-                )}
+                {sellers?.length < totalSeller ? (
+                    <a
+                      className="brand-view-more textColor"
+                      onClick={loadMoreSellers}
+                    >
+                      {t("showMore")}
+                    </a>
+                  ) : (
+                    <></>
+                  )}
               </div>
             </CollapsibleContent>
           </Collapsible>

@@ -75,6 +75,22 @@ const BreadCrumb = () => {
 
     return breadcrumbs[1]?.label;
   };
+  const formatBreadcrumbLabel = (label) => {
+    const map = {
+      activeorders: "Active Orders",
+      orderhistory: "Order History",
+      wallethistory: "Wallet History",
+      "about-us": "About Us",
+      "contact-us": "Contact Us",
+    };
+
+    if (map[label]) return map[label];
+
+    
+    return label
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
 
   return (
     <section className="p-3 md:p-6 breadCrumbBg">
@@ -107,7 +123,7 @@ const BreadCrumb = () => {
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
-                    {crumb.label}
+                    {formatBreadcrumbLabel(crumb.label)}
                   </span>
                 ) : (
                   <div
@@ -116,7 +132,7 @@ const BreadCrumb = () => {
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
-                    {crumb.label}
+                    {formatBreadcrumbLabel(crumb.label)}
                   </div>
                 )}
               </div>

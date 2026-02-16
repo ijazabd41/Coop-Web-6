@@ -228,10 +228,10 @@ const WishlistCard = ({
   )?.qty;
 
   return (
-    <div className="cardBorder min-w-[700px]">
-      <div className="grid grid-cols-12 items-center gap-4 p-4 border-b ">
+    <div className="cardBorder p-4 w-full overflow-hidden border-b ">
+      <div className="lg:grid grid-cols-12 items-start gap-6 p-4  hidden">
         {/* Product Image and Details */}
-        <div className="col-span-4 flex space-x-5">
+        <div className="col-span-7 xl:col-span-6 flex space-x-5">
           <div className="w-[72px] h-[72px] rounded-sm cardBorder p-[4px] flex-shrink-0">
             <ImageWithPlaceholder
               src={product?.image_url}
@@ -255,7 +255,7 @@ const WishlistCard = ({
         </div>
 
         {/* Quantity Selector */}
-        <div className="col-span-4 flex items-center justify-center rounded">
+        <div className="col-span-2 xl:col-span-3 flex items-center justify-center rounded">
           {isProductAlreadyAdded ? (
             <div className="cardBorder flex w-[100px] h-[30px] justify-between rounded-sm my-1">
               <button
@@ -311,13 +311,106 @@ const WishlistCard = ({
         </div>
 
         {/* Remove Button */}
-        <div className="col-span-2 text-center">
+        <div className="col-span-1 text-center">
           <button
             className="text-red-600 hover:text-red-800"
             onClick={() => handleRemoveFromWishlist(product?.id)}
           >
             <BiTrash size={26} />
           </button>
+        </div>
+      </div>
+
+      {/* Tab and Mobile Cards */}
+      <div className="flex flex-col lg:hidden w-full overflow-hidden gap-3">
+        <div className="grid grid-cols-12 gap-2 w-full">
+          <div className="flex col-span-10 gap-2">
+            <div className="w-[72px] h-[72px] rounded-sm cardBorder p-[4px] flex-shrink-0">
+              <ImageWithPlaceholder
+                src={product?.image_url}
+                alt="Image"
+                className="h-full w-full object-cover"
+                height={400}
+                width={400}
+              />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="font-bold text-lg">{product?.name}</h2>
+              <p
+                className="font-normal text-sm flex gap-1 items-center cursor-pointer"
+                onClick={handleShowVariatModal}
+              >
+                {product?.variants[0]?.measurement}
+                {product?.variants[0]?.stock_unit_name}
+                {product?.variants?.length > 1 && <IoMdArrowDropdown />}
+              </p>
+            </div>
+          </div>
+          <div className="col-span-2 text-center">
+            {product?.variants[0]?.discounted_price !== 0 ? (
+              <>
+                <p className="textColor text-base font-bold">
+                  {setting?.currency}
+                  {product?.variants[0]?.discounted_price}
+                </p>
+                <p className="SecondaryTextColor text-[14px] font-normal leading-[17px] m-1 line-through">
+                  {setting?.currency}
+                  {product?.variants[0]?.price}
+                </p>
+              </>
+            ) : (
+              <p className="textColor text-base font-bold">
+                {setting?.currency}
+                {product?.variants[0]?.price}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-2 w-full">
+          {/* Quantity Selector */}
+          <div className="col-span-10 flex items-start justify-start rounded">
+            {isProductAlreadyAdded ? (
+              <div className="cardBorder flex w-[100px] h-[30px] justify-between rounded-sm my-1">
+                <button
+                  className="md:p-1 flex items-center justify-center primaryBackColor text-white font-bold text-sm w-8 rounded-[2px]"
+                  onClick={handleQuantityDecrease}
+                >
+                  <FaMinus />
+                </button>
+                <input
+                  value={addedQuantity}
+                  disabled
+                  className="w-full h-full text-center"
+                  min="1"
+                  max={product?.variants[0]?.stock}
+                />
+                <button
+                  className="flex items-center justify-center font-bold text-sm md:p-1 primaryBackColor text-white w-8 rounded-[2px]"
+                  onClick={handleQuantityIncrease}
+                >
+                  <FaPlus />
+                </button>
+              </div>
+            ) : (
+              <button
+                className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]"
+                onClick={handleIntialAddToCart}
+              >
+                <FaShoppingBasket size={22} />
+                {t("add")}
+              </button>
+            )}
+          </div>
+          {/* Remove Button */}
+          <div className="col-span-2 text-center">
+            <button
+              className="text-red-600 hover:text-red-800"
+              onClick={() => handleRemoveFromWishlist(product?.id)}
+            >
+              <BiTrash size={26} />
+            </button>
+          </div>
         </div>
       </div>
       {/* Variants Modal */}
