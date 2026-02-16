@@ -45,7 +45,7 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
                   {coupon?.promo_code}
                 </h3>
                 <p className="text-sm overflow-hidden">
-                  {coupon?.promo_code_message}
+                  {coupon?.translations?.message}
                 </p>
               </div>
               <button
@@ -58,12 +58,11 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
             </div>
           </div>
         </div>
-        <p className="text-sm mt-3 p-1 border-t-2">{`${t("you_will_save")} ${
-          cart?.cartSubTotal -
+        <p className="text-sm mt-3 p-1 border-t-2">{`${t("you_will_save")} ${cart?.cartSubTotal -
           coupon?.discounted_amount?.toFixed(
             setting?.decimal_point ? setting?.decimal_point : 0
           )
-        }  ${t("on_this_coupon")}`}</p>
+          }  ${t("on_this_coupon")}`}</p>
       </div>
     </div>
   );

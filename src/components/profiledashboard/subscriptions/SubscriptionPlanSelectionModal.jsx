@@ -98,7 +98,7 @@ const PlanSelectionModal = ({
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-lg font-bold textColor">
-                        {plan.name}
+                        {plan?.translations?.name}
                       </span>
                       <span className="text-xs font-medium text-white primaryBackColor py-0.5 px-2 rounded-full">
                         {plan.days} {t("days")}

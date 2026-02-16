@@ -177,7 +177,6 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                           </p>
                         </div>
                       </div>
-                      
 
                       <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full ">
                         {t("expired")}

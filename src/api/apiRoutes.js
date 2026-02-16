@@ -91,6 +91,7 @@ export const forgotPasswordOTP = async ({ email }) => {
   const response = await api.post(apiEndPoints.forgotPasswordOtp, formData);
   return response.data;
 };
+
 export const forgotPassword = async ({
   phone,
   otp,
@@ -119,6 +120,7 @@ export const forgotPassword = async ({
   const response = await api.post(apiEndPoints.forgotPassword, formData);
   return response.data;
 };
+
 export const resetPassword = async ({
   password,
   newPassword,
@@ -131,6 +133,7 @@ export const resetPassword = async ({
   const response = await api.post(apiEndPoints.resetPassword, formData);
   return response.data;
 };
+
 export const updateProfile = async ({
   image,
   name,
@@ -800,6 +803,7 @@ export const getCountries = async ({ limit, offset, latitude, longitude }) => {
   });
   return response.data;
 };
+
 export const verifyUserByPhoneNum = async ({ mobile, countryCode, type }) => {
   const formData = new FormData();
   formData.append("mobile", mobile);
