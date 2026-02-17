@@ -3,10 +3,11 @@ import HorizontalProductCard from '../productcards/HorizontalProductCard'
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
+import { setFilterSection, setListingSource, } from '@/redux/slices/productFilterSlice';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
 const HorizontalCardContainer = ({ section }) => {
+
     const router = useRouter();
     const dispatch = useDispatch();
     const theme = useSelector(state => state.Theme.theme)
@@ -15,7 +16,7 @@ const HorizontalCardContainer = ({ section }) => {
     useEffect(() => {
         const promotionImageBelowSection = shop?.offers?.filter((offer) => offer?.position == "below_section");
         const image = promotionImageBelowSection?.filter((offer) => {
-            return offer?.section?.title == section?.title
+            return offer?.section?.id == section?.id
         })
         setPromotionImage(image)
     }, [section])
@@ -33,8 +34,8 @@ const HorizontalCardContainer = ({ section }) => {
             {section?.products?.length > 0 ? <div className='container feature-section'>
                 <div className='flex justify-between items-center mb-3'>
                     <div>
-                        <h2 className='text-2xl font-bold'>{section?.title}</h2>
-                        <p className='text-base font-[500] shortDescriptionText'>{section?.short_description}</p>
+                        <h2 className='text-2xl font-bold'>{section?.translations?.title}</h2>
+                        <p className='text-base font-[500] shortDescriptionText'>{section?.translations?.short_description}</p>
                     </div>
 
                     <div>
@@ -54,9 +55,9 @@ const HorizontalCardContainer = ({ section }) => {
             <div className='containers'>
                 {promotionImage && promotionImage?.map((offer) => {
                     return (
-                       <div className='relative w-full' key={offer?.id}>
-                            <Image 
-                                src={offer?.image_url} alt='Offer image' width={1920} height={1080} quality={90} sizes="100vw" className='object-cover w-full h-auto rounded-sm'   
+                        <div className='relative w-full' key={offer?.id}>
+                            <Image
+                                src={offer?.image_url} alt='Offer image' width={1920} height={1080} quality={90} sizes="100vw" className='object-cover w-full h-auto rounded-sm'
                             />
                         </div>
                     )

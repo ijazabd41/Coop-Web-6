@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
-import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
+import { setFilterSection, setListingSource, } from '@/redux/slices/productFilterSlice';
 
 const VerticleCardContainer = ({ section }) => {
+
     const router = useRouter();
     const dispatch = useDispatch();
     const shop = useSelector(state => state.Shop.shop);
@@ -16,7 +17,7 @@ const VerticleCardContainer = ({ section }) => {
     useEffect(() => {
         const promotionImageBelowSection = shop?.offers?.filter((offer) => offer?.position == "below_section");
         const image = promotionImageBelowSection?.filter((offer) => {
-            return offer?.section?.title == section?.title
+            return offer?.section?.id == section?.id
         })
         setPromotionImage(image)
     }, [section])
@@ -34,8 +35,8 @@ const VerticleCardContainer = ({ section }) => {
                 <div className='container feature-section'>
                     <div className='flex justify-between items-center mb-3'>
                         <div>
-                            <h2 className='text-2xl font-bold'>{section?.title}</h2>
-                            <p className='text-base font-[500] shortDescriptionText'>{section?.short_description}</p>
+                            <h2 className='text-2xl font-bold'>{section?.translations?.title}</h2>
+                            <p className='text-base font-[500] shortDescriptionText'>{section?.translations?.short_description}</p>
                         </div>
 
                         <div>

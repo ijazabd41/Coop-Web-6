@@ -10,7 +10,7 @@ import { Navigation } from "swiper/modules";
 import VerticleProductCard from '../productcards/VerticleProductCard';
 import { useSelector, useDispatch } from 'react-redux'
 import { t } from '@/utils/translation'
-import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
+import { setFilterSection, setListingSource, } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/navigation'
 import { isRtl } from '@/lib/utils'
 
@@ -25,7 +25,7 @@ const ProductSwiperWithImage = ({ section }) => {
     useEffect(() => {
         const promotionImageBelowSection = shop?.offers?.filter((offer) => offer?.position == "below_section");
         const image = promotionImageBelowSection?.filter((offer) => {
-            return offer?.section?.title == section?.title
+            return offer?.section?.id == section?.id
         })
         setPromotionImage(image)
     }, [section])
@@ -44,8 +44,8 @@ const ProductSwiperWithImage = ({ section }) => {
                     <div dir={language?.type}>
                         <div className='flex justify-between items-center mb-3'>
                             <div>
-                                <h2 className='textColor text-2xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.title} </h2>
-                                <p className='shortDescriptionText'>{section?.short_description}</p>
+                                <h2 className='textColor text-2xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{section?.translations?.title} </h2>
+                                <p className='shortDescriptionText'>{section?.translations?.short_description}</p>
                             </div>
                             <div className='flex  gap-0 md:gap-4 items-center flex-col md:flex-row'>
                                 <button onClick={handleViewAll} className='hover:primaryColor'>{t("see_all")}</button>

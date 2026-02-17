@@ -8,8 +8,6 @@ import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 import dynamic from "next/dynamic";
 
-
-
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
