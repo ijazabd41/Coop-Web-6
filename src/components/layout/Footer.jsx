@@ -365,12 +365,12 @@ const Footer = () => {
         </div>
       </div>
       <div className="bottom-footer bg-black text-white">
-        <div className="container  md:grid md:grid-cols-12 py-6 flex flex-col mb-[75px] md:mb-0">
-          <div className="col-span-6 text-center md:text-left">
+        <div className="container md:grid lg:grid-cols-12 py-6 flex flex-col mb-[75px] md:mb-0 gap-6 lg:gap-0">
+          <div className="col-span-6 text-center lg:text-left">
             {setting?.web_settings?.copyright_details !== "" &&
               setting?.web_settings?.copyright_details}
           </div>
-          <div className="col-span-6 md:flex hidden md:justify-end justify-start items-center gap-3">
+          <div className="col-span-6 flex flex-col md:flex-row justify-center lg:justify-end items-center gap-3 ">
             {enabledPaymentMethods?.length > 0 && (
               <>
                 <p>{t("we_accept")}</p>
