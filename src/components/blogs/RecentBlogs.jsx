@@ -22,7 +22,7 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
               key={blog?.id}
             >
               <ImageWithPlaceholder
-                className={"rounded-md h-16 w-20 md:h-24 md:w-32"}
+                className={"rounded-md h-16 w-20 md:h-24 md:w-32 lg:w-24 xl:w-32"}
                 src={blog?.image_url}
                 width={390}
                 height={264}
@@ -32,12 +32,10 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
                   {blog?.translations?.title?.slice(0, 20)}
                 </p>
                 <h2
-                  className="font-bold text-base blog-card-description"
+                  className="font-bold text-base blog-card-description line-clamp-1 md:line-clamp-1 lg:line-clamp-1"
                   dangerouslySetInnerHTML={{
                     __html:
-                      blog?.translations?.description?.length > 25
-                        ? blog?.translations?.description?.slice(0, 25) + "..."
-                        : blog?.translations?.description,
+                      blog?.translations?.description,
                   }}
                 ></h2>
               </div>

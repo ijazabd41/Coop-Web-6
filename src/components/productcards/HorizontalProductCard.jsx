@@ -476,7 +476,7 @@ const HorizontalProductCard = ({ product }) => {
                 % {t("off")}
               </span>
             ) : null}
-            <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+            <ul className="absolute right-5 top-5 lg:flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out hidden">
               <li
                 className="buttonBorder hover:primaryBorder rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
                 onClick={handleProductLikes}

@@ -33,7 +33,7 @@ const CategoryFlowBreadcrumb = () => {
   };
 
   return (
-    <div className="flex gap-2 text-sm SecondaryTextColor mb-3 flex-wrap">
+    <div className="flex gap-2 text-sm SecondaryTextColor mb-3 mt-3 flex-wrap">
       {categoryBreadcrumb.map((cat, index) => (
         <span key={cat.id} className="flex items-center gap-2">
           <button

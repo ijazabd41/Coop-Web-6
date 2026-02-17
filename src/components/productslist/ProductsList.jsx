@@ -236,7 +236,6 @@ const Products = () => {
     fetchSubCategories();
   }, [listing_source, category_slug]);
 
- 
   const handleCategoryClick = (category) => {
     const exists = categoryBreadcrumb.find((c) => c.id === category.id);
 
@@ -291,6 +290,76 @@ const Products = () => {
               />
             </div>
             <div className="col-span-12 md:col-span-9">
+              {loading ? (
+                <CardSkeleton height={70} />
+              ) : (
+                <div className="flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor">
+                  <p className="text-dm font-normal order-2 md:order-1">
+                    {totalProducts} {t("products_found")}
+                  </p>
+                  <div className="flex justify-between gap-3 order-1 md:order-2 ">
+                    <div className="flex  gap-2 items-center">
+                      <p className="text-sm text-nowrap font-normal">
+                        {t("sortBy")}
+                      </p>
+                      <Select
+                        onValueChange={sortProduct}
+                        value={filter?.sort_filter}
+                      >
+                        <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
+                          <SelectValue placeholder={t("default")} />
+                        </SelectTrigger>
+                        <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
+                          <SelectItem value="default">
+                            {t("default")}
+                          </SelectItem>
+                          <SelectItem value="new">
+                            {t("newest_first")}
+                          </SelectItem>
+                          <SelectItem value="old">
+                            {t("oldest_first")}
+                          </SelectItem>
+                          <SelectItem value="high">
+                            {t("high_to_low")}
+                          </SelectItem>
+                          <SelectItem value="low">
+                            {t("low_to_high")}
+                          </SelectItem>
+                          <SelectItem value="discount">
+                            {t("discount_high_to_low")}
+                          </SelectItem>
+                          <SelectItem value="popular">
+                            {t("popularity")}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex  gap-4 items-center">
+                      <span
+                        className={`${
+                          filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white p-1.5"
+                            : ""
+                        } hover:cursor-pointer`}
+                      >
+                        <BsFillGrid3X3GapFill
+                          size={23}
+                          onClick={handleGridViewChange}
+                        />
+                      </span>
+                      <span
+                        className={`${
+                          !filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white  p-1.5"
+                            : ""
+                        } hover:cursor-pointer`}
+                      >
+                        <FaThList size={23} onClick={handleListViewChange} />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
               {listing_source === "category" && <CategoryFlowBreadcrumb />}
               <div className="flex flex-col gap-6">
                 {listing_source === "category" && (
@@ -302,76 +371,6 @@ const Products = () => {
                     rtl={rtl}
                     onCategoryClick={handleCategoryClick}
                   />
-                )}
-                {loading ? (
-                  <CardSkeleton height={70} />
-                ) : (
-                  <div className="flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor">
-                    <p className="text-dm font-normal order-2 md:order-1">
-                      {totalProducts} {t("products_found")}
-                    </p>
-                    <div className="flex justify-between gap-3 order-1 md:order-2 ">
-                      <div className="flex  gap-2 items-center">
-                        <p className="text-sm text-nowrap font-normal">
-                          {t("sortBy")}
-                        </p>
-                        <Select
-                          onValueChange={sortProduct}
-                          value={filter?.sort_filter}
-                        >
-                          <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
-                            <SelectValue placeholder={t("default")} />
-                          </SelectTrigger>
-                          <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
-                            <SelectItem value="default">
-                              {t("default")}
-                            </SelectItem>
-                            <SelectItem value="new">
-                              {t("newest_first")}
-                            </SelectItem>
-                            <SelectItem value="old">
-                              {t("oldest_first")}
-                            </SelectItem>
-                            <SelectItem value="high">
-                              {t("high_to_low")}
-                            </SelectItem>
-                            <SelectItem value="low">
-                              {t("low_to_high")}
-                            </SelectItem>
-                            <SelectItem value="discount">
-                              {t("discount_high_to_low")}
-                            </SelectItem>
-                            <SelectItem value="popular">
-                              {t("popularity")}
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="flex  gap-4 items-center">
-                        <span
-                          className={`${
-                            filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
-                        >
-                          <BsFillGrid3X3GapFill
-                            size={23}
-                            onClick={handleGridViewChange}
-                          />
-                        </span>
-                        <span
-                          className={`${
-                            !filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white  p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
-                        >
-                          <FaThList size={23} onClick={handleListViewChange} />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 )}
 
                 <div className="grid grid-cols-12 gap-2 h-full">
