@@ -211,6 +211,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       phoneNumber?.length < countryCode.length ||
       phoneNumber?.slice(1) === countryCode
     ) {
+      // FIXME: translate this error message
       setError("Please enter phone number!");
       setLoading(false);
     } else {

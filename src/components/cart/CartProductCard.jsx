@@ -156,7 +156,7 @@ const CartProductCard = ({
                   if (
                     cartProduct?.product_id == product?.product_id &&
                     cartProduct?.product_variant_id ==
-                      product?.product_variant_id
+                    product?.product_variant_id
                   ) {
                     return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                   } else {
@@ -204,7 +204,7 @@ const CartProductCard = ({
                   if (
                     cartProduct?.product_id == product?.product_id &&
                     cartProduct?.product_variant_id ==
-                      product?.product_variant_id
+                    product?.product_variant_id
                   ) {
                     return { ...cartProduct, qty: cartProductQty?.qty + 1 };
                   } else {
@@ -321,11 +321,11 @@ const CartProductCard = ({
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id,
-        )?.qty
+        (prdct) => prdct?.product_variant_id == product?.product_variant_id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id,
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == product?.product_variant_id
+      )?.qty;
 
   return (
     <div className="  gap-4 p-4 border-b w-full min-w-0">
@@ -335,7 +335,7 @@ const CartProductCard = ({
           <div className="relative w-[64px] h-[64px] rounded-sm flex-shrink-0 cardBorder p-1">
             <ImageWithPlaceholder
               src={product?.image_url}
-              alt={product?.name}
+              alt={product?.translations?.name}
               width={380}
               height={380}
               className="w-full h-full object-cover  flex-shrink-0"
@@ -343,11 +343,10 @@ const CartProductCard = ({
           </div>
           <div>
             <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
-              {product?.name}
+              {product?.translations?.name}
             </h3>
-
             <p className="text-xs font-normal">
-              {product?.measurement} {product?.unit_code}
+              {product?.measurement} {product?.unit?.translations?.short_code}
             </p>
           </div>
         </div>

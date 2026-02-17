@@ -15,15 +15,14 @@ const BlogsCategories = ({
             <div
               key={category?.id}
               onClick={() => setSelectedCategory(category?.id)}
-              className={`flex justify-between p-4 items-center  rounded-lg font-bold text-base ${
-                selectedCategory == category?.id
-                  ? "primaryBackColor text-white"
-                  : "headerBackgroundColor textColor"
-              }  cursor-pointer`}
+              className={`flex justify-between p-4 items-center  rounded-lg font-bold text-base ${selectedCategory == category?.id
+                ? "primaryBackColor text-white"
+                : "headerBackgroundColor textColor"
+                }  cursor-pointer`}
             >
               <div className="flex items-center gap-2 ">
                 <p>{i + 1}</p>
-                <p>{category?.name}</p>
+                <p>{category?.translations?.name}</p>
               </div>
               <div>
                 <p>{`(${category?.active_blogs_count})`}</p>

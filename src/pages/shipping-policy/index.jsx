@@ -12,7 +12,8 @@ import React from "react";
 let serverSidePropsFunction = null;
 
 if(process.env.NEXT_PUBLIC_SEO == "true"){
-serverSidePropsFunction = async() => {
+serverSidePropsFunction = async(context) => {
+  const lang = context.query.lang;
   const defaultProps = {
       title: process.env.NEXT_PUBLIC_META_TITLE,
       description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
@@ -28,6 +29,9 @@ serverSidePropsFunction = async() => {
         params: {
           page_type: "Shipping policy",
         },
+        headers: {
+          "Content-Language": lang,
+        },
       },
     );
     
@@ -36,13 +40,13 @@ serverSidePropsFunction = async() => {
       response.data.data?.length > 0
     ) {
       const seoData = response.data.data;
-      metatitle = seoData[0].meta_title || defaultProps.title;
-      metaDescription = seoData[0].meta_description || defaultProps.title;
-      metaKeywords = seoData[0].meta_keyword || defaultProps.keywords;
+      metatitle = seoData[0].translations.meta_title || defaultProps.title;
+      metaDescription = seoData[0].translations.meta_description || defaultProps.title;
+      metaKeywords = seoData[0].translations.meta_keyword || defaultProps.keywords;
       ogImage = seoData[0].og_image_url || defaultProps.ogImage;
       favicon = seoData[0].favicon || defaultProps.favicon;
-      if (seoData[0].schema_markup) {
-        schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup || defaultProps.schemaMarkup);
+      if (seoData[0].translations.schema_markup) {
+        schemaMarkup = extractJSONFromMarkup(seoData[0]?.translations?.schema_markup || defaultProps.schemaMarkup);
       }
     }
     return {

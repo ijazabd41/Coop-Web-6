@@ -12,9 +12,10 @@ import React from "react";
 
 let serverSidePropsFunction = null;
 
-if(process.env.NEXT_PUBLIC_SEO == "true"){
-serverSidePropsFunction = async () => {
-  const defaultProps = {
+if (process.env.NEXT_PUBLIC_SEO == "true") {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
+    const defaultProps = {
       title: process.env.NEXT_PUBLIC_META_TITLE,
       description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
       keywords: process.env.NEXT_PUBLIC_META_KEYWORDS,
@@ -22,52 +23,55 @@ serverSidePropsFunction = async () => {
       ogImage: "",
       favicon: null,
     };
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
-      {
-        params: {
-          page_type: "Return exchange policy",
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
+        {
+          params: {
+            page_type: "Return exchange policy",
+          },
+          headers: {
+            "Content-Language": lang,
+          },
         },
-      },
-    );
-    
-    if (
-      process.env.NEXT_PUBLIC_SEO == "true" &&
-      response.data.data?.length > 0
-    ) {
-      const seoData = response.data.data;
-      metatitle = seoData[0].meta_title || defaultProps.title;
-      metaDescription = seoData[0].meta_description || defaultProps.title;
-      metaKeywords = seoData[0].meta_keyword || defaultProps.keywords;
-      ogImage = seoData[0].og_image_url || defaultProps.ogImage;
-      favicon = seoData[0].favicon || defaultProps.favicon;
-      if (seoData[0].schema_markup) {
-        schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup || defaultProps.schemaMarkup);
+      );
+
+      if (
+        process.env.NEXT_PUBLIC_SEO == "true" &&
+        response.data.data?.length > 0
+      ) {
+        const seoData = response.data.data;
+        metatitle = seoData[0].translations.meta_title || defaultProps.title;
+        metaDescription = seoData[0].translations.meta_description || defaultProps.title;
+        metaKeywords = seoData[0].translations.meta_keyword || defaultProps.keywords;
+        ogImage = seoData[0].og_image_url || defaultProps.ogImage;
+        favicon = seoData[0].favicon || defaultProps.favicon;
+        if (seoData[0].translations.schema_markup) {
+          schemaMarkup = extractJSONFromMarkup(seoData[0].translations.schema_markup || defaultProps.schemaMarkup);
+        }
       }
+      return {
+        props: {
+          title: metatitle,
+          description: metaDescription,
+          keywords: metaKeywords,
+          schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
+          ogImage: ogImage,
+          favicon: favicon ? favicon : null,
+        },
+      };
+    } catch (error) {
+      console.log("error", error);
+      return { props: defaultProps }
     }
-    return {
-      props: {
-        title: metatitle,
-        description: metaDescription,
-        keywords: metaKeywords,
-        schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
-        ogImage: ogImage,
-        favicon: favicon ? favicon : null,
-      },
-    };
-  } catch (error) {
-    console.log("error", error);
-    return {props:defaultProps}
   }
-}
 }
 
 export const getServerSideProps = serverSidePropsFunction
 
 
 
-const index = ({ title, description, keywords, schemaMarkup, ogImage,favicon }) => {
+const index = ({ title, description, keywords, schemaMarkup, ogImage, favicon }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/return-and-exchange-policy`;
 
   return (

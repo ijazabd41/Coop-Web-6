@@ -79,7 +79,6 @@ export const fetchToken = async (dispatch) => {
     });
 
     if (currentToken) {
-      console.log("FCM Token retrieved:", currentToken);
       dispatch(setFcmToken({ data: currentToken }));
     } else {
       console.log(

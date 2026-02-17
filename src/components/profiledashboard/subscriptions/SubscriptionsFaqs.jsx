@@ -44,8 +44,8 @@ const SubscriptionsFaqs = ({ isOpen, setIsOpen, faqs, totalFaqs, faqLoading, fet
               <div key={index} className="">
                 <SubscriptionsFaq
                   faq={{
-                    question: faq.question,
-                    answer: faq.answer
+                    question: faq?.translations?.question,
+                    answer: faq?.translations?.answer
                   }}
                 />
               </div>

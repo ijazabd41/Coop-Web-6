@@ -203,10 +203,10 @@ const Subscription = () => {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white">
-                    {t("save_more_with_egrocermax")}
+                    {`${user?.subscription_name}  ${t("save_more_with_egrocermax")}`}
                   </h2>
                   <p className="text-[#8BA2B3] text-base font-medium mt-1 leading-relaxed">
-                    {t("save_more_with_egrocermax_desc")}
+                    {`${user?.subscription_name} ${t("save_more_with_egrocermax_desc")} `}
                   </p>
                 </div>
               </div>
@@ -275,7 +275,6 @@ const Subscription = () => {
                   </p>
                 </div>
               </div>
-
               <ArrowRight className="w-5 h-5 textColor" />
             </div>
           </div>

@@ -12,10 +12,16 @@ import { extractJSONFromMarkup } from "@/utils/helperFunction";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`,
+        {
+          headers: {
+            "Content-Language": lang,
+          }
+        }
       );
       let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
       let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
@@ -25,13 +31,13 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let favicon = null;
       if (process.env.NEXT_PUBLIC_SEO === "true") {
         const seoData = response?.data.data || {};
-        metaKeywords = seoData?.meta_keywords || metaKeywords;
-        metaTitle = seoData?.meta_title || metaTitle;
-        metaDescription = seoData?.meta_description || metaDescription;
+        metaKeywords = seoData?.translations?.meta_keywords || metaKeywords;
+        metaTitle = seoData?.translations?.meta_title || metaTitle;
+        metaDescription = seoData?.translations?.meta_description || metaDescription;
         og_image = seoData?.og_image || null;
         favicon = seoData.favicon || null;
-        if (seoData?.schema_markup) {
-          markUpSchema = extractJSONFromMarkup(seoData.schema_markup) || "";
+        if (seoData?.translations?.schema_markup) {
+          markUpSchema = extractJSONFromMarkup(seoData?.translations?.schema_markup) || "";
         }
       }
       return {

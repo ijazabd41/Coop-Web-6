@@ -12,7 +12,7 @@ const Country = ({ country }) => {
                 />
             </div>
             <div className='w-full text-sm sm:text-base font-semibold leading-normal sm:leading-[26px] overflow-hidden text-center truncate whitespace-nowrap py-2'>
-                {country.name}
+                {country?.translations?.name ?? country?.name}
             </div>
         </div>
     )

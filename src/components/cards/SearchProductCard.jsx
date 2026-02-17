@@ -19,7 +19,7 @@ const SearchProductCard = ({ product }) => {
                     <ImageWithPlaceholder src={product?.image_url} width={150} height={150} className="w-full h-full object-cover rounded-sm" alt="product image" />
                 </div>
                 <div className="flex flex-col">
-                    <div className="text-xl font-semibold max-w-[150px] truncate">{product?.name}</div>
+                    <div className="text-xl font-semibold max-w-[150px] truncate">{product?.translations?.name}</div>
                     <div className="text-base font-normal text-start">
                         {
                             product?.discounted_price ?

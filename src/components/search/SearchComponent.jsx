@@ -66,7 +66,7 @@ const SearchComponent = ({
             </SelectItem>
             {categories?.map((category) => (
               <SelectItem key={category?.id} value={`${category?.id}`}>
-                {category?.name}
+                {category?.translations?.name}
               </SelectItem>
             ))}
           </SelectContent>

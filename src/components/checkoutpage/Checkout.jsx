@@ -141,7 +141,7 @@ const Checkout = () => {
 
   useEffect(() => {
     handleFilterTimeSlots();
-  }, [checkout?.selectedDate]);
+  }, [checkout?.selectedDate, timeSlots]);
 
   const handleFetchCheckout = async () => {
     const couponseCodeId = cart?.promo_code?.promo_code_id;
@@ -173,12 +173,14 @@ const Checkout = () => {
     const currentDate = new Date();
     const finalDate = currentDate.setHours(0, 0, 0, 0);
     if (date < finalDate) {
+      // FIXME: translate this error message
       toast.info("Please select a valid date");
     }
 
     dispatch(setSelectedDate({ data: date }));
     dispatch(setTimeSlot({ data: null }));
     setIsPopoverOpen(false);
+    handleFilterTimeSlots(date);
   };
 
   const formatDate = (date) => {
@@ -341,7 +343,7 @@ const Checkout = () => {
 
   const formatDateWithTimeSlot = (date, timeSlot) => {
     const formattedDate = formatDateToDDMMYYYY(date);
-    return timeSlot ? `${formattedDate} ${timeSlot.title}` : formattedDate;
+    return timeSlot ? `${formattedDate} ${timeSlot.default_title}` : formattedDate;
   };
 
   const initializeRazorpay = () => {
@@ -369,6 +371,7 @@ const Checkout = () => {
     try {
       const res = await initializeRazorpay();
       if (!res) {
+        // FIXME: translate this error message
         console.error("RazorPay SDK Load Failed");
         return;
       }
@@ -511,6 +514,7 @@ const Checkout = () => {
         : 1;
     try {
       if (checkout?.selectedPaymentMethod == null) {
+        // FIXME: translate this error message
         toast.error("Please select payment method");
         return;
       } else if (
@@ -518,12 +522,14 @@ const Checkout = () => {
         checkout?.orderType == "doorstep" &&
         timeSlotsData?.time_slot_setting == "true"
       ) {
+        // FIXME: translate this error message
         toast.error("Please select date");
         return;
       } else if (
         checkout?.address == null &&
         checkout?.orderType == "doorstep"
       ) {
+        // FIXME: translate this error message
         toast.error("Please select address");
         return;
       } else {
@@ -1009,7 +1015,7 @@ const Checkout = () => {
                                           >
                                             <div className="flex justify-between items-center w-full min-w-0">
                                               <p className="truncate">
-                                                {slot?.title}
+                                                {slot?.translations?.title}
                                               </p>
                                               <p className="whitespace-nowrap ml-64">
                                                 {slot?.is_free_delivery

@@ -11,8 +11,8 @@ import React from "react";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
-
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     const defaultProps = {
       title: process.env.NEXT_PUBLIC_META_TITLE,
       description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
@@ -29,20 +29,28 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             page_type: "About us",
           },
+          headers: {
+            "Content-Language": lang,
+          },
         }
       );
-     
+      let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
+      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
+      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
+      let ogImage = "";
+      let schemaMarkup = null;
+      let favicon = "";
       if (
         process.env.NEXT_PUBLIC_SEO == "true" &&
         response.data.data?.length > 0
       ) {
         const seoData = response.data.data;
-        metatitle = seoData[0].meta_title || defaultProps.title;
-        metaDescription = seoData[0].meta_description || defaultProps.description;
-        metaKeywords = seoData[0].meta_keyword || defaultProps.keywords;
+        metatitle = seoData[0].translations.meta_title || defaultProps.title;
+        metaDescription = seoData[0].translations.meta_description || defaultProps.description;
+        metaKeywords = seoData[0].translations.meta_keyword || defaultProps.keywords;
         ogImage = seoData[0].og_image_url || defaultProps.ogImage;
-        if (seoData[0].schema_markup) {
-          schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup);
+        if (seoData[0].translations.schema_markup) {
+          schemaMarkup = extractJSONFromMarkup(seoData[0]?.translations?.schema_markup);
         }
         favicon = seoData[0].favicon || defaultProps.favicon;
       }

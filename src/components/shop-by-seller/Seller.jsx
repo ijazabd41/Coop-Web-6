@@ -9,8 +9,8 @@ const Seller = ({ seller }) => {
             <div className='flex flex-row items-center gap-4'>
                 <div className='relative h-[80px] w-[80px]'>
                     <ImageWithPlaceholder
-                        src={seller.logo_url}
-                        alt={seller.name}
+                        src={seller?.logo_url}
+                        alt={seller?.name}
                         width={100}
                         height={100}
                         className='h-full w-full rounded-md'
@@ -18,7 +18,7 @@ const Seller = ({ seller }) => {
                 </div>
 
                 <div className="relative max-w-[100px] md:max-w-[200px] whitespace-nowrap text-base font-bold overflow-hidden text-ellipsis">
-                    {seller.name}
+                    {seller?.translations?.name}
                 </div>
             </div>
 

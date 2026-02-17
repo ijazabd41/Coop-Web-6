@@ -129,6 +129,7 @@ const Location = ({ showLocation, setShowLocation }) => {
       }
       setMapView(true);
     } catch (error) {
+      console.log("error", error);
       toast.error(t("provided_api_invalid"));
       console.log("err", error);
     }
@@ -405,15 +406,14 @@ const Location = ({ showLocation, setShowLocation }) => {
       ) : (
         <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
           <DialogOverlay
-            className={`${
-              theme == "light"
-                ? setting.setting?.default_city == null && city?.city == null
-                  ? "bg-white/100"
-                  : "bg-white/10"
-                : setting.setting?.default_city == null && city?.city == null
+            className={`${theme == "light"
+              ? setting.setting?.default_city == null && city?.city == null
+                ? "bg-white/100"
+                : "bg-white/10"
+              : setting.setting?.default_city == null && city?.city == null
                 ? "bg-black/100"
                 : "bg-black/10"
-            }`}
+              }`}
           />
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
@@ -487,11 +487,10 @@ const Location = ({ showLocation, setShowLocation }) => {
                             <div
                               role="option"
                               key={index}
-                              className={`p-2 cursor-pointer transition-colors duration-150 ${
-                                highlightedIndex === index
-                                  ? "bg-blue-500 text-white"
-                                  : "bg-white hover:bg-gray-100"
-                              }`}
+                              className={`p-2 cursor-pointer transition-colors duration-150 ${highlightedIndex === index
+                                ? "bg-blue-500 text-white"
+                                : "bg-white hover:bg-gray-100"
+                                }`}
                               onClick={() =>
                                 handleSelectLocation(item.placePrediction)
                               }

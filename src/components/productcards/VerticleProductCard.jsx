@@ -459,11 +459,11 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty;
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&
@@ -489,7 +489,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               priority
             />
             {selectedVariant?.discounted_price !== 0 &&
-            selectedVariant?.discounted_price !== selectedVariant?.price ? (
+              selectedVariant?.discounted_price !== selectedVariant?.price ? (
               <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-medium left-2 lg:left-4 leading-[16px] px-2 py-1 absolute text-center uppercase top-2 lg:top-4">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
@@ -505,16 +505,16 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               >
                 <span>
                   {favoriteProducts &&
-                  favoriteProducts?.includes(product?.id) ? (
+                    favoriteProducts?.includes(product?.id) ? (
                     <BiSolidHeart size={20} className="primaryFilledColor" />
                   ) : (
-                    <BiHeart size={20} className="svgColors  hover:primaryColor"/>
+                    <BiHeart size={20} className="svgColors  hover:primaryColor" />
                   )}
                 </span>
               </li>
               <li className="buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor">
                 <div onClick={handleShowDetailModal}>
-                  <GoEye size={20} className="svgColors  hover:primaryColor"/>
+                  <GoEye size={20} className="svgColors  hover:primaryColor" />
                 </div>
               </li>
             </ul>
@@ -522,7 +522,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         </div>
         <div className="h-[100px] flex flex-col justify-between ">
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
-            {product?.name}
+            {product?.translations?.name ?? product?.name}
           </h3>
           {selectedVariant?.few_quantity_left == true && (
             <p className="text-sm text-red-600 font-semibold">{t("few_quantity_left")}</p>
@@ -536,11 +536,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
                       <FaStar
                         key={star}
                         size={15}
-                        className={`${
-                          star <= parseInt(product?.average_rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "fill-gray-200 text-gray-200"
-                        }`}
+                        className={`${star <= parseInt(product?.average_rating)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "fill-gray-200 text-gray-200"
+                          }`}
                       />
                     );
                   })}
@@ -550,7 +549,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           ) : null}
           <div className="flex">
             {selectedVariant?.discounted_price !== 0 &&
-            selectedVariant?.discounted_price !== selectedVariant?.price ? (
+              selectedVariant?.discounted_price !== selectedVariant?.price ? (
               <>
                 {" "}
                 <p className="textColor text-base font-bold">
@@ -576,7 +575,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               onClick={(e) => handleShowVariantModal(e, product)}
               className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
             >
-              {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
+              {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
               {productsVariants?.length > 1 ? (
                 <div>
                   <MdArrowDropDown size={16} />

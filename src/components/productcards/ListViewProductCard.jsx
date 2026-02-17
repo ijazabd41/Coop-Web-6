@@ -440,11 +440,11 @@ const ListViewProductCard = ({ product }) => {
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty;
+        (prdct) => prdct?.product_variant_id == selectedVariant?.id
+      )?.qty;
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&
@@ -461,58 +461,58 @@ const ListViewProductCard = ({ product }) => {
       >
         <div className="flex">
           <div className="flex-shrink-0 w-[160px] h-[160px] md:w-[160px] md:h-[160px] lg:w-[220px] lg:h-[220px] p-[10px] lg:p-[12px]">
-          <div className="relative aspect-square w-full">
-            <ImageWithPlaceholder
-              src={product.image_url}
-              alt={product.name}
-              width={400}
-              height={400}
-              className="w-full h-full aspect-square rounded-sm object-cover"
-              sizes="
+            <div className="relative aspect-square w-full">
+              <ImageWithPlaceholder
+                src={product?.image_url}
+                alt={product?.name}
+                width={400}
+                height={400}
+                className="w-full h-full aspect-square rounded-sm object-cover"
+                sizes="
                 (max-width: 640px) 50vw,
                 (max-width: 1024px) 33vw,
                 400px
               "
-              quality={75}
-            />
-            {selectedVariant?.discounted_price !== 0 &&
-            selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px]  text-white text-[14px] font-bold left-2 leading-none px-2 py-1 absolute text-center uppercase top-2 whitespace-nowrap">
-                {calculateDiscount(
-                  selectedVariant?.discounted_price,
-                  selectedVariant?.price
-                ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}
-                % {t("off")}
-              </span>
-            ) : null}
-            <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-              <li
-                className="buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
-                onClick={handleProductLikes}
-              >
-                <span>
-                  {favoriteProducts &&
-                  favoriteProducts?.includes(product?.id) ? (
-                    <BiSolidHeart size={20} className="primaryFilledColor"/>
-                  ) : (
-                    <BiHeart size={20} className="svgColors hover:primaryColor"/>
-                  )}
+                quality={75}
+              />
+              {selectedVariant?.discounted_price !== 0 &&
+                selectedVariant?.discounted_price !== selectedVariant?.price ? (
+                <span className="bg-[#db3d26] rounded-[4px]  text-white text-[14px] font-bold left-2 leading-none px-2 py-1 absolute text-center uppercase top-2 whitespace-nowrap">
+                  {calculateDiscount(
+                    selectedVariant?.discounted_price,
+                    selectedVariant?.price
+                  ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)}
+                  % {t("off")}
                 </span>
-              </li>
-              <li className="buttonBorder hover:primaryBorder   rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor hover:cursor-pointer">
-                <span onClick={handleShowDetailModal}>
-                  <FaRegEye size={18}  className="svgColors hover:primaryColor"/>
-                </span>
-              </li>
-              
-            </ul>
+              ) : null}
+              <ul className="absolute right-5 top-5 flex flex-col gap-2 translate-x-10 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                <li
+                  className="buttonBorder hover:primaryBorder hover:primaryColor rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor"
+                  onClick={handleProductLikes}
+                >
+                  <span>
+                    {favoriteProducts &&
+                      favoriteProducts?.includes(product?.id) ? (
+                      <BiSolidHeart size={20} className="primaryFilledColor" />
+                    ) : (
+                      <BiHeart size={20} className="svgColors hover:primaryColor" />
+                    )}
+                  </span>
+                </li>
+                <li className="buttonBorder hover:primaryBorder   rounded-full h-[30px] w-[30px] flex justify-center items-center bodyBackgroundColor hover:cursor-pointer">
+                  <span onClick={handleShowDetailModal}>
+                    <FaRegEye size={18} className="svgColors hover:primaryColor" />
+                  </span>
+                </li>
+
+              </ul>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col justify-center flex-1 px-1 md:px-2">
-          <div className="flex flex-col items-start gap-[24px]">
-            <div className="flex flex-col justify-between">
-                <h3 className="flex text-[14px] md:text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
-                  {product?.name}
+          <div className="flex flex-col justify-center flex-1 px-1 md:px-2">
+            <div className="flex flex-col items-start gap-[24px]">
+              <div className="flex flex-col justify-between">
+                <h3 className="flex text-[14px] md:text-[16px] font-bold mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor">
+                  {product?.translations?.name ?? product?.name}
                 </h3>
                 {selectedVariant?.few_quantity_left == true && (
                   <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
@@ -525,50 +525,49 @@ const ListViewProductCard = ({ product }) => {
                           <FaStar
                             key={star}
                             size={15}
-                            className={`${
-                              star <= product?.average_rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "fill-gray-200 text-gray-200"
-                            }`}
+                            className={`${star <= product?.average_rating
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "fill-gray-200 text-gray-200"
+                              }`}
                           />
                         ))}
                       </div>
                     </div>
                   </div>
                 ) : null}
-            </div>
-            <div className="flex">
-              {selectedVariant?.discounted_price !== 0 &&
-              selectedVariant?.discounted_price !== selectedVariant?.price ? (
-                <>
-                  {" "}
-                  <p className=" text-base font-bold textColor">
-                    {setting?.currency}
-                    {selectedVariant?.discounted_price}
-                  </p>
-                  <p className=" text-[14px] font-normal leading-[17px] m-1 line-through SecondaryTextColor">
+              </div>
+              <div className="flex">
+                {selectedVariant?.discounted_price !== 0 &&
+                  selectedVariant?.discounted_price !== selectedVariant?.price ? (
+                  <>
+                    {" "}
+                    <p className=" text-base font-bold textColor">
+                      {setting?.currency}
+                      {selectedVariant?.discounted_price}
+                    </p>
+                    <p className=" text-[14px] font-normal leading-[17px] m-1 line-through SecondaryTextColor">
+                      {setting?.currency}
+                      {selectedVariant?.price}
+                    </p>
+                  </>
+                ) : (
+                  <p className=" text-base font-bold">
                     {setting?.currency}
                     {selectedVariant?.price}
                   </p>
-                </>
-              ) : (
-                <p className=" text-base font-bold">
-                  {setting?.currency}
-                  {selectedVariant?.price}
-                </p>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
-        </div>
         <div className="flex-shrink-0 w-full md:w-[140px] lg:w-[170px] xl:w-[200px]  flex items-center justify-center  p-3 md:border-l md:border-[var(--border-color)]">
           {!isProductAvailabel ? (
-            <div className="flex  gap-[12px] w-full md:w-[150px] md:flex-col md:mb-0 items-center">
+            <div className="flex  gap-[12px] w-full md:w-[150px]  md:flex-col md:mb-0 items-center">
               <button
                 className="w-full SecondaryTextColor flex items-center  justify-between rounded-[4px] p-2 buttonBackground line-clamp-1"
                 onClick={(e) => handleShowVariantModal(e, product)}
               >
-                {`${selectedVariant?.measurement} ${selectedVariant?.stock_unit_name}`}
+                {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
                 {productsVariants?.length > 1 ? (
                   <div>
                     <MdArrowDropDown size={22} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactImageMagnify from "react-image-magnify";
 import { useSelector } from "react-redux";
 import { Card, CardContent } from "../ui/card";
@@ -6,6 +6,14 @@ import { Card, CardContent } from "../ui/card";
 const ProductZoomImage = ({ image }) => {
   const setting = useSelector((state) => state.Setting);
   const imageSrc = image || setting?.setting?.web_settings?.placeholder_image;
+
+  const placeholder = setting?.setting?.web_settings?.placeholder_image;
+
+  const [imgSrc, setImgSrc] = useState(image || placeholder);
+
+  useEffect(() => {
+    setImgSrc(image || placeholder);
+  }, [image, placeholder]);
 
   return (
     <Card className="border-0 shadow-none h-full w-full">
@@ -17,10 +25,13 @@ const ProductZoomImage = ({ image }) => {
                 smallImage: {
                   alt: "Product Image",
                   isFluidWidth: true,
-                  src: imageSrc,
+                  src: imgSrc,
+                  onError: () => {
+                    setImgSrc(placeholder);
+                  },
                 },
                 largeImage: {
-                  src: imageSrc,
+                  src: imgSrc,
                   width: 900,
                   height: 1200,
                 },

@@ -31,7 +31,6 @@ const FeatureSections = () => {
     const belowShopSellerSection = shop?.sections?.filter((section) => section?.position == "below_shop_by_seller");
 
 
-
     return (
         <section>
             <div className=' md:mx-0'>
@@ -113,8 +112,8 @@ const FeatureSections = () => {
                     } else if (section?.style_web == "style_4") {
                         return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
-
                 })}
+                
                 {shop?.sellers?.length > 0 && <SellerSlider sellers={shop} />}
 
                 {belowShopSellerSection && belowShopSellerSection?.map((section, index) => {

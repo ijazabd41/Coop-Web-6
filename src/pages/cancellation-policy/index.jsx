@@ -21,7 +21,8 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
     ogImage: "",
     favicon: null,
   };
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -29,6 +30,9 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             page_type: "Cancellation policy",
           },
+          headers: {
+            "Content-Language": lang,
+          }
         },
       );
 
@@ -37,14 +41,14 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
         response.data.data?.length > 0
       ) {
         const seoData = response.data.data;
-        metatitle = seoData[0].meta_title || defaultProps.title;
-        metaDescription = seoData[0].meta_description || defaultProps.title;
-        metaKeywords = seoData[0].meta_keyword || defaultProps.keywords;
+        metatitle = seoData[0].translations.meta_title || defaultProps.title;
+        metaDescription = seoData[0].translations.meta_description || defaultProps.title;
+        metaKeywords = seoData[0].translations.meta_keyword || defaultProps.keywords;
         ogImage = seoData[0].og_image_url || defaultProps.ogImage;
         favicon = seoData[0].favicon || defaultProps.favicon;
-        if (seoData[0].schema_markup) {
+        if (seoData[0].translations.schema_markup) {
           schemaMarkup = extractJSONFromMarkup(
-            seoData[0].schema_markup || defaultProps.schemaMarkup,
+            seoData[0].translations.schema_markup || defaultProps.schemaMarkup,
           );
         }
       }
