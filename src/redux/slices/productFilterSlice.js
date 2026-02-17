@@ -14,7 +14,10 @@ const initialState = {
   country_id: "",
   search_product: [],
   selectedCategories: [],
-  searchedCategory: ""
+  searchedCategory: "",
+  listing_source: "all",
+  category_slug: "",
+  categoryBreadcrumb: [],
 };
 
 export const productFilterReducer = createSlice({
@@ -61,16 +64,23 @@ export const productFilterReducer = createSlice({
       state.seller_id = action.payload.data;
     },
     clearAllFilter: (state, action) => {
+      const { preserveCategory } = action.payload || {};
       state.country_id = "";
       state.brand_ids = [];
       state.seller_id = "";
-      state.category_id = "";
+      // state.category_id = "";
       state.section_id = null;
       state.search = null;
       state.price_filter = null;
       state.search_product = [];
       state.selectedCategories = [];
-      state.searchedCategory = ""
+      state.searchedCategory = "";
+      if (!preserveCategory) {
+        state.category_id = "";
+        state.category_slug = "";
+        state.categoryBreadcrumb = [];
+        state.listing_source = "all";
+      }
     },
     setSelectedCategories: (state, action) => {
       state.selectedCategories = [
@@ -80,6 +90,15 @@ export const productFilterReducer = createSlice({
     },
     setSearchedCategory: (state, action) => {
       state.searchedCategory = action.payload.data;
+    },
+    setListingSource: (state, action) => {
+      state.listing_source = action.payload.data;
+    },
+    setCategorySlug: (state, action) => {
+      state.category_slug = action.payload.data;
+    },
+    setCategoryBreadcrumb: (state, action) => {
+      state.categoryBreadcrumb = action.payload.data;
     },
   },
 });
@@ -100,6 +119,9 @@ export const {
   setProductBySearch,
   setSelectedCategories,
   setSearchedCategory,
+  setListingSource,
+  setCategorySlug,
+  setCategoryBreadcrumb,
 } = productFilterReducer.actions;
 
 export default productFilterReducer.reducer;

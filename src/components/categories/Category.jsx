@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFilterCategory,
   setSelectedCategories,
+  setListingSource,
+  setCategorySlug,
+  setCategoryBreadcrumb,
 } from "@/redux/slices/productFilterSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { t } from "@/utils/translation";
@@ -15,11 +18,7 @@ const Category = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { slug } = router.query;
-  const language = useSelector(state => state.Language.selectedLanguage)
-  const selectedCategories = useSelector(
-    (state) => state.ProductFilter?.selectedCategories
-  );
-
+  const language = useSelector((state) => state.Language.selectedLanguage);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCategories, setTotalCategories] = useState(0);
@@ -55,16 +54,41 @@ const Category = () => {
     setIsLoading(false);
   };
 
-  const handleCategoryClick = (category) => {
-    dispatch(setSelectedCategories({ data: category?.id }));
+  // const handleCategoryClick = (category) => {
+  //   dispatch(setSelectedCategories({ data: category?.id }));
+  //   dispatch(setListingSource({ data: "category" }));
+  //   if (category?.has_child) {
+  //     router.push(`/categories/${category?.slug}`);
+  //   } else {
+  //     const cats = [...selectedCategories, category?.id];
+  //     dispatch(setFilterCategory({ data: cats.join(",") }));
+  //     router.push(`/products`);
+  //   }
+  // };
+  const categoryBreadcrumb = useSelector(
+    (state) => state.ProductFilter.categoryBreadcrumb,
+  );
 
-    if (category?.has_child) {
-      router.push(`/categories/${category?.slug}`);
-    } else {
-      const cats = [...selectedCategories, category?.id];
-      dispatch(setFilterCategory({ data: cats.join(",") }));
-      router.push(`/products`);
-    }
+  const handleCategoryClick = (category) => {
+    const exists = categoryBreadcrumb.find((c) => c.id === category.id);
+
+    const newBreadcrumb = exists
+      ? categoryBreadcrumb
+      : [
+          ...categoryBreadcrumb,
+          {
+            id: category.id,
+            name: category.translations?.name || category.name,
+            slug: category.slug,
+          },
+        ];
+
+    dispatch(setListingSource({ data: "category" }));
+    dispatch(setFilterCategory({ data: category.id }));
+    dispatch(setCategorySlug({ data: category.slug }));
+    dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+    dispatch(setSelectedCategories({ data: category.id }))
+    router.push("/products");
   };
 
   const totalPages = Math.ceil(totalCategories / categoryPerPage);
@@ -78,19 +102,19 @@ const Category = () => {
         >
           {isLoading
             ? Array.from({ length: categoryPerPage }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <CardSkeleton height={180} />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <CardSkeleton height={180} />
+                </div>
+              ))
             : categories?.data?.map((category) => (
-              <div
-                key={category?.id}
-                className="col-span-1"
-                onClick={() => handleCategoryClick(category)}
-              >
-                <CategoryCard category={category} />
-              </div>
-            ))}
+                <div
+                  key={category?.id}
+                  className="col-span-1"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <CategoryCard category={category} />
+                </div>
+              ))}
         </div>
 
         {/* Pagination */}
@@ -99,10 +123,11 @@ const Category = () => {
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
-              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === 1
-                ? "backgroundColor text-gray-500 cursor-not-allowed"
-                : "buttonBackground hover:backgroundColor textColor"
-                }`}
+              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                page === 1
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "buttonBackground hover:backgroundColor textColor"
+              }`}
             >
               {t("prev")}
             </button>
@@ -113,10 +138,11 @@ const Category = () => {
                 <button
                   key={pageNumber}
                   onClick={() => setPage(pageNumber)}
-                  className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === pageNumber
-                    ? "primaryBackColor text-white primaryBorder"
-                    : "backgroundColor textColor hover:backgroundColor"
-                    }`}
+                  className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                    page === pageNumber
+                      ? "primaryBackColor text-white primaryBorder"
+                      : "backgroundColor textColor hover:backgroundColor"
+                  }`}
                 >
                   {pageNumber}
                 </button>
@@ -128,10 +154,11 @@ const Category = () => {
                 setPage((prev) => (prev < totalPages ? prev + 1 : prev))
               }
               disabled={page === totalPages}
-              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === totalPages
-                ? "backgroundColor text-gray-500 cursor-not-allowed"
-                : "backgroundColor hover:backgroundColor textColor"
-                }`}
+              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                page === totalPages
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "backgroundColor hover:backgroundColor textColor"
+              }`}
             >
               {t("next")}
             </button>

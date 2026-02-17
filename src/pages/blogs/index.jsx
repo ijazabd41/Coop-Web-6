@@ -12,10 +12,16 @@ import { extractJSONFromMarkup } from "@/utils/helperFunction";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`,
+        {
+          headers: {
+            "Content-Language": lang,
+          }
+        }
       );
       let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
       let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;

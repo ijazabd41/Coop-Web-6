@@ -166,7 +166,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         recaptchaContainer,
         {
           size: "invisible",
-        }
+        },
       );
       return window.recaptchaVerifier;
     } catch (error) {
@@ -221,7 +221,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           const confirmationResult = await signInWithPhoneNumber(
             auth,
             phoneNumberWithoutSpaces,
-            window.recaptchaVerifier
+            window.recaptchaVerifier,
           );
           window.confirmationResult = confirmationResult;
           setTimer(90);
@@ -275,7 +275,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           user.user,
           phoneNumberWithoutCountryCode,
           fcmToken,
-          "phone"
+          "phone",
         );
         setLoading(false);
       } catch (error) {
@@ -303,7 +303,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setEmail("");
         } else if (response?.status == 1) {
           const tokenSet = await dispatch(
-            setTokenThunk(response?.data?.access_token)
+            setTokenThunk(response?.data?.access_token),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: "phone" }));
@@ -365,8 +365,12 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       });
       if (response.status === 1) {
         dispatch(setCart({ data: response.data }));
-        dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
-        dispatch(setDoorStepDeliveryMode({ data: cartData?.data?.doorstep_delivery_mode }))
+        dispatch(setSelfPickupMode({ data: response?.data?.self_pickup_mode }));
+        dispatch(
+          setDoorStepDeliveryMode({
+            data: response?.data?.doorstep_delivery_mode,
+          }),
+        );
         const productsData = getProductData(response.data);
         dispatch(setCartProducts({ data: productsData }));
         dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
@@ -399,7 +403,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           return;
         } else {
           const tokenSet = await dispatch(
-            setTokenThunk(res?.data?.access_token)
+            setTokenThunk(res?.data?.access_token),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: type }));
@@ -503,7 +507,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         user,
         user?.providerData[0].email,
         fcmToken,
-        "google"
+        "google",
       );
     } catch (error) {
       if (error?.message?.includes("auth/popup-closed-by-user")) {
@@ -538,7 +542,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           return;
         } else {
           const tokenSet = await dispatch(
-            setTokenThunk(res?.data?.access_token)
+            setTokenThunk(res?.data?.access_token),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: "email" }));
@@ -928,7 +932,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   </div>
 
                   {setting?.google_login == 1 &&
-                    (setting?.email_login == 1 || setting?.phone_login == 1) ? (
+                  (setting?.email_login == 1 || setting?.phone_login == 1) ? (
                     <div className="flex items-center justify-between my-4 gap-2">
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                       <span className=" text-[#4B6272] font-bold text-base">

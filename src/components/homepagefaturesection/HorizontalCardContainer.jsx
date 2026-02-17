@@ -3,7 +3,7 @@ import HorizontalProductCard from '../productcards/HorizontalProductCard'
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
-import { setFilterSection } from '@/redux/slices/productFilterSlice';
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
 const HorizontalCardContainer = ({ section }) => {
@@ -24,6 +24,7 @@ const HorizontalCardContainer = ({ section }) => {
 
     const handleViewAll = () => {
         dispatch(setFilterSection({ data: section?.id }))
+        dispatch(setListingSource({ data: "all" }));
         router.push('/products')
     }
 

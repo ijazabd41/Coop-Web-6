@@ -12,6 +12,7 @@ import { extractJSONFromMarkup } from "@/utils/helperFunction";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
+
   serverSidePropsFunction = async (context) => {
     const { slug } = context.params;
     const lang = context.query.lang;

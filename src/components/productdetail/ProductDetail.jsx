@@ -421,7 +421,8 @@ const ProductDetail = () => {
           <ImageWithPlaceholder
             src={ProductNotFoundImage}
             alt={"not product found"}
-            unoptimized
+            width={400}
+            height={400}
             loading="lazy"
             fetchPriority="low"
           />
@@ -458,12 +459,12 @@ const ProductDetail = () => {
                       {selectVariant?.discounted_price !== 0 &&
                         selectVariant?.discounted_price !==
                         selectVariant?.price ? (
-                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 absolute text-center uppercase  top-3">
+                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 px-2 absolute text-center uppercase  top-3">
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price
                           ).toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 0
+                            setting?.decimal_point ? setting?.decimal_point : 2
                           )}
                           % {t("off")}
                         </span>

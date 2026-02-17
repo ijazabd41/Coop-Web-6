@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
 import Filter from "../productFilter/ProductFilter";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
+import SubCategorySwiper from "../categories/SubCategorySwiper";
+
+import { setFilterCategory } from "@/redux/slices/productFilterSlice";
+import {
+  setListingSource,
+  setCategorySlug,
+  setCategoryBreadcrumb,
+} from "@/redux/slices/productFilterSlice";
+import CategoryFlowBreadcrumb from "../categories/CategoryFlowBreadcrumb";
 import {
   Select,
   SelectContent,
@@ -12,6 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/router";
+
+import "swiper/css";
+import "swiper/css/navigation";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
 import ListViewProductCard from "../productcards/ListViewProductCard";
@@ -26,10 +40,14 @@ import {
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 
+import { isRtl } from "@/lib/utils";
+
 const Products = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const city = useSelector((state) => state.City);
-
+  const [subCategories, setSubCategories] = useState([]);
+  const [isSubCatLoading, setIsSubCatLoading] = useState(false);
   const filter = useSelector((state) => state.ProductFilter);
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
@@ -37,17 +55,48 @@ const Products = () => {
   const [isLoader, setisLoader] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
-
+  const {
+    listing_source,
+    category_id,
+    category_slug,
+    selectedCategories,
+    searchedCategory,
+  } = useSelector((state) => state.ProductFilter);
+  const categoryBreadcrumb = useSelector(
+    (state) => state.ProductFilter.categoryBreadcrumb,
+  );
+  const currentCategoryName =
+    categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.name;
   const total_products_per_page = 12;
+  const rtl = isRtl();
+  const isCategoryListing = listing_source === "category";
+  const ancestorCategoryIds = (categoryBreadcrumb) => {
+    if (!Array.isArray(categoryBreadcrumb) || categoryBreadcrumb.length === 0) {
+      return null;
+    }
+    return categoryBreadcrumb.map((category) => category.id).join(",");
+  };
+  const resolvedParentsCategory =
+    filter?.category_id === "NaN" || filter?.category_id === "all categories"
+      ? null
+      : ancestorCategoryIds(categoryBreadcrumb);
+  const resolvedCategory =
+    filter?.category_id === "NaN" || filter?.category_id === "all categories"
+      ? null
+      : filter?.category_id;
+
+  const finalCategoryIds = isCategoryListing
+    ? resolvedParentsCategory
+    : resolvedCategory;
 
   const fetchProducts = async ({ pageParam = 0 }) => {
+    console.log(category_id);
     const filterParams = {
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
-      category_ids:
-        filter?.category_id == "NaN" || filter?.category_id == "all categories"
-          ? null
-          : filter?.category_id,
+      ...(finalCategoryIds && {
+        category_ids: finalCategoryIds,
+      }),
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
       search: filter?.search,
@@ -97,10 +146,10 @@ const Products = () => {
   const totalProducts = data?.pages?.[0]?.total || 0;
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
-
+  const language = useSelector((state) => state.Language.selectedLanguage);
   // Dummy setters for Filter component
-  const setProductResult = () => { };
-  const setOffset = () => { };
+  const setProductResult = () => {};
+  const setOffset = () => {};
 
   useEffect(() => {
     if (data?.pages?.[0]) {
@@ -157,6 +206,59 @@ const Products = () => {
 
   const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      if (listing_source !== "category" || !category_slug) {
+        setSubCategories([]);
+        return;
+      }
+      console.log(category_slug);
+      try {
+        setIsSubCatLoading(true);
+        const res = await api.getCategories({
+          slug: category_slug,
+        });
+
+        const currentCategory = res?.data;
+        const subCats = Array.isArray(currentCategory)
+          ? currentCategory
+          : (currentCategory?.cat_active_childs ?? []);
+
+        setSubCategories(subCats);
+      } catch (err) {
+        console.error("Failed to fetch subcategories", err);
+        setSubCategories([]);
+      } finally {
+        setIsSubCatLoading(false);
+      }
+    };
+
+    fetchSubCategories();
+  }, [listing_source, category_slug]);
+
+ 
+  const handleCategoryClick = (category) => {
+    const exists = categoryBreadcrumb.find((c) => c.id === category.id);
+
+    const newBreadcrumb = exists
+      ? categoryBreadcrumb
+      : [
+          ...categoryBreadcrumb,
+          {
+            id: category.id,
+            name: category.translations?.name || category.name,
+            slug: category.slug,
+          },
+        ];
+
+    dispatch(setListingSource({ data: "category" }));
+    dispatch(setFilterCategory({ data: category.id }));
+    dispatch(setCategorySlug({ data: category.slug }));
+    dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+
+    router.push("/products");
+  };
+
   return (
     <section>
       <div>
@@ -184,10 +286,23 @@ const Products = () => {
                 setMaxPrice={setMaxPrice}
                 setMinPrice={setMinPrice}
                 setisLoader={setisLoader}
+                hideCategory={listing_source === "category"}
+                disableFilter={listing_source === "category"}
               />
             </div>
             <div className="col-span-12 md:col-span-9">
+              {listing_source === "category" && <CategoryFlowBreadcrumb />}
               <div className="flex flex-col gap-6">
+                {listing_source === "category" && (
+                  <SubCategorySwiper
+                    title={currentCategoryName}
+                    subCategories={subCategories}
+                    isLoading={isSubCatLoading}
+                    languageType={language?.type}
+                    rtl={rtl}
+                    onCategoryClick={handleCategoryClick}
+                  />
+                )}
                 {loading ? (
                   <CardSkeleton height={70} />
                 ) : (
@@ -234,10 +349,11 @@ const Products = () => {
                       </div>
                       <div className="flex  gap-4 items-center">
                         <span
-                          className={`${filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white p-1.5"
-                            : ""
-                            } hover:cursor-pointer`}
+                          className={`${
+                            filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white p-1.5"
+                              : ""
+                          } hover:cursor-pointer`}
                         >
                           <BsFillGrid3X3GapFill
                             size={23}
@@ -245,10 +361,11 @@ const Products = () => {
                           />
                         </span>
                         <span
-                          className={`${!filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white  p-1.5"
-                            : ""
-                            } hover:cursor-pointer`}
+                          className={`${
+                            !filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white  p-1.5"
+                              : ""
+                          } hover:cursor-pointer`}
                         >
                           <FaThList size={23} onClick={handleListViewChange} />
                         </span>

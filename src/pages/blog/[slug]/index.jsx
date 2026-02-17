@@ -14,6 +14,8 @@ let serverSidePropsFunction = null;
 if (process.env.NEXT_PUBLIC_SEO == "true") {
   serverSidePropsFunction = async (context) => {
     const { slug } = context.params;
+    const lang = context.query.lang;
+
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`,
@@ -21,6 +23,9 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             slug: slug,
           },
+          headers: {
+            "Content-Language": lang,
+          }
         }
       );
 

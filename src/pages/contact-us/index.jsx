@@ -11,7 +11,17 @@ import React from "react";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
+    const defaultProps = {
+      title: process.env.NEXT_PUBLIC_META_TITLE,
+      description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
+      keywords: process.env.NEXT_PUBLIC_META_KEYWORDS,
+      schemaMarkup: null,
+      ogImage: "",
+      favicon: null,
+    };
+
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -19,6 +29,9 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             page_type: "Contact us",
           },
+          headers: {
+            "Content-Language": lang,
+          }
         },
       );
       let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
@@ -32,13 +45,16 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
         response.data.data?.length > 0
       ) {
         const seoData = response.data.data;
-        metatitle = seoData[0].translations.meta_title;
-        metaDescription = seoData[0].translations.meta_description;
-        metaKeywords = seoData[0].translations.meta_keyword;
-        ogImage = seoData[0].og_image_url;
-        favicon = seoData[0].favicon;
-        if (seoData[0].translations.schema_markup) {
-          schemaMarkup = extractJSONFromMarkup(seoData[0]?.translations?.schema_markup);
+        metatitle = seoData[0]?.translations?.meta_title || defaultProps.title;
+        metaDescription =
+          seoData[0]?.translations?.meta_description || defaultProps.description;
+        metaKeywords = seoData[0]?.translations?.meta_keyword || defaultProps.keywords;
+        ogImage = seoData[0]?.translations?.og_image_url || defaultProps.ogImage;
+        favicon = seoData[0]?.translations?.favicon || defaultProps.favicon;
+        if (seoData[0]?.translations?.schema_markup) {
+          schemaMarkup =
+            extractJSONFromMarkup(seoData[0]?.translations?.schema_markup) ||
+            defaultProps.schemaMarkup;
         }
       }
       return {
@@ -53,15 +69,21 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       };
     } catch (error) {
       console.log("error", error);
+      return { props: defaultProps };
     }
-  }
+  };
 }
 
 export const getServerSideProps = serverSidePropsFunction;
 
-
-
-const index = ({ title, description, keywords, schemaMarkup, ogImage, favicon }) => {
+const index = ({
+  title,
+  description,
+  keywords,
+  schemaMarkup,
+  ogImage,
+  favicon,
+}) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/contact-us`;
 
   return (

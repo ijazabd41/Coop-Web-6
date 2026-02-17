@@ -10,7 +10,7 @@ import { Navigation } from "swiper/modules";
 import VerticleProductCard from '../productcards/VerticleProductCard';
 import { useSelector, useDispatch } from 'react-redux'
 import { t } from '@/utils/translation'
-import { setFilterSection } from '@/redux/slices/productFilterSlice'
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
 import { useRouter } from 'next/navigation'
 import { isRtl } from '@/lib/utils'
 
@@ -33,6 +33,7 @@ const ProductSwiperWithImage = ({ section }) => {
 
     const handleViewAll = () => {
         dispatch(setFilterSection({ data: section?.id }))
+        dispatch(setListingSource({ data: "all" }));
         router.push('/products')
     }
 

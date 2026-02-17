@@ -61,13 +61,13 @@ const WalletHistory = () => {
                     <div className='grid grid-cols-12 '>
                         {loading ? Array?.from({ length: 6 })?.map((_, index) => {
                             return (
-                                <div className='col-span-12  md:col-span-6 lg:col-span-4' key={index}>
+                                <div className='col-span-12  md:col-span-12 lg:col-span-4' key={index}>
                                     <CardSkeleton height={200} padding='p-4' />
                                 </div>
                             )
                         }) : transactions?.length > 0 ? transactions?.map((transaction) => {
                             return (
-                                <div className='col-span-12  md:col-span-6 xl:col-span-6 p-4 md:p-2 lg:p-4' key={transaction?.id}>
+                                <div className='col-span-12  md:col-span-12 xl:col-span-6 p-4 md:p-2 lg:p-4' key={transaction?.id}>
                                     <WalletTransactionCard transaction={transaction} />
                                 </div>
                             )
@@ -78,7 +78,7 @@ const WalletHistory = () => {
                         {loadingMore ?
                             Array?.from({ length: 6 })?.map((_, index) => {
                                 return (
-                                    <div className='col-span-12  md:col-span-6 lg:col-span-4' key={index}>
+                                    <div className='col-span-12  md:col-span-12 lg:col-span-4' key={index}>
                                         <CardSkeleton height={200} padding='p-4' />
                                     </div>
                                 )

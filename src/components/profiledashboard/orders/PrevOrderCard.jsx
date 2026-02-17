@@ -57,7 +57,7 @@ const PrevOrderCard = ({ order }) => {
                       src={orderFirstItem?.image_url}
                       alt="demo image"
                       fill
-                      className="h-full w-full rounded-sm"
+                      className="h-full w-full rounded-sm cardBorder p-[4px]"
                     />
                   )}
                 </div>
@@ -99,7 +99,7 @@ const PrevOrderCard = ({ order }) => {
               </button>
             )}
           </div>
-          <div className="backgroundColor">
+          <div className="backgroundColor topBorder rounded-sm">
             <div className="flex justify-between p-4 flex-col md:flex-row">
               <div className="flex flex-col">
                 <span>{`${t("total")} ${t("Credit")}`} </span>

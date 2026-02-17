@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
-import { setFilterSection, setFilterView } from '@/redux/slices/productFilterSlice';
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
 
 const VerticleCardContainer = ({ section }) => {
     const router = useRouter();
@@ -23,6 +23,7 @@ const VerticleCardContainer = ({ section }) => {
 
     const handleViewAll = () => {
         dispatch(setFilterSection({ data: section?.id }))
+        dispatch(setListingSource({ data: "all" }));
         router.push('/products')
     }
 

@@ -11,13 +11,17 @@ import React from "react";
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
         {
           params: {
             page_type: "Term condition",
+          },
+          headers: {
+            "Content-Language": lang,
           },
         },
       );
