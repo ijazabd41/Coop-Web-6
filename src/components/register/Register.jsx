@@ -175,8 +175,7 @@ const Register = ({
       phoneNumber?.length < countryCode.length ||
       phoneNumber?.slice(1) === countryCode
     ) {
-      // FIXME: translate this error message
-      setError("Please enter phone number!");
+      setError(t("please_enter_phone_number"));
       setErrorType("phone");
       setIsLoading(false);
     } else {
@@ -251,7 +250,7 @@ const Register = ({
         if (
           response?.status == 1 &&
           res?.message ==
-            "OTP is valid, but no user found with this phone number."
+          "OTP is valid, but no user found with this phone number."
         ) {
           return false;
         } else if (response?.status == 1) {

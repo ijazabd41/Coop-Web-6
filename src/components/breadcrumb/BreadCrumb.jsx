@@ -7,7 +7,7 @@ import { t } from "@/utils/translation";
 
 const notFoundRoute = ["/order-detail"];
 
-const BreadCrumb = () => {
+const BreadCrumb = ({ title }) => {
   const rtl = isRtl();
   const router = useRouter();
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -21,9 +21,14 @@ const BreadCrumb = () => {
         const href = `/${pathArray.slice(0, index + 1).join("/")}`;
         return { label: decodeURIComponent(path), href };
       });
+
+      if (title && formattedBreadcrumbs.length > 0) {
+        formattedBreadcrumbs[formattedBreadcrumbs.length - 1].label = title;
+      }
+
       setBreadcrumbs(formattedBreadcrumbs);
     }
-  }, [router.pathname, router.asPath]);
+  }, [router.pathname, router.asPath, title]);
 
   const handleNotFoundRoutes = (href) => {
     if (href === "/product") {
@@ -47,46 +52,145 @@ const BreadCrumb = () => {
       breadcrumbs?.length === 2 &&
       parseInt(breadcrumbs[breadcrumbs.length - 1]?.label)
     ) {
-      return breadcrumbs[0]?.label;
+      return formatBreadcrumbLabel(breadcrumbs[0]?.label);
     }
     if (breadcrumbs?.length === 1) {
       if (breadcrumbs[0]?.label === "about-us") {
-        return "About Us";
+        return t("about_us");
       }
       if (breadcrumbs[0]?.label === "contact-us") {
-        return "Contact Us";
+        return t("contact_us");
+      }
+      if (breadcrumbs[0]?.label === "products") {
+        return t("products");
+      }
+      if (breadcrumbs[0]?.label === "blogs") {
+        return t("blogs");
+      }
+      if (breadcrumbs[0]?.label === "orders") {
+        return t("orders");
+      }
+      if (breadcrumbs[0]?.label === "wishlist") {
+        return t("wishlist");
+      }
+      if (breadcrumbs[0]?.label === "profile") {
+        return t("profile");
+      }
+      if (breadcrumbs[0]?.label === "address") {
+        return t("address");
+      }
+
+      if (breadcrumbs[0]?.label === "subscription") {
+        return t("subscription");
+      }
+
+      if (breadcrumbs[0]?.label === "transaction") {
+        return t("transaction");
+      }
+
+      if (breadcrumbs[0]?.label === "notifications") {
+        return t("notifications");
+      }
+
+      if (breadcrumbs[0]?.label === "notification-setting") {
+        return t("notification-setting");
+      }
+
+      if (breadcrumbs[0]?.label === "requested-products") {
+        return t("requestedProducts");
       }
       return breadcrumbs?.[0]?.label;
     }
     if (breadcrumbs[1]?.label === "activeorders") {
-      return "Active orders";
+      return t("active_orders");
     }
 
     if (breadcrumbs[1]?.label === "orderhistory") {
-      return "Order History";
+      return t("order_history");
     }
     if (breadcrumbs[1]?.label === "wallethistory") {
-      return "Wallet History";
+      return t("wallet_history");
     }
 
     if (breadcrumbs[1]?.label === "requested-products") {
-      return "Requested Products";
+      return t("requestedProducts");
+    }
+
+    if (breadcrumbs[1]?.label === "categories") {
+      return t("categories");
+    }
+
+    if (breadcrumbs[1]?.label === "products") {
+      return t("products");
+    }
+
+    if (breadcrumbs[1]?.label === "blogs") {
+      return t("blogs");
+    }
+
+    if (breadcrumbs[1]?.label === "profile") {
+      return t("profile");
+    }
+
+    if (breadcrumbs[1]?.label === "orders") {
+      return t("orders");
+    }
+
+    if (breadcrumbs[1]?.label === "wishlist") {
+      return t("wishlist");
+    }
+
+    if (breadcrumbs[1]?.label === "address") {
+      return t("address");
+    }
+
+    if (breadcrumbs[1]?.label === "subscription") {
+      return t("subscription");
+    }
+
+    if (breadcrumbs[1]?.label === "notifications") {
+      return t("notifications");
+    }
+
+    if (breadcrumbs[1]?.label === "transaction") {
+      return t("transaction");
+    }
+
+    if (breadcrumbs[1]?.label === "notification-setting") {
+      return t("notification-setting");
+    }
+
+    if (breadcrumbs[1]?.label === "all") {
+      return t("all");
     }
 
     return breadcrumbs[1]?.label;
   };
+
   const formatBreadcrumbLabel = (label) => {
     const map = {
-      activeorders: "Active Orders",
-      orderhistory: "Order History",
-      wallethistory: "Wallet History",
-      "about-us": "About Us",
-      "contact-us": "Contact Us",
+      activeorders: t("active_orders"),
+      orderhistory: t("order_history"),
+      wallethistory: t("wallet_history"),
+      "about-us": t("about_us"),
+      "contact-us": t("contact_us"),
+      categories: t("categories"),
+      products: t("products"),
+      blogs: t("blogs"),
+      profile: t("profile"),
+      all: t("all"),
+      orders: t("orders"),
+      wishlist: t("wishlist"),
+      address: t("address"),
+      subscription: t("subscription"),
+      transaction: t("transaction"),
+      notifications: t("notifications"),
+      "notification-setting": t("notification-setting"),
+      "requested-products": t("requestedProducts"),
     };
 
     if (map[label]) return map[label];
 
-    
     return label
       .replace(/-/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -97,7 +201,11 @@ const BreadCrumb = () => {
       <div className=" container px-2">
         <div className="flex justify-between flex-col gap-1 md:flex-row">
           <p className="text-xl font-bold capitalize">
-            {breadcrumbs.length ? handleCheckBreadCrumb() : "Home"}
+            {title
+              ? title
+              : breadcrumbs.length
+                ? handleCheckBreadCrumb()
+                : t("home")}
           </p>
           <div className="flex gap-1 items-center overflow-hidden ">
             <Link

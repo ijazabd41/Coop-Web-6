@@ -438,7 +438,7 @@ const ProductDetail = () => {
         </div>
       ) : (
         <>
-          <BreadCrumb />
+          <BreadCrumb title={product?.translations?.name} />
           <div className="container px-2 mb-6">
             <div className="mt-1">
               <div className="flex flex-col justify-center">
