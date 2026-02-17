@@ -61,8 +61,7 @@ const OrderDetail = () => {
       } else if (error.message) {
         toast.error(error.message);
       } else {
-        // FIXME: translate this error message
-        toast.error("Something went wrong!");
+        toast.error(t("something_went_wrong"));
       }
     }
   };
@@ -111,9 +110,9 @@ const OrderDetail = () => {
                 </div>
                 {Number(
                   orderDetail?.active_status < 6 &&
-                    parseInt(orderDetail?.otp) !== 0 &&
-                    orderDetail.order_type == "doorstep" &&
-                    orderDetail?.otp !== null
+                  parseInt(orderDetail?.otp) !== 0 &&
+                  orderDetail.order_type == "doorstep" &&
+                  orderDetail?.otp !== null
                 ) ? (
                   <div className="flex flex-col items-start md:items-end">
                     <span className="font-normal text-sm ">{t("otp")}</span>
@@ -213,9 +212,8 @@ const OrderDetail = () => {
                             {t("open_hours")}
                           </h2>
                           <p className="font-medium">
-                            {`${t("today")} ${
-                              orderDetail?.pickup_address?.opening_time
-                            } - ${orderDetail?.pickup_address?.closing_time}`}
+                            {`${t("today")} ${orderDetail?.pickup_address?.opening_time
+                              } - ${orderDetail?.pickup_address?.closing_time}`}
                           </p>
                         </div>
                       </div>

@@ -641,5 +641,10 @@
   "rejected": "Rejected",
   "approved": "Approved",
   "few_quantity_left": "Only a few left",
-  "please_select_valid_time_slot": "Sorry, this slot is currently unavailable."
+  "please_select_valid_time_slot": "Sorry, this slot is currently unavailable.",
+  "subscription": "Subscription",
+  "notifications": "Notifications",
+  "notification-setting": "Notification Settings",
+  "please_select_valid_date": "Please select a valid date",
+  "please_select_valid_time": "Please select a valid time"
 }

@@ -211,8 +211,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       phoneNumber?.length < countryCode.length ||
       phoneNumber?.slice(1) === countryCode
     ) {
-      // FIXME: translate this error message
-      setError("Please enter phone number!");
+      setError(t("please_enter_phone_number"));
       setLoading(false);
     } else {
       const phoneNumberWithoutSpaces = `${phoneNumber}`.replace(/\s+/g, "");
@@ -932,7 +931,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   </div>
 
                   {setting?.google_login == 1 &&
-                  (setting?.email_login == 1 || setting?.phone_login == 1) ? (
+                    (setting?.email_login == 1 || setting?.phone_login == 1) ? (
                     <div className="flex items-center justify-between my-4 gap-2">
                       <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
                       <span className=" text-[#4B6272] font-bold text-base">

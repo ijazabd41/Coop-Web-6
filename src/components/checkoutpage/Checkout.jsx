@@ -173,8 +173,7 @@ const Checkout = () => {
     const currentDate = new Date();
     const finalDate = currentDate.setHours(0, 0, 0, 0);
     if (date < finalDate) {
-      // FIXME: translate this error message
-      toast.info("Please select a valid date");
+      toast.info(t("please_select_valid_date"));
     }
 
     dispatch(setSelectedDate({ data: date }));
@@ -371,7 +370,6 @@ const Checkout = () => {
     try {
       const res = await initializeRazorpay();
       if (!res) {
-        // FIXME: translate this error message
         console.error("RazorPay SDK Load Failed");
         return;
       }
@@ -514,23 +512,21 @@ const Checkout = () => {
         : 1;
     try {
       if (checkout?.selectedPaymentMethod == null) {
-        // FIXME: translate this error message
-        toast.error("Please select payment method");
+
+        toast.error(t('please_select_valid_time'));
         return;
       } else if (
         checkout?.selectedDate == null &&
         checkout?.orderType == "doorstep" &&
         timeSlotsData?.time_slot_setting == "true"
       ) {
-        // FIXME: translate this error message
-        toast.error("Please select date");
+        toast.error(t("please_select_date"));
         return;
       } else if (
         checkout?.address == null &&
         checkout?.orderType == "doorstep"
       ) {
-        // FIXME: translate this error message
-        toast.error("Please select address");
+        toast.error(t("please_select_address"));
         return;
       } else {
         setCheckoutLoading(true);

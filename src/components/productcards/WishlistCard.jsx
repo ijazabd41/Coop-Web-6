@@ -242,13 +242,13 @@ const WishlistCard = ({
             />
           </div>
           <div className="flex flex-col">
-            <h2 className="font-bold text-lg">{product?.name}</h2>
+            <h2 className="font-bold text-lg">{product?.translations?.name}</h2>
             <p
               className="font-normal text-sm flex gap-1 items-center cursor-pointer"
               onClick={handleShowVariatModal}
             >
               {product?.variants[0]?.measurement}
-              {product?.variants[0]?.stock_unit_name}
+              {product?.variants[0]?.unit?.translations?.name}
               {product?.variants?.length > 1 && <IoMdArrowDropdown />}
             </p>
           </div>
