@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { IoMdArrowBack, IoMdArrowForward } from 'react-icons/io'
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -115,7 +114,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                             <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
                         </div>
                     </div>
-                )
+                ) 
             })}
         </div>
 

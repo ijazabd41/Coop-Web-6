@@ -73,7 +73,6 @@ const Categories = ({
   favicon,
 }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${slug}`;
-
   return (
     <div>
       <MetaData

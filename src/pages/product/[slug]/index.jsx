@@ -9,12 +9,12 @@ import MetaData from "@/components/metadata-component/MetaData";
 import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
-
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
   serverSidePropsFunction = async (context) => {
     const { slug } = context.params;
+    const lang = context.query.lang;
     let isMetadata = false;
     try {
       const response = await axios.get(
@@ -23,6 +23,9 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             slug: slug,
           },
+          headers: {
+            "Content-Language": lang,
+          }
         },
       );
 
