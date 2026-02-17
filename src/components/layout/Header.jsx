@@ -171,7 +171,6 @@ const Header = () => {
       console.log("error", error);
     }
   };
-  console.log(city);
 
   const handleCartOpen = () => {
     if (router.pathname == "/checkout") {
