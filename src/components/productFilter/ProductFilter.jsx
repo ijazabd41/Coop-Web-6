@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useCallback } from "react";
 import {
   setFilterCategory,
   clearAllFilter,
@@ -32,6 +33,8 @@ const Filter = ({
   setMinPrice,
   setMaxPrice,
   setShowFilter = () => {},
+  hideCategory,
+  disableFilter,
 }) => {
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
@@ -42,15 +45,20 @@ const Filter = ({
   const [brands, setbrands] = useState(null);
   const [sellers, setSellers] = useState(null);
   const [totalBrands, setTotalBrands] = useState();
+  const [totalSeller, setTotalSeller] =useState();
   const [brandOffset, setBrandOffset] = useState(0);
   const [sellerOffset, setSellerOffset] = useState(0);
   const [tempMinPrice, setTempMinPrice] = useState(null);
   const [tempMaxPrice, setTempMaxPrice] = useState(null);
+  const [defaultMinPrice, setDefaultMinPrice] = useState(minPrice);
+  const [defaultMaxPrice, setDefaultMaxPrice] = useState(maxPrice);
   const [activeKey, setActiveKey] = useState(["1", "2", "3", "4"]);
   const brandLimit = 10;
   const sellerLimit = 10;
-  const [loading, setLoading] = useState(false);
-
+  // const [loading, setLoading] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingBrands, setLoadingBrands] = useState(false);
+  const [loadingSellers, setLoadingSellers] = useState(false);
   useEffect(() => {
     if (brands == null) {
       fetchBrands(0);
@@ -59,7 +67,7 @@ const Filter = ({
       fetchCategories();
     }
     if (sellers == null) {
-      fetchSellers();
+      fetchSellers(0);
     }
   }, []);
 
@@ -67,12 +75,12 @@ const Filter = ({
     setActiveKey((prevActiveKeys) =>
       prevActiveKeys.includes(key)
         ? prevActiveKeys.filter((item) => item !== key)
-        : [...prevActiveKeys, key]
+        : [...prevActiveKeys, key],
     );
   };
 
-  const fetchSellers = async (sOffset) => {
-    setLoading(true);
+  const fetchSellers = useCallback(async (sOffset) => {
+    setLoadingSellers(true);
     try {
       const result = await api.getSellers({
         latitude: city?.city?.latitude,
@@ -86,24 +94,25 @@ const Filter = ({
         } else {
           setSellers((prevSellers) => [...prevSellers, ...result?.data]);
         }
+        setTotalSeller(result?.total);
       }
-      setSellers(result?.data);
+      // setSellers(result?.data);
     } catch (error) {
       console.log("Error", error);
     } finally {
-      setLoading(false);
+      setLoadingSellers(false);
     }
-  };
+  },[city?.city?.latitude, city?.city?.longitude]);
 
   const fetchCategories = async () => {
-    setLoading(true);
+    setLoadingCategories(true);
     try {
       const categories = await api.getCategories();
       setCategories(categories.data);
     } catch (error) {
       console.log("erorr", error);
     } finally {
-      setLoading(false);
+      setLoadingCategories(false);
     }
   };
 
@@ -115,29 +124,32 @@ const Filter = ({
     dispatch(setFilterCategory({ data: categories.join(",") }));
   };
 
-  const fetchBrands = async (bOffset) => {
-    setLoading(true);
-    try {
-      const result = await api.getBrands({
-        limit: brandLimit,
-        offset: bOffset,
-        latitude: city?.city?.latitude,
-        longitude: city?.city?.longitude,
-      });
-      if (result.status === 1) {
-        if (brands == null) {
-          setbrands(result?.data);
-        } else {
-          setbrands((prevBrands) => [...prevBrands, ...result?.data]);
+  const fetchBrands = useCallback(
+    async (bOffset) => {
+      setLoadingBrands(true);
+      try {
+        const result = await api.getBrands({
+          limit: brandLimit,
+          offset: bOffset,
+          latitude: city?.city?.latitude,
+          longitude: city?.city?.longitude,
+        });
+        if (result.status === 1) {
+          if (brands == null) {
+            setbrands(result?.data);
+          } else {
+            setbrands((prevBrands) => [...prevBrands, ...result?.data]);
+          }
+          setTotalBrands(result?.total);
         }
-        setTotalBrands(result?.total);
+      } catch (error) {
+        console.log("Error", error);
+      } finally {
+        setLoadingBrands(false);
       }
-    } catch (error) {
-      console.log("Error", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [city?.city?.latitude, city?.city?.longitude],
+  );
 
   const filterbyBrands = (brand) => {
     var brand_ids = [...filter.brand_ids];
@@ -171,13 +183,18 @@ const Filter = ({
   };
 
   const loadMoreSellers = () => {
-    setSellerOffset((prevOffset) => prevOffset + brandLimit);
-    fetchSellers(sellerOffset + brandLimit);
+    setSellerOffset((prevOffset) => prevOffset + sellerLimit);
+    fetchSellers(sellerOffset + sellerLimit);
   };
+
+  useEffect(() => {
+    setDefaultMinPrice(minPrice);
+    setDefaultMaxPrice(maxPrice);
+  }, [minPrice, maxPrice]);
 
   return (
     <>
-      {loading ? (
+      {loadingCategories || loadingBrands || loadingSellers ? (
         <FilterSkeleton />
       ) : (
         <div className="md:cardBorder rounded-md headerBackgroundColor ">
@@ -188,9 +205,21 @@ const Filter = ({
                 className="m-0 text-sm font-normal text-[#DB3D26] cursor-pointer"
                 onClick={() => {
                   setSelectedCategories([]);
-                  setMinPrice(null);
-                  setMaxPrice(null);
-                  dispatch(clearAllFilter());
+                  setMinPrice(defaultMinPrice);
+                  setMaxPrice(defaultMaxPrice);
+                  setValues([defaultMinPrice, defaultMaxPrice]);
+                  setTempMinPrice(defaultMinPrice);
+                  setTempMaxPrice(defaultMaxPrice);
+
+                  if (disableFilter) {
+                    dispatch(
+                      clearAllFilter({
+                        preserveCategory: filter.listing_source === "category",
+                      }),
+                    );
+                  } else {
+                    dispatch(clearAllFilter());
+                  }
                   // dispatch(resetSelectedCategories())
                   setOffset(0);
                   setShowFilter(false);
@@ -201,34 +230,38 @@ const Filter = ({
               </p>
             </div>
           </div>
-          <Collapsible
-            open={activeKey.includes("1")}
-            className="w-full bottomBorder"
-            onOpenChange={() => handleActiveKey("1")}
-          >
-            <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
-              <div className="text-start font-medium textColor md:text-base">
-                {t("product_category")}
-              </div>
-              <div
-                className={`transition-transform duration-250 ${
-                  activeKey.includes("1") ? "rotate-0" : "-rotate-90"
-                }`}
-              >
-                <FaChevronDown />
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="filter-row">
-                <CategoryTree
-                  categories={categories}
-                  selectedCategories={selectedCategories}
-                  onCategoryChange={handleCategoryChange}
-                  initialFilter={filter}
-                />
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+          {!hideCategory && (
+            <Collapsible
+              open={activeKey.includes("1")}
+              className="w-full bottomBorder"
+              onOpenChange={() => handleActiveKey("1")}
+            >
+              <CollapsibleTrigger className="w-full p-4 flex justify-between items-center">
+                <div className="text-start font-medium textColor md:text-base">
+                  {t("product_category")}
+                </div>
+                <div
+                  className={`transition-transform duration-250 ${
+                    activeKey.includes("1") ? "rotate-0" : "-rotate-90"
+                  }`}
+                >
+                  <FaChevronDown />
+                </div>
+              </CollapsibleTrigger>
+
+              <CollapsibleContent>
+                <div className="filter-row">
+                  <CategoryTree
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    onCategoryChange={handleCategoryChange}
+                    initialFilter={filter}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
           {brands && brands?.length > 0 && (
             <Collapsible
               open={activeKey.includes("2")}
@@ -322,7 +355,7 @@ const Filter = ({
                           dispatch(
                             setFilterBySeller({
                               data: seller.id,
-                            })
+                            }),
                           );
                         }}
                       />
@@ -333,14 +366,16 @@ const Filter = ({
                   );
                 })}
 
-                {sellers?.length < totalBrands && (
-                  <a
-                    className="brand-view-more textColor cursor-pointer"
-                    onClick={loadMoreSellers}
-                  >
-                    {t("showMore")}
-                  </a>
-                )}
+                {sellers?.length < totalSeller ? (
+                    <a
+                      className="brand-view-more textColor"
+                      onClick={loadMoreSellers}
+                    >
+                      {t("showMore")}
+                    </a>
+                  ) : (
+                    <></>
+                  )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -395,7 +430,7 @@ const Filter = ({
                           min_price: tempMinPrice,
                           max_price: tempMaxPrice,
                         },
-                      })
+                      }),
                     );
                   }}
                 >

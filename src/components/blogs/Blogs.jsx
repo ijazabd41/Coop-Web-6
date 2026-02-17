@@ -98,20 +98,19 @@ const Blogs = () => {
       <BreadCrumb />
       <div className="container my-12">
         <div className="grid md:grid-cols-12 gap-6 grid-cols-1">
-          <div className="md:col-span-8 col-span-12 flex flex-col gap-6">
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+          {blogs?.length == 0 && (
+              <div className="w-full flex col-span-12 justify-center ">
+                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+              </div>
+            )}
+          <div className="lg:col-span-8 md:col-span-7 col-span-12 flex flex-col gap-6">
+            <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
               {blogsLoading
                 ? Array?.from({ length: 3 })?.map((_, i) => (
                     <BlogCardSkeleton key={i} />
                   ))
                 : blogs?.map((blog, i) => <BlogCard key={i} blog={blog} />)}
             </div>
-            {blogs?.length == 0 && (
-              <div className="w-full flex justify-center md:mt-96">
-                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
-              </div>
-            )}
-
             {blogs?.length < totalBlogs && (
               <div className="w-full flex justify-center mt-6">
                 <button
@@ -127,7 +126,7 @@ const Blogs = () => {
           {blogsCategories?.length > 0 &&
             mostViewedBlogs?.length > 0 &&
             tags?.length > 0 && (
-              <div className="md:col-span-4 col-span-12 flex flex-col gap-6">
+              <div className="lg:col-span-4 md:col-span-5 col-span-12 flex flex-col gap-6">
                 {blogsCategories?.length > 0 && (
                   <BlogsCategories
                     blogsCategories={blogsCategories}

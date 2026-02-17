@@ -14,6 +14,14 @@ let serverSidePropsFunction = null;
 
 if(process.env.NEXT_PUBLIC_SEO == "true"){
 serverSidePropsFunction = async() =>  {
+  const defaultProps = {
+      title: process.env.NEXT_PUBLIC_META_TITLE,
+      description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
+      keywords: process.env.NEXT_PUBLIC_META_KEYWORDS,
+      schemaMarkup: null,
+      ogImage: "",
+      favicon: null,
+    };
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -23,25 +31,20 @@ serverSidePropsFunction = async() =>  {
         },
       },
     );
-    let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
-    let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
-    let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
-    let ogImage = "";
-    let schemaMarkup = null;
-    let favicon = null;
+
     if (
       process.env.NEXT_PUBLIC_SEO == "true" &&
       response.data.data?.length > 0
     ) {
       const seoData = response.data.data;
 
-      metatitle = seoData[0].meta_title;
-      metaDescription = seoData[0].meta_description;
-      metaKeywords = seoData[0].meta_keyword;
-      ogImage = seoData[0].og_image_url;
+      metatitle = seoData[0].meta_title || defaultProps.title;
+      metaDescription = seoData[0].meta_description || defaultProps.description;
+      metaKeywords = seoData[0].meta_keyword || defaultProps.keywords;
+      ogImage = seoData[0].og_image_url || defaultProps.ogImage;
       favicon = seoData[0].favicon;
       if (seoData[0].schema_markup) {
-        schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup);
+        schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup) || defaultProps.schemaMarkup;
       }
     }
     return {
@@ -56,6 +59,7 @@ serverSidePropsFunction = async() =>  {
     };
   } catch (error) {
     console.log("error", error);
+    return { props: defaultProps };
   }
 }
 }

@@ -10,7 +10,7 @@ import {
   setGuestCartTotal,
 } from "@/redux/slices/cartSlice";
 import { toast } from "react-toastify";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { BiTrash } from "react-icons/bi";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import { t } from "@/utils/translation";
@@ -32,7 +32,7 @@ const CartProductCard = ({
       ? getProductQuantities(cart?.guestCart)
       : getProductQuantities(cart?.cartProducts);
     const productQty = productQuantity?.find(
-      (prdct) => prdct?.product_id == product?.product_id
+      (prdct) => prdct?.product_id == product?.product_id,
     )?.qty;
     const finalPrice =
       product?.discounted_price == 0
@@ -50,11 +50,11 @@ const CartProductCard = ({
       if (response?.status == 1) {
         const remainItems = cart?.cartProducts?.filter(
           (cartProduct) =>
-            cartProduct?.product_variant_id !== product?.product_variant_id
+            cartProduct?.product_variant_id !== product?.product_variant_id,
         );
         const updatedProducts = cartProductsData?.filter(
           (cartProduct) =>
-            cartProduct?.product_variant_id !== product?.product_variant_id
+            cartProduct?.product_variant_id !== product?.product_variant_id,
         );
         setCartProductsData(updatedProducts);
         dispatch(setCartProducts({ data: remainItems }));
@@ -80,11 +80,11 @@ const CartProductCard = ({
   const handleGuestCartRemove = () => {
     const remainItems = cart?.guestCart?.filter(
       (cartProduct) =>
-        cartProduct?.product_variant_id !== product?.product_variant_id
+        cartProduct?.product_variant_id !== product?.product_variant_id,
     );
     const updatedProducts = cartProductsData?.filter(
       (cartProduct) =>
-        cartProduct?.product_variant_id !== product?.product_variant_id
+        cartProduct?.product_variant_id !== product?.product_variant_id,
     );
     setCartProductsData(updatedProducts);
     dispatch(addtoGuestCart({ data: remainItems }));
@@ -107,7 +107,7 @@ const CartProductCard = ({
           ...quantities,
           [product.product_id]: existingQty + product.qty,
         };
-      }, {})
+      }, {}),
     ).map(([productId, qty]) => ({
       product_id: parseInt(productId),
       qty,
@@ -120,12 +120,12 @@ const CartProductCard = ({
         ? getProductQuantities(cart?.guestCart)
         : getProductQuantities(cart?.cartProducts);
       const productQty = productQuantity?.find(
-        (prdct) => prdct?.product_id == product?.product_id
+        (prdct) => prdct?.product_id == product?.product_id,
       )?.qty;
       const cartProductQty = cart.cartProducts.find(
         (prdct) =>
           prdct?.product_id == product?.product_id &&
-          prdct?.product_variant_id == product?.product_variant_id
+          prdct?.product_variant_id == product?.product_variant_id,
       );
       if (product?.is_unlimited_stock !== 0) {
         if (productQty >= Number(product?.total_allowed_quantity)) {
@@ -252,17 +252,17 @@ const CartProductCard = ({
         productQuantity = getProductQuantities(cart?.cartProducts);
       }
       const productQty = productQuantity?.find(
-        (prdct) => prdct?.product_id == product?.product_id
+        (prdct) => prdct?.product_id == product?.product_id,
       )?.qty;
       const variantQty = cart?.guestCart?.find(
         (prdct) =>
           prdct?.product_id == product?.product_id &&
-          prdct?.product_variant_id == product?.product_variant_id
+          prdct?.product_variant_id == product?.product_variant_id,
       )?.qty;
       const cartProductQty = cart.cartProducts.find(
         (prdct) =>
           prdct?.product_id == product?.product_id &&
-          prdct?.product_variant_id == product?.product_variant_id
+          prdct?.product_variant_id == product?.product_variant_id,
       );
       if (cart.isGuest) {
         if (variantQty <= 1) {
@@ -321,87 +321,172 @@ const CartProductCard = ({
   const addedQuantity =
     cart.isGuest === false
       ? cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id
+          (prdct) => prdct?.product_variant_id == product?.product_variant_id,
         )?.qty
       : cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == product?.product_variant_id
+          (prdct) => prdct?.product_variant_id == product?.product_variant_id,
         )?.qty;
 
   return (
-    <div className="grid grid-cols-12 items-center gap-4 p-4 border-b min-w-[600px]">
-      {/* Product Image and Details */}
-      <div className="col-span-4 flex space-x-4">
-        <div className="relative w-16 h-16 rounded-sm flex-shrink-0">
-          <ImageWithPlaceholder
-            src={product?.image_url}
-            alt={product?.name}
-            width={380}
-            height={380}
-            
-            className="w-16 h-16 object-cover  flex-shrink-0"
-          />
-        </div>
-        <div>
-          <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
-            {product?.name}
-          </h3>
+    <div className="  gap-4 p-4 border-b w-full min-w-0">
+      <div className=" hidden md:grid grid-cols-12 items-center ">
+        {/* Product Image and Details */}
+        <div className="col-span-4 flex space-x-4">
+          <div className="relative w-[64px] h-[64px] rounded-sm flex-shrink-0 cardBorder p-1">
+            <ImageWithPlaceholder
+              src={product?.image_url}
+              alt={product?.name}
+              width={380}
+              height={380}
+              className="w-full h-full object-cover  flex-shrink-0"
+            />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
+              {product?.name}
+            </h3>
 
-          <p className="text-xs font-normal">
-            {product?.measurement} {product?.unit_code}
+            <p className="text-xs font-normal">
+              {product?.measurement} {product?.unit_code}
+            </p>
+          </div>
+        </div>
+
+        {/* Product Price */}
+        <div className="col-span-2 text-center">
+          {product?.discounted_price !== 0 ? (
+            <>
+              <h2 className="text-base font-bold">
+                {setting?.currency}
+                {product?.discounted_price}
+              </h2>
+              <p className="text-sm font-normal line-through">
+                {setting?.currency} {product?.price}
+              </p>
+            </>
+          ) : (
+            <h2 className="text-base font-bold">
+              {setting?.currency} {product?.price}
+            </h2>
+          )}
+        </div>
+
+        {/* Quantity Selector */}
+        <div className="col-span-3 flex items-center justify-center rounded cardBorder">
+          <button className="px-2 py-1" onClick={handleQuantityDecrease}>
+            <FaMinus />
+          </button>
+          <input
+            className="py-1 text-base w-2/3 text-center"
+            value={addedQuantity}
+            disabled
+          />
+          <button className="px-2 py-1" onClick={handleQuantityIncrease}>
+            <FaPlus />
+          </button>
+        </div>
+
+        {/* Total Price */}
+        <div className="col-span-2 text-center">
+          <p className="text-base font-bold">
+            {setting?.currency}
+            {totalPrice}
           </p>
         </div>
-      </div>
 
-      {/* Product Price */}
-      <div className="col-span-2 text-center">
-        {product?.discounted_price !== 0 ? (
-          <>
-            <h2 className="text-base font-bold">
+        {/* Remove Button */}
+        <div className="col-span-1 text-center">
+          <button
+            className="text-red-600 hover:text-red-800"
+            onClick={handleRemoveItem}
+          >
+            <BiTrash size={26} />
+          </button>
+        </div>
+      </div>
+      {/* Mobile Card  */}
+      <div className="flex flex-col md:hidden gap-2 w-full overflow-hidden">
+        <div className="flex justify-between ">
+          <div>
+            <div className="relative w-[72px] h-[72px] rounded-sm flex-shrink-0 cardBorder p-1">
+              <ImageWithPlaceholder
+                src={product?.image_url}
+                alt={product?.name}
+                width={380}
+                height={380}
+                className=" h-full w-full object-cover  flex-shrink-0"
+              />
+            </div>
+            <div>
+              <h3 className="text-base font-bold truncate max-w-full">
+                {product?.name}
+              </h3>
+
+              <p className="text-xs font-normal">
+                {product?.measurement} {product?.unit_code}
+              </p>
+            </div>
+          </div>
+          <div>
+            <button
+              className="text-red-600 hover:text-red-800"
+              onClick={handleRemoveItem}
+            >
+              <BiTrash size={26} />
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 border-t">
+          {/* Product Price */}
+          <div className="flex justify-between pt-2">
+            <div>{t("price")}</div>
+            <div className="flex flex-wrap items-center gap-2">
+              {product?.discounted_price !== 0 ? (
+                <>
+                  <h2 className="text-base font-bold">
+                    {setting?.currency}
+                    {product?.discounted_price}
+                  </h2>
+                  <p className="text-sm font-normal line-through">
+                    {setting?.currency} {product?.price}
+                  </p>
+                </>
+              ) : (
+                <h2 className="text-base font-bold">
+                  {setting?.currency} {product?.price}
+                </h2>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between border-t items-center  pt-2">
+          <div className="text-center font-bold">{t("quantity")}</div>
+          {/* Quantity Selector */}
+          <div className="flex items-center justify-center rounded cardBorder">
+            <button className="px-2 py-1" onClick={handleQuantityDecrease}>
+              <FaMinus />
+            </button>
+            <input
+              className="py-1 text-base max-w-[97px] text-center"
+              value={addedQuantity}
+              disabled
+            />
+            <button className="px-2 py-1" onClick={handleQuantityIncrease}>
+              <FaPlus />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex justify-between border-t  pt-2">
+          <div className=" text-center font-bold">{t("total")}</div>
+          {/* Total Price */}
+          <div className=" text-center">
+            <p className="text-base font-bold">
               {setting?.currency}
-              {product?.discounted_price}
-            </h2>
-            <p className="text-sm font-normal line-through">
-              {setting?.currency} {product?.price}
+              {totalPrice}
             </p>
-          </>
-        ) : (
-          <h2 className="text-base font-bold">
-            {setting?.currency} {product?.price}
-          </h2>
-        )}
-      </div>
-
-      {/* Quantity Selector */}
-      <div className="col-span-3 flex items-center justify-center rounded cardBorder">
-        <button className="px-2 py-1" onClick={handleQuantityDecrease}>
-          <FaMinus />
-        </button>
-        <input
-          className="py-1 text-base w-2/3 text-center"
-          value={addedQuantity}
-          disabled
-        />
-        <button className="px-2 py-1" onClick={handleQuantityIncrease}>
-          <FaPlus />
-        </button>
-      </div>
-
-      {/* Total Price */}
-      <div className="col-span-2 text-center">
-        <p className="text-base font-bold">
-          {setting?.currency}
-          {totalPrice}
-        </p>
-      </div>
-
-      {/* Remove Button */}
-      <div className="col-span-1 text-center">
-        <button
-          className="text-red-600 hover:text-red-800"
-          onClick={handleRemoveItem}
-        >
-          <RiDeleteBinLine size={26} />
-        </button>
+          </div>
+        </div>
       </div>
     </div>
   );

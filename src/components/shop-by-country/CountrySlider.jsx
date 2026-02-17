@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { isRtl } from '@/lib/utils';
 import { setFilterByCountry } from '@/redux/slices/productFilterSlice';
+import { setFilterSection,setListingSource, } from '@/redux/slices/productFilterSlice';
 
 const CountrySlider = ({ countries }) => {
     const router = useRouter()
@@ -19,6 +20,7 @@ const CountrySlider = ({ countries }) => {
     const dispatch = useDispatch()
     const handleCountryClick = (country) => {
         dispatch(setFilterByCountry({ data: country?.id }));
+        dispatch(setListingSource({ data: "all" }));
         router.push(`/products`)
     }
 

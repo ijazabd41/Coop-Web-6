@@ -107,9 +107,7 @@ const BlogDetail = () => {
               <div className="border h-12 hidden md:block"></div>
               <div className="flex flex-col ">
                 <p className="subTextColor">{t("read_time")}</p>
-                <h4 className="font-bold">{`${blog?.read_time} ${t(
-                  "minutes"
-                )}`}</h4>
+                <h4 className="font-bold">{`${blog?.read_time}`}</h4>
               </div>
             </div>
           </div>

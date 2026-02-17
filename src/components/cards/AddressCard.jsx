@@ -70,7 +70,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
 
                 </div>
                 {(address?.is_default === 1 && !finalOrderAddress) && (
-                    <p className="text-sm mb-2">{t('default_address_msg')}</p>
+                    <p className="text-sm mb-2 SecondaryTextColor">{t('default_address_msg')}</p>
                 )}
 
                 <p className="text-sm mb-4 font-semibold">{formattedAddress}</p>
@@ -80,7 +80,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                     </p>
                     {!finalOrderAddress && <div className="flex md:space-x-1 flex-col md:flex-row">
                         <button
-                            className="flex items-center gap-1 text-base font-medium"
+                            className="flex items-center gap-1 textColor text-base font-medium"
                             onClick={handleEditAddress}
                         >
                             <FaRegEdit size={18} />
@@ -88,7 +88,7 @@ const AddressCard = ({ address, setShowAddAddres, setIsAddressSelected, fetchAdd
                         </button>
                         <span className="p-1 border-r-2 hidden md:block"></span>
                         <button
-                            className="flex items-center text-base font-medium gap-1"
+                            className="flex items-center text-base textColor font-medium gap-1"
                             onClick={() => setShowDeleteModal(true)}
                         >
                             <RiDeleteBinLine size={18} />

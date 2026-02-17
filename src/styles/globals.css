@@ -23,6 +23,17 @@
   --sub-text-color: #595F65;
   --secondary-text-color:rgba(20, 26, 31, 0.66);  
   --short-description-text-color:#5C788C;
+  --order-status-payment-pending-color:#e3aa0e;
+  --order-status-recieved:#319795;
+  --order-status-in-process-color:#e3aa0e;
+  --order-status-processed:#805AD5;
+  --order-status-shipped:#3182CE;
+  --order-status-out_for_delivery:#2D3748;
+  --order-status-delivered:#2D3748;
+  --order-status-cancelled:#db3232;
+  --order-status-returned:#458ae6;
+  --order-status-ready_to_pickup:#458ae6;
+  --order-status-picked:#59AC77;
 }
 
 .dark {
@@ -45,6 +56,16 @@
   --brand-bg-color: #40454A;
   --secondary-text-color:rgba(255,255,255,0.66);
   --short-description-text-color:#fff;
+  --order-status-payment-pending-color:#e3aa0e;
+  --order-status-in-process-color:#e3aa0e;
+  --order-status-processed:#805AD5;
+  --order-status-shipped:#3182CE;
+  --order-status-out_for_delivery:#2D3748;
+  --order-status-delivered:#2D3748;
+  --order-status-cancelled:#db3232;
+  --order-status-returned:#458ae6;
+  --order-status-ready_to_pickup:#458ae6;
+  --order-status-picked:#59AC77;
 }
 
 /* .container {
@@ -197,6 +218,10 @@
     border-bottom: 1px solid var(--border-color);
   }
 
+  .topBorder {
+    border-top: 1px solid var(--border-color);
+  }
+
   .textPrimaryColor {
     color: var(--primary-color);
   }
@@ -227,6 +252,60 @@
 
   .addToCartColor {
     background-color: var(--light-primary-color)
+  }
+
+  .paymentPendingStatus{
+    color: var(--order-status-payment-pending-color);
+    border: 1px solid var(--order-status-payment-pending-color);
+  }
+  .orderInProcess{
+    color: var(--order-status-payment-pending-color);
+    border: 1px solid var(--order-status-payment-pending-color);
+  }
+
+  .orderRecieved{
+    color: var(--order-status-recieved);
+    border: 1px solid var(--order-status-recieved);
+  }
+
+  .orderProcessed{
+    color: var(--order-status-processed);
+    border:1px solid var(--order-status-processed);
+  }
+  
+  .orderShipped{
+    color: var(--order-status-shipped);
+    border:1px solid var(--order-status-shipped);
+  }
+
+  .orderOutForDelivery{
+    color: var(--order-status-out_for_delivery);
+    border:1px solid var(--order-status-out_for_delivery);
+  }
+
+  .orderDelivered{
+    color: var(--order-status-delivered);
+    border:1px solid var(--order-status-delivered);
+  }
+
+  .orderCancelled{
+    color: var(--order-status-cancelled);
+    border:1px solid var(--order-status-cancelled);
+  }
+
+  .orderReturned{
+    color: var(--order-status-returned);
+    border:1px solid var(--order-status-returned);
+  }
+
+  .orderReadyToPickup{
+    color: var(--order-status-ready_to_pickup);
+    border:1px solid var(--order-status-ready_to_pickup);
+  }
+
+  .orderPicked{
+    color: var(--order-status-picked);
+    border:1px solid var(--order-status-picked);
   }
 
   .infoContent h1,

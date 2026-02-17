@@ -41,7 +41,7 @@ const OrderItems = ({
 
   const handleShowUpdateRating = (product) => {
     const rating = product?.item_rating?.find(
-      (rating) => rating?.user_id == user?.id
+      (rating) => rating?.user_id == user?.id,
     );
     const ratingId = rating?.id;
     setRatingId(ratingId);
@@ -51,7 +51,7 @@ const OrderItems = ({
   return (
     <div className="rounded-md cardBorder overflow-auto">
       <table className="table-auto w-full rounded-md min-w-[600px]">
-        <thead className="backColor ">
+        <thead className="backgroundColor ">
           <tr>
             <th className="text-left p-4 border-b ">{t("product")}</th>
             <th className="text-left p-4 border-b ">{t("price")}</th>
@@ -61,7 +61,7 @@ const OrderItems = ({
         <tbody>
           {products?.map((product) => {
             const userRating = product?.item_rating?.find(
-              (rating) => rating?.user?.id === user?.id
+              (rating) => rating?.user?.id === user?.id,
             );
             return (
               <tr key={product?.id} className="border-b last:border-b-0 ">
@@ -132,7 +132,7 @@ const OrderItems = ({
                   <p className="font-bold">
                     {setting?.currency}
                     {product?.price?.toFixed(
-                      setting?.decimal_point ? setting?.decimal_point : 0
+                      setting?.decimal_point ? setting?.decimal_point : 0,
                     )}
                   </p>
                 </td>
