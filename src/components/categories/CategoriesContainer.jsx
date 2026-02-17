@@ -102,7 +102,7 @@ const CategoriesContainer = ({ categories }) => {
                         {categories?.categories?.map((category, index) => {
                             return (
                                 <SwiperSlide key={index} onClick={() => handleCategoryClick(category)}>
-                                    <CategoryCard category={category} />
+                                    <CategoryCard category={category} imageSize={122} padding={16}/>
                                 </SwiperSlide>
                             )
                         })}

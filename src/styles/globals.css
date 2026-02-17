@@ -783,3 +783,6 @@ input[type=number] {
   display: block;
   max-width: 100%;
 }
+.blog-card-description * {
+  display: inline !important;
+}

@@ -20,17 +20,14 @@ const SubCategorySwiper = ({
 
   return (
     <>
-      
-      {title && (
-        <div className="textColor text-xl sm:text-3xl font-extrabold !tracking-wide leading-[29px] m-0">
-          <p>{title}</p>
-        </div>
-      )}
-
-      <div className="container" dir={languageType}>
-        
-        <div className="flex justify-between items-center p-0 w-full">
-          <div className="md:flex hidden gap-2">
+      <div className="flex justify-between gap-4">
+        {title && (
+          <div className="textColor text-xl font-extrabold !tracking-wide leading-[29px] m-0">
+            <p>{title}</p>
+          </div>
+        )}
+        <div className="flex  items-center p-0">
+          <div className="flex gap-2">
             <button className="group category-button-next swiperBorderColor rounded-full !p-2 inline-block hover:primaryBackColor hover:text-white hover:primaryBorder">
               <IoMdArrowBack
                 size={20}
@@ -45,9 +42,10 @@ const SubCategorySwiper = ({
             </button>
           </div>
         </div>
+      </div>
 
-        
-        <div className="mt-6">
+      <div className="container" dir={languageType}>
+        <div className="">
           <Swiper
             key={rtl}
             modules={[Navigation]}
@@ -60,7 +58,7 @@ const SubCategorySwiper = ({
             breakpoints={{
               0: { slidesPerView: 2 },
               320: { slidesPerView: 2.5 },
-              375: { slidesPerView: 2.3 },
+              375: { slidesPerView: 2.5 },
               425: { slidesPerView: 3 },
               768: { slidesPerView: 4 },
               1024: { slidesPerView: 6 },
@@ -68,9 +66,7 @@ const SubCategorySwiper = ({
           >
             {isLoading ? (
               <SwiperSlide>
-                <div className="p-4 text-sm opacity-60">
-                  {t("loading")}
-                </div>
+                <div className="p-4 text-sm opacity-60">{t("loading")}</div>
               </SwiperSlide>
             ) : (
               subCategories.map((category) => (
@@ -78,7 +74,7 @@ const SubCategorySwiper = ({
                   key={category.id}
                   onClick={() => onCategoryClick(category)}
                 >
-                  <CategoryCard category={category} />
+                  <CategoryCard category={category} imageSize={96} padding={8}/>
                 </SwiperSlide>
               ))
             )}
