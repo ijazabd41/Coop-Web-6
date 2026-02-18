@@ -53,7 +53,6 @@ const NewAddressModal = ({
   }, [showAddAddres]);
 
   useEffect(() => {
-   
     const center = {
       lat: localLocation.lat,
       lng: localLocation.lng,
@@ -73,7 +72,7 @@ const NewAddressModal = ({
         } else {
           console.error(
             "Geocode was not successful for the following reason:",
-            status
+            status,
           );
         }
       });
@@ -307,15 +306,16 @@ const NewAddressModal = ({
   };
 
   const handleCurrentLocationClick = () => {
+    
     navigator.geolocation.getCurrentPosition((position) => {
       const latLng = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      setlocalLocation({
-        lat: parseFloat(latLng.lat),
-        lng: parseFloat(latLng.lng),
-      });
+      setCenter(latLng);
+        
+        // 2. Update localLocation for your other logic
+        setlocalLocation(latLng);
       const geocoder = new window.google.maps.Geocoder();
       geocoder
         .geocode({
@@ -402,7 +402,7 @@ const NewAddressModal = ({
           <div className="flex flex-row justify-between items-center">
             <h2 className="font-bold text-xl">{t("new_address")}</h2>
             <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
-              <RiCloseFill size={22} onClick={() => handleHideAddressModal()}/>
+              <RiCloseFill size={22} onClick={() => handleHideAddressModal()} />
             </div>
           </div>
         </DialogHeader>
@@ -425,7 +425,7 @@ const NewAddressModal = ({
                 zoom={11}
                 center={center}
                 mapContainerStyle={mapContainerStyle}
-                className="h-full"
+                className="h-full "
               >
                 <MarkerF
                   position={center}
@@ -435,10 +435,13 @@ const NewAddressModal = ({
                 />
               </GoogleMap>
             </div>
-            <div className="w-full md:w-1/2 h-full">
+            <div className=" max-w-[391px] min-w-[286px] md:w-1/2 h-full">
               {addressLoading ? (
-                <div className="flex items-center justify-center">
-                  <Loader height={600} width={600} />
+                <div className="flex items-center justify-center ">
+                  <Loader
+                    width={Math.min(300, window.innerWidth - 40)}
+                    height={Math.min(300, window.innerWidth - 40)}
+                  />
                 </div>
               ) : (
                 <div className="flex flex-col">

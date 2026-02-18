@@ -605,10 +605,10 @@ const Header = () => {
             </div>
           </div>
           <div className="bottom-header ">
-            <div className="container mx-auto grid grid-cols-12 items-center justify-between mt-2 mb-2 md:mb-4 px-2 ">
+            <div className="container mx-auto flex md:grid md:grid-cols-12 md:items-center justify-between mt-2 mb-2 md:mb-4 px-2 ">
               {/* First column: col-3 equivalent */}
               <div
-                className="col-span-11 md:col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer"
+                className=" md:col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer"
                 onClick={handleOpenLocation}
               >
                 <span className="p-3 iconBackgroundColor hidden md:block rounded-full">
@@ -621,7 +621,7 @@ const Header = () => {
                   <span className="text-sm shortDescriptionText">
                     {t("deliver_to")}
                   </span>
-                  <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap w-40">
+                  <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap truncate max-w-[252px] md:max-w-40">
                     <>
                       {city.status === "fulfill" ? (
                         city?.city?.formatted_address
@@ -638,7 +638,7 @@ const Header = () => {
                   </span>
                 </div>
               </div>
-              <div className="block md:hidden">
+              <div className=" md:hidden flex items-center">
                 <BiCaretRight size={18} />
               </div>
               <div className="hidden md:block lg:col-span-6 md:col-span-8">

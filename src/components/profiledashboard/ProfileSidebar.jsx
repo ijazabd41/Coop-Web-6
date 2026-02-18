@@ -119,21 +119,26 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
     <div>
       <div className="cardBorder rounded-sm ">
         {user?.is_subscription_plans ? (
-          <div className="backgroundColor flex flex-col md:p-1 lg:p-6 p-4 gap-6">
-            <div className="flex items-center  gap-6 md:gap-2 lg:gap-6">
-              <div className="h-28 w-28 rounded-full border-2 bodyBackgroundColor flex items-center justify-center ">
+          <div className="backgroundColor flex flex-col md:p-4 lg:p-6 p-4 gap-6">
+            <div className="flex items-center gap-6 md:gap-2 lg:gap-6">
+              {/* Avatar */}
+              <div
+                className="h-28 w-28 md:h-[56px] md:w-[56px] lg:h-[96.62px] lg:w-[96.62px] rounded-full border-2 bodyBackgroundColor flex items-center justify-center p-[2.32px] shrink-0"
+              >
                 <Image
                   src={user?.profile}
                   alt="Profile"
-                  width={80}
-                  height={80}
-                  className="h-[100px] w-[100px] rounded-full object-cover"
+                  width={100}
+                  height={100}
+                  className="h-full w-full rounded-full object-cover shrink-0"
                 />
               </div>
-              <div className="w-1/2 ">
+
+              {/* Text */}
+              <div className="flex-1 min-w-0">
                 <p className="text-[14px] SecondaryTextColor">{t("hello")},</p>
-                <p className="text-xl md:text-[16px] lg:text-xl  font-bold textColor">
-                  {user?.name?.slice(0, 16)}
+                <p className="text-xl md:text-[16px] lg:text-xl font-bold textColor ">
+                  {user?.name}
                 </p>
               </div>
             </div>
@@ -141,15 +146,15 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
             <div className="flex gap-6 flex-col">
               <div className="flex gap-3">
                 {user?.has_active_subscription == 1 ? (
-                  <div className="flex items-start w-full justify-between md:gap-1 lg:justify-between">
+                  <div className="flex md:flex-col lg:flex-row items-start w-full justify-between md:gap-1 lg:justify-between">
                     <div className="flex gap-2 md:gap-1 lg:gap-2">
-                      <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-10  shrink-0">
+                      <div className="p-[5.5px] md:p-1 lg:p-[5.5px] gap-[6px] primaryBackColor rounded-full border border-white h-8 w-8 md:h-6 md:w-6 lg:h-8 lg:w-8 shrink-0">
                         <Image
                           src={LightImage}
                           alt="light logo"
-                          className={`h-6 w-6 object-contain `}
-                          height={20}
-                          width={20}
+                          className={`h-full w-full object-contain `}
+                          height={24}
+                          width={24}
                         />
                       </div>
                       <div className="flex flex-col">
@@ -161,7 +166,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </p>
                       </div>
                     </div>
-                    <span className="primaryBackColor text-white text-sm font-semibold px-3 py-1 md:px-2 md:py-0.5 lg:px-3 lg:py-1  rounded-full">
+                    <span className="primaryBackColor ml-0 md:ml-3 lg:ml-0 text-white text-sm font-semibold px-3 py-1 md:px-2 md:py-0.5 lg:px-3 lg:py-1  rounded-full">
                       {t("active")}
                     </span>
                   </div>
@@ -169,11 +174,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   <div className="flex flex-col gap-6">
                     <div className="flex  md:flex-col lg:flex-row items-start w-full justify-between gap-2 ">
                       <div className="flex gap-[12px] ">
-                        <div className="p-2 primaryBackColor rounded-full border border-white h-10 w-10  shrink-0">
+                        <div className="p-[5.5px] md:p-1 lg:p-[5.5px] gap-[6px] primaryBackColor rounded-full border border-white h-8 w-8 md:h-6 md:w-6 lg:h-8 lg:w-8 shrink-0">
                           <Image
                             src={LightImage}
                             alt="light logo"
-                            className={`h-6 w-6 object-contain `}
+                            className={`h-full w-full object-contain `}
                             height={24}
                             width={24}
                           />
