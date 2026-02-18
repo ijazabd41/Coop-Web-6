@@ -103,7 +103,7 @@ const Category = () => {
                 className="col-span-1"
                 onClick={() => handleCategoryClick(category)}
               >
-                <CategoryCard category={category} />
+                <CategoryCard category={category} imageSize={122} />
               </div>
             ))}
         </div>

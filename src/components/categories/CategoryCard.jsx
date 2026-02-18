@@ -1,7 +1,7 @@
 import React from "react";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 
-const CategoryCard = ({ category,imageSize,padding }) => {
+const CategoryCard = ({ category, imageSize, padding }) => {
   return (
     <div className="flex flex-col category-card border border-transparent hover:textPrimaryColor hover:cardBorder rounded-xl categoryCardBackground cursor-pointer " style={{ padding }}>
       <div className="gap-3 flex flex-col items-center">
@@ -14,8 +14,8 @@ const CategoryCard = ({ category,imageSize,padding }) => {
         >
           <ImageWithPlaceholder
             src={category.image_url}
-            width={1000}
-            height={1000}
+            width={300}
+            height={300}
             alt="Category Image"
             className="rounded-full w-full h-full object-cover p-2"
           />

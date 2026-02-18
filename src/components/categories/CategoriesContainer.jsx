@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterCategory } from '@/redux/slices/productFilterSlice';
-import {setListingSource,setCategorySlug,setCategoryBreadcrumb } from '@/redux/slices/productFilterSlice';
+import { setListingSource, setCategorySlug, setCategoryBreadcrumb } from '@/redux/slices/productFilterSlice';
 import { isRtl } from '@/lib/utils';
 
 const CategoriesContainer = ({ categories }) => {
@@ -31,29 +31,29 @@ const CategoriesContainer = ({ categories }) => {
     //     }
     // }
     const categoryBreadcrumb = useSelector(
-      (state) => state.ProductFilter.categoryBreadcrumb
+        (state) => state.ProductFilter.categoryBreadcrumb
     );
- const handleCategoryClick = (category) => {
-   const exists = categoryBreadcrumb.find(c => c.id === category.id);
- 
-   const newBreadcrumb = exists
-     ? categoryBreadcrumb
-     : [
-         ...categoryBreadcrumb,
-         {
-           id: category.id,
-           name: category.translations?.name || category.name,
-           slug: category.slug,
-         },
-       ];
- 
-   dispatch(setListingSource({ data: "category" }));
-   dispatch(setFilterCategory({ data: category.id }));
-   dispatch(setCategorySlug({ data: category.slug }));
-   dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
- 
-   router.push("/products");
- };
+    const handleCategoryClick = (category) => {
+        const exists = categoryBreadcrumb.find(c => c.id === category.id);
+
+        const newBreadcrumb = exists
+            ? categoryBreadcrumb
+            : [
+                ...categoryBreadcrumb,
+                {
+                    id: category.id,
+                    name: category.translations?.name || category.name,
+                    slug: category.slug,
+                },
+            ];
+
+        dispatch(setListingSource({ data: "category" }));
+        dispatch(setFilterCategory({ data: category.id }));
+        dispatch(setCategorySlug({ data: category.slug }));
+        dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
+
+        router.push("/products");
+    };
     return (
         <section>
             <div className='container feature-section' dir={language?.type}>
@@ -79,7 +79,7 @@ const CategoriesContainer = ({ categories }) => {
                         {/* ) : null} */}
                     </div>
                 </div>
-                
+
                 <div className='mt-6'>
                     <Swiper
                         key={rtl}
@@ -92,9 +92,9 @@ const CategoriesContainer = ({ categories }) => {
                         }}
                         breakpoints={{
                             0: { slidesPerView: 1.5 },
-                            320: { slidesPerView: 2},
-                            375: { slidesPerView: 2.5},
-                            425: { slidesPerView: 3},
+                            320: { slidesPerView: 2 },
+                            375: { slidesPerView: 2.5 },
+                            425: { slidesPerView: 3 },
                             768: { slidesPerView: 4 },
                             1024: { slidesPerView: 6 },
                         }}
@@ -102,7 +102,7 @@ const CategoriesContainer = ({ categories }) => {
                         {categories?.categories?.map((category, index) => {
                             return (
                                 <SwiperSlide key={index} onClick={() => handleCategoryClick(category)}>
-                                    <CategoryCard category={category} imageSize={122} padding={16}/>
+                                    <CategoryCard category={category} imageSize={122} padding={16} />
                                 </SwiperSlide>
                             )
                         })}
