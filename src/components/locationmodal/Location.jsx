@@ -30,15 +30,12 @@ const Location = ({ showLocation, setShowLocation }) => {
   const debounceTimeoutRef = useRef(null);
   const dispatch = useDispatch();
   const [mapView, setMapView] = useState(false);
-  // const [currLocationClick, setcurrLocationClick] = useState(false);
-  // const [isInputFields, setisInputFields] = useState(false);
   const [addressLoading, setAddressLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, seterrorMsg] = useState("");
   const [center, setCenter] = useState();
   const [inputValue, setInputValue] = useState("");
   const [resultedPlaces, setResultedPlaces] = useState([]);
-  // const [selectedLocation, setSelectedLocation] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const [localLocation, setlocalLocation] = useState({
@@ -106,33 +103,59 @@ const Location = ({ showLocation, setShowLocation }) => {
     setMapView(false);
   };
 
-  const handleViewMap = async () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      setlocalLocation({ lat: lat, lng: lng });
-    });
-    const geocoder = new window.google.maps.Geocoder();
-    try {
-      const response = await geocoder.geocode({
-        location: {
-          lat: localLocation.lat,
-          lng: localLocation.lng,
-        },
-      });
 
-      if (response.results[0]) {
-        setlocalLocation((state) => ({
-          ...state,
-          formatted_address: response.results[0].formatted_address,
-        }));
+  const handleViewMap = async () => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        // Success callback
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setlocalLocation({ lat: lat, lng: lng });
+
+        const geocoder = new window.google.maps.Geocoder();
+        try {
+          const response = await geocoder.geocode({
+            location: { lat, lng },
+          });
+
+          if (response.results[0]) {
+            setlocalLocation((state) => ({
+              ...state,
+              formatted_address: response.results[0].formatted_address,
+            }));
+          }
+          setMapView(true);
+        } catch (error) {
+          toast.error(t("provided_api_invalid"));
+          console.log("err", error);
+        }
+      },
+      (error) => {
+        // Error callback
+        console.log("Geolocation error:", error);
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            toast.error(t("location_permission_denied") || "Please enable location permission in your browser");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            toast.error(t("location_unavailable") || "Location information is unavailable");
+            break;
+          case error.TIMEOUT:
+            toast.error(t("location_timeout") || "Location request timed out");
+            break;
+          default:
+            toast.error(t("location_error") || "An unknown error occurred while getting location");
+            break;
+        }
+      },
+      {
+        // Options
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
       }
-      setMapView(true);
-    } catch (error) {
-      console.log("error", error);
-      toast.error(t("provided_api_invalid"));
-      console.log("err", error);
-    }
+    );
   };
 
   const handleConfirmLocation = async (
