@@ -306,82 +306,92 @@ const NewAddressModal = ({
   };
 
   const handleCurrentLocationClick = () => {
-    
-    navigator.geolocation.getCurrentPosition((position) => {
-      const latLng = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      setCenter(latLng);
-        
-        // 2. Update localLocation for your other logic
-        setlocalLocation(latLng);
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder
-        .geocode({
-          location: latLng,
-        })
-        .then((response) => {
-          if (response.results[0]) {
-            let address = "",
-              country = "",
-              pincode = "",
-              landmark = "",
-              area = "",
-              state_ = "",
-              city = "";
-            response.results[0].address_components.forEach((res_add) => {
-              if (
-                res_add.types.includes("premise") ||
-                res_add.types.includes("plus_code") ||
-                res_add.types.includes("route")
-              ) {
-                address = res_add.long_name;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latLng = {
+            lat: parseFloat(position.coords.latitude),
+            lng: parseFloat(position.coords.longitude),
+          };
+          setCenter(latLng);
+          setlocalLocation(latLng);
+
+          const geocoder = new window.google.maps.Geocoder();
+          geocoder
+            .geocode({
+              location: latLng,
+            })
+            .then((response) => {
+              if (response.results[0]) {
+                let address = "",
+                  country = "",
+                  pincode = "",
+                  landmark = "",
+                  area = "",
+                  state_ = "",
+                  city = "";
+                response.results[0].address_components.forEach((res_add) => {
+                  if (
+                    res_add.types.includes("premise") ||
+                    res_add.types.includes("plus_code") ||
+                    res_add.types.includes("route")
+                  ) {
+                    address = res_add.long_name;
+                  }
+                  if (res_add.types.includes("political")) {
+                    landmark = res_add.long_name;
+                  }
+                  if (
+                    res_add.types.includes("administrative_area_level_3") ||
+                    res_add.types.includes("administrative_area_level_2") ||
+                    res_add.types.includes("sublocality")
+                  ) {
+                    area = res_add.long_name;
+                  }
+                  if (res_add.types.includes("administrative_area_level_1")) {
+                    state_ = res_add.long_name;
+                  }
+                  if (res_add.types.includes("country")) {
+                    country = res_add.long_name;
+                  }
+                  if (res_add?.types?.includes("postal_code")) {
+                    pincode = res_add?.long_name;
+                  }
+                  if (res_add.types.includes("locality")) {
+                    city = res_add.long_name;
+                  }
+                });
+                setaddressDetails((state) => ({
+                  ...state,
+                  address: address,
+                  landmark: landmark,
+                  city: city,
+                  area: area,
+                  pincode: pincode,
+                  country: country,
+                  state: state_,
+                }));
+              } else {
+                console.log("No result found");
               }
-              if (res_add.types.includes("political")) {
-                landmark = res_add.long_name;
-              }
-              if (
-                res_add.types.includes("administrative_area_level_3") ||
-                res_add.types.includes("administrative_area_level_2") ||
-                res_add.types.includes("sublocality")
-              ) {
-                area = res_add.long_name;
-              }
-              if (res_add.types.includes("administrative_area_level_1")) {
-                state_ = res_add.long_name;
-              }
-              if (res_add.types.includes("country")) {
-                country = res_add.long_name;
-              }
-              if (res_add?.types?.includes("postal_code")) {
-                pincode = res_add?.long_name;
-              }
-              if (res_add.types.includes("locality")) {
-                city = res_add.long_name;
-              }
+            })
+            .catch((error) => {
+              console.log(error);
             });
-            setaddressDetails((state) => ({
-              ...state,
-              address: address,
-              landmark: landmark,
-              city: city,
-              area: area,
-              pincode: pincode,
-              country: country,
-              state: state_,
-            }));
-          } else {
-            console.log("No result found");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      if (!("geolocation" in navigator)) {
-        console.log("geolocation not present in navigator");
-      }
-    });
+        },
+        (error) => {
+          console.error("Error detecting location", error);
+        },
+        {
+          // FIX: Crucial for mobile devices to get an actual GPS lock
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        },
+      );
+    } else {
+      console.log("geolocation not present in navigator");
+    }
   };
 
   const handleSetAddressType = (value) => {
@@ -425,7 +435,7 @@ const NewAddressModal = ({
                 zoom={11}
                 center={center}
                 mapContainerStyle={mapContainerStyle}
-                className="h-full "
+                className="h-full"
               >
                 <MarkerF
                   position={center}
@@ -435,13 +445,10 @@ const NewAddressModal = ({
                 />
               </GoogleMap>
             </div>
-            <div className=" max-w-[391px] min-w-[286px] md:w-1/2 h-full">
+            <div className="w-full md:w-1/2 h-full">
               {addressLoading ? (
-                <div className="flex items-center justify-center ">
-                  <Loader
-                    width={Math.min(300, window.innerWidth - 40)}
-                    height={Math.min(300, window.innerWidth - 40)}
-                  />
+                <div className="flex items-center justify-center">
+                  <Loader width={Math.min(300, window.innerWidth - 40)} height={Math.min(300, window.innerWidth - 40)}/>
                 </div>
               ) : (
                 <div className="flex flex-col">
