@@ -103,15 +103,15 @@ const Blogs = () => {
     <>
       <div ref={topRef}></div>
       <BreadCrumb />
+      {blogs?.length == 0 && (
+        <div className="w-full flex col-span-2 justify-center items-center lg:items-end h-[200px]">
+          <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+        </div>
+      )}
       <div className="container my-12">
         <div className="grid lg:grid-cols-12 gap-6 grid-cols-1">
           <div className="lg:col-span-8 md:col-span-12 col-span-12 flex flex-col gap-6">
             <div className="grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 gap-6">
-              {blogs?.length == 0 && (
-                <div className="w-full flex col-span-2 justify-center items-center lg:items-end h-[200px]">
-                  <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
-                </div>
-              )}
               {blogsLoading
                 ? Array?.from({ length: 3 })?.map((_, i) => (
                     <BlogCardSkeleton key={i} />
