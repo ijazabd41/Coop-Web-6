@@ -62,11 +62,25 @@ const Products = () => {
     selectedCategories,
     searchedCategory,
   } = useSelector((state) => state.ProductFilter);
+  const { selectedLanguage } = useSelector((state) => state.Language);
+  useEffect(() => {
+    console.log("LANGUAGE CHANGED:", selectedLanguage);
+  }, [selectedLanguage]);
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
-  const currentCategoryName =
-    categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.name;
+  const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
+
+  const currentCategoryName = React.useMemo(() => {
+    if (!currentCategory) return "";
+
+    return (
+      currentCategory?.translations?.[selectedLanguage?.code]?.name ||
+      currentCategory?.translations?.name ||
+      currentCategory?.name ||
+      ""
+    );
+  }, [currentCategory, selectedLanguage?.code]);
   const total_products_per_page = 12;
   const rtl = isRtl();
   const isCategoryListing = listing_source === "category";
@@ -90,7 +104,6 @@ const Products = () => {
     : resolvedCategory;
 
   const fetchProducts = async ({ pageParam = 0 }) => {
-    console.log(category_id);
     const filterParams = {
       min_price: filter.price_filter?.min_price,
       max_price: filter.price_filter?.max_price,
@@ -212,7 +225,6 @@ const Products = () => {
         setSubCategories([]);
         return;
       }
-      console.log(category_slug);
       try {
         setIsSubCatLoading(true);
         const res = await api.getCategories({
@@ -245,8 +257,9 @@ const Products = () => {
           ...categoryBreadcrumb,
           {
             id: category.id,
-            name: category.translations?.name || category.name,
+            name: category.name,
             slug: category.slug,
+            translations: category.translations,
           },
         ];
 
@@ -293,7 +306,9 @@ const Products = () => {
               {loading ? (
                 <CardSkeleton height={70} />
               ) : (
-                <div className="flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor">
+                <div
+                  className={` flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor  ${listing_source === "category" ? "mb-0" : "mb-6"}`}
+                >
                   <p className="text-dm font-normal order-2 md:order-1">
                     {totalProducts} {t("products_found")}
                   </p>
@@ -367,8 +382,8 @@ const Products = () => {
                     title={currentCategoryName}
                     subCategories={subCategories}
                     isLoading={isSubCatLoading}
-                    languageType={language?.type}
-                    rtl={rtl}
+                    languageCode={selectedLanguage?.code} // ✅
+                    rtl={selectedLanguage?.type === "RTL"}
                     onCategoryClick={handleCategoryClick}
                   />
                 )}

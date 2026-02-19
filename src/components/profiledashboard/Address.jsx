@@ -86,7 +86,7 @@ const Address = () => {
             className=" flex justify-center  my-2 cursor-pointer"
             onClick={() => setShowAddAddres(true)}
           >
-            <div className="border-2 border-dashed p-3 w-1/3  flex items-center justify-center gap-2 font-bold text-xl">
+            <div className="border-2 border-dashed p-3 w-[200px]  flex items-center justify-center gap-2 font-bold text-xl">
               <GoPlusCircle /> {t("add_address")}
             </div>
           </div>

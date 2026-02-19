@@ -64,19 +64,19 @@ const Category = () => {
     const newBreadcrumb = exists
       ? categoryBreadcrumb
       : [
-        ...categoryBreadcrumb,
-        {
-          id: category.id,
-          name: category.translations?.name || category.name,
-          slug: category.slug,
-        },
-      ];
+          ...categoryBreadcrumb,
+          {
+            id: category.id,
+            name: category.translations?.name || category.name,
+            slug: category.slug,
+          },
+        ];
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
     dispatch(setCategorySlug({ data: category.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
-    dispatch(setSelectedCategories({ data: category.id }))
+    dispatch(setSelectedCategories({ data: category.id }));
     router.push("/products");
   };
 
@@ -93,19 +93,19 @@ const Category = () => {
         >
           {isLoading
             ? Array.from({ length: categoryPerPage }).map((_, index) => (
-              <div key={index} className="col-span-1">
-                <CardSkeleton height={180} />
-              </div>
-            ))
+                <div key={index} className="col-span-1">
+                  <CardSkeleton height={180} />
+                </div>
+              ))
             : categories?.data?.map((category) => (
-              <div
-                key={category?.id}
-                className="col-span-1"
-                onClick={() => handleCategoryClick(category)}
-              >
-                <CategoryCard category={category} imageSize={122} />
-              </div>
-            ))}
+                <div
+                  key={category?.id}
+                  className="col-span-1"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <CategoryCard category={category} imageSize={122} />
+                </div>
+              ))}
         </div>
 
         {/* Pagination */}
@@ -114,10 +114,11 @@ const Category = () => {
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
-              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === 1
-                ? "backgroundColor text-gray-500 cursor-not-allowed"
-                : "buttonBackground hover:backgroundColor textColor"
-                }`}
+              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                page === 1
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "buttonBackground hover:backgroundColor textColor"
+              }`}
             >
               {t("prev")}
             </button>
@@ -128,10 +129,11 @@ const Category = () => {
                 <button
                   key={pageNumber}
                   onClick={() => setPage(pageNumber)}
-                  className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === pageNumber
-                    ? "primaryBackColor text-white primaryBorder"
-                    : "backgroundColor textColor hover:backgroundColor"
-                    }`}
+                  className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                    page === pageNumber
+                      ? "primaryBackColor text-white primaryBorder"
+                      : "backgroundColor textColor hover:backgroundColor"
+                  }`}
                 >
                   {pageNumber}
                 </button>
@@ -143,10 +145,11 @@ const Category = () => {
                 setPage((prev) => (prev < totalPages ? prev + 1 : prev))
               }
               disabled={page === totalPages}
-              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${page === totalPages
-                ? "backgroundColor text-gray-500 cursor-not-allowed"
-                : "backgroundColor hover:backgroundColor textColor"
-                }`}
+              className={`px-4 py-2 rounded-md border text-sm font-medium transition-all duration-200 ${
+                page === totalPages
+                  ? "backgroundColor text-gray-500 cursor-not-allowed"
+                  : "backgroundColor hover:backgroundColor textColor"
+              }`}
             >
               {t("next")}
             </button>

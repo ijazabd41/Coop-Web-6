@@ -99,6 +99,43 @@ const BreadCrumb = ({ title }) => {
       if (breadcrumbs[0]?.label === "requested-products") {
         return t("requestedProducts");
       }
+
+      if (breadcrumbs[0].label === "faqs") {
+        return t("faqs");
+      }
+
+      if (breadcrumbs[0].label === "terms-and-conditions") {
+        return t("terms-and-conditions");
+      }
+
+      if (breadcrumbs[0].label === "privacy-policy") {
+        return t("privacy-policy");
+      }
+
+      if (breadcrumbs[0].label === "return-and-exchange-policy") {
+        return t("return-and-exchange-policy");
+      }
+
+      if (breadcrumbs[0].label === "shipping-policy") {
+        return t("shipping-policy");
+      }
+
+      if (breadcrumbs[0].label === "cancellation-policy") {
+        return t("cancellation-policy");
+      }
+
+      if (breadcrumbs[0].label === "cart") {
+        return t("cart");
+      }
+
+      if (breadcrumbs[0].label === "checkout") {
+        return t("checkout");
+      }
+
+      if (breadcrumbs[0].label === "order-detail") {
+        return t("order-detail");
+      }
+
       return breadcrumbs?.[0]?.label;
     }
     if (breadcrumbs[1]?.label === "activeorders") {
@@ -187,6 +224,16 @@ const BreadCrumb = ({ title }) => {
       notifications: t("notifications"),
       "notification-setting": t("notification-setting"),
       "requested-products": t("requestedProducts"),
+      faqs: t("faqs"),
+      "terms-and-conditions": t("terms-and-conditions"),
+      active_orders: t("active_orders"),
+      "privacy-policy": t("privacy-policy"),
+      "return-and-exchange-policy": t("return-and-exchange-policy"),
+      "shipping-policy": t("shipping-policy"),
+      "cancellation-policy": t("cancellation-policy"),
+      "cart" : t("cart"),
+      "checkout"  : t("checkout"),
+      "order-detail" : t("order-detail"),
     };
 
     if (map[label]) return map[label];
@@ -227,7 +274,7 @@ const BreadCrumb = ({ title }) => {
                 )}
                 {index === breadcrumbs.length - 1 ? (
                   <span
-                    className="text-sm font-bold capitalize cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                    className="text-sm font-bold capitalize cursor-pointer text-ellipsis  whitespace-nowrap"
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
