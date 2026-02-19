@@ -68,8 +68,6 @@ const BlogDetail = () => {
       console.log("error", error);
     }
   };
-  console.log(blog?.translations)
-  console.log(blog?.translations?.description);
 
   return loading ? (
     <Loader />
