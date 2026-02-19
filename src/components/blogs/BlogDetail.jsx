@@ -114,7 +114,7 @@ const BlogDetail = () => {
         </div>
         <div className="my-12">
           <div
-            className="container  !text-start px-2 md:px-0"
+            className="container  !text-start px-2 md:px-0 api-html-content"
             dangerouslySetInnerHTML={{ __html: blog?.translations?.description }}
           ></div>
           {tags.length > 0 && (

@@ -166,7 +166,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </p>
                       </div>
                     </div>
-                    <span className="primaryBackColor ml-0 md:ml-3 lg:ml-0 text-white text-sm font-semibold px-3 py-1 md:px-2 md:py-0.5 lg:px-3 lg:py-1  rounded-full">
+                    <span className="primaryBackColor ml-0 md:ml-6 lg:ml-0 text-white text-sm font-semibold px-3 py-1 md:px-2 md:py-0.5 lg:px-3 lg:py-1  rounded-full">
                       {t("active")}
                     </span>
                   </div>

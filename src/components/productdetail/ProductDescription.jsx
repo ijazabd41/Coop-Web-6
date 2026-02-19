@@ -105,7 +105,7 @@ const ProductDescription = ({ product, ratingData }) => {
             product?.description !== "" ? (
               <div className="p-4">
                 <div
-                  className="overflow-x-auto md:overflow-hidden"
+                  className="overflow-x-auto md:overflow-hidden api-html-content"
                   dangerouslySetInnerHTML={{ __html: product?.translations?.description }}
                 />
               </div>

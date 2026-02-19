@@ -786,3 +786,62 @@ input[type=number] {
 .blog-card-description * {
   display: inline !important;
 }
+
+
+.api-html-content h1 {
+  @apply text-3xl font-bold mb-4 mt-6 block border-b pb-2;
+}
+
+.api-html-content h2 {
+  @apply text-2xl font-bold mb-3 mt-5 block;
+}
+
+.api-html-content h3 {
+  @apply text-xl font-bold mb-2 mt-4 block;
+}
+
+.api-html-content p {
+  @apply mb-4 leading-relaxed block;
+}
+
+.api-html-content strong, 
+.api-html-content b {
+  @apply font-bold;
+}
+
+.api-html-content ul {
+  @apply list-disc ml-6 mb-4;
+}
+
+.api-html-content ol {
+  @apply list-decimal ml-6 mb-4;
+}
+
+.api-html-content li {
+  @apply mb-1;
+}
+
+.api-html-content br {
+  @apply block content-[""] my-2;
+}
+
+.api-html-content table {
+  @apply w-full border-collapse border border-gray-300 my-4;
+  table-layout: auto;
+}
+
+.api-html-content th, 
+.api-html-content td {
+  @apply border border-gray-300 p-2 text-start;
+  min-width: 50px; 
+}
+
+.api-html-content th {
+  @apply bg-gray-100 font-bold;
+}
+
+
+.api-html-content span[style], 
+.api-html-content p[style] {
+  font-family: inherit; 
+}
