@@ -13,6 +13,7 @@ import { RiCloseFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { addUserBalance } from "@/redux/slices/userSlice";
+import { CiWallet } from "react-icons/ci";
 let PaystackPop;
 
 if (typeof window !== "undefined") {
@@ -106,10 +107,19 @@ const WalletBalanceModal = ({
       }
     }
 
+    const subscriptionPlanPrice = selectedPlan?.discounted_price ? selectedPlan?.discounted_price : selectedPlan?.price;
+
+    if (selectedPaymentMethod === "wallet") {
+      if (user?.user?.balance < subscriptionPlanPrice) {
+        toast.error(t("insufficient_wallet_balance"));
+        return;
+      }
+    }
 
     const capitalizedPaymentMethod =
       selectedPaymentMethod.charAt(0).toUpperCase() +
       selectedPaymentMethod.slice(1);
+
     if (capitalizedPaymentMethod !== "Paystack") {
       const result = await api.initiateTrasaction({
         paymentMethod: capitalizedPaymentMethod,
@@ -125,6 +135,10 @@ const WalletBalanceModal = ({
           setStripeTransId(result?.data?.id);
           setShowStripe(true);
           // setAddWalletModal(false);
+        } else if (capitalizedPaymentMethod === "Wallet") {
+          toast.success(t('subscription_add_description'))
+    
+          setAddWalletModal(false);
         }
         else {
           if (capitalizedPaymentMethod == "Phonepe") {
@@ -419,6 +433,34 @@ const WalletBalanceModal = ({
                   {t("choose_payment_method")}
                 </h1>
                 <div className="flex flex-col gap-2">
+                  {type == "subscription" &&
+                    <div
+                      key={"wallet"}
+                      data-method={"wallet"}
+                      className={`p-2 flex justify-between items-center  rounded-sm ${selectedPaymentMethod === "wallet"
+                        ? "addToCartColor primaryBorder"
+                        : "cardBorder"
+                        }`}
+                      onClick={() => handleSelectedPaymentMethod("wallet")}
+                    >
+                      <div className="flex gap-2 items-center">
+                        <CiWallet size={24} />
+                        <p className="font-medium text-base">
+                          {t("wallet")}
+                        </p>
+                      </div>
+                      <div>
+                        <input
+                          id="paymentRadio"
+                          type="radio"
+                          name="payment_method"
+                          className="appearance-none w-6 h-6 mt-[5px] rounded-full outline outline-1 outline-black border-2 border-white cursor-pointer checked:primaryBackColor checked:p-[3px] checked:border-[3px] checked:border-white"
+                          checked={selectedPaymentMethod === "wallet"}
+                          onChange={() => handleSelectedPaymentMethod("wallet")}
+                        />
+                      </div>
+                    </div>
+                  }
                   {enabledPaymentMethods.map((method) => (
                     <div
                       key={method.key}

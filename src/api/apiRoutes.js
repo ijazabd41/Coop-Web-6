@@ -315,6 +315,14 @@ export const getSystemLanguages = async ({ id, isDefault, systemType }) => {
   return response.data;
 };
 
+export const updateFcmToken = async ({ langaugeId,fcmToken }) => {
+  const formData = new FormData();
+  formData.append("language_id", langaugeId);
+  formData.append("fcm_token", fcmToken);
+  const response = await api.post(apiEndPoints.updateFcmToken, formData);
+  return response.data;
+};
+
 // cart apis
 export const getCart = async ({
   latitude,

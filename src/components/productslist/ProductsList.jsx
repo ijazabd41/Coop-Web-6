@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
 import Filter from "../productFilter/ProductFilter";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import SubCategorySwiper from "../categories/SubCategorySwiper";
-
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
 import {
   setListingSource,
@@ -23,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/router";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
@@ -39,7 +36,6 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
-
 import { isRtl } from "@/lib/utils";
 
 const Products = () => {
@@ -58,9 +54,7 @@ const Products = () => {
   const {
     listing_source,
     category_id,
-    category_slug,
-    selectedCategories,
-    searchedCategory,
+    category_slug
   } = useSelector((state) => state.ProductFilter);
   const { selectedLanguage } = useSelector((state) => state.Language);
   useEffect(() => {
@@ -160,9 +154,8 @@ const Products = () => {
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
   const language = useSelector((state) => state.Language.selectedLanguage);
-  // Dummy setters for Filter component
-  const setProductResult = () => {};
-  const setOffset = () => {};
+  const setProductResult = () => { };
+  const setOffset = () => { };
 
   useEffect(() => {
     if (data?.pages?.[0]) {
@@ -351,11 +344,10 @@ const Products = () => {
                     </div>
                     <div className="flex  gap-4 items-center">
                       <span
-                        className={`${
-                          filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white p-1.5"
-                            : ""
-                        } hover:cursor-pointer`}
+                        className={`${filter?.grid_view
+                          ? "primaryBackColor rounded-md text-white p-1.5"
+                          : ""
+                          } hover:cursor-pointer`}
                       >
                         <BsFillGrid3X3GapFill
                           size={23}
@@ -363,11 +355,10 @@ const Products = () => {
                         />
                       </span>
                       <span
-                        className={`${
-                          !filter?.grid_view
-                            ? "primaryBackColor rounded-md text-white  p-1.5"
-                            : ""
-                        } hover:cursor-pointer`}
+                        className={`${!filter?.grid_view
+                          ? "primaryBackColor rounded-md text-white  p-1.5"
+                          : ""
+                          } hover:cursor-pointer`}
                       >
                         <FaThList size={23} onClick={handleListViewChange} />
                       </span>

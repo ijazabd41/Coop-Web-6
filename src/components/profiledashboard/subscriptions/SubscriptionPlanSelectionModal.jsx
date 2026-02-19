@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { X, Truck, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes"
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+
 
 
 
@@ -21,8 +21,6 @@ const PlanSelectionModal = ({
   const [plans, setPlans] = useState([]);
 
   const setting = useSelector((state) => state.Setting.setting);
-
-
 
   useEffect(() => {
     handleFetchPlans();

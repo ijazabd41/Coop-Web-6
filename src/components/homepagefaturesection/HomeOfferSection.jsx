@@ -10,7 +10,8 @@ const HomeOfferSection = ({ offer }) => {
 
   const handleOfferClick = () => {
     if (offer?.type == "product") {
-      router.push(`/product/${offer.product.slug}`);
+      
+      router.push(`/product/${offer?.product?.slug}`);
     } else if (offer?.type == "category") {
       if (offer?.category?.has_child == true) {
         router.push(`/categories/${offer?.type_slug}`);
@@ -28,7 +29,7 @@ const HomeOfferSection = ({ offer }) => {
       <ImageWithPlaceholder
         src={offer?.image_url}
         alt="Offer image"
-        width={1304} 
+        width={1304}
         height={255}
         quality={90}
         priority={true}
