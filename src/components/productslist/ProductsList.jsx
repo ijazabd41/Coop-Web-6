@@ -57,12 +57,13 @@ const Products = () => {
     category_slug
   } = useSelector((state) => state.ProductFilter);
   const { selectedLanguage } = useSelector((state) => state.Language);
-  useEffect(() => {
-    console.log("LANGUAGE CHANGED:", selectedLanguage);
-  }, [selectedLanguage]);
+
+
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
+
+
   const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
 
   const currentCategoryName = React.useMemo(() => {
@@ -247,14 +248,14 @@ const Products = () => {
     const newBreadcrumb = exists
       ? categoryBreadcrumb
       : [
-          ...categoryBreadcrumb,
-          {
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-            translations: category.translations,
-          },
-        ];
+        ...categoryBreadcrumb,
+        {
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          translations: category.translations,
+        },
+      ];
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
