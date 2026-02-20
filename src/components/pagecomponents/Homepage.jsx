@@ -1,70 +1,70 @@
-import React, { useEffect, useState } from 'react'
-import Home from '@/components/homepage/Home'
-import * as api from "@/api/apiRoutes"
-import { setShop } from '@/redux/slices/shopSlice'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useState } from "react";
+import Home from "@/components/homepage/Home";
+import * as api from "@/api/apiRoutes";
+import { setShop } from "@/redux/slices/shopSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
-import Loader from '../loader/Loader'
-import Layout from '../layout/Layout'
+import Loader from "../loader/Loader";
+import Layout from "../layout/Layout";
 // import { resetSelectedCategories } from '@/redux/slices/productFilterSlice'
-import { useRouter } from 'next/router'
-import { clearAllFilter } from '@/redux/slices/productFilterSlice'
-import HomeSkeleton from '../homepage/HomeSkeleton'
-
+import { useRouter } from "next/router";
+import { clearAllFilter } from "@/redux/slices/productFilterSlice";
+import HomeSkeleton from "../homepage/HomeSkeleton";
 
 const Homepage = () => {
-    const dispatch = useDispatch();
-    const router = useRouter();
-    const setting = useSelector(state => state.Setting.setting)
-    const language = useSelector(state => state.Language.selectedLanguage)
-    const city = useSelector(state => state.City.city)
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const setting = useSelector((state) => state.Setting.setting);
+  const language = useSelector((state) => state.Language.selectedLanguage);
+  const city = useSelector((state) => state.City.city);
 
-    const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {}, [language]);
 
-
-    useEffect(() => { }, [language])
-
-    useEffect(() => {
-        if (router?.pathname === "/") {
-            dispatch(clearAllFilter())
-        }
-    }, [])
-
-    useEffect(() => {
-        if (city) {
-            fetchShop()
-        }
-    }, [city, language])
-
-    const fetchShop = async () => {
-        setLoading(true)
-        try {
-            const latitude = parseFloat(city?.latitude)
-            const longitude = parseFloat(city?.longitude)
-            const response = await api.getShop({ latitude: latitude, longitude: longitude })
-            dispatch(setShop({ data: response.data }))
-            setLoading(false)
-        } catch (error) {
-            console.log("error", error)
-            setLoading(false)
-        }
+  useEffect(() => {
+    if (router?.pathname === "/") {
+      dispatch(clearAllFilter());
     }
+  }, []);
 
+  const { isLoading, data, isFetching } = useQuery({
+    queryKey: ["shopData", city?.latitude, city?.longitude, language],
+    queryFn: async () => {
+      const latitude = parseFloat(city?.latitude);
+      const longitude = parseFloat(city?.longitude);
+      const response = await api.getShop({ latitude, longitude });
 
+      dispatch(setShop({ data: response.data }));
 
-    return (
-        <div>
-            {
-                <Layout>
-                    {loading ? <div > <HomeSkeleton /></div> : <Home />}
-                </Layout>
-            }
+      return response.data;
+    },
 
+    enabled: !!city,
 
-        </div>
-    )
-}
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
 
+  const showLoading = isLoading && !data;
 
-export default Homepage
+  return (
+    <div>
+      {
+        <Layout>
+          {showLoading ? (
+            <div>
+              {" "}
+              <HomeSkeleton />
+            </div>
+          ) : (
+            <Home />
+          )}
+        </Layout>
+      }
+    </div>
+  );
+};
+
+export default Homepage;

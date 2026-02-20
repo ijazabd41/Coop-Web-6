@@ -30,7 +30,7 @@ const HomePageSlider = ({ slider }) => {
       containScroll: "trimSnaps",
       direction: language?.type === "RTL" ? "rtl" : "ltr",
     },
-    [autoplayPlugin]
+    [autoplayPlugin],
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,7 +38,7 @@ const HomePageSlider = ({ slider }) => {
 
   const scrollTo = useCallback(
     (index) => emblaApi && emblaApi.scrollTo(index),
-    [emblaApi]
+    [emblaApi],
   );
 
   const onSelect = useCallback(() => {
@@ -94,10 +94,11 @@ const HomePageSlider = ({ slider }) => {
                   src={slide.image_url}
                   alt="Fruit Basket"
                   priority={index === 0}
+                  fetchpriority={index === 0 ? "high" : "auto"}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] "
-                  width={1200}
-                  height={650}
-                  
+                  width={1700}
+                  height={700}
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

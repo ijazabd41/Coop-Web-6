@@ -7,6 +7,8 @@ import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import SubCategorySwiper from "../categories/SubCategorySwiper";
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   setListingSource,
   setCategorySlug,
@@ -42,8 +44,8 @@ const Products = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const city = useSelector((state) => state.City);
-  const [subCategories, setSubCategories] = useState([]);
-  const [isSubCatLoading, setIsSubCatLoading] = useState(false);
+  // const [subCategories, setSubCategories] = useState([]);
+  // const [isSubCatLoading, setIsSubCatLoading] = useState(false);
   const filter = useSelector((state) => state.ProductFilter);
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
@@ -51,11 +53,9 @@ const Products = () => {
   const [isLoader, setisLoader] = useState(false);
   const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
-  const {
-    listing_source,
-    category_id,
-    category_slug
-  } = useSelector((state) => state.ProductFilter);
+  const { listing_source, category_id, category_slug } = useSelector(
+    (state) => state.ProductFilter,
+  );
   const { selectedLanguage } = useSelector((state) => state.Language);
   useEffect(() => {
     console.log("LANGUAGE CHANGED:", selectedLanguage);
@@ -136,7 +136,6 @@ const Products = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-    error,
   } = useInfiniteQuery({
     queryKey: ["products", filter, city.city.latitude, city.city.longitude],
     queryFn: fetchProducts,
@@ -154,8 +153,8 @@ const Products = () => {
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
   const language = useSelector((state) => state.Language.selectedLanguage);
-  const setProductResult = () => { };
-  const setOffset = () => { };
+  const setProductResult = () => {};
+  const setOffset = () => {};
 
   useEffect(() => {
     if (data?.pages?.[0]) {
@@ -212,34 +211,41 @@ const Products = () => {
 
   const placeholderItems = Array.from({ length: 12 }).map((_, index) => index);
 
-  useEffect(() => {
-    const fetchSubCategories = async () => {
+  const {
+    data: subCategories = [],
+    isLoading: isSubCatLoading,
+    error,
+  } = useQuery({
+    queryKey: ["subCategories", listing_source, category_slug],
+    queryFn: async () => {
+      // SAME guard logic as useEffect
       if (listing_source !== "category" || !category_slug) {
-        setSubCategories([]);
-        return;
+        return [];
       }
-      try {
-        setIsSubCatLoading(true);
-        const res = await api.getCategories({
-          slug: category_slug,
-        });
 
-        const currentCategory = res?.data;
-        const subCats = Array.isArray(currentCategory)
-          ? currentCategory
-          : (currentCategory?.cat_active_childs ?? []);
+      const res = await api.getCategories({
+        slug: category_slug,
+      });
 
-        setSubCategories(subCats);
-      } catch (err) {
-        console.error("Failed to fetch subcategories", err);
-        setSubCategories([]);
-      } finally {
-        setIsSubCatLoading(false);
-      }
-    };
+      const currentCategory = res?.data;
 
-    fetchSubCategories();
-  }, [listing_source, category_slug]);
+      return Array.isArray(currentCategory)
+        ? currentCategory
+        : (currentCategory?.cat_active_childs ?? []);
+    },
+
+    // Prevent API call unless conditions are valid
+    enabled: listing_source === "category" && !!category_slug,
+
+    // Optional but recommended
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+
+    // Error handling (TanStack standard)
+    onError: (err) => {
+      console.error("Failed to fetch subcategories", err);
+    },
+  });
 
   const handleCategoryClick = (category) => {
     const exists = categoryBreadcrumb.find((c) => c.id === category.id);
@@ -296,76 +302,83 @@ const Products = () => {
               />
             </div>
             <div className="col-span-12 md:col-span-9">
-              {loading ? (
-                <CardSkeleton height={70} />
-              ) : (
-                <div
-                  className={` flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor  ${listing_source === "category" ? "mb-0" : "mb-6"}`}
-                >
-                  <p className="text-dm font-normal order-2 md:order-1">
-                    {totalProducts} {t("products_found")}
-                  </p>
-                  <div className="flex justify-between gap-3 order-1 md:order-2 ">
-                    <div className="flex  gap-2 items-center">
-                      <p className="text-sm text-nowrap font-normal">
-                        {t("sortBy")}
-                      </p>
-                      <Select
-                        onValueChange={sortProduct}
-                        value={filter?.sort_filter}
-                      >
-                        <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
-                          <SelectValue placeholder={t("default")} />
-                        </SelectTrigger>
-                        <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
-                          <SelectItem value="default">
-                            {t("default")}
-                          </SelectItem>
-                          <SelectItem value="new">
-                            {t("newest_first")}
-                          </SelectItem>
-                          <SelectItem value="old">
-                            {t("oldest_first")}
-                          </SelectItem>
-                          <SelectItem value="high">
-                            {t("high_to_low")}
-                          </SelectItem>
-                          <SelectItem value="low">
-                            {t("low_to_high")}
-                          </SelectItem>
-                          <SelectItem value="discount">
-                            {t("discount_high_to_low")}
-                          </SelectItem>
-                          <SelectItem value="popular">
-                            {t("popularity")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex  gap-4 items-center">
-                      <span
-                        className={`${filter?.grid_view
-                          ? "primaryBackColor rounded-md text-white p-1.5"
-                          : ""
+              <div
+                className={`${listing_source === "category" ? "mb-0" : "mb-6"}`}
+              >
+                {loading ? (
+                  <CardSkeleton height={70} />
+                ) : (
+                  <div
+                    className={` flex justify-between flex-col md:flex-row  md:items-center p-4 cardBorder rounded-md gap-1 md:gap-0  headerBackgroundColor  `}
+                  >
+                    <p className="text-dm font-normal order-2 md:order-1">
+                      {totalProducts} {t("products_found")}
+                    </p>
+                    <div className="flex justify-between gap-3 order-1 md:order-2 ">
+                      <div className="flex  gap-2 items-center">
+                        <p className="text-sm text-nowrap font-normal">
+                          {t("sortBy")}
+                        </p>
+                        <Select
+                          onValueChange={sortProduct}
+                          value={filter?.sort_filter}
+                        >
+                          <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
+                            <SelectValue placeholder={t("default")} />
+                          </SelectTrigger>
+                          <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
+                            <SelectItem value="default">
+                              {t("default")}
+                            </SelectItem>
+                            <SelectItem value="new">
+                              {t("newest_first")}
+                            </SelectItem>
+                            <SelectItem value="old">
+                              {t("oldest_first")}
+                            </SelectItem>
+                            <SelectItem value="high">
+                              {t("high_to_low")}
+                            </SelectItem>
+                            <SelectItem value="low">
+                              {t("low_to_high")}
+                            </SelectItem>
+                            <SelectItem value="discount">
+                              {t("discount_high_to_low")}
+                            </SelectItem>
+                            <SelectItem value="popular">
+                              {t("popularity")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex  gap-4 items-center">
+                        <span
+                          className={`${
+                            filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white p-1.5"
+                              : ""
                           } hover:cursor-pointer`}
-                      >
-                        <BsFillGrid3X3GapFill
-                          size={23}
-                          onClick={handleGridViewChange}
-                        />
-                      </span>
-                      <span
-                        className={`${!filter?.grid_view
-                          ? "primaryBackColor rounded-md text-white  p-1.5"
-                          : ""
+                        >
+                          <BsFillGrid3X3GapFill
+                            size={23}
+                            onClick={handleGridViewChange}
+                          />
+                        </span>
+                        <span
+                          className={`${
+                            !filter?.grid_view
+                              ? "primaryBackColor rounded-md text-white  p-1.5"
+                              : ""
                           } hover:cursor-pointer`}
-                      >
-                        <FaThList size={23} onClick={handleListViewChange} />
-                      </span>
+                        >
+                          <FaThList size={23} onClick={handleListViewChange} />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
               {listing_source === "category" && <CategoryFlowBreadcrumb />}
               <div className="flex flex-col gap-6">
                 {listing_source === "category" && (
@@ -384,7 +397,7 @@ const Products = () => {
                     placeholderItems.map((index) => {
                       return filter?.grid_view ? (
                         <div
-                          className="col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3"
+                          className="col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3"
                           key={index}
                         >
                           <CardSkeleton height={300} />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import * as api from "@/api/apiRoutes";
+import { useQuery } from "@tanstack/react-query";
 import CategoryCard from "./CategoryCard";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,40 +20,59 @@ const Category = () => {
   const router = useRouter();
   const { slug } = router.query;
   const language = useSelector((state) => state.Language.selectedLanguage);
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalCategories, setTotalCategories] = useState(0);
+  // const [categories, setCategories] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [totalCategories, setTotalCategories] = useState(0);
 
   const [page, setPage] = useState(1);
   const categoryPerPage = 12;
   const slug_id = slug === "all" ? "" : slug;
 
-  // Reset page when slug changes
-  useEffect(() => {
-    setPage(1);
-  }, [slug_id]);
+  // // Reset page when slug changes
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [slug_id]);
 
-  useEffect(() => {
-    const offset = (page - 1) * categoryPerPage;
-    fetchCategories(slug_id, offset);
-  }, [page, slug_id, language]);
+  // useEffect(() => {
+  //   const offset = (page - 1) * categoryPerPage;
+  //   fetchCategories(slug_id, offset);
+  // }, [page, language]);
 
-  const fetchCategories = async (Slug = "", offset = 0) => {
-    setIsLoading(true);
-    try {
-      const result = await api.getCategories({
+  // const fetchCategories = async ({ queryKey }) => {
+  //   const [_key, page, slug_id, language] = queryKey;
+
+  //   const offset = (page - 1) * categoryPerPage;
+
+  //   return api.getCategories({
+  //     limit: categoryPerPage,
+  //     offset,
+  //     slug: slug_id,
+  //   });
+  // };
+
+  const {
+    data: categoriesResponse,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["categories", page, slug_id, language],
+    queryFn: async ({ queryKey }) => {
+      const [_key, page, slug_id] = queryKey;
+      const offset = (page - 1) * categoryPerPage;
+
+      return api.getCategories({
         limit: categoryPerPage,
         offset,
-        slug: Slug,
+        slug: slug_id,
       });
+    },
+    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
 
-      setCategories(result);
-      setTotalCategories(result?.total || 0);
-    } catch (error) {
-      console.log("Error", error);
-    }
-    setIsLoading(false);
-  };
+  const categories = categoriesResponse;
+  const totalCategories = categoriesResponse?.total || 0;
 
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
@@ -79,6 +99,10 @@ const Category = () => {
     dispatch(setSelectedCategories({ data: category.id }));
     router.push("/products");
   };
+
+  useEffect(() => {
+    dispatch(setCategoryBreadcrumb({ data: [] }));
+  }, [dispatch]);
 
   const totalPages = Math.ceil(totalCategories / categoryPerPage);
 

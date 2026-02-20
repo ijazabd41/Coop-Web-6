@@ -3,6 +3,7 @@ import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import {
   FaLink,
@@ -72,7 +73,7 @@ const ProductDetail = () => {
   const cart = useSelector((state) => state.Cart);
   const user = useSelector((state) => state.User);
   const favoriteProducts = useSelector(
-    (state) => state.Favorite.favouriteProductIds
+    (state) => state.Favorite.favouriteProductIds,
   );
 
   const isMobileDevice = isMobile === "true";
@@ -91,19 +92,19 @@ const ProductDetail = () => {
 
   const ratingsCount = 10;
 
-  useEffect(() => {
-    if (city) {
-      handleFetchBySlug();
-    }
-  }, [slug, city]);
+  // useEffect(() => {
+  //   if (city) {
+  //     handleFetchBySlug();
+  //   }
+  // }, [slug, city]);
 
   useEffect(() => {
     handleIsVariantAvailable();
   }, [selectVariant]);
 
-  useEffect(() => {
-    fetchRatings();
-  }, [product]);
+  // useEffect(() => {
+  //   fetchRatings();
+  // }, [product]);
 
   const handleAddRecentlyViewedProduct = async (product) => {
     try {
@@ -130,15 +131,36 @@ const ProductDetail = () => {
     }
   };
 
-  const handleFetchBySlug = async () => {
-    setIsLoading(true);
-    try {
-      const res = await api.getProductById({
-        slug: slug,
-        latitude: city.latitude,
-        longitude: city.longitude,
-        id: -1,
-      });
+  const {
+    isLoading: queryLoading,
+    data: productResponse,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["product", slug, city?.latitude, city?.longitude],
+    queryFn: async () => {
+      try {
+        const res = await api.getProductById({
+          slug: slug,
+          latitude: city.latitude,
+          longitude: city.longitude,
+          id: -1,
+        });
+        return res;
+      } catch (err) {
+        console.error("API Crash:", err);
+        throw err;
+      }
+    },
+    enabled: !!slug && !!city?.latitude,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (productResponse) {
+      const res = productResponse;
       if (res.status == 1) {
         setProduct(res?.data);
         setSelectedVariant(res?.data?.variants?.[0]);
@@ -149,12 +171,8 @@ const ProductDetail = () => {
       } else {
         setProductNotAvailable(true);
       }
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [productResponse]);
 
   const handleIsVariantAvailable = () => {
     if (
@@ -167,19 +185,23 @@ const ProductDetail = () => {
     }
   };
 
-  const fetchRatings = async () => {
-    try {
-      const result = await api.getProductRatings({
+  const { data: ratingResponse } = useQuery({
+    queryKey: ["product-ratings", product?.id],
+    queryFn: () =>
+      api.getProductRatings({
         id: product?.id,
         limit: ratingsCount,
         offset: 0,
-      });
-      setRatingData(result?.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
+      }),
+    enabled: !!product?.id,
+    staleTime: 1000 * 60 * 10,
+  });
 
+  useEffect(() => {
+    if (ratingResponse?.data) {
+      setRatingData(ratingResponse.data);
+    }
+  }, [ratingResponse]);
   const currency = setting?.setting?.currency;
 
   const handleChangeVariant = (variant) => {
@@ -226,7 +248,7 @@ const ProductDetail = () => {
           ...quantities,
           [product.product_id]: existingQty + product.qty,
         };
-      }, {})
+      }, {}),
     ).map(([productId, qty]) => ({
       product_id: parseInt(productId),
       qty,
@@ -240,15 +262,15 @@ const ProductDetail = () => {
     const isExisting = cart.guestCart.find(
       (cartProduct) =>
         cartProduct?.product_id == product?.id &&
-        cartProduct?.product_variant_id == selectVariant?.id
+        cartProduct?.product_variant_id == selectVariant?.id,
     );
     const productQty = productQuantity?.find(
-      (prdct) => prdct?.product_id == product?.id
+      (prdct) => prdct?.product_id == product?.id,
     )?.qty;
     const cartProductQty = cart.cartProducts.find(
       (prdct) =>
         prdct?.product_id == product?.id &&
-        selectVariant?.id == prdct?.product_variant_id
+        selectVariant?.id == prdct?.product_variant_id,
     );
     const totalQty = productQty ? productQty + quantity : quantity;
     if (Number(product?.is_unlimited_stock) == 0 && selectVariant?.stock <= 0) {
@@ -294,7 +316,7 @@ const ProductDetail = () => {
       }
     } else {
       const isInclude = productQuantity.some(
-        (item) => item.product_id === product?.id
+        (item) => item.product_id === product?.id,
       );
 
       try {
@@ -377,7 +399,7 @@ const ProductDetail = () => {
           });
           if (response.status == 1) {
             const updatedFavProducts = favoriteProducts?.filter(
-              (prdctId) => prdctId != product?.id
+              (prdctId) => prdctId != product?.id,
             );
             dispatch(setFavoriteProductIds({ data: updatedFavProducts }));
             toast.success(response.message);
@@ -399,7 +421,7 @@ const ProductDetail = () => {
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}?isMobile=true`
+      `${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(pathname)}?isMobile=true`,
     );
     toast.success(t("link_copied_to_clipboard"));
   };
@@ -457,14 +479,14 @@ const ProductDetail = () => {
                         <ProductZoomImage image={selectedImage} />
                       )}
                       {selectVariant?.discounted_price !== 0 &&
-                        selectVariant?.discounted_price !==
+                      selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 px-2 absolute text-center uppercase  top-3">
                           {calculateDiscount(
                             selectVariant?.discounted_price,
-                            selectVariant?.price
+                            selectVariant?.price,
                           ).toFixed(
-                            setting?.decimal_point ? setting?.decimal_point : 2
+                            setting?.decimal_point ? setting?.decimal_point : 2,
                           )}
                           % {t("off")}
                         </span>
@@ -472,8 +494,9 @@ const ProductDetail = () => {
                     </div>
                     <div
                       dir={language?.type}
-                      className={`mt-[10px] ${language?.type == "RTL" ? "flex-row-reverse" : ""
-                        }`}
+                      className={`mt-[10px] ${
+                        language?.type == "RTL" ? "flex-row-reverse" : ""
+                      }`}
                     >
                       <Swiper
                         spaceBetween={10}
@@ -544,14 +567,14 @@ const ProductDetail = () => {
 
                         <div className="flex gap-4">
                           {ratingData?.average_rating > 0 &&
-                            product?.product_rating == true ? (
+                          product?.product_rating == true ? (
                             <div className="px-2">
                               <div className="flex gap-1 items-center">
                                 <div className="flex">
                                   {[1, 2, 3, 4, 5].map((star) => {
                                     const roundedRating =
                                       Math.round(
-                                        ratingData?.average_rating * 2
+                                        ratingData?.average_rating * 2,
                                       ) / 2;
 
                                     if (star <= Math.floor(roundedRating)) {
@@ -620,7 +643,7 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       {selectVariant?.discounted_price !== 0 &&
-                        selectVariant?.discounted_price !==
+                      selectVariant?.discounted_price !==
                         selectVariant?.price ? (
                         <>
                           <h2 className="font-bold text-3xl ">
@@ -654,10 +677,11 @@ const ProductDetail = () => {
                           const price = variant?.price;
                           return (
                             <div
-                              className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${selectVariant?.id == variant?.id
-                                ? "primaryBorder addToCartColor"
-                                : "cardBorder"
-                                }`}
+                              className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${
+                                selectVariant?.id == variant?.id
+                                  ? "primaryBorder addToCartColor"
+                                  : "cardBorder"
+                              }`}
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
@@ -670,7 +694,7 @@ const ProductDetail = () => {
                                     : price}
                                 </p>
                                 {discountPrice != 0 &&
-                                  discountPrice !== price ? (
+                                discountPrice !== price ? (
                                   <p className="line-through">
                                     {currency}
                                     {price}
@@ -729,7 +753,7 @@ const ProductDetail = () => {
                           onClick={handleProductLikes}
                         >
                           {favoriteProducts &&
-                            favoriteProducts?.includes(product?.id) ? (
+                          favoriteProducts?.includes(product?.id) ? (
                             <BiSolidHeart size={20} />
                           ) : (
                             <BiHeart size={20} />
@@ -738,7 +762,7 @@ const ProductDetail = () => {
                         <span>
                           {" "}
                           {favoriteProducts &&
-                            favoriteProducts?.includes(product?.id)
+                          favoriteProducts?.includes(product?.id)
                             ? t("removeTowishlist")
                             : t("addToWishlist")}
                         </span>
@@ -864,21 +888,21 @@ const ProductDetail = () => {
                       <div className="flex gap-3">
                         <WhatsappShareButton
                           url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
-                            pathname
+                            pathname,
                           )}`}
                         >
                           <WhatsappIcon className="h-8 w-8 rounded-full" />
                         </WhatsappShareButton>
                         <TwitterShareButton
                           url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
-                            pathname
+                            pathname,
                           )}`}
                         >
                           <TwitterIcon className="h-8 w-8 rounded-full" />
                         </TwitterShareButton>
                         <FacebookShareButton
                           url={`${process.env.NEXT_PUBLIC_BASE_URL}${decodeURI(
-                            pathname
+                            pathname,
                           )}`}
                         >
                           <FacebookIcon className="h-8 w-8 rounded-full" />
