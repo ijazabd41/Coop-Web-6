@@ -36,14 +36,10 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
-import { isRtl } from "@/lib/utils";
 
 const Products = () => {
 
   const total_products_per_page = 12;
-
-
-
   const dispatch = useDispatch();
   const router = useRouter();
   const city = useSelector((state) => state.City);
@@ -54,6 +50,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState(null);
   const [values, setValues] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(filter?.search);
   const {
     listing_source,
     category_slug
@@ -83,6 +80,13 @@ const Products = () => {
     }
     return categoryBreadcrumb.map((category) => category.id).join(",");
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(filter?.search);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [filter?.search]);
 
   useEffect(() => {
     if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
@@ -132,7 +136,7 @@ const Products = () => {
       }),
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
-      search: filter?.search,
+      search: debouncedSearch,
       limit: total_products_per_page,
       sizes: filter?.search_sizes
         ?.filter((obj) => obj.checked)
@@ -164,7 +168,7 @@ const Products = () => {
     isError,
     error,
   } = useInfiniteQuery({
-    queryKey: ["products", filter, city.city.latitude, city.city.longitude],
+    queryKey: ["products", { ...filter, search: debouncedSearch }, city.city.latitude, city.city.longitude],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.data || lastPage.data.length < total_products_per_page) {
