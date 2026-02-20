@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
@@ -39,6 +39,11 @@ import Image from "next/image";
 import { isRtl } from "@/lib/utils";
 
 const Products = () => {
+
+  const total_products_per_page = 12;
+
+
+
   const dispatch = useDispatch();
   const router = useRouter();
   const city = useSelector((state) => state.City);
@@ -48,25 +53,20 @@ const Products = () => {
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [values, setValues] = useState([]);
-  const [isLoader, setisLoader] = useState(false);
-  const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
   const {
     listing_source,
-    category_id,
     category_slug
   } = useSelector((state) => state.ProductFilter);
   const { selectedLanguage } = useSelector((state) => state.Language);
-
-
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
 
-
+  const isCategoryListing = listing_source === "category";
   const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
 
-  const currentCategoryName = React.useMemo(() => {
+  const currentCategoryName = useMemo(() => {
     if (!currentCategory) return "";
 
     return (
@@ -76,15 +76,40 @@ const Products = () => {
       ""
     );
   }, [currentCategory, selectedLanguage?.code]);
-  const total_products_per_page = 12;
-  const rtl = isRtl();
-  const isCategoryListing = listing_source === "category";
+
   const ancestorCategoryIds = (categoryBreadcrumb) => {
     if (!Array.isArray(categoryBreadcrumb) || categoryBreadcrumb.length === 0) {
       return null;
     }
     return categoryBreadcrumb.map((category) => category.id).join(",");
   };
+
+  useEffect(() => {
+    if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
+    refetchBreadcrumbTranslations();
+  }, [selectedLanguage]);
+
+
+  const refetchBreadcrumbTranslations = async () => {
+    const updated = await Promise.all(
+      categoryBreadcrumb.map(async (category) => {
+        try {
+          const res = await api.getCategories({ slug: category.slug, is_own_data: 1 });
+          const data = res?.data;
+          return {
+            ...category,
+            name: data?.[0]?.translations?.name || category.name,
+            translations: data?.[0]?.translations || category.translations,
+          };
+        } catch (error) {
+          return category;
+        }
+      })
+    );
+    dispatch(setCategoryBreadcrumb({ data: updated }));
+  };
+
+
   const resolvedParentsCategory =
     filter?.category_id === "NaN" || filter?.category_id === "all categories"
       ? null
@@ -194,12 +219,11 @@ const Products = () => {
       }
     }
   };
+
   const handleGridViewChange = () => {
-    setIsGridView(true);
     dispatch(setFilterView({ data: true }));
   };
   const handleListViewChange = () => {
-    setIsGridView(false);
     dispatch(setFilterView({ data: false }));
   };
 
@@ -222,7 +246,7 @@ const Products = () => {
       try {
         setIsSubCatLoading(true);
         const res = await api.getCategories({
-          slug: category_slug,
+          slug: category_slug
         });
 
         const currentCategory = res?.data;
@@ -251,11 +275,12 @@ const Products = () => {
         ...categoryBreadcrumb,
         {
           id: category.id,
-          name: category.name,
+          name: category?.translations?.name || category.name,
           slug: category.slug,
           translations: category.translations,
         },
       ];
+
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
@@ -291,7 +316,6 @@ const Products = () => {
                 setValues={setValues}
                 setMaxPrice={setMaxPrice}
                 setMinPrice={setMinPrice}
-                setisLoader={setisLoader}
                 hideCategory={listing_source === "category"}
                 disableFilter={listing_source === "category"}
               />
