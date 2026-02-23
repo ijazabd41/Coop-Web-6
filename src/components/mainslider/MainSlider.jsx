@@ -97,8 +97,15 @@ const HomePageSlider = ({ slider }) => {
                   fetchpriority={index === 0 ? "high" : "auto"}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] "
-                  width={1700}
-                  height={700}
+                  width={1200}
+                  height={650}
+                  sizes="
+                    (max-width: 640px) 304px,
+                    (max-width: 768px) 480px,
+                    (max-width: 1024px) 600px,
+                    (max-width: 1536px) 900px,
+                    1200px
+                  "
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

@@ -485,9 +485,8 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               className="rounded-lg object-cover h-full w-full"
               alt={product.name}
               src={product.image_url}
-              width={350}
-              height={350}
-              
+              width={300}
+              height={300}
               priority
             />
             {selectedVariant?.discounted_price !== 0 &&
