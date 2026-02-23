@@ -520,7 +520,7 @@ const Checkout = () => {
         : 1;
     try {
       if (checkout?.selectedPaymentMethod == null) {
-        toast.error(t("please_select_valid_time"));
+        toast.error(t('please_select_payment_method'));
         return;
       } else if (
         checkout?.selectedDate == null &&

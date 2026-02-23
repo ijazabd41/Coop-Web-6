@@ -26,6 +26,7 @@ const BreadCrumb = ({ title }) => {
         formattedBreadcrumbs[formattedBreadcrumbs.length - 1].label = title;
       }
 
+
       setBreadcrumbs(formattedBreadcrumbs);
     }
   }, [router.pathname, router.asPath, title]);
@@ -231,9 +232,9 @@ const BreadCrumb = ({ title }) => {
       "return-and-exchange-policy": t("return-and-exchange-policy"),
       "shipping-policy": t("shipping-policy"),
       "cancellation-policy": t("cancellation-policy"),
-      "cart" : t("cart"),
-      "checkout"  : t("checkout"),
-      "order-detail" : t("order-detail"),
+      "cart": t("cart"),
+      "checkout": t("checkout"),
+      "order-detail": t("order-detail"),
     };
 
     if (map[label]) return map[label];
@@ -242,6 +243,8 @@ const BreadCrumb = ({ title }) => {
       .replace(/-/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
+
+
 
   return (
     <section className="p-3 md:p-6 breadCrumbBg">

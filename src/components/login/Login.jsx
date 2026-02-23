@@ -465,7 +465,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     try {
       const response = await api.getUser();
       dispatch(setCurrentUser({ data: response.user }));
-      toast.success("You're successfully Logged In");
+      toast.success(t('login_success'));
     } catch (error) {
       console.log("error", error);
     }

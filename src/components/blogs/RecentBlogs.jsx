@@ -32,10 +32,9 @@ const RecentBlogs = ({ mostViewedBlogs }) => {
                   {blog?.translations?.title?.slice(0, 20)}
                 </p>
                 <h2
-                  className="font-bold text-base blog-card-description line-clamp-1 md:line-clamp-1 lg:line-clamp-1"
+                  className="font-bold !text-sm blog-card-description line-clamp-2 md:line-clamp-2 lg:line-clamp-2 md:!text-base [&_*]:!text-inherit [&_*]:!font-inherit [&_*]:!text-sm [&_*]:md:!text-base"
                   dangerouslySetInnerHTML={{
-                    __html:
-                      blog?.translations?.description,
+                    __html: blog?.translations?.description,
                   }}
                 ></h2>
               </div>
