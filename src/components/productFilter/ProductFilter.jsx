@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   setFilterCategory,
   clearAllFilter,
@@ -45,7 +46,7 @@ const Filter = ({
   const [brands, setbrands] = useState(null);
   const [sellers, setSellers] = useState(null);
   const [totalBrands, setTotalBrands] = useState();
-  const [totalSeller, setTotalSeller] =useState();
+  const [totalSeller, setTotalSeller] = useState();
   const [brandOffset, setBrandOffset] = useState(0);
   const [sellerOffset, setSellerOffset] = useState(0);
   const [tempMinPrice, setTempMinPrice] = useState(null);
@@ -56,20 +57,38 @@ const Filter = ({
   const brandLimit = 10;
   const sellerLimit = 10;
   // const [loading, setLoading] = useState(false);
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  // const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingBrands, setLoadingBrands] = useState(false);
   const [loadingSellers, setLoadingSellers] = useState(false);
   useEffect(() => {
     if (brands == null) {
       fetchBrands(0);
     }
-    if (categories == null) {
-      fetchCategories();
-    }
+    // if (categories == null) {
+    //   fetchCategories();
+    // }
     if (sellers == null) {
       fetchSellers(0);
     }
   }, []);
+
+  const { data: categoriesData, isLoading: loadingCategories } = useQuery({
+    queryKey: ["filter-category"],
+
+    queryFn: async () => {
+      const response = await api.getCategories();
+      return response.data;
+    },
+
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+
+  useEffect(() => {
+    if (categoriesData) {
+      setCategories(categoriesData);
+    }
+  }, [categoriesData]);
 
   const handleActiveKey = (key) => {
     setActiveKey((prevActiveKeys) =>
@@ -79,42 +98,45 @@ const Filter = ({
     );
   };
 
-  const fetchSellers = useCallback(async (sOffset) => {
-    setLoadingSellers(true);
-    try {
-      const result = await api.getSellers({
-        latitude: city?.city?.latitude,
-        longitude: city?.city?.longitude,
-        limit: sellerLimit,
-        offset: sOffset,
-      });
-      if (result.status === 1) {
-        if (sellers == null) {
-          setSellers(result?.data);
-        } else {
-          setSellers((prevSellers) => [...prevSellers, ...result?.data]);
+  const fetchSellers = useCallback(
+    async (sOffset) => {
+      setLoadingSellers(true);
+      try {
+        const result = await api.getSellers({
+          latitude: city?.city?.latitude,
+          longitude: city?.city?.longitude,
+          limit: sellerLimit,
+          offset: sOffset,
+        });
+        if (result.status === 1) {
+          if (sellers == null) {
+            setSellers(result?.data);
+          } else {
+            setSellers((prevSellers) => [...prevSellers, ...result?.data]);
+          }
+          setTotalSeller(result?.total);
         }
-        setTotalSeller(result?.total);
+        // setSellers(result?.data);
+      } catch (error) {
+        console.log("Error", error);
+      } finally {
+        setLoadingSellers(false);
       }
-      // setSellers(result?.data);
-    } catch (error) {
-      console.log("Error", error);
-    } finally {
-      setLoadingSellers(false);
-    }
-  },[city?.city?.latitude, city?.city?.longitude]);
+    },
+    [city?.city?.latitude, city?.city?.longitude],
+  );
 
-  const fetchCategories = async () => {
-    setLoadingCategories(true);
-    try {
-      const categories = await api.getCategories();
-      setCategories(categories.data);
-    } catch (error) {
-      console.log("erorr", error);
-    } finally {
-      setLoadingCategories(false);
-    }
-  };
+  // const fetchCategories = async () => {
+  //   setLoadingCategories(true);
+  //   try {
+  //     const categories = await api.getCategories();
+  //     setCategories(categories.data);
+  //   } catch (error) {
+  //     console.log("erorr", error);
+  //   } finally {
+  //     setLoadingCategories(false);
+  //   }
+  // };
 
   const handleCategoryChange = (categories) => {
     setSelectedCategories(categories);
@@ -179,7 +201,7 @@ const Filter = ({
 
   const loadMoreBrands = () => {
     setBrandOffset((prevOffset) => prevOffset + brandLimit);
-    fetchBrands(brandOffset + brandLimit); // Increase offset to fetch next set of brands
+    fetchBrands(brandOffset + brandLimit); 
   };
 
   const loadMoreSellers = () => {
@@ -273,8 +295,9 @@ const Filter = ({
                   {t("brands")}
                 </div>
                 <div
-                  className={`transition-transform duration-250 ${activeKey.includes("2") ? "rotate-0" : "-rotate-90"
-                    }`}
+                  className={`transition-transform duration-250 ${
+                    activeKey.includes("2") ? "rotate-0" : "-rotate-90"
+                  }`}
                 >
                   <FaChevronDown />
                 </div>
@@ -327,8 +350,9 @@ const Filter = ({
                 {t("sellers")}
               </div>
               <div
-                className={`transition-transform duration-250 ${activeKey.includes("3") ? "rotate-0" : "-rotate-90"
-                  }`}
+                className={`transition-transform duration-250 ${
+                  activeKey.includes("3") ? "rotate-0" : "-rotate-90"
+                }`}
               >
                 <FaChevronDown />
               </div>
@@ -365,15 +389,15 @@ const Filter = ({
                 })}
 
                 {sellers?.length < totalSeller ? (
-                    <a
-                      className="brand-view-more textColor"
-                      onClick={loadMoreSellers}
-                    >
-                      {t("showMore")}
-                    </a>
-                  ) : (
-                    <></>
-                  )}
+                  <a
+                    className="brand-view-more textColor"
+                    onClick={loadMoreSellers}
+                  >
+                    {t("showMore")}
+                  </a>
+                ) : (
+                  <></>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -387,8 +411,9 @@ const Filter = ({
                 {t("priceRange")}
               </div>
               <div
-                className={`transition-transform duration-250 ${activeKey.includes("4") ? "rotate-0" : "-rotate-90"
-                  }`}
+                className={`transition-transform duration-250 ${
+                  activeKey.includes("4") ? "rotate-0" : "-rotate-90"
+                }`}
               >
                 <FaChevronDown />
               </div>

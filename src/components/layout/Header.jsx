@@ -141,7 +141,10 @@ const Header = () => {
       if (response.status == 1) {
         dispatch(setSelectedLanguage({ data: response?.data }));
         document.documentElement.dir = response?.data?.type;
-        await api.updateFcmToken({ langaugeId: response?.data?.admin_lang_id_for_fcm, fcmToken });
+        await api.updateFcmToken({
+          langaugeId: response?.data?.admin_lang_id_for_fcm,
+          fcmToken,
+        });
       }
     } catch (error) {
       console.log("error", error);
@@ -281,8 +284,8 @@ const Header = () => {
                                   // Special handling for WeChat icon
                                   <i className="fab fa-weixin"></i>
                                 ) : social?.icon
-                                  .toLowerCase()
-                                  .includes("twitter") ? (
+                                    .toLowerCase()
+                                    .includes("twitter") ? (
                                   // Special handling for TikTok icon
                                   <FaXTwitter className={`${social?.icon}`} />
                                 ) : (
@@ -366,8 +369,9 @@ const Header = () => {
                       src={setting?.setting?.web_settings?.web_logo}
                       alt="Logo"
                       fill
-                      priority
-                      sizes="(max-width: 1024px) 140px, 170px"
+                      priority={true}
+                      fetchpriority="high"
+                      loading="eager"
                       className="object-contain"
                     />
                   )}
@@ -460,15 +464,15 @@ const Header = () => {
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
                         ? cart?.guestCartTotal?.toFixed(
-                          setting?.setting?.decimal_point
-                            ? setting?.setting?.decimal_point
-                            : 0,
-                        )
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0,
+                          )
                         : cart?.cartSubTotal?.toFixed(
-                          setting?.setting?.decimal_point
-                            ? setting?.setting?.decimal_point
-                            : 0,
-                        )}
+                            setting?.setting?.decimal_point
+                              ? setting?.setting?.decimal_point
+                              : 0,
+                          )}
                     </span>
                   </div>
                 </div>
@@ -720,10 +724,11 @@ const Header = () => {
             >
               <IoHomeOutline
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 1
-                  ? "primaryBackColor text-white  "
-                  : "bg-[#55AE7B14] primaryColor "
-                  }p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 1
+                    ? "primaryBackColor text-white  "
+                    : "bg-[#55AE7B14] primaryColor "
+                }p-2 rounded-full`}
               />
               <span className="text-sm">{t("home")}</span>
             </div>
@@ -734,10 +739,11 @@ const Header = () => {
             >
               <IoSearchOutline
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 2
-                  ? "primaryBackColor text-white "
-                  : "bg-[#55AE7B14] primaryColor "
-                  } p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 2
+                    ? "primaryBackColor text-white "
+                    : "bg-[#55AE7B14] primaryColor "
+                } p-2 rounded-full`}
               />
               <span className="text-sm">{t("search")}</span>
             </div>
@@ -748,10 +754,11 @@ const Header = () => {
             >
               <FaRegUser
                 size={24}
-                className={`h-10 w-10 ${mobileActiveKey == 3
-                  ? "primaryBackColor text-white "
-                  : "bg-[#55AE7B14] primaryColor "
-                  } p-2 rounded-full`}
+                className={`h-10 w-10 ${
+                  mobileActiveKey == 3
+                    ? "primaryBackColor text-white "
+                    : "bg-[#55AE7B14] primaryColor "
+                } p-2 rounded-full`}
               />
               <span className="text-sm">
                 {user?.jwtToken ? t("profile") : t("login")}
