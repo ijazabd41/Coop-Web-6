@@ -52,17 +52,11 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState(null);
   const [values, setValues] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-<<<<<<< HEAD
-  const { listing_source, category_id, category_slug } = useSelector(
-    (state) => state.ProductFilter,
-  );
-=======
   const [debouncedSearch, setDebouncedSearch] = useState(filter?.search);
   const {
     listing_source,
     category_slug
   } = useSelector((state) => state.ProductFilter);
->>>>>>> main
   const { selectedLanguage } = useSelector((state) => state.Language);
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
@@ -259,14 +253,6 @@ const Products = () => {
       if (listing_source !== "category" || !category_slug) {
         return [];
       }
-<<<<<<< HEAD
-=======
-      try {
-        setIsSubCatLoading(true);
-        const res = await api.getCategories({
-          slug: category_slug
-        });
->>>>>>> main
 
       const res = await api.getCategories({
         slug: category_slug,
