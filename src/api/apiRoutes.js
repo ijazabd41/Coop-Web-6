@@ -196,12 +196,14 @@ export const getCategories = async ({
   id = "",
   limit,
   offset,
+  is_own_data,
 } = {}) => {
   const params = {
     limit,
     offset,
     ...(slug && { slug }),
     ...(id && { id }),
+    ...(is_own_data && { is_own_data }),
   };
 
   const response = await api.get(apiEndPoints.getCategory, { params });

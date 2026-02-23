@@ -451,7 +451,8 @@ const ListViewProductCard = ({ product }) => {
       product?.variants?.[0]?.is_unlimited_stock == 0 &&
       product?.variants?.[0]?.stock == 0) ||
     (selectedVariant?.stock <= 0 && selectedVariant?.is_unlimited_stock == 0) ||
-    (product?.variants?.length <= 1 && product?.variants?.[0]?.status == 0);
+    selectedVariant?.status == 0 ||
+    product?.status == 0;
 
   return (
     <div>

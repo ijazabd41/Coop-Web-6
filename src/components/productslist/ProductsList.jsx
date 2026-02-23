@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { t } from "@/utils/translation";
@@ -38,9 +38,10 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
-import { isRtl } from "@/lib/utils";
 
 const Products = () => {
+
+  const total_products_per_page = 12;
   const dispatch = useDispatch();
   const router = useRouter();
   const city = useSelector((state) => state.City);
@@ -50,22 +51,27 @@ const Products = () => {
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [values, setValues] = useState([]);
-  const [isLoader, setisLoader] = useState(false);
-  const [isGridView, setIsGridView] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
+<<<<<<< HEAD
   const { listing_source, category_id, category_slug } = useSelector(
     (state) => state.ProductFilter,
   );
+=======
+  const [debouncedSearch, setDebouncedSearch] = useState(filter?.search);
+  const {
+    listing_source,
+    category_slug
+  } = useSelector((state) => state.ProductFilter);
+>>>>>>> main
   const { selectedLanguage } = useSelector((state) => state.Language);
-  useEffect(() => {
-    console.log("LANGUAGE CHANGED:", selectedLanguage);
-  }, [selectedLanguage]);
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
+
+  const isCategoryListing = listing_source === "category";
   const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
 
-  const currentCategoryName = React.useMemo(() => {
+  const currentCategoryName = useMemo(() => {
     if (!currentCategory) return "";
 
     return (
@@ -75,15 +81,47 @@ const Products = () => {
       ""
     );
   }, [currentCategory, selectedLanguage?.code]);
-  const total_products_per_page = 12;
-  const rtl = isRtl();
-  const isCategoryListing = listing_source === "category";
+
   const ancestorCategoryIds = (categoryBreadcrumb) => {
     if (!Array.isArray(categoryBreadcrumb) || categoryBreadcrumb.length === 0) {
       return null;
     }
     return categoryBreadcrumb.map((category) => category.id).join(",");
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(filter?.search);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [filter?.search]);
+
+  useEffect(() => {
+    if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
+    refetchBreadcrumbTranslations();
+  }, [selectedLanguage]);
+
+
+  const refetchBreadcrumbTranslations = async () => {
+    const updated = await Promise.all(
+      categoryBreadcrumb.map(async (category) => {
+        try {
+          const res = await api.getCategories({ slug: category.slug, is_own_data: 1 });
+          const data = res?.data;
+          return {
+            ...category,
+            name: data?.[0]?.translations?.name || category.name,
+            translations: data?.[0]?.translations || category.translations,
+          };
+        } catch (error) {
+          return category;
+        }
+      })
+    );
+    dispatch(setCategoryBreadcrumb({ data: updated }));
+  };
+
+
   const resolvedParentsCategory =
     filter?.category_id === "NaN" || filter?.category_id === "all categories"
       ? null
@@ -106,7 +144,7 @@ const Products = () => {
       }),
       brand_ids: filter?.brand_ids.toString(),
       sort: filter?.sort_filter,
-      search: filter?.search,
+      search: debouncedSearch,
       limit: total_products_per_page,
       sizes: filter?.search_sizes
         ?.filter((obj) => obj.checked)
@@ -137,7 +175,7 @@ const Products = () => {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["products", filter, city.city.latitude, city.city.longitude],
+    queryKey: ["products", { ...filter, search: debouncedSearch }, city.city.latitude, city.city.longitude],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.data || lastPage.data.length < total_products_per_page) {
@@ -192,12 +230,11 @@ const Products = () => {
       }
     }
   };
+
   const handleGridViewChange = () => {
-    setIsGridView(true);
     dispatch(setFilterView({ data: true }));
   };
   const handleListViewChange = () => {
-    setIsGridView(false);
     dispatch(setFilterView({ data: false }));
   };
 
@@ -222,6 +259,14 @@ const Products = () => {
       if (listing_source !== "category" || !category_slug) {
         return [];
       }
+<<<<<<< HEAD
+=======
+      try {
+        setIsSubCatLoading(true);
+        const res = await api.getCategories({
+          slug: category_slug
+        });
+>>>>>>> main
 
       const res = await api.getCategories({
         slug: category_slug,
@@ -253,14 +298,15 @@ const Products = () => {
     const newBreadcrumb = exists
       ? categoryBreadcrumb
       : [
-          ...categoryBreadcrumb,
-          {
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-            translations: category.translations,
-          },
-        ];
+        ...categoryBreadcrumb,
+        {
+          id: category.id,
+          name: category?.translations?.name || category.name,
+          slug: category.slug,
+          translations: category.translations,
+        },
+      ];
+
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
@@ -296,7 +342,6 @@ const Products = () => {
                 setValues={setValues}
                 setMaxPrice={setMaxPrice}
                 setMinPrice={setMinPrice}
-                setisLoader={setisLoader}
                 hideCategory={listing_source === "category"}
                 disableFilter={listing_source === "category"}
               />

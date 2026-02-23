@@ -137,8 +137,10 @@ const WalletBalanceModal = ({
           // setAddWalletModal(false);
         } else if (capitalizedPaymentMethod === "Wallet") {
           toast.success(t('subscription_add_description'))
-    
           setAddWalletModal(false);
+          setTimeout(() => {
+            router.push('/profile/subscription')
+          }, 2000);
         }
         else {
           if (capitalizedPaymentMethod == "Phonepe") {
@@ -347,7 +349,7 @@ const WalletBalanceModal = ({
         {addWalletModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60 z-40"></div>
         )}
-        <DialogContent aria-describedby="addWalletModal">
+        <DialogContent aria-describedby="addWalletModal " className="max-h-[100vh]  border-0 overflow-y-auto">
           <DialogHeader className="flex flex-row justify-between items-center">
             <DialogTitle>
               <h1 className="font-bold text-xl">
@@ -361,7 +363,7 @@ const WalletBalanceModal = ({
               />
             </div>
           </DialogHeader>
-          <div>
+          <div >
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-2">
                 <>
