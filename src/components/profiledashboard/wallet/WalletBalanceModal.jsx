@@ -30,7 +30,12 @@ import StriperImage from "@/assets/payment_methods_svgs/ic_stripe.svg";
 import MidtransImage from "@/assets/payment_methods_svgs/Midtrans.svg";
 import PhonePeImage from "@/assets/payment_methods_svgs/Phonepe.svg";
 import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
-import StripeModal from "@/components/checkoutpage/StripeModal";
+// import StripeModal from "@/components/checkoutpage/StripeModal";
+import dynamic from "next/dynamic";
+
+const StripeModal = dynamic(() => import("@/components/checkoutpage/StripeModal"), {
+  ssr: false, 
+});
 import { setPhonePeCheckoutDetails } from "@/redux/slices/checkoutSlice";
 
 const paymentMethodsConfig = [

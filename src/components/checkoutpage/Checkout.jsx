@@ -43,7 +43,13 @@ import {
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { setCurrentUser } from "@/redux/slices/userSlice";
-import StripeModal from "./StripeModal";
+import dynamic from "next/dynamic";
+
+// Remove: import StripeModal from "./StripeModal";
+
+const StripeModal = dynamic(() => import("./StripeModal"), {
+  ssr: false, // Stripe must only load on the client side
+});
 import PaystackPop from "@paystack/inline-js";
 import CheckoutSkeleton from "./CheckoutSkeleton";
 import { FiPhoneCall, FiTruck } from "react-icons/fi";
@@ -193,7 +199,7 @@ const Checkout = () => {
     } else {
       const tomorrow = new Date();
       tomorrow.setDate(
-        tomorrow.getDate() + parseInt(timeSlotsData.delivery_estimate_days)
+        tomorrow.getDate() + parseInt(timeSlotsData.delivery_estimate_days),
       );
       const finalDate = tomorrow.toLocaleDateString("en-US", {
         day: "2-digit",
@@ -211,7 +217,7 @@ const Checkout = () => {
       if (response.status == 1) {
         dispatch(setAllAddresses({ data: response.data }));
         const defaultAddress = response?.data?.find(
-          (address) => address.is_default == 1
+          (address) => address.is_default == 1,
         );
         if (checkout?.address != null) {
           return;
@@ -234,7 +240,7 @@ const Checkout = () => {
   const handleFilterTimeSlots = () => {
     const currentDate = new Date();
     const userSelectedDate = new Date(
-      checkout?.selectedDate ? checkout?.selectedDate : new Date()
+      checkout?.selectedDate ? checkout?.selectedDate : new Date(),
     );
 
     const updatedTimeSlots = timeSlots.map((slot) => {
@@ -342,7 +348,9 @@ const Checkout = () => {
 
   const formatDateWithTimeSlot = (date, timeSlot) => {
     const formattedDate = formatDateToDDMMYYYY(date);
-    return timeSlot ? `${formattedDate} ${timeSlot.default_title}` : formattedDate;
+    return timeSlot
+      ? `${formattedDate} ${timeSlot.default_title}`
+      : formattedDate;
   };
 
   const initializeRazorpay = () => {
@@ -365,7 +373,7 @@ const Checkout = () => {
     order_id,
     razorpay_transaction_id,
     amount,
-    capilizePaymeneMethod
+    capilizePaymeneMethod,
   ) => {
     try {
       const res = await initializeRazorpay();
@@ -396,7 +404,7 @@ const Checkout = () => {
               if (response.status === 1) {
                 setPaymentLoading(false);
                 return router.push(
-                  `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${order_id}`
+                  `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${order_id}`,
                 );
               } else {
                 setPaymentLoading(false);
@@ -449,7 +457,7 @@ const Checkout = () => {
   const handlePayStackPayment = async (
     orderId,
     amount,
-    capilizePaymeneMethod
+    capilizePaymeneMethod,
   ) => {
     try {
       const handler = PaystackPop.setup({
@@ -480,7 +488,7 @@ const Checkout = () => {
             if (response.status == 1) {
               setPaymentLoading(false);
               return router.push(
-                `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${orderId}`
+                `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${orderId}`,
               );
             } else {
               setPaymentLoading(false);
@@ -500,20 +508,19 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     const formatDate = formatDateWithTimeSlot(
       checkout?.selectedDate,
-      checkout?.timeSlot
+      checkout?.timeSlot,
     );
     const capilizePaymeneMethod =
       String(checkout?.selectedPaymentMethod).charAt(0).toUpperCase() +
       String(checkout?.selectedPaymentMethod).slice(1);
     const status =
       checkout?.selectedPaymentMethod === "COD" ||
-        checkout?.selectedPaymentMethod === "wallet"
+      checkout?.selectedPaymentMethod === "wallet"
         ? 2
         : 1;
     try {
       if (checkout?.selectedPaymentMethod == null) {
-
-        toast.error(t('please_select_valid_time'));
+        toast.error(t("please_select_valid_time"));
         return;
       } else if (
         checkout?.selectedDate == null &&
@@ -560,7 +567,7 @@ const Checkout = () => {
             setCheckoutLoading(false);
             await handleInitiateTransaction(
               response?.data?.order_id,
-              capilizePaymeneMethod
+              capilizePaymeneMethod,
             );
           }
         } else {
@@ -576,24 +583,24 @@ const Checkout = () => {
 
   const handleInitiateTransaction = async (
     currentOrderID,
-    capilizePaymeneMethod
+    capilizePaymeneMethod,
   ) => {
     try {
       if (checkout?.selectedPaymentMethod == "COD") {
         // redirect after successfull COD order
         return router.push(
-          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`
+          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`,
         );
       } else if (checkout?.selectedPaymentMethod == "wallet") {
         // redirect after successfull wallet order
         return router.push(
-          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`
+          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`,
         );
       } else if (checkout?.selectedPaymentMethod == "paystack") {
         handlePayStackPayment(
           currentOrderID,
           checkout?.checkoutTotal,
-          capilizePaymeneMethod
+          capilizePaymeneMethod,
         );
       } else {
         const response = await api.initiateTrasaction({
@@ -610,7 +617,7 @@ const Checkout = () => {
               currentOrderID,
               response?.data?.transaction_id,
               checkout?.checkoutTotal,
-              capilizePaymeneMethod
+              capilizePaymeneMethod,
             );
           } else if (checkout?.selectedPaymentMethod == "stripe") {
             setStripeOrderId(currentOrderID);
@@ -634,7 +641,7 @@ const Checkout = () => {
             } else {
               console.error(
                 "Unsupported payment method:",
-                selectedPaymentMethod
+                selectedPaymentMethod,
               );
             }
           }
@@ -673,8 +680,9 @@ const Checkout = () => {
         ) : (
           <div className="flex justify-center flex-col items-center">
             <div
-              className={`flex w-full ${checkout?.orderType == "doorstep" ? "lg:w-1/2" : "lg:w-1/4"
-                }`}
+              className={`flex w-full ${
+                checkout?.orderType == "doorstep" ? "lg:w-1/2" : "lg:w-1/4"
+              }`}
             >
               <Stepper currentStep={checkout?.currentStep} />
             </div>
@@ -689,7 +697,7 @@ const Checkout = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
                           className="flex flex-col"
-                          onClick={() => handleOptionsClick('doorstep')}
+                          onClick={() => handleOptionsClick("doorstep")}
                         >
                           <label className="flex items-center p-4 border rounded-md cursor-pointer  transition bodyBackgroundColor">
                             <input
@@ -718,7 +726,7 @@ const Checkout = () => {
                         </div>
                         <div
                           className="flex flex-col"
-                          onClick={() => handleOptionsClick('selfpickup')}
+                          onClick={() => handleOptionsClick("selfpickup")}
                         >
                           <label className="flex items-center p-4 border rounded-md cursor-pointer transition bodyBackgroundColor peer-disabled:disabledBackgroundColor">
                             <input
@@ -859,7 +867,7 @@ const Checkout = () => {
                                         checkoutData?.seller_self_pickup
                                           ?.pickup_latitude,
                                         checkoutData?.seller_self_pickup
-                                          ?.pickup_longitude
+                                          ?.pickup_longitude,
                                       );
                                     }}
                                   >
@@ -893,11 +901,13 @@ const Checkout = () => {
                                     {t("open_hours")}
                                   </h2>
                                   <p className="font-medium">
-                                    {`${t("today")} ${checkoutData?.seller_self_pickup
-                                      .opening_time
-                                      } - ${checkoutData?.seller_self_pickup
+                                    {`${t("today")} ${
+                                      checkoutData?.seller_self_pickup
+                                        .opening_time
+                                    } - ${
+                                      checkoutData?.seller_self_pickup
                                         .closing_time
-                                      }`}
+                                    }`}
                                   </p>
                                 </div>
                               </div>
@@ -952,33 +962,44 @@ const Checkout = () => {
                                 </PopoverTrigger>
                                 {timeSlotsData?.time_slots_is_enabled ==
                                   "true" && (
-                                    <PopoverContent className="w-full p-0">
-                                      <Calendar
-                                        mode="single"
-                                        selected={checkout?.selectedDate}
-                                        onSelect={handleSelectedDate}
-                                        className="rounded-md w-full"
-                                        // NOTE: change in version 2.0.4
-                                        fromDate={(() => {
-                                          let date = new Date();
-                                          date.setDate(date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1));
-                                          return date;
-                                        })()}
-                                        toDate={(() => {
-                                          let date = new Date();
-                                          let allowedDays =
+                                  <PopoverContent className="w-full p-0">
+                                    <Calendar
+                                      mode="single"
+                                      selected={checkout?.selectedDate}
+                                      onSelect={handleSelectedDate}
+                                      className="rounded-md w-full"
+                                      // NOTE: change in version 2.0.4
+                                      fromDate={(() => {
+                                        let date = new Date();
+                                        date.setDate(
+                                          date.getDate() +
                                             parseInt(
-                                              setting?.setting
-                                                ?.time_slots_allowed_days
-                                            ) || 15;
-                                          date.setDate(
-                                            date.getDate() + parseInt(timeSlotsData.delivery_estimate_days - 1) + (allowedDays - 1)
-                                          );
-                                          return date;
-                                        })()}
-                                      />
-                                    </PopoverContent>
-                                  )}
+                                              timeSlotsData.delivery_estimate_days -
+                                                1,
+                                            ),
+                                        );
+                                        return date;
+                                      })()}
+                                      toDate={(() => {
+                                        let date = new Date();
+                                        let allowedDays =
+                                          parseInt(
+                                            setting?.setting
+                                              ?.time_slots_allowed_days,
+                                          ) || 15;
+                                        date.setDate(
+                                          date.getDate() +
+                                            parseInt(
+                                              timeSlotsData.delivery_estimate_days -
+                                                1,
+                                            ) +
+                                            (allowedDays - 1),
+                                        );
+                                        return date;
+                                      })()}
+                                    />
+                                  </PopoverContent>
+                                )}
                               </Popover>
                             </div>
                             {timeSlotsData?.time_slots_is_enabled == "true" && (
@@ -1003,7 +1024,10 @@ const Checkout = () => {
                                           <SelectItem
                                             value={slot}
                                             style={{
-                                              opacity: slot.isDisabled == "true" ? 0.0 : 1,
+                                              opacity:
+                                                slot.isDisabled == "true"
+                                                  ? 0.0
+                                                  : 1,
                                             }}
                                             className={`
                                               ${slot.isDisabled == true ? "opacity-10 cursor-not-allowed text-gray-500 hover:text-gray-500" : ""}
@@ -1094,7 +1118,7 @@ const Checkout = () => {
         setShowAddAddres={setShowAddAddres}
         isAddressSelected={isAddressSelected}
       />
-      <StripeModal
+      {showStripe && (<StripeModal
         showStripe={showStripe}
         setShowStripe={setShowStripe}
         amount={checkout?.checkoutTotal}
@@ -1102,7 +1126,7 @@ const Checkout = () => {
         stripeTransId={stripeTransactionId}
         stripeOrderId={stripeOrderId}
         type="order"
-      />
+      />)}
       {/* <OrderSuccessModal showOrderSuccess={showOrderSuccess} handlePaymentClose={handlePaymentClose} /> */}
     </section>
   );

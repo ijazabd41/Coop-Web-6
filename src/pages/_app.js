@@ -10,6 +10,22 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { Nunito, Poppins } from 'next/font/google';
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['200','300','400','500','600','700','800','900'],
+  variable: '--font-family',
+  display: 'swap',
+});
+
+// const poppins = Poppins({
+//   subsets: ['latin'],
+//   weight: ['300','400','500','600','700','800','900'],
+//   variable: '--font-heading',
+//   display: 'swap',
+// });
+
 const queryClient = new QueryClient();
 
 function AppContent({ Component, pageProps }) {
@@ -66,7 +82,7 @@ function AppContent({ Component, pageProps }) {
 export default function App({ Component, pageProps }) {
 
   return (
-    <main>
+    <main className={`${nunito.variable} `}>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
