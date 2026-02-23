@@ -463,8 +463,8 @@ const HorizontalProductCard = ({ product }) => {
               className="object-cover aspect-square h-full w-full rounded-sm"
               alt={product.name}
               src={product.image_url}
-              width={700}
-              height={700}
+              width={200}
+              height={200}
 
             />
             {selectedVariant?.discounted_price !== 0 &&
