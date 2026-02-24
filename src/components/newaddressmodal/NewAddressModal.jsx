@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
 import { RiCloseFill } from "react-icons/ri";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import * as api from "@/api/apiRoutes";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { BiCurrentLocation } from "react-icons/bi";
@@ -10,6 +10,9 @@ import Loader from "../loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { darkThemeStyles } from "@/utils/mapColor";
+import { MAP_CONFIG } from "@/utils/mapConfig";
+
+
 
 const NewAddressModal = ({
   showAddAddres,
@@ -37,6 +40,8 @@ const NewAddressModal = ({
     address_type: "Home",
     is_default: true,
   });
+
+  const { isLoaded } = useJsApiLoader(MAP_CONFIG);
   const [localLocation, setlocalLocation] = useState({
     city: "",
     formatted_address: "",
@@ -425,7 +430,7 @@ const NewAddressModal = ({
               >
                 <BiCurrentLocation size={20} className=" " />
               </div>
-              <GoogleMap
+              {isLoaded ? <GoogleMap
                 streetViewControl={false}
                 tilt={true}
                 options={{
@@ -443,12 +448,15 @@ const NewAddressModal = ({
                   onDragStart={onMarkerDragStart}
                   onDragEnd={onMarkerDragEnd}
                 />
-              </GoogleMap>
+              </GoogleMap> : <Loader />}
             </div>
             <div className="w-full md:w-1/2 h-full">
               {addressLoading ? (
                 <div className="flex items-center justify-center">
-                  <Loader width={Math.min(300, window.innerWidth - 40)} height={Math.min(300, window.innerWidth - 40)}/>
+                  <Loader
+                    width={Math.min(300, window.innerWidth - 40)}
+                    height={Math.min(300, window.innerWidth - 40)}
+                  />
                 </div>
               ) : (
                 <div className="flex flex-col">

@@ -21,11 +21,11 @@ export default function Document() {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
           media="all"
         />
-        <script
+        {/* <script
           async
           defer
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_API}&libraries=places&loading=async`}
-        ></script>
+        ></script> */}
        
       </Head>
       <body className="antialiased !pointer-events-auto">

@@ -4,6 +4,7 @@ import { RiCloseFill } from "react-icons/ri";
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes";
 import { useSelector } from "react-redux";
+import { useJsApiLoader } from "@react-google-maps/api";
 import {
   GoogleMap,
   Marker,
@@ -15,6 +16,9 @@ import { IoLocationOutline } from "react-icons/io5";
 import Link from "next/link";
 import userIcon from "@/assets/customer_location.svg?url";
 import deliveryBoyIcon from "@/assets/delivery_boy.svg?url";
+import { MAP_CONFIG } from "@/utils/mapConfig";
+import { toast } from "react-toastify";
+import Loader from "@/components/loader/Loader";
 
 const LiveTrackingModal = ({
   showLiveTracking,
@@ -31,7 +35,7 @@ const LiveTrackingModal = ({
 
   const [showOverlay, setShowOverlay] = useState(false);
   const [directions, setDirections] = useState(null);
-
+  const { isLoaded, loadError } = useJsApiLoader(MAP_CONFIG);
   const fetchLocation = async () => {
     try {
       const res = await api.liveOrderTracking({ orderId: order?.id });
@@ -104,7 +108,7 @@ const LiveTrackingModal = ({
       // // NOTE: when live location tracking is off
       // else {
       const bounds = new window.google.maps.LatLngBounds(
-        riderLocation && riderLocation
+        riderLocation && riderLocation,
       );
       bounds.extend(riderLocation);
       bounds.extend(userLocation);
@@ -126,24 +130,36 @@ const LiveTrackingModal = ({
     height: "calc(50vh - 100px)",
   };
 
-  const polylineOptions = {
-    strokeColor: "#16a34a",
-    strokeOpacity: 0.9,
-    strokeWeight: 6,
-    icons: [
-      {
-        icon: {
-          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-          scale: 3,
-          strokeColor: "#16a34a",
-          strokeWeight: 2,
-          fillColor: "#16a34a",
-          fillOpacity: 1,
-        },
-        offset: "50%",
-      },
-    ],
-  };
+  const polylineOptions = isLoaded
+    ? {
+        strokeColor: "#16a34a",
+        strokeOpacity: 0.9,
+        strokeWeight: 6,
+        icons: [
+          {
+            icon: {
+              path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+              scale: 3,
+              strokeColor: "#16a34a",
+              strokeWeight: 2,
+              fillColor: "#16a34a",
+              fillOpacity: 1,
+            },
+            offset: "50%",
+          },
+        ],
+      }
+    : {};
+
+  useEffect(() => {
+    if (loadError) {
+      toast.error(t("map_failed_to_load"));
+    }
+  }, [loadError]);
+
+  if (!isLoaded) {
+    return <Loader />;
+  }
 
   return (
     <Dialog open={showLiveTracking}>

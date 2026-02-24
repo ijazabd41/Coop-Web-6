@@ -22,7 +22,10 @@ import {
 import CheckoutPayment from "./CheckoutPayment";
 import OrderSummaryCard from "./OrderSummaryCard";
 import { useDispatch, useSelector } from "react-redux";
-import NewAddressModal from "../newaddressmodal/NewAddressModal";
+import dynamic from 'next/dynamic';
+const NewAddressModal = dynamic(() => import('../newaddressmodal/NewAddressModal'), {
+  ssr: false,
+});
 import * as api from "@/api/apiRoutes";
 import {
   clearCartPromo,
@@ -43,7 +46,6 @@ import {
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { setCurrentUser } from "@/redux/slices/userSlice";
-import dynamic from "next/dynamic";
 
 // Remove: import StripeModal from "./StripeModal";
 
@@ -1112,12 +1114,12 @@ const Checkout = () => {
           </div>
         )}
       </div>
-      <NewAddressModal
+      {showAddAddres && (<NewAddressModal
         fetchAddress={fetchAddress}
         showAddAddres={showAddAddres}
         setShowAddAddres={setShowAddAddres}
         isAddressSelected={isAddressSelected}
-      />
+      />)}
       {showStripe && (<StripeModal
         showStripe={showStripe}
         setShowStripe={setShowStripe}

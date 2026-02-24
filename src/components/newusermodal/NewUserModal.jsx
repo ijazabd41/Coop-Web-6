@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
-import Image from "next/image";
-import Logo from "/public/logo.png";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 import { RiCloseFill } from "react-icons/ri";

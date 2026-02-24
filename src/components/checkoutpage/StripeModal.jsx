@@ -16,24 +16,31 @@ import * as api from "@/api/apiRoutes";
 import { addUserBalance } from "@/redux/slices/userSlice";
 import { useRouter } from "next/router";
 
-const CARD_OPTIONS = {
-  iconStyle: "solid",
-  style: {
-    base: {
-      // iconColor: "#c4f0ff",
-      fontWeight: 500,
-      fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-      fontSize: "16px",
-      fontSmoothing: "antialiased",
-      ":-webkit-autofill": { color: "#fce883" },
-      "::placeholder": { color: "#87bbfd" },
-      // border: "2px solid black"
+const getCardOptions = (theme) => {
+  return {
+    iconStyle: "solid",
+    style: {
+      base: {
+        
+        color: theme === "dark" ? "#87bbfd" : "#87bbfd", 
+        
+        fontWeight: 500,
+        fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
+        fontSize: "16px",
+        fontSmoothing: "antialiased",
+        ":-webkit-autofill": { 
+          color: theme === "dark" ? "#fce883" : "#fce883" 
+        },
+        "::placeholder": { 
+          color: theme === "dark" ? "#87bbfd" : "#87bbfd" 
+        },
+      },
+      invalid: {
+        color: "#fa755a", 
+        iconColor: "#fa755a",
+      },
     },
-    invalid: {
-      // iconColor: "#ffc7ee",
-      color: "#ffc7ee",
-    },
-  },
+  };
 };
 const CheckoutForm = ({
   clientSecret,
@@ -46,8 +53,9 @@ const CheckoutForm = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.User?.user);
+  const theme = useSelector((state) => state.Theme.theme);
   const router = useRouter();
-
+  const cardElementOptions = getCardOptions(theme);
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
@@ -135,7 +143,7 @@ const CheckoutForm = ({
       className={"min-h-[150px]  flex flex-col justify-center gap-4 mt-3"}
     >
       <div className="h-full flex flex-col justify-evenly gap-4">
-        <CardElement options={CARD_OPTIONS} />
+        <CardElement options={cardElementOptions} />
       </div>
       <div className="flex justify-center">
         <button
@@ -194,6 +202,8 @@ const StripeModal = ({
     if (!setting?.payment_setting?.stripe_publishable_key) return null;
     return loadStripe(setting.payment_setting.stripe_publishable_key);
   }, [setting?.payment_setting?.stripe_publishable_key]);
+  const theme = useSelector((state) => state.Theme.theme);
+  const cardElementOptions = getCardOptions(theme);
 
   return (
     <Dialog open={showStripe} className="bg-gray-400">
@@ -212,14 +222,14 @@ const StripeModal = ({
         <div>
           <Elements
             stripe={stripePromise}
-            options={CARD_OPTIONS}
+            options={cardElementOptions}
             clientSecret={clientSecret}
             transactionId={stripeTransId}
           >
             <InjectedCheckoutForm
               setShowStripe={setShowStripe}
               stripe={stripePromise}
-              options={CARD_OPTIONS}
+              options={cardElementOptions}
               clientSecret={clientSecret}
               transactionId={stripeTransId}
               amount={amount}
