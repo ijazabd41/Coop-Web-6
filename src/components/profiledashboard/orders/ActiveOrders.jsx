@@ -52,6 +52,7 @@ const ActiveOrders = () => {
       } else {
         setActiveOrders([]);
         setLoading(false);
+        setTotalOrders(0);
         setLoadingMore(false);
       }
     } catch (error) {
