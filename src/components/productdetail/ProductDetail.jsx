@@ -905,9 +905,6 @@ const ProductDetail = () => {
                         >
                           <FacebookIcon className="h-8 w-8 rounded-full" />
                         </FacebookShareButton>
-                        {/* <InstapaperShareButton>
-                                            <InstapaperIcon className='h-10 w-10 rounded-full' />
-                                        </InstapaperShareButton> */}
                         <FaLink
                           className="h-8 w-8 rounded-full bg-gray-400 p-2 hover:cursor-pointer"
                           onClick={handleCopyToClipboard}

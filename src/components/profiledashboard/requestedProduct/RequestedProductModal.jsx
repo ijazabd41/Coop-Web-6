@@ -55,11 +55,11 @@ const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
         <DialogHeader className="flex justify-between items-center flex-row">
           <h1 className="font-bold text-xl">{t("requestProduct")}</h1>
           <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
-          <RiCloseFill
-            size={22}
-            className="cursor-pointer hover:text-gray-500 transition "
-            onClick={() => setShowModal(false)}
-          />
+            <RiCloseFill
+              size={22}
+              className="cursor-pointer hover:text-gray-500 transition "
+              onClick={() => setShowModal(false)}
+            />
           </div>
         </DialogHeader>
 
@@ -75,7 +75,7 @@ const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
             <textarea
               id="description"
               name="description"
-              placeholder="Enter product description"
+              placeholder={t('enter_product_desription')}
               className="mt-1 block w-full rounded-sm cardBorder p-2"
               value={description}
               onChange={(e) => setDescription(e.target.value)}

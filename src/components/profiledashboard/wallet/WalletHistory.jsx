@@ -5,6 +5,8 @@ import * as api from "@/api/apiRoutes"
 import CardSkeleton from '@/components/skeleton/CardSkeleton'
 import NoTransactionFound from "@/assets/not_found_images/No_Transaction.svg"
 import Image from 'next/image'
+
+
 const WalletHistory = () => {
 
     const [transactions, setTransactions] = useState([])
@@ -61,7 +63,7 @@ const WalletHistory = () => {
                     <div className='grid grid-cols-12 '>
                         {loading ? Array?.from({ length: 6 })?.map((_, index) => {
                             return (
-                                <div className='col-span-12  md:col-span-12 lg:col-span-4' key={index}>
+                                <div className='col-span-12  md:col-span-12 lg:col-span-6' key={index}>
                                     <CardSkeleton height={200} padding='p-4' />
                                 </div>
                             )

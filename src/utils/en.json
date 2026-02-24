@@ -648,5 +648,6 @@
   "please_select_valid_date": "Please select a valid date",
   "please_select_valid_time": "Please select a valid time",
   "wallet": "Wallet",
-  "insufficient_wallet_balance": "Insufficient Wallet Balance"
+  "insufficient_wallet_balance": "Insufficient Wallet Balance",
+  "enter_product_desription": "Enter product description"
 }

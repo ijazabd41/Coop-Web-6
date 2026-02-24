@@ -23,6 +23,9 @@ const FilterDrawer = ({
   setMaxPrice,
 }) => {
   const language = useSelector((state) => state.Language.selectedLanguage);
+  const {
+    listing_source
+  } = useSelector((state) => state.ProductFilter);
 
 
   return (
@@ -53,6 +56,7 @@ const FilterDrawer = ({
             setMaxPrice={setMaxPrice}
             setMinPrice={setMinPrice}
             setShowFilter={setShowFilter}
+            hideCategory={listing_source === "category"}
           />
         </div>
       </SheetContent>
