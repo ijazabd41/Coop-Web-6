@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as api from "@/api/apiRoutes";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { FaRegHeart, FaShoppingBasket, FaStar, FaLink } from "react-icons/fa";
+import {FaShoppingBasket, FaStar, FaLink } from "react-icons/fa";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

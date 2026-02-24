@@ -1,16 +1,16 @@
 import React, { use, useEffect, useState } from "react";
 import { t } from "@/utils/translation";
 import { CiCirclePlus } from "react-icons/ci";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBinLine } from "react-icons/ri";
 import AddressCard from "../cards/AddressCard";
-import NewAddressModal from "../newaddressmodal/NewAddressModal";
+import dynamic from 'next/dynamic';
+const NewAddressModal = dynamic(() => import('../newaddressmodal/NewAddressModal'), {
+  ssr: false,
+});
 import * as api from "@/api/apiRoutes";
 import { useSelector, useDispatch } from "react-redux";
 import { setAllAddresses } from "@/redux/slices/addressSlice";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { GoPlusCircle } from "react-icons/go";
-import { CloudCog } from "lucide-react";
 
 const Address = () => {
   const dispatch = useDispatch();
@@ -98,12 +98,12 @@ const Address = () => {
                     </div>
                 } */}
       </div>
-      <NewAddressModal
+      {showAddAddres && (<NewAddressModal
         showAddAddres={showAddAddres}
         setShowAddAddres={setShowAddAddres}
         isAddressSelected={isAddressSelected}
         fetchAddress={fetchAddress}
-      />
+      />)}
     </div>
   );
 };

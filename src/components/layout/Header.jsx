@@ -17,7 +17,6 @@ import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
 import * as api from "@/api/apiRoutes";
 import {
   IoCartOutline,
-  IoPersonOutline,
   IoLocationOutline,
   IoHomeOutline,
   IoSearchOutline,
@@ -31,7 +30,10 @@ import CartDrawer from "../cart/CartDrawer";
 import Login from "../login/Login";
 import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from "react-redux";
-import Location from "@/components/locationmodal/Location";
+import dynamic from "next/dynamic";
+const Location = dynamic(() => import("../locationmodal/Location"), {
+  ssr: false,
+});
 import {
   BiBell,
   BiBookmarkHeart,
@@ -709,10 +711,12 @@ const Header = () => {
           setShowLogin={setShowLogin}
           setMobileActiveKey={setMobileActiveKey}
         />
-        <Location
-          showLocation={showLocation}
-          setShowLocation={setShowLocation}
-        />
+        {showLocation && (
+          <Location
+            showLocation={showLocation}
+            setShowLocation={setShowLocation}
+          />
+        )}
         <LogoutModal showLogout={showLogout} setShowLogout={setShowLogout} />
       </section>
       <section className="fixed bottom-0 left-0 w-full z-50 md:hidden backgroundColor pt-3">

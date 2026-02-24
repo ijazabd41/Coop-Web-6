@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FaRegHeart,
-  FaRegEye,
-  FaRegStar,
   FaStar,
   FaShoppingBasket,
   FaMinus,

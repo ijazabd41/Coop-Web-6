@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { FaRegEye, FaRegHeart, FaShoppingBasket, FaStar } from "react-icons/fa";
+import { FaRegEye, FaShoppingBasket, FaStar } from "react-icons/fa";
 import { t } from "@/utils/translation";
 import VariantsModal from "../variantsmodal/VariantsModal";
 import ProductDetailModal from "../productdetailmodal/ProductDetailModal";

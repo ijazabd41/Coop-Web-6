@@ -1,5 +1,5 @@
 import { t } from "@/utils/translation";
-import React, { useState } from "react";
+import React from "react";
 import { MdOutlineCelebration } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCartPromo } from "@/redux/slices/cartSlice";

@@ -138,7 +138,7 @@ const CategoryTree = ({
     return (
       <div className="ml-1 md:ml-1.5 lg:ml-2">
         <div className="flex justify-between items-center my-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleCheck(!isChecked, node.key, childKeys)}>
             <Checkbox
               className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
               checked={isChecked}
@@ -146,7 +146,7 @@ const CategoryTree = ({
                 handleCheck(checked, node.key, childKeys)
               }
             />
-            <span className="text-sm font-normal text-ellipsis">
+            <span className="text-sm font-normal text-ellipsis" >
               {node.title}
             </span>
           </div>

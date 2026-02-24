@@ -201,7 +201,7 @@ const Filter = ({
 
   const loadMoreBrands = () => {
     setBrandOffset((prevOffset) => prevOffset + brandLimit);
-    fetchBrands(brandOffset + brandLimit); 
+    fetchBrands(brandOffset + brandLimit);
   };
 
   const loadMoreSellers = () => {
@@ -310,6 +310,10 @@ const Filter = ({
                       <div
                         key={brand.id}
                         className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2"
+                        onClick={() => {
+                          setProductResult([]);
+                          filterbyBrands(brand);
+                        }}
                       >
                         <Checkbox
                           className="data-[state=checked]:primaryBackColor shadow-sm border-gray-300 border-[1.5px]"
@@ -365,6 +369,15 @@ const Filter = ({
                     <div
                       key={seller.id}
                       className="flex items-center ml-1 my-2 md:ml-1.5 lg:ml-2 gap-2"
+                      onClick={() => {
+                        setProductResult([]);
+                        setOffset(0);
+                        dispatch(
+                          setFilterBySeller({
+                            data: seller.id,
+                          }),
+                        );
+                      }}
                     >
                       <input
                         type="radio"

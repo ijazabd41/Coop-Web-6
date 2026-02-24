@@ -10,9 +10,8 @@ import { t } from "@/utils/translation";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { FaLocationCrosshairs } from "react-icons/fa6";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import * as api from "@/api/apiRoutes";
-import { setSetting } from "@/redux/slices/settingSlice";
 import { setCity } from "@/redux/slices/citySlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -20,12 +19,12 @@ import { setShop } from "@/redux/slices/shopSlice";
 import Loader from "../loader/Loader";
 import { RiCloseFill } from "react-icons/ri";
 import { darkThemeStyles } from "@/utils/mapColor";
+import { MAP_CONFIG } from "@/utils/mapConfig";
 
 const Location = ({ showLocation, setShowLocation }) => {
   const city = useSelector((state) => state.City);
   const setting = useSelector((state) => state.Setting);
   const theme = useSelector((state) => state.Theme.theme);
-  const inputRef = useRef();
   const inputDomRef = useRef(null);
   const debounceTimeoutRef = useRef(null);
   const dispatch = useDispatch();
@@ -37,6 +36,9 @@ const Location = ({ showLocation, setShowLocation }) => {
   const [inputValue, setInputValue] = useState("");
   const [resultedPlaces, setResultedPlaces] = useState([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  
+
+  const { isLoaded } = useJsApiLoader(MAP_CONFIG);
 
   const [localLocation, setlocalLocation] = useState({
     city: "",
@@ -103,7 +105,6 @@ const Location = ({ showLocation, setShowLocation }) => {
     setMapView(false);
   };
 
-
   const handleViewMap = async () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -136,16 +137,25 @@ const Location = ({ showLocation, setShowLocation }) => {
 
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            toast.error(t("location_permission_denied") || "Please enable location permission in your browser");
+            toast.error(
+              t("location_permission_denied") ||
+                "Please enable location permission in your browser",
+            );
             break;
           case error.POSITION_UNAVAILABLE:
-            toast.error(t("location_unavailable") || "Location information is unavailable");
+            toast.error(
+              t("location_unavailable") ||
+                "Location information is unavailable",
+            );
             break;
           case error.TIMEOUT:
             toast.error(t("location_timeout") || "Location request timed out");
             break;
           default:
-            toast.error(t("location_error") || "An unknown error occurred while getting location");
+            toast.error(
+              t("location_error") ||
+                "An unknown error occurred while getting location",
+            );
             break;
         }
       },
@@ -153,8 +163,8 @@ const Location = ({ showLocation, setShowLocation }) => {
         // Options
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 0
-      }
+        maximumAge: 0,
+      },
     );
   };
 
@@ -162,7 +172,7 @@ const Location = ({ showLocation, setShowLocation }) => {
     latitude,
     longitude,
     cityName,
-    formattedAddress
+    formattedAddress,
   ) => {
     try {
       if (errorMessage !== "") {
@@ -195,7 +205,7 @@ const Location = ({ showLocation, setShowLocation }) => {
               max_deliverable_distance: result.data.max_deliverable_distance,
               distance: result.data.distance,
             },
-          })
+          }),
         );
         fetchShop(result.data.latitude, result.data.longitude);
         setShowLocation(false);
@@ -239,7 +249,7 @@ const Location = ({ showLocation, setShowLocation }) => {
             res,
             setlocalLocation,
             setAddressLoading,
-            seterrorMsg
+            seterrorMsg,
           );
         } else {
           toast.error("City not found");
@@ -294,7 +304,7 @@ const Location = ({ showLocation, setShowLocation }) => {
         seterrorMsg(result.message);
       }
     },
-    500
+    500,
   );
 
   const onMarkerDragStart = () => {
@@ -346,11 +356,11 @@ const Location = ({ showLocation, setShowLocation }) => {
     if (!resultedPlaces?.suggestions?.length) return;
     if (e.key === "ArrowDown") {
       setHighlightedIndex((prev) =>
-        prev < resultedPlaces.suggestions?.length - 1 ? prev + 1 : 0
+        prev < resultedPlaces.suggestions?.length - 1 ? prev + 1 : 0,
       );
     } else if (e.key === "ArrowUp") {
       setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : resultedPlaces?.suggestions?.length - 1
+        prev > 0 ? prev - 1 : resultedPlaces?.suggestions?.length - 1,
       );
     } else if (e.key === "Enter") {
       if (highlightedIndex >= 0) {
@@ -404,7 +414,7 @@ const Location = ({ showLocation, setShowLocation }) => {
           latitude,
           longitude,
           cityName,
-          formattedAddress
+          formattedAddress,
         );
         setAddressLoading(false);
       } else {
@@ -429,14 +439,15 @@ const Location = ({ showLocation, setShowLocation }) => {
       ) : (
         <Dialog open={showLocation} onOpenChange={handleCloseLocation}>
           <DialogOverlay
-            className={`${theme == "light"
-              ? setting.setting?.default_city == null && city?.city == null
-                ? "bg-white/100"
-                : "bg-white/10"
-              : setting.setting?.default_city == null && city?.city == null
-                ? "bg-black/100"
-                : "bg-black/10"
-              }`}
+            className={`${
+              theme == "light"
+                ? setting.setting?.default_city == null && city?.city == null
+                  ? "bg-white/100"
+                  : "bg-white/10"
+                : setting.setting?.default_city == null && city?.city == null
+                  ? "bg-black/100"
+                  : "bg-black/10"
+            }`}
           />
           <DialogContent onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader className="text-lg font-extrabold flex-row items-center flex justify-between">
@@ -445,10 +456,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                 <></>
               ) : (
                 <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
-                  <RiCloseFill
-                    size={22}
-                    onClick={() => handleShowModal()}
-                  />
+                  <RiCloseFill size={22} onClick={() => handleShowModal()} />
                 </div>
               )}
             </DialogHeader>
@@ -510,10 +518,11 @@ const Location = ({ showLocation, setShowLocation }) => {
                             <div
                               role="option"
                               key={index}
-                              className={`p-2 cursor-pointer transition-colors duration-150 ${highlightedIndex === index
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-100"
-                                }`}
+                              className={`p-2 cursor-pointer transition-colors duration-150 ${
+                                highlightedIndex === index
+                                  ? "bg-blue-500 text-white"
+                                  : "bg-white hover:bg-gray-100"
+                              }`}
                               onClick={() =>
                                 handleSelectLocation(item.placePrediction)
                               }
@@ -548,25 +557,27 @@ const Location = ({ showLocation, setShowLocation }) => {
                         setisInputFields(false);
                       }}
                     /> */}
-                    <GoogleMap
-                      streetViewControl={false}
-                      tilt={true}
-                      options={{
-                        streetViewControl: false,
-                        styles: theme == "dark" ? darkThemeStyles : [],
-                      }}
-                      zoom={11}
-                      center={center}
-                      mapContainerStyle={{ height: "400px" }}
-                      onClick={handleMapClick}
-                    >
-                      <MarkerF
-                        position={center}
-                        draggable={true}
-                        onDragStart={onMarkerDragStart}
-                        onDragEnd={handleDragEnd}
-                      />
-                    </GoogleMap>
+                    {mapView && isLoaded ? (
+                      <GoogleMap
+                        streetViewControl={false}
+                        tilt={true}
+                        options={{
+                          streetViewControl: false,
+                          styles: theme == "dark" ? darkThemeStyles : [],
+                        }}
+                        zoom={11}
+                        center={center}
+                        mapContainerStyle={{ height: "400px" }}
+                        onClick={handleMapClick}
+                      >
+                        <MarkerF
+                          position={center}
+                          draggable={true}
+                          onDragStart={onMarkerDragStart}
+                          onDragEnd={handleDragEnd}
+                        />
+                      </GoogleMap>
+                    ) : null}
                   </div>
 
                   <div className="flex flex-col gap-1">

@@ -40,7 +40,6 @@ import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 
 const Products = () => {
-
   const total_products_per_page = 12;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -53,10 +52,9 @@ const Products = () => {
   const [values, setValues] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(filter?.search);
-  const {
-    listing_source,
-    category_slug
-  } = useSelector((state) => state.ProductFilter);
+  const { listing_source, category_slug } = useSelector(
+    (state) => state.ProductFilter,
+  );
   const { selectedLanguage } = useSelector((state) => state.Language);
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
@@ -95,12 +93,14 @@ const Products = () => {
     refetchBreadcrumbTranslations();
   }, [selectedLanguage]);
 
-
   const refetchBreadcrumbTranslations = async () => {
     const updated = await Promise.all(
       categoryBreadcrumb.map(async (category) => {
         try {
-          const res = await api.getCategories({ slug: category.slug, is_own_data: 1 });
+          const res = await api.getCategories({
+            slug: category.slug,
+            is_own_data: 1,
+          });
           const data = res?.data;
           return {
             ...category,
@@ -110,11 +110,10 @@ const Products = () => {
         } catch (error) {
           return category;
         }
-      })
+      }),
     );
     dispatch(setCategoryBreadcrumb({ data: updated }));
   };
-
 
   const resolvedParentsCategory =
     filter?.category_id === "NaN" || filter?.category_id === "all categories"
@@ -169,7 +168,12 @@ const Products = () => {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["products", { ...filter, search: debouncedSearch }, city.city.latitude, city.city.longitude],
+    queryKey: [
+      "products",
+      { ...filter, search: debouncedSearch },
+      city.city.latitude,
+      city.city.longitude,
+    ],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.data || lastPage.data.length < total_products_per_page) {
@@ -284,15 +288,14 @@ const Products = () => {
     const newBreadcrumb = exists
       ? categoryBreadcrumb
       : [
-        ...categoryBreadcrumb,
-        {
-          id: category.id,
-          name: category?.translations?.name || category.name,
-          slug: category.slug,
-          translations: category.translations,
-        },
-      ];
-
+          ...categoryBreadcrumb,
+          {
+            id: category.id,
+            name: category?.translations?.name || category.name,
+            slug: category.slug,
+            translations: category.translations,
+          },
+        ];
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
@@ -309,14 +312,16 @@ const Products = () => {
           <BreadCrumb />
         </div>
         <div className="container px-2">
-          <div
-            className="w-full cardBorder md:hidden flex p-3 mt-4 rounded-sm gap-2 items-center text-xl font-bold hover:cursor-pointer"
-            onClick={() => setShowFilter(true)}
-          >
-            <IoFilter />
-            {t("filter")}
+          <div className="md:hidden sticky pt-0.5 top-0 z-30 bodyBackgroundColor">
+            <div
+              className="w-full cardBorder flex p-3 mt-3.5 rounded-sm gap-2 items-center text-xl font-bold hover:cursor-pointer"
+              onClick={() => setShowFilter(true)}
+            >
+              <IoFilter />
+              {t("filter")}
+            </div>
           </div>
-          <div className="my-8 grid grid-cols-12 gap-6">
+          <div className="mb-5  md:my-8 grid grid-cols-12 gap-6">
             <div className=" col-span-3 rounded-sm hidden md:block ">
               <Filter
                 setProductResult={setProductResult}
@@ -334,7 +339,7 @@ const Products = () => {
             </div>
             <div className="col-span-12 md:col-span-9">
               <div
-                className={`${listing_source === "category" ? "mb-0" : "mb-6"}`}
+                className={`${listing_source === "category" ? "mb-0" : "mb-6"} pt-5 md:py-0 sticky top-[56px] bodyBackgroundColor z-20 md:static `}
               >
                 {loading ? (
                   <CardSkeleton height={70} />
@@ -355,9 +360,9 @@ const Products = () => {
                           value={filter?.sort_filter}
                         >
                           <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
-                            <SelectValue placeholder={t("default")} />
+                            <SelectValue placeholder={t("default")} /> 
                           </SelectTrigger>
-                          <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-10  hidden md:block lg:block">
+                          <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-30  hidden md:block lg:block">
                             <SelectItem value="default">
                               {t("default")}
                             </SelectItem>

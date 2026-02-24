@@ -4,7 +4,6 @@ import {
   FaMinus,
   FaPlus,
   FaRegEye,
-  FaRegHeart,
   FaShoppingBasket,
   FaStar,
 } from "react-icons/fa";
@@ -27,7 +26,6 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
-import { GoEye } from "react-icons/go";
 
 const ListViewProductCard = ({ product }) => {
   const dispatch = useDispatch();

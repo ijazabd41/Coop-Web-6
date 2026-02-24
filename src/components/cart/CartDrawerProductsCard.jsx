@@ -1,6 +1,5 @@
 import React from 'react'
 import { IoClose } from 'react-icons/io5'
-import { TiMinus, TiPlus } from "react-icons/ti";
 import { useDispatch, useSelector } from 'react-redux';
 import * as api from "@/api/apiRoutes"
 import { addtoGuestCart, clearCartPromo, setCartProducts, setCartPromo, setCartSubTotal, setGuestCartTotal } from '@/redux/slices/cartSlice';
