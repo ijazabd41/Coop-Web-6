@@ -278,7 +278,7 @@
   "transaction_id": "Transaction ID",
   "order_details": "Order Details",
   "view_details": "View Details",
-  "recieved": "received",
+  "received": "received",
   "delivered": "Delivered",
   "out_for_delivery": "Out For Delivery",
   "shipped": "Shipped",

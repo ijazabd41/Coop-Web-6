@@ -804,6 +804,7 @@ const ProductDetail = () => {
                               className="h-full w-full"
                             />
                           </div>
+                          {console.log("product?.till_status", product?.till_status == 2)}
                           <span className="cancelDetail">
                             {t("cancelable")}
                             {product?.till_status == 1 ? (

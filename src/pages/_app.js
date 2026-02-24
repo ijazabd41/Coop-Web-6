@@ -54,6 +54,12 @@ function AppContent({ Component, pageProps }) {
   useEffect(() => {
     if (!selectedLanguage?.code) return;
 
+    // Wait until the router is ready so that dynamic route params
+    // (e.g., [orderid]) are available in router.query.
+    // Without this guard, router.query may be empty on page reload,
+    // causing href interpolation errors.
+    if (!router.isReady) return;
+
     const currentLang = router.query.lang;
 
     // Prevent infinite loop
@@ -69,7 +75,7 @@ function AppContent({ Component, pageProps }) {
       },
       undefined
     );
-  }, [selectedLanguage?.code, router]);
+  }, [selectedLanguage?.code, router.isReady, router.pathname, router.query]);
 
   return (
     <>

@@ -101,9 +101,8 @@ const OrderItems = ({
                         <button className="text-[#DB3D26]">
                           {t("return_request_cancel_by_delivery_boy")}
                         </button>
-                        <p className="text-xs">{`${t("sellerNote")}: ${
-                          product?.cancellation_reason
-                        }`}</p>
+                        <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
+                          }`}</p>
                       </>
                     )}
                     {Number(product?.return_requested) === 8 && (
@@ -112,18 +111,16 @@ const OrderItems = ({
                       </button>
                     )}
                     {Number(product?.active_status) === 8 && (
-                      <span className="text-[#DB3D26]">{`${t("totkal")} ${
-                        setting?.currency
-                      }${product?.refund_amount} ${t("refunded")}`}</span>
+                      <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
+                        }${product?.refund_amount} ${t("refunded")}`}</span>
                     )}
                     {Number(product?.return_requested) === 3 && (
                       <>
                         <button className=" text-red-500 ">
                           {t("return_rejected")}
                         </button>
-                        <p className="text-xs">{`${t("sellerNote")}: ${
-                          product?.return_remarks
-                        }`}</p>
+                        <p className="text-xs">{`${t("sellerNote")}: ${product?.return_remarks
+                          }`}</p>
                       </>
                     )}
                   </div>
@@ -139,8 +136,8 @@ const OrderItems = ({
                 <td className="p-4 ">
                   <div className="flex gap-2 flex-col items-start">
                     {Number(product?.active_status) === 6 &&
-                    isShowProductRating &&
-                    product?.return_requested === null ? (
+                      isShowProductRating &&
+                      product?.return_requested === null ? (
                       userRating ? (
                         <div
                           className="flex items-center flex-col px-1 cursor-pointer"
@@ -171,8 +168,8 @@ const OrderItems = ({
 
                     <div className="">
                       {Number(product?.active_status) <= 6 &&
-                        Number(product?.active_status) <
-                          Number(product?.till_status) &&
+                        Number(product?.active_status) <=
+                        Number(product?.till_status) &&
                         Number(product?.cancelable_status) === 1 && (
                           <button
                             className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md hover:bg-red-200"

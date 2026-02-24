@@ -10,7 +10,6 @@ import OrderStepper from "./OrderStatusStepper";
 import FinalCheckoutSummary from "./FinalCheckoutSummary";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import { MdOutlineFileDownload, MdOutlineWatchLater } from "react-icons/md";
-import ProductDetail from "../productdetail/ProductDetail";
 import Loader from "../loader/Loader";
 import { FiPhoneCall } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
