@@ -72,7 +72,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
       id: 2,
       text: t("go_max_save_more"),
       image: (
-        <div className="p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 ">
+        <div className="p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 flex items-center">
           <Image
             src={MoneyImage}
             alt="light logo"

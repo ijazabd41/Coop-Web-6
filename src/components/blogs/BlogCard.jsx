@@ -33,8 +33,8 @@ const BlogCard = ({ blog }) => {
         </div>
         <div className="flex flex-col gap-2 min-h-14">
           <div>
-            <h2 className="font-bold text-xl ">
-              {blog?.translations?.title?.slice(0, 32) + "..."}
+            <h2 className="font-bold text-xl line-clamp-1">
+              {blog?.translations?.title?.slice(0, 32)}
             </h2>
             <h4 className="blog-card-description">{blog?.translations?.short_description}</h4>
           </div>

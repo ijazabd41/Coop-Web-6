@@ -271,13 +271,13 @@ const BreadCrumb = ({ title }) => {
                 className="flex items-center gap-1 max-w-[150px]"
               >
                 {rtl ? (
-                  <FaChevronLeft size={14} />
+                  <FaChevronLeft size={14} className="shrink-0"/>
                 ) : (
-                  <FaChevronRight size={14} />
+                  <FaChevronRight size={14} className="shrink-0"/>
                 )}
                 {index === breadcrumbs.length - 1 ? (
                   <span
-                    className="text-sm font-bold capitalize cursor-pointer text-ellipsis  whitespace-nowrap"
+                    className="text-sm font-bold capitalize cursor-pointer text-ellipsis  whitespace-nowrap line-clamp-1"
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
@@ -286,7 +286,7 @@ const BreadCrumb = ({ title }) => {
                 ) : (
                   <div
                     onClick={() => handleNotFoundRoutes(crumb.href)}
-                    className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer primaryColor"
+                    className="text-sm font-bold capitalize text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer primaryColor "
                     style={{ maxWidth: "100%" }}
                     title={crumb.label}
                   >
