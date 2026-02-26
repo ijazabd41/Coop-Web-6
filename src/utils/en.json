@@ -649,5 +649,9 @@
   "please_select_valid_time": "Please select a valid time",
   "wallet": "Wallet",
   "insufficient_wallet_balance": "Insufficient Wallet Balance",
-  "enter_product_desription": "Enter product description"
+  "enter_product_desription": "Enter product description",
+  "name_can_contain_only_letters_and_spaces": "Name can contain only letters and spaces",
+  "enter_a_valid_email_address": "Enter a valid email address",
+  "enter_a_valid_mobile_number_with_at_least_6_digits": "Enter a valid mobile number with at least 6 digits",
+  "only_jpg_or_png_images_are_allowed": "Only JPG or PNG images are allowed"
 }

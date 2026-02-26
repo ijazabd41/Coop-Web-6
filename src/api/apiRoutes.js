@@ -595,7 +595,7 @@ export const placeOrder = async ({
     formData.append("wallet_used", 1);
     formData.append("wallet_balance", walletBalance);
   }
-  if (orderNote !== "") {
+  if (orderNote !== "" && orderNote !== null && orderNote !== undefined) {
     formData.append("order_note", orderNote);
   }
   if (promocodeId !== 0) {

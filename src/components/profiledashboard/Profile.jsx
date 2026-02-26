@@ -12,21 +12,21 @@ const validateName = (name) => {
   if (!name.trim()) return "Name is required";
   if (name.length < 2) return "Name must be at least 2 characters";
   if (!/^[a-zA-Z\s]+$/.test(name))
-    return "Name can contain only letters and spaces";
+    return t("name_can_contain_only_letters_and_spaces");
   return "";
 };
 
 const validateEmail = (email) => {
   if (!email.trim()) return "Email is required";
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!regex.test(email)) return "Enter a valid email address";
+  if (!regex.test(email)) return t("enter_a_valid_email_address");
   return "";
 };
 
 const validateMobile = (mobile) => {
   if (!mobile.trim()) return "Mobile number is required";
   if (!/^[0-9]{6,16}$/.test(mobile))
-    return "Enter a valid mobile number with at least 6 digits";
+    return t("enter_a_valid_mobile_number_with_at_least_6_digits");
   return "";
 };
 
@@ -34,7 +34,7 @@ const validateImage = (file) => {
   if (!file) return "";
   const allowedTypes = ["image/jpeg", "image/png"];
   if (!allowedTypes.includes(file.type))
-    return "Only JPG or PNG images are allowed";
+    return t("only_jpg_or_png_images_are_allowed");
 };
 
 const Profile = () => {
@@ -184,8 +184,8 @@ const Profile = () => {
                   defaultValue={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  // NOTE: remove due to tester suggestion in 2.0.4 update
-                  // disabled={authType == "google"}
+                // NOTE: remove due to tester suggestion in 2.0.4 update
+                // disabled={authType == "google"}
                 />
               </div>
               <div className="mb-4">
