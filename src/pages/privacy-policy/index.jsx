@@ -32,7 +32,12 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           }
         },
       );
-
+      let metatitle = defaultProps.title;
+      let metaDescription = defaultProps.description;
+      let metaKeywords = defaultProps.keywords;
+      let ogImage = defaultProps.ogImage;
+      let favicon = defaultProps.favicon;
+      let schemaMarkup = null;
       if (
         process.env.NEXT_PUBLIC_SEO == "true" &&
         response.data.data?.length > 0

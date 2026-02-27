@@ -13,6 +13,7 @@ let serverSidePropsFunction = null;
 if (process.env.NEXT_PUBLIC_SEO == "true") {
 
   serverSidePropsFunction = async (context) => {
+
     const lang = context.query.lang;
 
     const defaultProps = {
@@ -23,6 +24,13 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       ogImage: "",
       favicon: null,
     };
+
+    let metatitle = defaultProps.title;
+    let metaDescription = defaultProps.description;
+    let metaKeywords = defaultProps.keywords;
+    let ogImage = defaultProps.ogImage;
+    let schemaMarkup = null;
+    let favicon = defaultProps.favicon;
 
     try {
       const response = await axios.get(
