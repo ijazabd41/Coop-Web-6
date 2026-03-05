@@ -2,7 +2,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 const BlogsPage = dynamic(
   () => import("@/components/pagecomponents/BlogsPage"),
-  { ssr: false }
+  { ssr: false },
 );
 
 import MetaData from "@/components/metadata-component/MetaData";
@@ -16,12 +16,15 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
     const lang = context.query.lang;
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`,
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
         {
+          params: {
+            page_type: "Blogs",
+          },
           headers: {
             "Content-Language": lang,
-          }
-        }
+          },
+        },
       );
       let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
       let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
@@ -32,12 +35,15 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       if (process.env.NEXT_PUBLIC_SEO === "true") {
         const seoData = response?.data.data || {};
         metaKeywords = seoData?.translations?.meta_keywords || metaKeywords;
+        console.log(metaKeywords)
         metaTitle = seoData?.translations?.meta_title || metaTitle;
-        metaDescription = seoData?.translations?.meta_description || metaDescription;
+        metaDescription =
+          seoData?.translations?.meta_description || metaDescription;
         og_image = seoData?.og_image || null;
         favicon = seoData.favicon || null;
         if (seoData?.translations?.schema_markup) {
-          markUpSchema = extractJSONFromMarkup(seoData?.translations?.schema_markup) || "";
+          markUpSchema =
+            extractJSONFromMarkup(seoData?.translations?.schema_markup) || "";
         }
       }
       return {

@@ -137,6 +137,14 @@ const BreadCrumb = ({ title }) => {
         return t("order-detail");
       }
 
+      if (breadcrumbs[0].label === "brands") {
+        return t("brands");
+      }
+
+      if (breadcrumbs[0].label === "countries") {
+        return t("countries");
+      }
+
       return breadcrumbs?.[0]?.label;
     }
     if (breadcrumbs[1]?.label === "activeorders") {
@@ -235,6 +243,11 @@ const BreadCrumb = ({ title }) => {
       "cart": t("cart"),
       "checkout": t("checkout"),
       "order-detail": t("order-detail"),
+      "product":t("product"),
+      "blog":t("blog"),
+      "brands":t("brands"),
+      "countries":t("countries")
+      
     };
 
     if (map[label]) return map[label];
