@@ -45,7 +45,7 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let schemaMarkup = null;
       let favicon = null;
 
-      if (response.data.data?.length > 0) {
+      if (process.env.NEXT_PUBLIC_SEO == "true" && response.data.data?.length > 0) {
         const seoData = response.data.data;
         metatitle = seoData[0]?.translations?.meta_title || metatitle;
         metaDescription =
