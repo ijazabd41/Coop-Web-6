@@ -21,7 +21,8 @@ const fallbackProps = {
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -29,7 +30,10 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             page_type: "Home",
           },
-        }
+          headers: {
+            "Content-Language": lang,
+          },
+        },
       );
 
       let metatitle = process.env.NEXT_PUBLIC_META_TITLE || null;
@@ -40,17 +44,17 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
       let favicon = null;
 
       if (response.data.data?.length > 0) {
-        const seoData = response.data.data[0];
-
-        metatitle = seoData.meta_title || null;
-        metaDescription = seoData.meta_description || null;
-        metaKeywords = seoData.meta_keyword || null;
-        ogImage = seoData.og_image_url || null;
-        favicon = seoData.favicon || null;
-
-        if (seoData.schema_markup) {
-          const extracted = extractJSONFromMarkup(seoData.schema_markup);
-          schemaMarkup = extracted ? JSON.stringify(extracted) : null;
+        const seoData = response.data.data;
+        metatitle = seoData[0]?.translations?.meta_title || metatitle;
+        metaDescription =
+          seoData[0]?.translations?.meta_description || metaDescription;
+        metaKeywords = seoData[0]?.translations?.meta_keyword || metaKeywords;
+        ogImage = seoData[0]?.translations?.og_image_url || ogImage;
+        favicon = seoData[0]?.translations?.favicon || favicon;
+        if (seoData[0]?.translations?.schema_markup) {
+          schemaMarkup =
+            extractJSONFromMarkup(seoData[0]?.translations?.schema_markup) ||
+            schemaMarkup;
         }
       }
 
@@ -91,7 +95,7 @@ export default function Home({
         pageName="/"
         structuredData={schemaMarkup}
         ogImage={ogImage}
-        productUrl={pageUrl}
+        ogUrl={pageUrl}
         favicon={favicon}
       />
       <HomePage />

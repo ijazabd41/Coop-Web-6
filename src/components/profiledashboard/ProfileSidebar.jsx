@@ -72,7 +72,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
       id: 2,
       text: t("go_max_save_more"),
       image: (
-        <div className="p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 ">
+        <div className="p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 flex items-center">
           <Image
             src={MoneyImage}
             alt="light logo"
@@ -107,9 +107,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   };
   const handleDelete = () => {
     if (user.balance > 0) {
-      toast.error(
-        "Looks like you still have wallet balance left. Please use or withdraw it before deleting your account.",
-      );
+      toast.error(t("withdraw_it_before_deleting"));
       return;
     }
     setShowDelete(true);

@@ -48,6 +48,20 @@ const OrderItems = ({
     setShowUpdateRating(true);
   };
 
+  const showAction = products?.some((product) => {
+    const canCancel =
+      Number(product?.active_status) <= 6 &&
+      Number(product?.active_status) <= Number(product?.till_status) &&
+      Number(product?.cancelable_status) === 1;
+
+    const canReturn =
+      Number(product?.active_status) === 6 &&
+      Number(product?.return_status) === 1 &&
+      product?.return_requested === null;
+
+    return canCancel || canReturn;
+  });
+
   return (
     <div className="rounded-md cardBorder overflow-auto">
       <table className="table-auto w-full rounded-md min-w-[600px]">
@@ -55,7 +69,9 @@ const OrderItems = ({
           <tr>
             <th className="text-left p-4 border-b ">{t("product")}</th>
             <th className="text-left p-4 border-b ">{t("price")}</th>
-            <th className="text-left p-4 border-b ">{t("action")}</th>
+            {showAction && (
+              <th className="text-left p-4 border-b">{t("action")}</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -101,8 +117,9 @@ const OrderItems = ({
                         <button className="text-[#DB3D26]">
                           {t("return_request_cancel_by_delivery_boy")}
                         </button>
-                        <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
-                          }`}</p>
+                        <p className="text-xs">{`${t("sellerNote")}: ${
+                          product?.cancellation_reason
+                        }`}</p>
                       </>
                     )}
                     {Number(product?.return_requested) === 8 && (
@@ -111,16 +128,18 @@ const OrderItems = ({
                       </button>
                     )}
                     {Number(product?.active_status) === 8 && (
-                      <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
-                        }${product?.refund_amount} ${t("refunded")}`}</span>
+                      <span className="text-[#DB3D26]">{`${t("totkal")} ${
+                        setting?.currency
+                      }${product?.refund_amount} ${t("refunded")}`}</span>
                     )}
                     {Number(product?.return_requested) === 3 && (
                       <>
                         <button className=" text-red-500 ">
                           {t("return_rejected")}
                         </button>
-                        <p className="text-xs">{`${t("sellerNote")}: ${product?.return_remarks
-                          }`}</p>
+                        <p className="text-xs">{`${t("sellerNote")}: ${
+                          product?.return_remarks
+                        }`}</p>
                       </>
                     )}
                   </div>
@@ -133,11 +152,12 @@ const OrderItems = ({
                     )}
                   </p>
                 </td>
+                {showAction && (
                 <td className="p-4 ">
                   <div className="flex gap-2 flex-col items-start">
                     {Number(product?.active_status) === 6 &&
-                      isShowProductRating &&
-                      product?.return_requested === null ? (
+                    isShowProductRating &&
+                    product?.return_requested === null ? (
                       userRating ? (
                         <div
                           className="flex items-center flex-col px-1 cursor-pointer"
@@ -169,7 +189,7 @@ const OrderItems = ({
                     <div className="">
                       {Number(product?.active_status) <= 6 &&
                         Number(product?.active_status) <=
-                        Number(product?.till_status) &&
+                          Number(product?.till_status) &&
                         Number(product?.cancelable_status) === 1 && (
                           <button
                             className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md hover:bg-red-200"
@@ -201,6 +221,7 @@ const OrderItems = ({
                     </div>
                   </div>
                 </td>
+                )}
               </tr>
             );
           })}

@@ -97,20 +97,24 @@ const Blogs = () => {
     }
   }, [blogsLoading]);
 
+  const blogAvailable = (blogsCategories?.length > 0 ||
+            mostViewedBlogs?.length > 0 ||
+            tags?.length > 0 ) && blogs?.length > 0
+
   return loading ? (
     <BlogSkeleton />
   ) : (
     <>
       <div ref={topRef}></div>
       <BreadCrumb />
-      {blogs?.length == 0 && (
-        <div className="w-full flex col-span-2 justify-center items-center lg:items-end h-[200px]">
-          <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
-        </div>
-      )}
       <div className="container my-12">
         <div className="grid lg:grid-cols-12 gap-6 grid-cols-1">
-          <div className="lg:col-span-8 md:col-span-12 col-span-12 flex flex-col gap-6">
+          <div className={`${blogAvailable ? "lg:col-span-8" : "lg:col-span-12"} md:col-span-12 col-span-12 flex flex-col gap-6`}>
+            {blogs?.length == 0 && (
+              <div className="w-full flex  justify-center items-center  h-[200px]">
+                <h1 className="text-2xl font-bold">{t("noBlogFound")}</h1>
+              </div>
+            )}
             <div className="grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 gap-6">
               {blogsLoading
                 ? Array?.from({ length: 3 })?.map((_, i) => (
@@ -130,29 +134,27 @@ const Blogs = () => {
             )}
           </div>
 
-          {blogsCategories?.length > 0 &&
-            mostViewedBlogs?.length > 0 &&
-            tags?.length > 0 && (
-              <div className="lg:col-span-4 md:col-span-12 col-span-12 flex flex-col gap-6">
-                {blogsCategories?.length > 0 && (
-                  <BlogsCategories
-                    blogsCategories={blogsCategories}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                  />
-                )}
-                {mostViewedBlogs?.length > 0 && (
-                  <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
-                )}
-                {tags?.length > 0 && (
-                  <PopularBlogTags
-                    tags={tags}
-                    setSelectedTag={setSelectedTag}
-                    selectedTag={selectedTag}
-                  />
-                )}
-              </div>
-            )}
+          {blogAvailable  && (
+            <div className="lg:col-span-4 md:col-span-12 col-span-12 flex flex-col gap-6">
+              {blogsCategories?.length > 0 && (
+                <BlogsCategories
+                  blogsCategories={blogsCategories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+              )}
+              {mostViewedBlogs?.length > 0 && (
+                <RecentBlogs mostViewedBlogs={mostViewedBlogs} />
+              )}
+              {tags?.length > 0 && (
+                <PopularBlogTags
+                  tags={tags}
+                  setSelectedTag={setSelectedTag}
+                  selectedTag={selectedTag}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
