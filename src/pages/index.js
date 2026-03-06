@@ -2,14 +2,27 @@ import MetaData from "@/components/metadata-component/MetaData";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 import axios from "axios";
 import dynamic from "next/dynamic";
+
 const HomePage = dynamic(() => import("@/components/pagecomponents/Homepage"), {
   ssr: false,
 });
 
+const fallbackProps = {
+  props: {
+    title: process.env.NEXT_PUBLIC_META_TITLE || null,
+    description: process.env.NEXT_PUBLIC_META_DESCRIPTION || null,
+    keywords: process.env.NEXT_PUBLIC_META_KEYWORDS || null,
+    schemaMarkup: null,
+    ogImage: null,
+    favicon: null,
+  },
+};
+
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async () => {
+  serverSidePropsFunction = async (context) => {
+    const lang = context.query.lang;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
@@ -17,41 +30,47 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
           params: {
             page_type: "Home",
           },
-        }
+          headers: {
+            "Content-Language": lang,
+          },
+        },
       );
-      let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
-      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
-      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
-      let ogImage = "";
-      let schemaMarkup = null;
-      let favicon = "";
-      if (
-        process.env.NEXT_PUBLIC_SEO == "true" &&
-        response.data.data?.length > 0
-      ) {
-        const seoData = response.data.data;
 
-        metatitle = seoData[0].meta_title;
-        metaDescription = seoData[0].meta_description;
-        metaKeywords = seoData[0].meta_keyword;
-        ogImage = seoData[0].og_image_url;
-        if (seoData[0].schema_markup) {
-          schemaMarkup = extractJSONFromMarkup(seoData[0].schema_markup);
+      let metatitle = process.env.NEXT_PUBLIC_META_TITLE || null;
+      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION || null;
+      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS || null;
+      let ogImage = null;
+      let schemaMarkup = null;
+      let favicon = null;
+
+      if (response.data.data?.length > 0) {
+        const seoData = response.data.data;
+        metatitle = seoData[0]?.translations?.meta_title || metatitle;
+        metaDescription =
+          seoData[0]?.translations?.meta_description || metaDescription;
+        metaKeywords = seoData[0]?.translations?.meta_keyword || metaKeywords;
+        ogImage = seoData[0]?.translations?.og_image_url || ogImage;
+        favicon = seoData[0]?.translations?.favicon || favicon;
+        if (seoData[0]?.translations?.schema_markup) {
+          schemaMarkup =
+            extractJSONFromMarkup(seoData[0]?.translations?.schema_markup) ||
+            schemaMarkup;
         }
-        favicon = seoData[0].favicon;
       }
+
       return {
         props: {
           title: metatitle,
           description: metaDescription,
           keywords: metaKeywords,
-          schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
+          schemaMarkup: schemaMarkup,
           ogImage: ogImage,
-          favicon: favicon ? favicon : null,
+          favicon: favicon,
         },
       };
     } catch (error) {
       console.log("error", error);
+      return fallbackProps;
     }
   };
 }
@@ -76,7 +95,7 @@ export default function Home({
         pageName="/"
         structuredData={schemaMarkup}
         ogImage={ogImage}
-        productUrl={pageUrl}
+        ogUrl={pageUrl}
         favicon={favicon}
       />
       <HomePage />

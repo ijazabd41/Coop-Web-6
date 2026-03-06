@@ -22,6 +22,12 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
     favicon: null,
   };
   serverSidePropsFunction = async (context) => {
+    let metatitle = defaultProps.title;
+    let metaDescription = defaultProps.description;
+    let metaKeywords = defaultProps.keywords;
+    let ogImage = defaultProps.ogImage;
+    let schemaMarkup = null;
+    let favicon = defaultProps.favicon;
     const lang = context.query.lang;
     try {
       const response = await axios.get(

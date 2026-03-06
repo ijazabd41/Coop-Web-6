@@ -17,6 +17,12 @@ const nextConfig = {
         hostname: new URL(process.env.NEXT_PUBLIC_API_URL).hostname,
         port: '',
         pathname: '/public/storage/**',
+      },
+      {
+        protocol: 'https',
+        hostname: new URL(process.env.NEXT_PUBLIC_API_URL).hostname,
+        port: '',
+        pathname: '/images/**',
       }
     ],
     // unoptimized: true

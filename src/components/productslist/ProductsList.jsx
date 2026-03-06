@@ -171,8 +171,8 @@ const Products = () => {
     queryKey: [
       "products",
       { ...filter, search: debouncedSearch },
-      city.city.latitude,
-      city.city.longitude,
+      city?.city?.latitude,
+      city?.city?.longitude,
     ],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
@@ -189,8 +189,8 @@ const Products = () => {
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
   const language = useSelector((state) => state.Language.selectedLanguage);
-  const setProductResult = () => {};
-  const setOffset = () => {};
+  const setProductResult = () => { };
+  const setOffset = () => { };
 
   useEffect(() => {
     if (data?.pages?.[0]) {
@@ -288,14 +288,14 @@ const Products = () => {
     const newBreadcrumb = exists
       ? categoryBreadcrumb
       : [
-          ...categoryBreadcrumb,
-          {
-            id: category.id,
-            name: category?.translations?.name || category.name,
-            slug: category.slug,
-            translations: category.translations,
-          },
-        ];
+        ...categoryBreadcrumb,
+        {
+          id: category.id,
+          name: category?.translations?.name || category.name,
+          slug: category.slug,
+          translations: category.translations,
+        },
+      ];
 
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
@@ -360,7 +360,7 @@ const Products = () => {
                           value={filter?.sort_filter}
                         >
                           <SelectTrigger className="w-[120px] md:w-[150px] lg:w-[200px] h-full buttonBackground border-none">
-                            <SelectValue placeholder={t("default")} /> 
+                            <SelectValue placeholder={t("default")} />
                           </SelectTrigger>
                           <SelectContent className="w-[120px] md:w-[150px] lg:w-[200px] h-full z-30  hidden md:block lg:block">
                             <SelectItem value="default">
@@ -389,11 +389,10 @@ const Products = () => {
                       </div>
                       <div className="flex  gap-4 items-center">
                         <span
-                          className={`${
-                            filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
+                          className={`${filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white p-1.5"
+                            : ""
+                            } hover:cursor-pointer`}
                         >
                           <BsFillGrid3X3GapFill
                             size={23}
@@ -401,11 +400,10 @@ const Products = () => {
                           />
                         </span>
                         <span
-                          className={`${
-                            !filter?.grid_view
-                              ? "primaryBackColor rounded-md text-white  p-1.5"
-                              : ""
-                          } hover:cursor-pointer`}
+                          className={`${!filter?.grid_view
+                            ? "primaryBackColor rounded-md text-white  p-1.5"
+                            : ""
+                            } hover:cursor-pointer`}
                         >
                           <FaThList size={23} onClick={handleListViewChange} />
                         </span>

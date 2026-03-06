@@ -1,8 +1,6 @@
 import React from 'react'
 import MaitanceImage from "@/assets/under_maintenance.svg"
 import Image from 'next/image'
-import { t } from '@/utils/translation'
-import Link from 'next/link'
 
 const MaintanceMode = ({ message }) => {
     return (

@@ -22,6 +22,12 @@ serverSidePropsFunction = async(context) => {
       ogImage: "",
       favicon: null,
     };
+    let metatitle = defaultProps.title;
+    let metaDescription = defaultProps.description;
+    let metaKeywords = defaultProps.keywords;
+    let ogImage = defaultProps.ogImage;
+    let schemaMarkup = null;
+    let favicon = defaultProps.favicon;
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,

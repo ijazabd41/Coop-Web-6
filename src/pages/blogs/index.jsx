@@ -9,6 +9,17 @@ import MetaData from "@/components/metadata-component/MetaData";
 import axios from "axios";
 import { extractJSONFromMarkup } from "@/utils/helperFunction";
 
+const fallbackProps = {
+  props: {
+    title: process.env.NEXT_PUBLIC_META_TITLE || null,
+    description: process.env.NEXT_PUBLIC_META_DESCRIPTION || null,
+    keywords: process.env.NEXT_PUBLIC_META_KEYWORDS || null,
+    schemaMarkup: null,
+    ogImage: null,
+    favicon: null,
+  },
+};
+
 let serverSidePropsFunction = null;
 
 if (process.env.NEXT_PUBLIC_SEO == "true") {
@@ -16,70 +27,77 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
     const lang = context.query.lang;
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/blogs`,
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
         {
+          params: {
+            page_type: "Blog Listing Page",
+          },
           headers: {
             "Content-Language": lang,
-          }
-        }
+          },
+        },
       );
-      let metaTitle = process.env.NEXT_PUBLIC_META_TITLE;
-      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
-      let markUpSchema = "";
-      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
-      let og_image = null;
+
+      let metatitle = process.env.NEXT_PUBLIC_META_TITLE || null;
+      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION || null;
+      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS || null;
+      let ogImage = null;
+      let schemaMarkup = null;
       let favicon = null;
-      if (process.env.NEXT_PUBLIC_SEO === "true") {
-        const seoData = response?.data.data || {};
-        metaKeywords = seoData?.translations?.meta_keywords || metaKeywords;
-        metaTitle = seoData?.translations?.meta_title || metaTitle;
-        metaDescription = seoData?.translations?.meta_description || metaDescription;
-        og_image = seoData?.og_image || null;
-        favicon = seoData.favicon || null;
-        if (seoData?.translations?.schema_markup) {
-          markUpSchema = extractJSONFromMarkup(seoData?.translations?.schema_markup) || "";
+
+      if (response.data.data?.length > 0) {
+        const seoData = response.data.data;
+        metatitle = seoData[0]?.translations?.meta_title || metatitle;
+        metaDescription =
+          seoData[0]?.translations?.meta_description || metaDescription;
+        metaKeywords = seoData[0]?.translations?.meta_keyword || metaKeywords;
+        ogImage = seoData[0]?.translations?.og_image_url || ogImage;
+        favicon = seoData[0]?.translations?.favicon || favicon;
+        if (seoData[0]?.translations?.schema_markup) {
+          schemaMarkup =
+            extractJSONFromMarkup(seoData[0]?.translations?.schema_markup) ||
+            schemaMarkup;
         }
       }
+
       return {
         props: {
-          metaKeywords,
-          metaTitle,
-          metaDescription,
-          markUpSchema,
-          og_image,
-          favicon: favicon ? favicon : null,
+          title: metatitle,
+          description: metaDescription,
+          keywords: metaKeywords,
+          schemaMarkup: schemaMarkup,
+          ogImage: ogImage,
+          favicon: favicon,
         },
       };
     } catch (error) {
-      console.error("Error fetching product data:", error);
-      return {
-        notFound: true,
-      };
+      console.log("error", error);
+      return fallbackProps;
     }
   };
 }
 
-// export const getServerSideProps = serverSidePropsFunction;
+export const getServerSideProps = serverSidePropsFunction;
 
 const index = ({
-  metaKeywords,
-  metaTitle,
-  metaDescription,
-  markUpSchema,
-  og_image,
+  title,
+  description,
+  keywords,
+  schemaMarkup,
+  ogImage,
   favicon,
 }) => {
   const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/blogs`;
   return (
     <div>
       <MetaData
-        pageName="/categories/all"
-        title={metaTitle}
-        keywords={metaKeywords}
-        description={metaDescription}
-        structuredData={markUpSchema}
+        title={title}
+        description={description}
+        keywords={keywords}
+        structuredData={schemaMarkup}
+        ogImage={ogImage}
+        pageName="/blogs"
         ogUrl={pageUrl}
-        ogImage={og_image}
         favicon={favicon}
       />
       <BlogsPage />

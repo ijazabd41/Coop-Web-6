@@ -107,9 +107,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
   };
   const handleDelete = () => {
     if (user.balance > 0) {
-      toast.error(
-        "Looks like you still have wallet balance left. Please use or withdraw it before deleting your account.",
-      );
+      toast.error(t("withdraw_it_before_deleting"));
       return;
     }
     setShowDelete(true);
