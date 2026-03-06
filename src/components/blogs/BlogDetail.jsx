@@ -73,7 +73,7 @@ const BlogDetail = () => {
     <Loader />
   ) : (
     <>
-      <BreadCrumb title={blog?.translations?.meta_title}/>
+      <BreadCrumb title={blog?.translations?.title}/>
       <div className="">
         <div className="backgroundColor border-t-2">
           <div className="container flex flex-col gap-6 py-10">
