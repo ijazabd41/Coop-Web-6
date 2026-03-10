@@ -8,7 +8,7 @@ const CategoriesPages = () => {
 
     useEffect(() => {
         
-    }, [language])
+    }, [language?.id])
     return (
         <Layout>
             <Category />

@@ -11,7 +11,7 @@ const HomePage = () => {
     const setting = useSelector(state => state.Setting)
     const language = useSelector(state => state.Language.selectedLanguage)
 
-    useEffect(() => { }, [language])
+    useEffect(() => { }, [language?.id])
 
 
     return (

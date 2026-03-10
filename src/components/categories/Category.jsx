@@ -55,7 +55,7 @@ const Category = () => {
     isLoading,
     isFetching,
   } = useQuery({
-    queryKey: ["categories", page, slug_id, language],
+    queryKey: ["categories", page, slug_id, language?.id],
     queryFn: async ({ queryKey }) => {
       const [_key, page, slug_id] = queryKey;
       const offset = (page - 1) * categoryPerPage;

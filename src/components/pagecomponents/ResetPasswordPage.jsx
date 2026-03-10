@@ -7,7 +7,7 @@ import CheckResetPassword from '@/HOC/CheckResetPassword'
 const ResetPasswordPage = () => {
     const language = useSelector(state => state.Language.selectedLanguage)
 
-    useEffect(() => { }, [language])
+    useEffect(() => { }, [language?.id])
     return (
         <Layout>
             <ProfileDashboard />

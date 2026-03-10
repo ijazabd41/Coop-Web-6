@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 const CartPage = () => {
     const language = useSelector(state => state.Language.selectedLanguage)
 
-    useEffect(() => { }, [language])
+    useEffect(() => { }, [language?.id])
     return (
         <Layout><Cart /></Layout>
     )

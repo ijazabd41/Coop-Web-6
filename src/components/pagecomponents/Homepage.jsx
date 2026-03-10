@@ -21,7 +21,7 @@ const Homepage = () => {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {}, [language]);
+  useEffect(() => {}, [language?.id]);
 
   useEffect(() => {
     if (router?.pathname === "/") {
@@ -30,7 +30,7 @@ const Homepage = () => {
   }, []);
 
   const { isLoading, data, isFetching } = useQuery({
-    queryKey: ["shopData", city?.latitude, city?.longitude, language],
+    queryKey: ["shopData", city?.latitude, city?.longitude, language?.id],
     queryFn: async () => {
       const latitude = parseFloat(city?.latitude);
       const longitude = parseFloat(city?.longitude);

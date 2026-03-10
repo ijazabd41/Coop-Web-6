@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 const CheckoutPage = () => {
     const language = useSelector(state => state.Language.selectedLanguage)
 
-    useEffect(() => { }, [language])
+    useEffect(() => { }, [language?.id])
     return (
         <Layout>
             <Checkout />

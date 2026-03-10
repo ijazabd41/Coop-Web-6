@@ -35,7 +35,7 @@ const Layout = ({ children }) => {
     fetchSetting();
     fetchPaymentSetting();
     fetchLanguage();
-  }, [language]);
+  }, [language?.id]);
 
   const fetchLanguage = async () => {
     try {
