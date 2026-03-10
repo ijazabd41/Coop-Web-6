@@ -56,6 +56,7 @@ const Products = () => {
     (state) => state.ProductFilter,
   );
   const { selectedLanguage } = useSelector((state) => state.Language);
+  const language = useSelector((state) => state.Language.selectedLanguage);
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
@@ -167,12 +168,14 @@ const Products = () => {
     isFetchingNextPage,
     isLoading,
     isError,
+    
   } = useInfiniteQuery({
     queryKey: [
       "products",
       { ...filter, search: debouncedSearch },
       city?.city?.latitude,
       city?.city?.longitude,
+      language?.id,
     ],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
@@ -188,7 +191,7 @@ const Products = () => {
   const totalProducts = data?.pages?.[0]?.total || 0;
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
-  const language = useSelector((state) => state.Language.selectedLanguage);
+  
   const setProductResult = () => { };
   const setOffset = () => { };
 
