@@ -55,11 +55,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
       id: 1,
       text: `${t("subscribe")} ${user?.subscription_name}`,
       image: (
-        <div className="p-2 primaryBackColor rounded-full border border-white h-9 w-9 ">
+        <div className="p-2 md:p-1.5 lg:p-2  primaryBackColor rounded-full border border-white h-9 w-9 md:h-7 md:w-7 lg:w-9 lg:h-9 shrink-0">
           <Image
             src={LightImage}
             alt="light logo"
-            className={`h-5 w-5 object-contain `}
+            className={`h-5 w-5 md:w-4 md:h-4 lg:w-5 lg:h-5 object-contain `}
             height={20}
             width={20}
             unoptimized
@@ -72,11 +72,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
       id: 2,
       text: t("go_max_save_more"),
       image: (
-        <div className="p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 flex items-center">
+        <div className="p-2 md:p-1.5 lg:p-2 bg-[#0186D8] rounded-full border border-white h-9 w-9 md:h-7 md:w-7 lg:w-9 lg:h-9 flex items-center shrink-0">
           <Image
             src={MoneyImage}
             alt="light logo"
-            className={`h-6 w-6 object-contain `}
+            className={`h-6 w-6 md:w-4 md:h-4 lg:w-6 lg:h-6 object-contain `}
             height={20}
             width={20}
           />
@@ -88,11 +88,11 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
       id: 3,
       text: t("free_delivery_desc"),
       image: (
-        <div className="p-2 bg-[#DB9305] rounded-full border  border-white h-9 w-9 ">
+        <div className="p-2 md:p-1.5 lg:p-2 bg-[#DB9305] rounded-full border  border-white h-9 w-9 md:h-7 md:w-7 lg:w-9 lg:h-9 shrink-0">
           <Image
             src={BikeImage}
             alt="light logo"
-            className={`h-5 w-5 object-contain `}
+            className={`h-5 w-5 md:w-4 md:h-4 lg:w-5 lg:h-5 object-contain `}
             height={20}
             width={20}
           />
@@ -229,10 +229,12 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         }}
                         onClick={handleSubscriptionClick}
                       >
-                        <div className="flex gap-2 items-center font-bold justify-between px-4 w-full">
+                        <div className="flex gap-2 items-center font-bold justify-between px-4 md:px-1 lg:px-4 w-full">
                           <div className="flex gap-2 items-center">
                             {slide.image}
+                            <div className="text-sm lg:text-[16px]">
                             {slide.text}
+                            </div>
                           </div>
                           <div>
                             <FaArrowRight />

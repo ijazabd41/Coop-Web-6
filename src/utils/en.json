@@ -657,5 +657,6 @@
   "product_request_submitted_successfully": "Product request submitted successfully",
   "withdraw_it_before_deleting": "Looks like you still have wallet balance left. Please use or withdraw it before deleting your account.",
   "product ": "Product",
-  "blog":"Blog"
+  "blog":"Blog",
+  "mobile_number_already_taken":"This number is already taken. Please use another number."
 }

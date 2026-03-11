@@ -40,6 +40,7 @@ const Filter = ({
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
   const city = useSelector((state) => state.City);
+  const language = useSelector((state) => state.Language.selectedLanguage);
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -73,7 +74,7 @@ const Filter = ({
   }, []);
 
   const { data: categoriesData, isLoading: loadingCategories } = useQuery({
-    queryKey: ["filter-category"],
+    queryKey: ["filter-category",language?.id],
 
     queryFn: async () => {
       const response = await api.getCategories();
