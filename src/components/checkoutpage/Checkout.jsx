@@ -1035,8 +1035,8 @@ const Checkout = () => {
                                               ${slot.isDisabled == true ? "opacity-10 cursor-not-allowed text-gray-500 hover:text-gray-500" : ""}
                                             `}
                                           >
-                                            <div className="flex justify-between items-center w-full min-w-0">
-                                              <p className="truncate">
+                                            <div className="flex justify-between items-center w-full ">
+                                              <p className="">
                                                 {slot?.translations?.title}
                                               </p>
                                               <p className="whitespace-nowrap ml-64">
