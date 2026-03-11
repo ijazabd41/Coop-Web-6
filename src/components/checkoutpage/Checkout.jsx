@@ -1036,7 +1036,7 @@ const Checkout = () => {
                                             `}
                                           >
                                             <div className="flex justify-between items-center w-full min-w-0">
-                                              <p className="truncate">
+                                              <p className="">
                                                 {slot?.translations?.title}
                                               </p>
                                               <p className="whitespace-nowrap ml-64">

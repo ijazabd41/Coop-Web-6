@@ -335,7 +335,7 @@ const CartProductCard = ({
           <div className="relative w-[64px] h-[64px] rounded-sm flex-shrink-0 cardBorder p-1">
             <ImageWithPlaceholder
               src={product?.image_url}
-              alt={product?.translations?.name}
+              alt={product?.product?.translations?.name}
               width={380}
               height={380}
               className="w-full h-full object-cover  flex-shrink-0"
@@ -343,7 +343,7 @@ const CartProductCard = ({
           </div>
           <div>
             <h3 className="text-base font-bold text-ellipsis overflow-hidden  min-w-[147px]">
-              {product?.translations?.name}
+              {product?.product?.translations?.name}
             </h3>
             <p className="text-xs font-normal">
               {product?.measurement} {product?.unit?.translations?.short_code}
@@ -410,7 +410,7 @@ const CartProductCard = ({
             <div className="relative w-[72px] h-[72px] rounded-sm flex-shrink-0 cardBorder p-1">
               <ImageWithPlaceholder
                 src={product?.image_url}
-                alt={product?.name}
+                alt={product?.product?.translations?.name}
                 width={380}
                 height={380}
                 className=" h-full w-full object-cover  flex-shrink-0"
@@ -418,7 +418,7 @@ const CartProductCard = ({
             </div>
             <div>
               <h3 className="text-base font-bold truncate max-w-full">
-                {product?.name}
+                {product?.product?.translations?.name}
               </h3>
 
               <p className="text-xs font-normal">
