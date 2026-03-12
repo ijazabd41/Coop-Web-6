@@ -1,5 +1,6 @@
 import axios from "axios";
 import { store } from "@/redux/store";
+import { logoutAuth } from "@/redux/slices/userSlice";
 
 const access_key_param = "x-access-key";
 const access_key = "903361";
@@ -46,6 +47,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     try {
+      console.log("response", response?.status);
       return response;
     } catch (error) {
       console.error("Error while fetching data", error);
@@ -53,6 +55,10 @@ api.interceptors.response.use(
     }
   },
   (error) => {
+    if(error?.response?.status === 401){
+      
+      store.dispatch(logoutAuth());
+    }
     console.error("Error while fetching data", error);
     return Promise.reject(error);
   }
