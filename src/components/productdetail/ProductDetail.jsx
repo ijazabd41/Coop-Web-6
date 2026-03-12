@@ -353,7 +353,6 @@ const ProductDetail = () => {
               ];
               dispatch(setCartProducts({ data: productData }));
             }
-
             dispatch(setCart({ data: response }));
             dispatch(setCartSubTotal({ data: response.sub_total }));
             toast.success(t("product_added_successfully"));
@@ -908,10 +907,14 @@ const ProductDetail = () => {
             </div>
             <ProductDescription product={product} ratingData={ratingData} />
           </div>
-          <SimilarProducts slug={slug} tag_names={product?.tag_names} />
           <RecentalyViewedProducts
             recentalyViewedProducts={recentlyVisitedProduct}
           />
+          {
+            product?.tag_names &&
+            <SimilarProducts slug={slug} tag_names={product?.tag_names} />
+          }
+
         </>
       )}
       <SingleSellerConfirmationModal

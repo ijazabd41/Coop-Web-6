@@ -18,17 +18,18 @@ const SimilarProducts = ({ slug, tag_names }) => {
     const [totalSimilarProducts, setTotalSimilarProducts] = useState(0)
     const [offset, setOffset] = useState(0)
 
+
     const productPerPage = 10;
 
     useEffect(() => {
-        if (tag_names !== null && city) {
-            handleFetchSimilarProducts()
+        if (tag_names && city) {
+            handleFetchSimilarProducts(tag_names)
         }
     }, [offset, city])
 
-    const handleFetchSimilarProducts = async () => {
+    const handleFetchSimilarProducts = async (localTagNames) => {
         try {
-            const response = await api.getProductByFilter({ latitude: city?.latitude, longitude: city?.longitude, tag_names: tag_names, slug: slug })
+            const response = await api.getProductByFilter({ latitude: city?.latitude, longitude: city?.longitude, tag_names: localTagNames, slug: slug })
             setSimilarProducts(response.data)
             setTotalSimilarProducts(response.total)
         } catch (error) {
@@ -50,7 +51,7 @@ const SimilarProducts = ({ slug, tag_names }) => {
                 <div className='container py-12 px-2' dir={language?.type}>
                     <div className={`flex flex-col gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`} >
                         <div className='font-bold text-xl   rounded-sm my-2'>
-                            <h2>{t("related_product")}</h2>
+                            <h2>{t("similar_product")}</h2>
                         </div>
                         <div>
                             <Swiper
