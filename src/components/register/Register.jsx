@@ -299,6 +299,8 @@ const Register = ({
         handleResponseError(res.message);
       } else if (res.message == "user_exist_with_google") {
         handleResponseError(res.message);
+      } else if (res.message == "mobile_number_already_taken") {
+        handleResponseError(res.message);
       } else {
         handleResponseError(res.message);
       }
