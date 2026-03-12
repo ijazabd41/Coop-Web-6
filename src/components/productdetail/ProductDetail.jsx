@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,10 +58,12 @@ import {
   setFilterBySeller,
 } from "@/redux/slices/productFilterSlice";
 import RecentalyViewedProducts from "../productslist/RecentalyViewedProducts";
+import { setIsRefetch } from "@/redux/slices/shopSlice";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
 
+  const hasDispatched = useRef(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const { slug, isMobile } = router.query;
@@ -69,7 +71,7 @@ const ProductDetail = () => {
   const city = useSelector((state) => state.City.city);
   const setting = useSelector((state) => state.Setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
-
+  const isRefetch = useSelector((state) => state.Shop.isRefetch)
   const cart = useSelector((state) => state.Cart);
   const user = useSelector((state) => state.User);
   const favoriteProducts = useSelector(
@@ -92,19 +94,7 @@ const ProductDetail = () => {
 
   const ratingsCount = 10;
 
-  // useEffect(() => {
-  //   if (city) {
-  //     handleFetchBySlug();
-  //   }
-  // }, [slug, city]);
 
-  useEffect(() => {
-    handleIsVariantAvailable();
-  }, [selectVariant]);
-
-  // useEffect(() => {
-  //   fetchRatings();
-  // }, [product]);
 
   const handleAddRecentlyViewedProduct = async (product) => {
     try {
@@ -168,6 +158,7 @@ const ProductDetail = () => {
         setSelectedImage(res?.data?.image_url);
         handleAddRecentlyViewedProduct(res?.data);
         handleFetchRecentlyViewedProducts(res?.data);
+        dispatch(setIsRefetch());
       } else {
         setProductNotAvailable(true);
       }
@@ -804,7 +795,6 @@ const ProductDetail = () => {
                               className="h-full w-full"
                             />
                           </div>
-                          {console.log("product?.till_status", product?.till_status == 2)}
                           <span className="cancelDetail">
                             {t("cancelable")}
                             {product?.till_status == 1 ? (
