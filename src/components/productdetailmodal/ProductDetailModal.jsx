@@ -78,7 +78,7 @@ const ProductDetailModal = ({
       fetchProductById();
       fetchRatings();
     }
-  }, [showDetailModal, product.id, product.slug]);
+  }, [showDetailModal, product?.id, product?.slug]);
 
   useEffect(() => {
     handleIsVariantAvailable();
@@ -90,8 +90,8 @@ const ProductDetailModal = ({
       const res = await api.getProductById({
         latitude: city.latitude,
         longitude: city.longitude,
-        id: product.id,
-        slug: product.slug,
+        id: product?.id,
+        slug: product?.slug,
       });
       setLoading(false);
       setProductImages([res?.data?.image_url, ...res?.data?.images]);
@@ -199,7 +199,7 @@ const ProductDetailModal = ({
               ? selectVariant.discounted_price
               : selectVariant.price;
           const productData = {
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant?.id,
             qty: quantity,
             productPrice: productPrice,
@@ -229,7 +229,7 @@ const ProductDetailModal = ({
           toast.error(t("maximum_cart_quantity_reach"));
         } else {
           const response = await api.addToCart({
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant.id,
             qty: cartProductQty ? cartProductQty.qty + quantity : quantity,
           });
@@ -237,7 +237,7 @@ const ProductDetailModal = ({
             if (cartProductQty) {
               const updatedProducts = cart.cartProducts.map((cartProduct) => {
                 if (
-                  cartProduct.product_id == product.id &&
+                  cartProduct.product_id == product?.id &&
                   cartProduct.product_variant_id == selectVariant.id
                 ) {
                   return {
@@ -255,7 +255,7 @@ const ProductDetailModal = ({
               const productData = [
                 ...cart.cartProducts,
                 {
-                  product_id: product.id,
+                  product_id: product?.id,
                   product_variant_id: selectVariant?.id,
                   qty: quantity,
                 },

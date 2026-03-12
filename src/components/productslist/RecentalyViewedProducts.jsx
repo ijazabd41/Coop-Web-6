@@ -8,6 +8,7 @@ import VerticleProductCard from "../productcards/VerticleProductCard";
 import * as api from "@/api/apiRoutes";
 import { useSelector } from "react-redux";
 import { isRtl } from "@/lib/utils";
+import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
 
 const RecentalyViewedProducts = ({ recentalyViewedProducts }) => {
   const rtl = isRtl();
@@ -20,8 +21,24 @@ const RecentalyViewedProducts = ({ recentalyViewedProducts }) => {
             language?.type == "RTL" ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="font-bold text-xl   rounded-sm my-2">
+          <div className="font-bold text-xl   rounded-sm my-2 flex justify-between items-center">
             <h2>{t("recentaly_products")}</h2>
+            <div
+               className={` flex  gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}
+            >
+                <button className=" group category-button-next1 swiperBorderColor rounded-full  !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                <IoMdArrowBack
+                    className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
+                    size={20}
+                />
+                </button>
+                <button className=" group category-button-prev1 swiperBorderColor rounded-full   !p-2 inline-block text-[15px] relative right-[5%] top-0 transition-all duration-200 ease-linear visibility-visible z-10 hover:primaryBackColor hover:text-white hover:primaryBorder">
+                <IoMdArrowForward
+                    className="swiperNavButtonColor group-hover:text-white transition-colors duration-200"
+                    size={20}
+                />
+                </button>
+            </div>
           </div>
           <div>
             <Swiper
@@ -29,6 +46,10 @@ const RecentalyViewedProducts = ({ recentalyViewedProducts }) => {
               spaceBetween={20}
               modules={[Navigation]}
               className="brand-swiper"
+              navigation={{
+                nextEl: ".category-button-prev1",
+                prevEl: ".category-button-next1",
+              }}
               //   onReachEnd={handleLoadMore}
               breakpoints={{
                 1200: {

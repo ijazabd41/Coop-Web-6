@@ -650,6 +650,7 @@ const Checkout = () => {
         } else {
           // setIsOrderPlaced(false)
           await api.deleteOrder({ orderId: orderId });
+          toast.error(response?.message);
         }
       }
     } catch (error) {

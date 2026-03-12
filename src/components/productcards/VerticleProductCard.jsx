@@ -259,7 +259,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     } else if (
       Number(productQty || 0) < Number(product.total_allowed_quantity)
     ) {
-      AddToGuestCart(product, product.id, selectedVariant?.id, 1, 0, "add");
+      AddToGuestCart(product, product?.id, selectedVariant?.id, 1, 0, "add");
     } else {
       toast.error(t("out_of_stock_message"));
     }
@@ -280,10 +280,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     } else if (cart?.cartProducts?.length >= setting?.max_cart_items_count) {
       toast.error(t("maximum_cart_quantity_reach"));
     } else if (Number(product.is_unlimited_stock)) {
-      addToCart(product.id, selectedVariant.id, 1);
+      addToCart(product?.id, selectedVariant.id, 1);
     } else {
       if (selectedVariant?.status) {
-        addToCart(product.id, selectedVariant?.id, 1);
+        addToCart(product?.id, selectedVariant?.id, 1);
       } else {
         toast.error(t("out_of_stock_message"));
       }
@@ -309,7 +309,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     if (Number(product.is_unlimited_stock)) {
       if (productQty < Number(product?.total_allowed_quantity)) {
         addToCart(
-          product.id,
+          product?.id,
           selectedVariant?.id,
           cart?.cartProducts?.find(
             (prdct) => prdct?.product_variant_id == selectedVariant?.id
@@ -325,7 +325,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         toast.error(t("max_cart_limit_error"));
       } else {
         addToCart(
-          product.id,
+          product?.id,
           selectedVariant?.id,
           cart?.cartProducts?.find(
             (prdct) => prdct?.product_variant_id == selectedVariant?.id
@@ -378,7 +378,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         removeFromCart(product?.id, selectedVariant?.id);
       } else {
         addToCart(
-          product.id,
+          product?.id,
           selectedVariant.id,
           cart?.cartProducts?.find(
             (prdct) => prdct?.product_variant_id == selectedVariant?.id
@@ -441,7 +441,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     }
   };
 
-  const productsVariants = product.variants;
+  const productsVariants = product?.variants;
 
   const isProductAlreadyAdded =
     (cart?.isGuest === false &&
@@ -480,8 +480,8 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           <div className="relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72">
             <ImageWithPlaceholder
               className="rounded-lg object-cover h-full w-full"
-              alt={product.name}
-              src={product.image_url}
+              alt={product?.translations?.name ?? product?.name}
+              src={product?.image_url}
               width={300}
               height={300}
               priority

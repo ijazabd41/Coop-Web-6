@@ -352,19 +352,19 @@ const CartProductCard = ({
         </div>
 
         {/* Product Price */}
-        <div className="col-span-2 text-center">
+        <div className="col-span-2 text-center px-1 overflow-hidden">
           {product?.discounted_price !== 0 ? (
-            <>
-              <h2 className="text-base font-bold">
+            <div className="flex flex-col items-center">
+              <h2 className="text-base font-bold break-all max-w-full">
                 {setting?.currency}
                 {product?.discounted_price}
               </h2>
-              <p className="text-sm font-normal line-through">
+              <p className="text-sm font-normal line-through break-all max-w-full">
                 {setting?.currency} {product?.price}
               </p>
-            </>
+            </div>
           ) : (
-            <h2 className="text-base font-bold">
+            <h2 className="text-base font-bold break-all max-w-full">
               {setting?.currency} {product?.price}
             </h2>
           )}
@@ -386,8 +386,8 @@ const CartProductCard = ({
         </div>
 
         {/* Total Price */}
-        <div className="col-span-2 text-center">
-          <p className="text-base font-bold">
+        <div className="col-span-2 text-center px-1 overflow-hidden">
+          <p className="text-base font-bold break-all max-w-full">
             {setting?.currency}
             {totalPrice}
           </p>
@@ -439,19 +439,19 @@ const CartProductCard = ({
           {/* Product Price */}
           <div className="flex justify-between pt-2">
             <div>{t("price")}</div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 max-w-full overflow-hidden">
               {product?.discounted_price !== 0 ? (
                 <>
-                  <h2 className="text-base font-bold">
+                  <h2 className="text-base font-bold break-all">
                     {setting?.currency}
                     {product?.discounted_price}
                   </h2>
-                  <p className="text-sm font-normal line-through">
+                  <p className="text-sm font-normal line-through break-all">
                     {setting?.currency} {product?.price}
                   </p>
                 </>
               ) : (
-                <h2 className="text-base font-bold">
+                <h2 className="text-base font-bold break-all">
                   {setting?.currency} {product?.price}
                 </h2>
               )}
