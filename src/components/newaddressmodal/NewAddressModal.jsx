@@ -67,7 +67,7 @@ const NewAddressModal = ({
   }, [localLocation.lat, localLocation.lng]);
 
   useEffect(() => {
-    if (addressDetails.address !== "") {
+    if (isLoaded && addressDetails.address !== "") {
       const geocoder = new window.google.maps.Geocoder();
       const fullAddress = `${addressDetails.address}, ${addressDetails.city}, ${addressDetails.state}, ${addressDetails.country}`;
       geocoder.geocode({ address: fullAddress }, (results, status) => {
@@ -82,7 +82,7 @@ const NewAddressModal = ({
         }
       });
     }
-  }, [addressDetails]);
+  }, [addressDetails,isLoaded]);
 
   useEffect(() => {
     if (isAddressSelected && addresses.selectedEditAddress) {

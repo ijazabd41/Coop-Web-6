@@ -110,11 +110,13 @@ const Filter = ({
           offset: sOffset,
         });
         if (result.status === 1) {
-          if (sellers == null) {
-            setSellers(result?.data);
-          } else {
-            setSellers((prevSellers) => [...prevSellers, ...result?.data]);
-          }
+          setSellers((prevSellers) => {
+            if (prevSellers == null) {
+              return result?.data;
+            } else {
+              return [...prevSellers, ...result?.data];
+            }
+          });
           setTotalSeller(result?.total);
         }
         // setSellers(result?.data);
@@ -158,11 +160,13 @@ const Filter = ({
           longitude: city?.city?.longitude,
         });
         if (result.status === 1) {
-          if (brands == null) {
-            setbrands(result?.data);
-          } else {
-            setbrands((prevBrands) => [...prevBrands, ...result?.data]);
-          }
+          setbrands((prevBrands) => {
+            if (prevBrands == null) {
+              return result?.data;
+            } else {
+              return [...prevBrands, ...result?.data];
+            }
+          });
           setTotalBrands(result?.total);
         }
       } catch (error) {

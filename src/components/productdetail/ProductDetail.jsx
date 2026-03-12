@@ -293,7 +293,7 @@ const ProductDetail = () => {
               ? selectVariant.discounted_price
               : selectVariant.price;
           const productData = {
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant?.id,
             qty: quantity,
             productPrice: productPrice,
@@ -320,7 +320,7 @@ const ProductDetail = () => {
           toast.error(t("maximum_cart_quantity_reach"));
         } else {
           const response = await api.addToCart({
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant.id,
             qty: cartProductQty ? cartProductQty.qty + quantity : quantity,
           });
@@ -328,7 +328,7 @@ const ProductDetail = () => {
             if (cartProductQty) {
               const updatedProducts = cart.cartProducts.map((cartProduct) => {
                 if (
-                  cartProduct.product_id == product.id &&
+                  cartProduct.product_id == product?.id &&
                   cartProduct.product_variant_id == selectVariant.id
                 ) {
                   return {
@@ -346,7 +346,7 @@ const ProductDetail = () => {
               const productData = [
                 ...cart.cartProducts,
                 {
-                  product_id: product.id,
+                  product_id: product?.id,
                   product_variant_id: selectVariant?.id,
                   qty: quantity,
                 },
@@ -510,7 +510,7 @@ const ProductDetail = () => {
                         }}
                       >
                         {productImages?.map((image, index) => (
-                          <SwiperSlide key={product.id}>
+                          <SwiperSlide key={product?.id}>
                             <div
                               className="h-auto relative w-full aspect-square"
                               key={index}

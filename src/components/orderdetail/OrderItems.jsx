@@ -128,7 +128,7 @@ const OrderItems = ({
                       </button>
                     )}
                     {Number(product?.active_status) === 8 && (
-                      <span className="text-[#DB3D26]">{`${t("totkal")} ${
+                      <span className="text-[#DB3D26]">{`${t("total")} ${
                         setting?.currency
                       }${product?.refund_amount} ${t("refunded")}`}</span>
                     )}
@@ -147,7 +147,7 @@ const OrderItems = ({
                 <td className="p-4">
                   <p className="font-bold">
                     {setting?.currency}
-                    {product?.price?.toFixed(
+                    {product?.sub_total?.toFixed(
                       setting?.decimal_point ? setting?.decimal_point : 0,
                     )}
                   </p>

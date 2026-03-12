@@ -38,6 +38,7 @@ const AddressCard = ({
       const response = await api.deleteAddress({ id: address.id });
       if (response.status === 1) {
         fetchAddress();
+        dispatch(setSelectedAddresForEdit({ data: null }));
         setShowDeleteModal(false);
       }
     } catch (error) {
