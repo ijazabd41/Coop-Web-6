@@ -176,6 +176,10 @@ const ProductDetail = () => {
     }
   };
 
+  useEffect(() => {
+    handleIsVariantAvailable();
+  }, [product, selectVariant]);
+
   const { data: ratingResponse } = useQuery({
     queryKey: ["product-ratings", product?.id],
     queryFn: () =>
