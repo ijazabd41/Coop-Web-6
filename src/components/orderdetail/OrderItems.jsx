@@ -235,7 +235,7 @@ const OrderItems = ({
             (rating) => rating?.user?.id === user?.id,
           );
           return (
-            <div className="p-4 w-full flex flex-col gap-4 bottomBorder">
+            <div  key={product?.id} className="p-4 w-full flex flex-col gap-4 bottomBorder">
               <div className="flex gap-2">
                 <div className="relative p-1 rounded-sm flex-shrink-0 cardBorder">
                   <ImageWithPlaceholder
