@@ -16,13 +16,16 @@ import Link from "next/link";
 import Image from "next/image";
 import NoCartData from "@/assets/Empty_Cart.svg";
 import CartPageSkeleton from "./CartLoading";
+import { useRouter } from "next/router";
+import { clearAllFilter } from "@/redux/slices/productFilterSlice";
+import { clearCartPromo } from "@/redux/slices/cartSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const user = useSelector((state) => state.User);
-
   const [cartProductsData, setCartProductsData] = useState([]);
   const [showCouponCode, setShowCouponCode] = useState(false);
   const [cartData, setCartData] = useState([]);
@@ -137,12 +140,17 @@ const Cart = () => {
               <p className="font-bold text-xs text-center">
                 {t("empty_cart_list_description")}
               </p>
-              <Link
-                href="/products"
+              <button
+                onClick={() => {
+                  router.push("/products")
+                  dispatch(clearAllFilter());
+                  setShowCouponCode(false);
+                  dispatch(clearCartPromo());
+                }}
                 className="primaryBackColor text-white font-bold p-1 rounded-sm"
               >
                 {t("empty_cart_list_button_name")}
-              </Link>
+              </button>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
@@ -41,6 +41,12 @@ const NewUserModal = ({
   const [loading, setLoading] = useState(false);
   const [friendCode, setFriendCode] = useState(null);
 
+  useEffect(() => {
+    if (showNewUser) {
+      setPhoneNumberWithoutCountryCode("");
+    }
+  }, [showNewUser]);
+
   const handleChangeUserName = (e) => {
     setUserName(e.target.value);
   };
@@ -53,6 +59,7 @@ const NewUserModal = ({
   const handleFriendCodeChange = (e) => {
     setFriendCode(e.target.value);
   };
+
 
   const handleUserRegister = async (e) => {
     setLoading(true);

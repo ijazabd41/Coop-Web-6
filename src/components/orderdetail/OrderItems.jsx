@@ -297,25 +297,32 @@ const OrderItems = ({
                       <button className=" text-red-500 ">
                         {t("return_rejected")}
                       </button>
-                      <p className="text-xs">{`${t("sellerNote")}: ${
-                        product?.return_remarks
-                      }`}</p>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="bottomBorder w-full"></div>
-              <div className=" flex justify-between">
-                <p className="font-bold">{t("price")}:</p>
-                <p className="font-bold">
-                  {setting?.currency}
-                  {product?.price?.toFixed(
-                    setting?.decimal_point ? setting?.decimal_point : 0,
-                  )}
-                </p>
-              </div>
-              <div className="bottomBorder w-full"></div>
-              <div className="w-full">
+                    )}
+                    {Number(product?.active_status) === 8 && (
+                      <span className="text-[#DB3D26]">{`${t("total")} ${
+                        setting?.currency
+                      }${product?.refund_amount} ${t("refunded")}`}</span>
+                    )}
+                    {Number(product?.return_requested) === 3 && (
+                      <>
+                        <button className=" text-red-500 ">
+                          {t("return_rejected")}
+                        </button>
+                        <p className="text-xs">{`${t("sellerNote")}: ${
+                          product?.return_remarks
+                        }`}</p>
+                      </>
+                    )}
+                  </div>
+                </td>
+                <td className="p-4">
+                  <p className="font-bold">
+                    {setting?.currency}
+                    {product?.sub_total?.toFixed(
+                      setting?.decimal_point ? setting?.decimal_point : 0,
+                    )}
+                  </p>
+                </td>
                 {showAction && (
                   <div className="flex gap-2 md:gap-3  items-center">
                     {Number(product?.active_status) === 6 &&

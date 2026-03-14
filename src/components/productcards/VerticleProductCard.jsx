@@ -280,10 +280,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     } else if (cart?.cartProducts?.length >= setting?.max_cart_items_count) {
       toast.error(t("maximum_cart_quantity_reach"));
     } else if (Number(product.is_unlimited_stock)) {
-      addToCart(product.id, selectedVariant.id, 1);
+      addToCart(product?.id, selectedVariant.id, 1);
     } else {
       if (selectedVariant?.status) {
-        addToCart(product.id, selectedVariant?.id, 1);
+        addToCart(product?.id, selectedVariant?.id, 1);
       } else {
         toast.error(t("out_of_stock_message"));
       }
@@ -480,7 +480,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
           <div className="relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72">
             <ImageWithPlaceholder
               className="rounded-lg object-cover h-full w-full"
-              alt={product?.name}
+              alt={product?.translations?.name ?? product?.name}
               src={product?.image_url}
               width={300}
               height={300}

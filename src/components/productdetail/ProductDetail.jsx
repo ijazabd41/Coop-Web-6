@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,10 +58,12 @@ import {
   setFilterBySeller,
 } from "@/redux/slices/productFilterSlice";
 import RecentalyViewedProducts from "../productslist/RecentalyViewedProducts";
+import { setIsRefetch } from "@/redux/slices/shopSlice";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
 
+  const hasDispatched = useRef(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const { slug, isMobile } = router.query;
@@ -69,7 +71,7 @@ const ProductDetail = () => {
   const city = useSelector((state) => state.City.city);
   const setting = useSelector((state) => state.Setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
-
+  const isRefetch = useSelector((state) => state.Shop.isRefetch)
   const cart = useSelector((state) => state.Cart);
   const user = useSelector((state) => state.User);
   const favoriteProducts = useSelector(
@@ -92,19 +94,7 @@ const ProductDetail = () => {
 
   const ratingsCount = 10;
 
-  // useEffect(() => {
-  //   if (city) {
-  //     handleFetchBySlug();
-  //   }
-  // }, [slug, city]);
 
-  useEffect(() => {
-    handleIsVariantAvailable();
-  }, [selectVariant]);
-
-  // useEffect(() => {
-  //   fetchRatings();
-  // }, [product]);
 
   const handleAddRecentlyViewedProduct = async (product) => {
     try {
@@ -168,6 +158,7 @@ const ProductDetail = () => {
         setSelectedImage(res?.data?.image_url);
         handleAddRecentlyViewedProduct(res?.data);
         handleFetchRecentlyViewedProducts(res?.data);
+        dispatch(setIsRefetch());
       } else {
         setProductNotAvailable(true);
       }
@@ -184,6 +175,10 @@ const ProductDetail = () => {
       setIsVariantAvailable(true);
     }
   };
+
+  useEffect(() => {
+    handleIsVariantAvailable();
+  }, [product, selectVariant]);
 
   const { data: ratingResponse } = useQuery({
     queryKey: ["product-ratings", product?.id],
@@ -302,7 +297,7 @@ const ProductDetail = () => {
               ? selectVariant.discounted_price
               : selectVariant.price;
           const productData = {
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant?.id,
             qty: quantity,
             productPrice: productPrice,
@@ -329,7 +324,7 @@ const ProductDetail = () => {
           toast.error(t("maximum_cart_quantity_reach"));
         } else {
           const response = await api.addToCart({
-            product_id: product.id,
+            product_id: product?.id,
             product_variant_id: selectVariant.id,
             qty: cartProductQty ? cartProductQty.qty + quantity : quantity,
           });
@@ -337,7 +332,7 @@ const ProductDetail = () => {
             if (cartProductQty) {
               const updatedProducts = cart.cartProducts.map((cartProduct) => {
                 if (
-                  cartProduct.product_id == product.id &&
+                  cartProduct.product_id == product?.id &&
                   cartProduct.product_variant_id == selectVariant.id
                 ) {
                   return {
@@ -355,14 +350,13 @@ const ProductDetail = () => {
               const productData = [
                 ...cart.cartProducts,
                 {
-                  product_id: product.id,
+                  product_id: product?.id,
                   product_variant_id: selectVariant?.id,
                   qty: quantity,
                 },
               ];
               dispatch(setCartProducts({ data: productData }));
             }
-
             dispatch(setCart({ data: response }));
             dispatch(setCartSubTotal({ data: response.sub_total }));
             toast.success(t("product_added_successfully"));
@@ -520,7 +514,7 @@ const ProductDetail = () => {
                         }}
                       >
                         {productImages?.map((image, index) => (
-                          <SwiperSlide key={product.id}>
+                          <SwiperSlide key={product?.id}>
                             <div
                               className="h-auto relative w-full aspect-square"
                               key={index}
@@ -804,7 +798,6 @@ const ProductDetail = () => {
                               className="h-full w-full"
                             />
                           </div>
-                          {console.log("product?.till_status", product?.till_status == 2)}
                           <span className="cancelDetail">
                             {t("cancelable")}
                             {product?.till_status == 1 ? (
@@ -918,10 +911,14 @@ const ProductDetail = () => {
             </div>
             <ProductDescription product={product} ratingData={ratingData} />
           </div>
-          <SimilarProducts slug={slug} tag_names={product?.tag_names} />
           <RecentalyViewedProducts
             recentalyViewedProducts={recentlyVisitedProduct}
           />
+          {
+            product?.tag_names &&
+            <SimilarProducts slug={slug} tag_names={product?.tag_names} />
+          }
+
         </>
       )}
       <SingleSellerConfirmationModal

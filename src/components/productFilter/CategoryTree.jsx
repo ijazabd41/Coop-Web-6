@@ -76,39 +76,39 @@ const CategoryTree = ({
 
     if (checked) {
       // Add current node and all its children
-      newSelected = [...newSelected, nodeKey, ...allChildKeys];
+      newSelected = [...newSelected, nodeKey];
 
       // Check and add parents if all siblings are selected
-      addParentIfAllChildrenSelected(treeData, nodeKey);
+      // addParentIfAllChildrenSelected(treeData, nodeKey);
     } else {
       // Remove current node and all its children
       newSelected = newSelected.filter(
-        (key) => key !== nodeKey && !allChildKeys.includes(key)
+        (key) => key !== nodeKey 
       );
 
       // Find and remove parent nodes recursively
-      const findAndRemoveParents = (nodes, childKey) => {
-        for (let node of nodes) {
-          if (node.children?.some((child) => child.key === childKey)) {
-            // Check if all children are unchecked
-            const allChildrenUnchecked = node.children.every(
-              (child) => !newSelected.includes(child.key)
-            );
+      // const findAndRemoveParents = (nodes, childKey) => {
+      //   for (let node of nodes) {
+      //     if (node.children?.some((child) => child.key === childKey)) {
+      //       // Check if all children are unchecked
+      //       const allChildrenUnchecked = node.children.every(
+      //         (child) => !newSelected.includes(child.key)
+      //       );
 
-            if (allChildrenUnchecked) {
-              // Remove the parent node
-              newSelected = newSelected.filter((key) => key !== node.key);
-              // Recursively check this node's parent
-              findAndRemoveParents(treeData, node.key);
-            }
-          }
-          if (node.children?.length > 0) {
-            findAndRemoveParents(node.children, childKey);
-          }
-        }
-      };
+      //       if (allChildrenUnchecked) {
+      //         // Remove the parent node
+      //         newSelected = newSelected.filter((key) => key !== node.key);
+      //         // Recursively check this node's parent
+      //         findAndRemoveParents(treeData, node.key);
+      //       }
+      //     }
+      //     if (node.children?.length > 0) {
+      //       findAndRemoveParents(node.children, childKey);
+      //     }
+      //   }
+      // };
 
-      findAndRemoveParents(treeData, nodeKey);
+      // findAndRemoveParents(treeData, nodeKey);
     }
 
     // Remove duplicates

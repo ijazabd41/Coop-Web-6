@@ -116,18 +116,12 @@ const Products = () => {
     dispatch(setCategoryBreadcrumb({ data: updated }));
   };
 
-  const resolvedParentsCategory =
-    filter?.category_id === "NaN" || filter?.category_id === "all categories"
-      ? null
-      : ancestorCategoryIds(categoryBreadcrumb);
   const resolvedCategory =
     filter?.category_id === "NaN" || filter?.category_id === "all categories"
       ? null
       : filter?.category_id;
 
-  const finalCategoryIds = isCategoryListing
-    ? resolvedParentsCategory
-    : resolvedCategory;
+  const finalCategoryIds = resolvedCategory;
 
   const fetchProducts = async ({ pageParam = 0 }) => {
     const filterParams = {
@@ -187,7 +181,7 @@ const Products = () => {
     initialPageParam: 0,
   });
 
-  const productResult = data?.pages?.flatMap((page) => page.data) || [];
+  const productResult = data?.pages?.flatMap((page) => page?.data ?? []) ?? [];
   const totalProducts = data?.pages?.[0]?.total || 0;
   const loading = isLoading;
   const isLoadMoreLoading = isFetchingNextPage;
@@ -212,21 +206,21 @@ const Products = () => {
         parseInt(filter?.price_filter?.min_price),
         parseInt(filter?.price_filter?.max_price),
       ]);
-      setMinPrice(parseInt(result.total_min_price));
-      setMaxPrice(parseInt(result.total_max_price));
+      setMinPrice(parseInt(result?.total_min_price));
+      setMaxPrice(parseInt(result?.total_max_price));
     } else {
-      setMinPrice(parseInt(result.total_min_price));
+      setMinPrice(parseInt(result?.total_min_price));
       if (result.total_min_price === result.total_max_price) {
-        setMaxPrice(parseInt(result.total_max_price) + 100);
+        setMaxPrice(parseInt(result?.total_max_price) + 100);
         setValues([
-          parseInt(result.total_min_price),
-          parseInt(result.total_max_price) + 100,
+          parseInt(result?.total_min_price),
+          parseInt(result?.total_max_price) + 100,
         ]);
       } else {
-        setMaxPrice(parseInt(result.total_max_price));
+        setMaxPrice(parseInt(result?.total_max_price));
         setValues([
-          parseInt(result.total_min_price),
-          parseInt(result.total_max_price),
+          parseInt(result?.total_min_price),
+          parseInt(result?.total_max_price),
         ]);
       }
     }
@@ -256,7 +250,7 @@ const Products = () => {
   } = useQuery({
     queryKey: ["subCategories", listing_source, category_slug],
     queryFn: async () => {
-      // SAME guard logic as useEffect
+      
       if (listing_source !== "category" || !category_slug) {
         return [];
       }
@@ -272,14 +266,14 @@ const Products = () => {
         : (currentCategory?.cat_active_childs ?? []);
     },
 
-    // Prevent API call unless conditions are valid
+    
     enabled: listing_source === "category" && !!category_slug,
 
-    // Optional but recommended
+    
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
 
-    // Error handling (TanStack standard)
+    
     onError: (err) => {
       console.error("Failed to fetch subcategories", err);
     },
@@ -423,7 +417,7 @@ const Products = () => {
                     title={currentCategoryName}
                     subCategories={subCategories}
                     isLoading={isSubCatLoading}
-                    languageCode={selectedLanguage?.code} // ✅
+                    languageCode={selectedLanguage?.code} 
                     rtl={selectedLanguage?.type === "RTL"}
                     onCategoryClick={handleCategoryClick}
                   />

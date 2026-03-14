@@ -78,7 +78,7 @@ const ProductDetailModal = ({
       fetchProductById();
       fetchRatings();
     }
-  }, [showDetailModal,product?.id, product.slug]);
+  }, [showDetailModal, product?.id, product?.slug]);
 
   useEffect(() => {
     handleIsVariantAvailable();

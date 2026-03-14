@@ -12,16 +12,18 @@ import { useRouter } from "next/router";
 import { clearAllFilter } from "@/redux/slices/productFilterSlice";
 import HomeSkeleton from "../homepage/HomeSkeleton";
 
+
 const Homepage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const setting = useSelector((state) => state.Setting.setting);
+  const isRefetch = useSelector((state) => state.Shop.isRefetch)
   const language = useSelector((state) => state.Language.selectedLanguage);
   const city = useSelector((state) => state.City.city);
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {}, [language?.id]);
+  useEffect(() => { }, [language?.id]);
 
   useEffect(() => {
     if (router?.pathname === "/") {
@@ -30,7 +32,7 @@ const Homepage = () => {
   }, []);
 
   const { isLoading, data, isFetching } = useQuery({
-    queryKey: ["shopData", city?.latitude, city?.longitude, language?.id],
+    queryKey: ["shopData", city?.latitude, city?.longitude, language?.id, isRefetch],
     queryFn: async () => {
       const latitude = parseFloat(city?.latitude);
       const longitude = parseFloat(city?.longitude);

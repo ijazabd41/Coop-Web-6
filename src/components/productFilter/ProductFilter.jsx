@@ -40,6 +40,7 @@ const Filter = ({
   const filter = useSelector((state) => state.ProductFilter);
   const setting = useSelector((state) => state?.Setting?.setting);
   const city = useSelector((state) => state.City);
+  const language = useSelector((state) => state.Language.selectedLanguage);
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -73,7 +74,7 @@ const Filter = ({
   }, []);
 
   const { data: categoriesData, isLoading: loadingCategories } = useQuery({
-    queryKey: ["filter-category"],
+    queryKey: ["filter-category",language?.id],
 
     queryFn: async () => {
       const response = await api.getCategories();
@@ -109,11 +110,13 @@ const Filter = ({
           offset: sOffset,
         });
         if (result.status === 1) {
-          if (sellers == null) {
-            setSellers(result?.data);
-          } else {
-            setSellers((prevSellers) => [...prevSellers, ...result?.data]);
-          }
+          setSellers((prevSellers) => {
+            if (prevSellers == null) {
+              return result?.data;
+            } else {
+              return [...prevSellers, ...result?.data];
+            }
+          });
           setTotalSeller(result?.total);
         }
         // setSellers(result?.data);
@@ -157,11 +160,13 @@ const Filter = ({
           longitude: city?.city?.longitude,
         });
         if (result.status === 1) {
-          if (brands == null) {
-            setbrands(result?.data);
-          } else {
-            setbrands((prevBrands) => [...prevBrands, ...result?.data]);
-          }
+          setbrands((prevBrands) => {
+            if (prevBrands == null) {
+              return result?.data;
+            } else {
+              return [...prevBrands, ...result?.data];
+            }
+          });
           setTotalBrands(result?.total);
         }
       } catch (error) {

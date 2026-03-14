@@ -185,6 +185,7 @@
   "delivery_charge": "Delivery Charge",
   "enter_user_name": "Enter User Name",
   "related_product": "Related Products",
+  "similar_product": "Similar Products",
   "recentaly_products": " Recently Viewed Products",
   "select_location": "Set Delivery Location",
   "shipping_policy": "Shipping Policy",
@@ -657,5 +658,6 @@
   "product_request_submitted_successfully": "Product request submitted successfully",
   "withdraw_it_before_deleting": "Looks like you still have wallet balance left. Please use or withdraw it before deleting your account.",
   "product ": "Product",
-  "blog":"Blog"
+  "blog": "Blog",
+  "mobile_number_already_taken": "This number is already taken. Please use another number."
 }
