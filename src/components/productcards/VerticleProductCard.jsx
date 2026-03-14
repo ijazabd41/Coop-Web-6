@@ -379,7 +379,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       } else {
         addToCart(
           product?.id,
-          selectedVariant.id,
+          selectedVariant?.id,
           cart?.cartProducts?.find(
             (prdct) => prdct?.product_variant_id == selectedVariant?.id
           )?.qty - 1
