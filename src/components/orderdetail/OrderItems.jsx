@@ -121,9 +121,8 @@ const OrderItems = ({
                           <button className="text-[#DB3D26]">
                             {t("return_request_cancel_by_delivery_boy")}
                           </button>
-                          <p className="text-xs">{`${t("sellerNote")}: ${
-                            product?.cancellation_reason
-                          }`}</p>
+                          <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
+                            }`}</p>
                         </>
                       )}
                       {Number(product?.return_requested) === 8 && (
@@ -132,18 +131,16 @@ const OrderItems = ({
                         </button>
                       )}
                       {Number(product?.active_status) === 8 && (
-                        <span className="text-[#DB3D26]">{`${t("totkal")} ${
-                          setting?.currency
-                        }${product?.refund_amount} ${t("refunded")}`}</span>
+                        <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
+                          }${product?.refund_amount} ${t("refunded")}`}</span>
                       )}
                       {Number(product?.return_requested) === 3 && (
                         <>
                           <button className=" text-red-500 ">
                             {t("return_rejected")}
                           </button>
-                          <p className="text-xs">{`${t("sellerNote")}: ${
-                            product?.return_remarks
-                          }`}</p>
+                          <p className="text-xs">{`${t("sellerNote")}: ${product?.return_remarks
+                            }`}</p>
                         </>
                       )}
                     </div>
@@ -160,8 +157,8 @@ const OrderItems = ({
                     <td className="p-4 ">
                       <div className="flex gap-2 flex-col items-start">
                         {Number(product?.active_status) === 6 &&
-                        isShowProductRating &&
-                        product?.return_requested === null ? (
+                          isShowProductRating &&
+                          product?.return_requested === null ? (
                           userRating ? (
                             <div
                               className="flex items-center flex-col px-1 cursor-pointer"
@@ -193,7 +190,7 @@ const OrderItems = ({
                         <div className="">
                           {Number(product?.active_status) <= 6 &&
                             Number(product?.active_status) <=
-                              Number(product?.till_status) &&
+                            Number(product?.till_status) &&
                             Number(product?.cancelable_status) === 1 && (
                               <button
                                 className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md hover:bg-red-200"
@@ -277,9 +274,8 @@ const OrderItems = ({
                       <button className="text-[#DB3D26]">
                         {t("return_request_cancel_by_delivery_boy")}
                       </button>
-                      <p className="text-xs">{`${t("sellerNote")}: ${
-                        product?.cancellation_reason
-                      }`}</p>
+                      <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
+                        }`}</p>
                     </>
                   )}
                   {Number(product?.return_requested) === 8 && (
@@ -288,46 +284,37 @@ const OrderItems = ({
                     </button>
                   )}
                   {Number(product?.active_status) === 8 && (
-                    <span className="text-[#DB3D26]">{`${t("totkal")} ${
-                      setting?.currency
-                    }${product?.refund_amount} ${t("refunded")}`}</span>
+                    <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
+                      }${product?.refund_amount} ${t("refunded")}`}</span>
                   )}
                   {Number(product?.return_requested) === 3 && (
                     <>
                       <button className=" text-red-500 ">
                         {t("return_rejected")}
                       </button>
-                    )}
-                    {Number(product?.active_status) === 8 && (
-                      <span className="text-[#DB3D26]">{`${t("total")} ${
-                        setting?.currency
-                      }${product?.refund_amount} ${t("refunded")}`}</span>
-                    )}
-                    {Number(product?.return_requested) === 3 && (
-                      <>
-                        <button className=" text-red-500 ">
-                          {t("return_rejected")}
-                        </button>
-                        <p className="text-xs">{`${t("sellerNote")}: ${
-                          product?.return_remarks
+                      <p className="text-xs">{`${t("sellerNote")}: ${product?.return_remarks
                         }`}</p>
-                      </>
-                    )}
-                  </div>
-                </td>
-                <td className="p-4">
-                  <p className="font-bold">
-                    {setting?.currency}
-                    {product?.sub_total?.toFixed(
-                      setting?.decimal_point ? setting?.decimal_point : 0,
-                    )}
-                  </p>
-                </td>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="bottomBorder w-full"></div>
+              <div className=" flex justify-between">
+                <p className="font-bold">{t("price")}:</p>
+                <p className="font-bold">
+                  {setting?.currency}
+                  {product?.price?.toFixed(
+                    setting?.decimal_point ? setting?.decimal_point : 0,
+                  )}
+                </p>
+              </div>
+              <div className="bottomBorder w-full"></div>
+              <div className="w-full">
                 {showAction && (
                   <div className="flex gap-2 md:gap-3  items-center">
                     {Number(product?.active_status) === 6 &&
-                    isShowProductRating &&
-                    product?.return_requested === null ? (
+                      isShowProductRating &&
+                      product?.return_requested === null ? (
                       userRating ? (
                         <div
                           className="flex items-center flex-col px-1 cursor-pointer  md:w-[165px] shrink-0"
@@ -359,7 +346,7 @@ const OrderItems = ({
                     <div className="w-full flex justify-start">
                       {Number(product?.active_status) <= 6 &&
                         Number(product?.active_status) <=
-                          Number(product?.till_status) &&
+                        Number(product?.till_status) &&
                         Number(product?.cancelable_status) === 1 && (
                           <div className="w-full md:w-[151px]">
                             <button
@@ -384,12 +371,12 @@ const OrderItems = ({
 
                       {Number(product?.active_status) === 7 && (
                         <div className="w-full md:w-[151px]">
-                        <button
-                          className="px-4 py-2 text-red-500 bg-[#DB3D261F] w-full rounded-md "
-                          disabled
-                        >
-                          {t("cancelled")}
-                        </button>
+                          <button
+                            className="px-4 py-2 text-red-500 bg-[#DB3D261F] w-full rounded-md "
+                            disabled
+                          >
+                            {t("cancelled")}
+                          </button>
                         </div>
                       )}
                     </div>
