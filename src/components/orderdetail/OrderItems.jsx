@@ -131,7 +131,7 @@ const OrderItems = ({
                         </button>
                       )}
                       {Number(product?.active_status) === 8 && (
-                        <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
+                        <span className="text-[#DB3D26]">{`${t("total")} ${setting?.currency
                           }${product?.refund_amount} ${t("refunded")}`}</span>
                       )}
                       {Number(product?.return_requested) === 3 && (
@@ -235,7 +235,7 @@ const OrderItems = ({
             (rating) => rating?.user?.id === user?.id,
           );
           return (
-            <div  key={product?.id} className="p-4 w-full flex flex-col gap-4 bottomBorder">
+            <div key={product?.id} className="p-4 w-full flex flex-col gap-4 bottomBorder">
               <div className="flex gap-2">
                 <div className="relative p-1 rounded-sm flex-shrink-0 cardBorder">
                   <ImageWithPlaceholder
@@ -284,7 +284,7 @@ const OrderItems = ({
                     </button>
                   )}
                   {Number(product?.active_status) === 8 && (
-                    <span className="text-[#DB3D26]">{`${t("totkal")} ${setting?.currency
+                    <span className="text-[#DB3D26]">{`${t("total")} ${setting?.currency
                       }${product?.refund_amount} ${t("refunded")}`}</span>
                   )}
                   {Number(product?.return_requested) === 3 && (
