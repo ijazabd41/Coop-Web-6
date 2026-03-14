@@ -326,7 +326,7 @@ const CartProductCard = ({
       : cart?.guestCart?.find(
         (prdct) => prdct?.product_variant_id == product?.product_variant_id
       )?.qty;
-
+      console.log(product)
   return (
     <div className="  gap-4 p-4 border-b w-full min-w-0">
       <div className=" hidden md:grid grid-cols-12 items-center ">
