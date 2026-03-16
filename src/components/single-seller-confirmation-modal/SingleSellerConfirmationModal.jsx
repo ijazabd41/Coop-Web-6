@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { t } from '@/utils/translation';
 import * as api from "@/api/apiRoutes"
 import { setCart, setCartProducts, setCartSubTotal } from '@/redux/slices/cartSlice';
+import { toast } from 'react-toastify';
 
 const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerModal, product, selectedVariant }) => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
     const handleAddToCart = async () => {
         try {
             // await handleDeleteCart()
-            const res = await api.deleteCart();
+
             if (res.status == 1) {
                 dispatch(setCart({ data: [] }));
                 dispatch(setCartSubTotal({ data: 0 }));
@@ -38,6 +39,10 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
                         }));
                         dispatch(setCartSubTotal({ data: response?.sub_total }));
                     }
+                    setSingleSellerModal(false)
+                    const res = await api.deleteCart();
+                } else {
+                    toast.error(response?.message);
                     setSingleSellerModal(false)
                 }
             }
