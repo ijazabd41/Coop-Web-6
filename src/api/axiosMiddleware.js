@@ -47,7 +47,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     try {
-      console.log("response", response?.status);
       return response;
     } catch (error) {
       console.error("Error while fetching data", error);
