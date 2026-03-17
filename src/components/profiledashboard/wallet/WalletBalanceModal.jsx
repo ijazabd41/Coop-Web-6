@@ -34,7 +34,7 @@ import PaytabsImage from "@/assets/payment_methods_svgs/ic_paytabs.svg";
 import dynamic from "next/dynamic";
 
 const StripeModal = dynamic(() => import("@/components/checkoutpage/StripeModal"), {
-  ssr: false, 
+  ssr: false,
 });
 import { setPhonePeCheckoutDetails } from "@/redux/slices/checkoutSlice";
 
@@ -168,6 +168,7 @@ const WalletBalanceModal = ({
         }
       } else {
         setAddWalletModal(false);
+        toast.error(result?.message);
       }
     } else {
       handlePayStackPayment(type, selectedPlan, amount, capitalizedPaymentMethod);
