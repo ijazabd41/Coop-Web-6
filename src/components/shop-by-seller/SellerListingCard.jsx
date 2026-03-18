@@ -5,9 +5,9 @@ const SellerListingCard = ({ seller }) => {
         <div className='flex flex-col category-card p-3 hover:textPrimaryColor hover:cardBorder rounded-sm headerBackgroundColor cursor-pointer'>
             <div className='gap-3 flex flex-col items-center'>
                 <div className='relative h-[120px] w-[120px]'>
-                    <ImageWithPlaceholder src={seller.logo_url} height={300} width={300}  alt='Category Image' className='rounded-sm w-full h-full object-cover p-2' />
+                    <ImageWithPlaceholder src={seller.logo_url} height={300} width={300} alt='Category Image' className='rounded-sm w-full h-full object-cover p-2' />
                 </div>
-                <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full truncate">{seller.store_name}</div>
+                <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full truncate">{seller?.translations?.store_name}</div>
             </div>
         </div>
     )
