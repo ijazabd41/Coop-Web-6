@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setFilterSection, setListingSource, } from '@/redux/slices/productFilterSlice';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
+import HomeOfferSection from './HomeOfferSection';
 const HorizontalCardContainer = ({ section }) => {
 
     const router = useRouter();
@@ -52,13 +53,11 @@ const HorizontalCardContainer = ({ section }) => {
                     })}
                 </div>
             </div> : null}
-            <div className='containers'>
+            <div className='container'>
                 {promotionImage && promotionImage?.map((offer) => {
                     return (
                         <div className='relative w-full' key={offer?.id}>
-                            <Image
-                                src={offer?.image_url} alt='Offer image' width={1920} height={1080} quality={90} sizes="100vw" className='object-cover w-full h-auto rounded-sm'
-                            />
+                            <HomeOfferSection offer={offer} />
                         </div>
                     )
                 })}

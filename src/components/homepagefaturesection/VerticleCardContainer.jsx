@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/navigation';
 import { setFilterSection, setListingSource, } from '@/redux/slices/productFilterSlice';
+import HomeOfferSection from './HomeOfferSection';
 
 const VerticleCardContainer = ({ section }) => {
 
@@ -61,7 +62,7 @@ const VerticleCardContainer = ({ section }) => {
                 return (
                     <div className='container mb-6' key={index}>
                         <div className='relative' key={offer?.id}>
-                            <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
+                            <HomeOfferSection offer={offer} />
                         </div>
                     </div>
                 )

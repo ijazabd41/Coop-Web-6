@@ -10,7 +10,6 @@ const HomeOfferSection = ({ offer }) => {
 
   const handleOfferClick = () => {
     if (offer?.type == "product") {
-      
       router.push(`/product/${offer?.product?.slug}`);
     } else if (offer?.type == "category") {
       if (offer?.category?.has_child == true) {
@@ -34,7 +33,7 @@ const HomeOfferSection = ({ offer }) => {
         quality={90}
         priority={true}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1304px"
-        className="object-contain max-h-[270px] h-full w-full rounded-sm"
+        className="max-h-[270px] h-full w-full rounded-sm"
         handleOnClick={handleOfferClick}
       />
     </div>

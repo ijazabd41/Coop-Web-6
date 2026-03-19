@@ -13,6 +13,7 @@ import { setFilterSection, setListingSource, } from '@/redux/slices/productFilte
 import { useRouter } from 'next/router';
 import { t } from '@/utils/translation';
 import { isRtl } from '@/lib/utils';
+import HomeOfferSection from './HomeOfferSection';
 
 const HorizontalProductSwiper = ({ section, index }) => {
     const router = useRouter();
@@ -111,7 +112,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                 return (
                     <div className='container mb-6' key={offer?.id}>
                         <div className='relative' >
-                            <Image src={offer?.image_url} alt='Offer image' height={600} width={1200} sizes="(max-width: 768px) 100vw, 1200px" priority className='object-contain h-full w-full rounded-sm' />
+                            <HomeOfferSection offer={offer} />
                         </div>
                     </div>
                 )

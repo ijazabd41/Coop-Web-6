@@ -9,7 +9,7 @@ import { Navigation } from "swiper/modules";
 import { t } from '@/utils/translation';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { setFilterBySeller,setListingSource } from '@/redux/slices/productFilterSlice';
+import { setFilterBySeller, setListingSource } from '@/redux/slices/productFilterSlice';
 import { useSelector } from 'react-redux';
 import { isRtl } from '@/lib/utils';
 
@@ -19,11 +19,13 @@ const SellerSlider = ({ sellers }) => {
     const language = useSelector(state => state.Language.selectedLanguage)
     const router = useRouter();
     const dispatch = useDispatch();
+
     const handleSellerClick = (seller) => {
         dispatch(setFilterBySeller({ data: seller?.id }));
         dispatch(setListingSource({ data: "all" }));
         router.push("/products")
     }
+
     return (
         <section className=' brandBackgroundColor '>
             <div className='container feature-section '>
