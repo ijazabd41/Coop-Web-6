@@ -14,6 +14,7 @@ const HomeAllProducts = () => {
 
   const latitude = city?.latitude || setting?.default_city?.latitude;
   const longitude = city?.longitude || setting?.default_city?.longitude;
+  const language = useSelector((state) => state.Language.selectedLanguage);
 
   const {
     data,
@@ -22,7 +23,7 @@ const HomeAllProducts = () => {
     isLoading,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["home-all-products", latitude, longitude],
+    queryKey: ["home-all-products", latitude, longitude,language?.id],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await api.getProductByFilter({
         latitude,
