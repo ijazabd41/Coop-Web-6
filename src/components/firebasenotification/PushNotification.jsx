@@ -6,6 +6,7 @@ import {
   fetchToken,
   onMessageListener,
   registerServiceWorker,
+  
 } from "@/utils/firebase";
 
 const PushNotificationLayout = ({ children }) => {

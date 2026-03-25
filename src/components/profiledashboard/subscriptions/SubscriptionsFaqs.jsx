@@ -40,7 +40,7 @@ const SubscriptionsFaqs = ({ isOpen, setIsOpen, faqs, totalFaqs, faqLoading, fet
         </DialogHeader>
         <div className="flex flex-col gap-4 items-center">
           <div className="mt-6 space-y-4 overflow-y-auto overflow-x-hidden   w-full  h-[400px]">
-            {faqs.map((faq, index) => (
+            {faqs?.map((faq, index) => (
               <div key={index} className="">
                 <SubscriptionsFaq
                   faq={{

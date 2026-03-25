@@ -44,6 +44,20 @@ const getMessagingInstance = async () => {
   }
 };
 
+export const registerNotificationClickHandler = () => {
+  if (typeof window === "undefined") return;
+  if (!("serviceWorker" in navigator)) return;
+
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    console.log("📩 SW Message received:", event.data);
+    if (event.data?.type === "NOTIFICATION_CLICK") {
+      const url = event.data.url;
+      console.log("✅ Redirecting to:", url);
+      window.location.replace(url); // replace() avoids adding to browser history
+    }
+  });
+};
+
 export const registerServiceWorker = () => {
   if (typeof window !== "undefined" && "serviceWorker" in navigator) {
     navigator.serviceWorker
@@ -95,7 +109,29 @@ export const onMessageListener = () => {
     const messagingInstance = await getMessagingInstance();
     if (messagingInstance) {
       onMessage(messagingInstance, (payload) => {
-        console.log("Foreground message received. ", payload);
+        const data = payload.data || {};
+         if (Notification.permission === "granted") {
+          const notification = new Notification(data.title || "New Notification", {
+            body: data.body,
+            icon: data.icon,
+            data: {
+              type: data.type,
+              id: data.id,
+              url: getRedirectUrl(data),
+              slug: data.type_slug,
+            },
+          });
+
+          // ✅ Handle click on foreground notification
+          notification.onclick = () => {
+            const targetUrl = getRedirectUrl(data);
+            console.log("targetUrl",targetUrl)
+            console.log("Foreground notification click → navigating to:", targetUrl);
+            window.focus();
+            window.location.href = targetUrl;
+            notification.close();
+          };
+        }
         resolve(payload);
       });
     } else {
@@ -103,5 +139,26 @@ export const onMessageListener = () => {
     }
   });
 };
+
+export const getRedirectUrl = (data) => {
+  const { type, id,type_slug } = data || {};
+  const base = typeof window !== "undefined" ? window.location.origin : "";
+  console.log("type",type)
+  switch (type) {
+    case "order":
+      return `${base}/order-detail/${id}`;
+    case "product":
+      return `${base}/product/${type_slug}`;
+    case "category":
+      return `${base}/categories/${type_slug}`;
+    case "wallet":
+      return `${base}/profile/wallethistory`;
+    case "notification":
+      return `${base}/profile/notifications`;
+    default:
+      return `${base}/`;
+  }
+};
+
 
 export { app, auth };
