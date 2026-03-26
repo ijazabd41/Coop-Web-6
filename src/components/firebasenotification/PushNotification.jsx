@@ -6,7 +6,7 @@ import {
   fetchToken,
   onMessageListener,
   registerServiceWorker,
-  
+
 } from "@/utils/firebase";
 
 const PushNotificationLayout = ({ children }) => {
@@ -17,6 +17,7 @@ const PushNotificationLayout = ({ children }) => {
     fetchToken(dispatch);
     const unsubscribe = onMessageListener()
       .then((payload) => {
+        console.log("payload", payload)
         if (payload) {
           new Notification(payload.notification.title, {
             body: payload.notification.body,
@@ -28,7 +29,7 @@ const PushNotificationLayout = ({ children }) => {
         console.error("Failed to listen for foreground messages:", err)
       );
 
-    return () => {};
+    return () => { };
   }, [dispatch]);
 
   return <>{children}</>;

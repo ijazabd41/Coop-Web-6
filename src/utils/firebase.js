@@ -49,10 +49,8 @@ export const registerNotificationClickHandler = () => {
   if (!("serviceWorker" in navigator)) return;
 
   navigator.serviceWorker.addEventListener("message", (event) => {
-    console.log("📩 SW Message received:", event.data);
     if (event.data?.type === "NOTIFICATION_CLICK") {
       const url = event.data.url;
-      console.log("✅ Redirecting to:", url);
       window.location.replace(url); // replace() avoids adding to browser history
     }
   });
@@ -125,8 +123,6 @@ export const onMessageListener = () => {
           // ✅ Handle click on foreground notification
           notification.onclick = () => {
             const targetUrl = getRedirectUrl(data);
-            console.log("targetUrl",targetUrl)
-            console.log("Foreground notification click → navigating to:", targetUrl);
             window.focus();
             window.location.href = targetUrl;
             notification.close();
@@ -136,6 +132,7 @@ export const onMessageListener = () => {
       });
     } else {
       resolve(null);
+
     }
   });
 };
@@ -149,7 +146,7 @@ export const getRedirectUrl = (data) => {
     case "product":
       return `${base}/product/${type_slug}`;
     case "category":
-      return `${base}/categories/${type_slug}`;
+      return `${base}/categories/all`;
     case "wallet":
       return `${base}/profile/wallethistory`;
     case "notification":
