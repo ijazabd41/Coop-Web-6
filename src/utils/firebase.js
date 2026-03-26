@@ -143,7 +143,6 @@ export const onMessageListener = () => {
 export const getRedirectUrl = (data) => {
   const { type, id,type_slug } = data || {};
   const base = typeof window !== "undefined" ? window.location.origin : "";
-  console.log("type",type)
   switch (type) {
     case "order":
       return `${base}/order-detail/${id}`;
@@ -155,6 +154,8 @@ export const getRedirectUrl = (data) => {
       return `${base}/profile/wallethistory`;
     case "notification":
       return `${base}/profile/notifications`;
+    case "cart":
+      return `${base}/checkout`;
     default:
       return `${base}/`;
   }

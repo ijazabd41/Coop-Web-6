@@ -40,63 +40,63 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// self.addEventListener("notificationclick", (event) => {
-//   event.notification.close();
-
-//   const { url } = event.notification.data || {};
-//   const targetUrl = url || "/";
-
-
-//   event.waitUntil(
-//     clients
-//       .matchAll({ type: "window", includeUncontrolled: true })
-//       .then(async (clientList) => {
-//         // Try to focus an existing tab and navigate it
-//         for (const client of clientList) {
-//           if (client.url && "focus" in client) {
-//             try {
-//               await client.focus();
-//               await client.navigate(targetUrl);
-//               return;
-//             } catch (err) {
-//               console.warn("client.navigate failed, opening new window:", err);
-//             }
-//           }
-//         }
-//         return clients.openWindow(targetUrl);
-//       })
-//   );
-// });
-
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
   const { url } = event.notification.data || {};
   const targetUrl = url || "/";
 
+
   event.waitUntil(
     clients
       .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientList) => {
-        const sameOriginClient = clientList.find(
-          (c) => new URL(c.url).origin === self.location.origin
-        );
-
-        if (sameOriginClient) {
-          // ✅ Tab already open — postMessage to navigate
-          sameOriginClient.postMessage({
-            type: "NOTIFICATION_CLICK",
-            url: targetUrl,
-          });
-          console.log("target url",targetUrl)
-          return sameOriginClient.focus();
+      .then(async (clientList) => {
+        // Try to focus an existing tab and navigate it
+        for (const client of clientList) {
+          if (client.url && "focus" in client) {
+            try {
+              await client.focus();
+              await client.navigate(targetUrl);
+              return;
+            } catch (err) {
+              console.warn("client.navigate failed, opening new window:", err);
+            }
+          }
         }
-
-        // ✅ No tab open — open the URL directly (no postMessage needed)
         return clients.openWindow(targetUrl);
       })
   );
 });
+
+// self.addEventListener("notificationclick", (event) => {
+//   event.notification.close();
+
+//   const { url } = event.notification.data || {};
+//   const targetUrl = url || "/";
+
+//   event.waitUntil(
+//     clients
+//       .matchAll({ type: "window", includeUncontrolled: true })
+//       .then((clientList) => {
+//         const sameOriginClient = clientList.find(
+//           (c) => new URL(c.url).origin === self.location.origin
+//         );
+
+//         if (sameOriginClient) {
+//           // ✅ Tab already open — postMessage to navigate
+//           sameOriginClient.postMessage({
+//             type: "NOTIFICATION_CLICK",
+//             url: targetUrl,
+//           });
+//           console.log("target url",targetUrl)
+//           return sameOriginClient.focus();
+//         }
+
+//         // ✅ No tab open — open the URL directly (no postMessage needed)
+//         return clients.openWindow(targetUrl);
+//       })
+//   );
+// });
 
 function getRedirectUrl(data) {
   const { type, id,type_slug } = data;
