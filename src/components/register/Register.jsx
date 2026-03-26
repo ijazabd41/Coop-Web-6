@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react"; // Added useRef
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { RiCloseFill } from "react-icons/ri";
+import { RiCloseFill, RiCameraLine } from "react-icons/ri"; // Added RiCameraLine
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ const Register = ({
   setShowLogin,
 }) => {
   const dispatch = useDispatch();
+  const fileInputRef = useRef(null); // Ref for image input
   const fcmToken = useSelector((state) => state.User?.fcm_token);
   const setting = useSelector((state) => state.Setting.setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
@@ -30,10 +31,10 @@ const Register = ({
   useEffect(() => {
     setCountryCode(process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE);
   }, []);
+
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] =
-    useState(null);
+  const [phoneNumberWithoutCountryCode, setPhoneNumberWithoutCountryCode] = useState(null);
   const [password, setPassword] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,31 +47,29 @@ const Register = ({
   const [otp, setOtp] = useState(null);
   const [friendCode, setFriendCode] = useState(null);
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  // New states for Image
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleFriendCodeChange = (e) => {
-    setFriendCode(e.target.value);
-  };
+  const handleShowPassword = () => setShowPassword(!showPassword);
+  const handleFriendCodeChange = (e) => setFriendCode(e.target.value);
+  const handleShowConfirmPassword = () => setShowConfirmPass(!showConfirmPass);
+  const handleUsernameChange = (e) => setName(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
-  const handleShowConfirmPassword = () => {
-    setShowConfirmPass(!showConfirmPass);
-  };
-
-  const handleUsernameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
+  // Handle Image Selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handlePhoneNumberChange = (value, data) => {
@@ -82,6 +81,94 @@ const Register = ({
     setCountryCode("+" + (data?.dialCode || ""));
   };
 
+  const handleMobileRegister = async (e) => {
+    const otpRes = await handleOtpVerification(e);
+    if (!otpRes) {
+      toast.error(t("invalid_otp"));
+      return;
+    }
+    setIsLoading(true);
+    e.preventDefault();
+    try {
+      const res = await api.registerUser({
+        id: phoneNumberWithoutCountryCode,
+        name: name,
+        email: email,
+        mobile: phoneNumberWithoutCountryCode,
+        type: "phone",
+        country_code: countryCode,
+        password: password,
+        fcm: fcmToken,
+        phoneAuthType: true,
+        profile: profileImage, // Pass image
+      });
+      if (res?.status == 1) {
+        toast.success(t("succesfull_register_message"));
+        handleCloseRegister();
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(t(res?.message));
+        // Reset Logic...
+        setShowRegister(false);
+        setIsPhoneOtp(false);
+        setOtp(null);
+        setPassword("");
+        setConfirmPassword("");
+        setPhoneNumber("");
+        setPhoneNumberWithoutCountryCode("");
+        setName("");
+        setEmail("");
+        setImagePreview(null);
+        setProfileImage(null);
+      }
+    } catch (error) {
+      console.log("error", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailRegister = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await api.registerUser({
+        id: email,
+        name: name,
+        email: email,
+        mobile: phoneNumberWithoutCountryCode,
+        type: "email",
+        country_code: countryCode,
+        password: password,
+        fcm: fcmToken,
+        friend_code: friendCode,
+        profile: profileImage, // Pass image
+      });
+      if (res.status == 1) {
+        setIsLoading(false);
+        dispatch(setAuthType({ data: "email" }));
+        setShowRegister(false);
+        toast.success(t(res?.message));
+        setIsOTP(true);
+        setOtp("");
+        setPassword("");
+        setName("");
+        setPhoneNumberWithoutCountryCode("");
+        setConfirmPassword("");
+        setPhoneNumber("");
+        setFriendCode("");
+        setImagePreview(null);
+        setProfileImage(null);
+      } else {
+        handleResponseError(res.message);
+      }
+    } catch (error) {
+      console.log("error", error);
+      setIsLoading(false);
+    }
+  };
+
+  // ... (keeping handleUserRegister, handleSendOTP, handleOtpVerification, handleResponseError, handleOtpChange as they were)
   const handleUserRegister = async (e) => {
     const emailRegexPattern =
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -120,48 +207,6 @@ const Register = ({
         } else {
           await handleEmailRegister(e);
         }
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const handleMobileRegister = async (e) => {
-    const otpRes = await handleOtpVerification(e);
-    if (!otpRes) {
-      toast.error(t("invalid_otp"));
-      return;
-    }
-    setIsLoading(true);
-    e.preventDefault();
-    try {
-      const res = await api.registerUser({
-        id: phoneNumberWithoutCountryCode,
-        name: name,
-        email: email,
-        mobile: phoneNumberWithoutCountryCode,
-        type: "phone",
-        country_code: countryCode,
-        password: password,
-        fcm: fcmToken,
-        phoneAuthType: true,
-      });
-      if (res?.status == 1) {
-        toast.success(t("succesfull_register_message"));
-        handleCloseRegister();
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        toast.error(t(res?.message));
-        setShowRegister(false);
-        setIsPhoneOtp(false);
-        setOtp(null);
-        setPassword("");
-        setConfirmPassword("");
-        setPhoneNumber("");
-        setPhoneNumberWithoutCountryCode("");
-        setName("");
-        setEmail("");
       }
     } catch (error) {
       console.log("error", error);
@@ -249,7 +294,7 @@ const Register = ({
         });
         if (
           response?.status == 1 &&
-          res?.message ==
+          response?.message ==
           "OTP is valid, but no user found with this phone number."
         ) {
           return false;
@@ -264,51 +309,6 @@ const Register = ({
     }
   };
 
-  const handleEmailRegister = async (e) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      const res = await api.registerUser({
-        id: email,
-        name: name,
-        email: email,
-        mobile: phoneNumberWithoutCountryCode,
-        type: "email",
-        country_code: countryCode,
-        password: password,
-        fcm: fcmToken,
-        friend_code: friendCode,
-      });
-      if (res.status == 1) {
-        setIsLoading(false);
-        dispatch(setAuthType({ data: "email" }));
-        setShowRegister(false);
-        toast.success(t(res?.message));
-        setIsOTP(true);
-        setOtp("");
-        // setTimer(90)
-        setPassword("");
-        setName("");
-        setPhoneNumberWithoutCountryCode("");
-        setConfirmPassword("");
-        setPhoneNumber("");
-        setFriendCode("");
-      } else if (res.message == "user_exist_with_email") {
-        handleResponseError(res.message);
-      } else if (res.message == "email_not_verified") {
-        handleResponseError(res.message);
-      } else if (res.message == "user_exist_with_google") {
-        handleResponseError(res.message);
-      } else if (res.message == "mobile_number_already_taken") {
-        handleResponseError(res.message);
-      } else {
-        handleResponseError(res.message);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   const handleResponseError = (errorMessage) => {
     toast.error(t(errorMessage));
     setShowRegister(false);
@@ -319,11 +319,12 @@ const Register = ({
     setFriendCode("");
     setPhoneNumber("");
     setPhoneNumberWithoutCountryCode("");
+    setImagePreview(null);
+    setProfileImage(null);
   };
 
   const handleOtpChange = (e) => {
     const input = e.target.value;
-    // Only allow digits, remove any special characters and limit to 6 characters
     const cleanedInput = input.replace(/[^0-9]/g, "").slice(0, 6);
     setOtp(cleanedInput);
   };
@@ -339,6 +340,8 @@ const Register = ({
     setFriendCode("");
     setShowRegister(false);
     setIsLoading(false);
+    setImagePreview(null);
+    setProfileImage(null);
   };
 
   return (
@@ -347,19 +350,45 @@ const Register = ({
         <DialogHeader className="flex justify-between flex-row items-center">
           <div className="">
             <h1 className="text-3xl font-bold">{t("register")}</h1>
-            {/* <Image src={setting?.web_settings?.web_logo} alt="logo" fill className="aspect-square w-full h-full object-cover" /> */}
           </div>
-          <div className="closeButtonBg rounded-full p-[8px] gap-[4px]">
+          <div className="closeButtonBg rounded-full p-[8px] gap-[4px] cursor-pointer">
             <RiCloseFill size={22} onClick={handleCloseRegister} />
           </div>
         </DialogHeader>
         <div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <h5 className="text-[34px] font-bold textColor">{t("welcome")}</h5>
             <span className="textColor text-xs">{t("signupMessage")}</span>
           </div>
+
+          {/* Profile Image Preview & Input (only show on registration step, not OTP step) */}
+          {!isPhoneOtp && (
+            <div className="flex flex-col items-center mt-6">
+              <div
+                className="relative w-24 h-24 rounded-full overflow-hidden cardBorder cursor-pointer flex items-center justify-center bg-gray-50 group"
+                onClick={() => fileInputRef.current.click()}
+              >
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <RiCameraLine size={30} className="text-gray-400" />
+                )}
+                <div className="absolute bottom-0 w-full bg-black/40 py-1 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] text-white font-medium">{t("edit")}</span>
+                </div>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+            </div>
+          )}
+
           {isPhoneOtp ? (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 mt-8">
               <span className="font-bold text-base">
                 {t("otp")}
                 <span className="text-red-500">*</span>
@@ -378,7 +407,7 @@ const Register = ({
               </div>
             </div>
           ) : (
-            <div className="mt-8 flex flex-col gap-2">
+            <div className="mt-4 flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-base">
                   {t("name")}
@@ -386,8 +415,6 @@ const Register = ({
                 </span>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   className="py-2 px-4 cardBorder outline-none rounded-sm"
                   placeholder={t("please_enter_name")}
                   value={name}
@@ -400,16 +427,10 @@ const Register = ({
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-base">
                   {t("email")}
-                  {inputType == "email" ? (
-                    <span className="text-red-500">*</span>
-                  ) : (
-                    <></>
-                  )}
+                  {inputType == "email" && <span className="text-red-500">*</span>}
                 </span>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   className="py-2 px-4 cardBorder outline-none rounded-sm"
                   placeholder={t("please_enter_email")}
                   value={email}
@@ -422,19 +443,13 @@ const Register = ({
               <div className="flex flex-col gap-1 pl-0">
                 <span className="font-bold text-base">
                   {t("mobileNumber")}
-                  {inputType == "number" ? (
-                    <span className="text-red-500">*</span>
-                  ) : (
-                    <></>
-                  )}
+                  {inputType == "number" && <span className="text-red-500">*</span>}
                 </span>
                 <PhoneInput
                   inputStyle={{ direction: language?.type }}
                   country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
                   value={phoneNumber}
-                  onChange={(phone, data) =>
-                    handlePhoneNumberChange(phone, data)
-                  }
+                  onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
                   onCountryChange={(code) => setCountryCode(code)}
                   className="w-full "
                 />
@@ -447,23 +462,18 @@ const Register = ({
                 <div className="relative w-full ">
                   <input
                     type={showPassword ? "text" : "password"}
-                    name=""
-                    id=""
                     className="py-2 px-4 cardBorder outline-none rounded-sm w-full"
                     placeholder={t("please_enter_password")}
                     value={password}
                     onChange={handlePasswordChange}
                   />
-                  <span
-                    className="absolute right-3 top-3"
-                    onClick={handleShowPassword}
-                  >
+                  <span className="absolute right-3 top-3 cursor-pointer" onClick={handleShowPassword}>
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </span>
-                  {error && errorType == "password" && (
-                    <span className="text-xs text-red-500">{error}</span>
-                  )}
                 </div>
+                {error && errorType == "password" && (
+                  <span className="text-xs text-red-500">{error}</span>
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-base">
@@ -473,30 +483,23 @@ const Register = ({
                 <div className="relative w-full ">
                   <input
                     type={showConfirmPass ? "text" : "password"}
-                    name=""
-                    id=""
                     className="py-2 px-4 cardBorder outline-none rounded-sm w-full"
                     placeholder={t("please_enter_confirm_password")}
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                   />
-                  <span
-                    className="absolute right-3 top-3"
-                    onClick={handleShowConfirmPassword}
-                  >
+                  <span className="absolute right-3 top-3 cursor-pointer" onClick={handleShowConfirmPassword}>
                     {showConfirmPass ? <FaEyeSlash /> : <FaEye />}
                   </span>
-                  {error && errorType == "confirmpassword" && (
-                    <span className="text-xs text-red-500">{error}</span>
-                  )}
                 </div>
+                {error && errorType == "confirmpassword" && (
+                  <span className="text-xs text-red-500">{error}</span>
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-base">{t("friend_code")}</span>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   className="py-2 px-4 cardBorder outline-none rounded-sm disabled:text-gray-400"
                   placeholder={t("friend_code")}
                   value={friendCode}
@@ -507,23 +510,13 @@ const Register = ({
           )}
 
           <div className="mt-4 flex flex-col justify-center text-center gap-3">
-            {isPhoneOtp ? (
-              <button
-                onClick={handleMobileRegister}
-                className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal"
-                disabled={isLoading}
-              >
-                {isLoading ? t("loading") : t("register")}
-              </button>
-            ) : (
-              <button
-                onClick={handleUserRegister}
-                className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal"
-                disabled={isLoading}
-              >
-                {isLoading ? t("loading") : t("verify")}
-              </button>
-            )}
+            <button
+              onClick={isPhoneOtp ? handleMobileRegister : handleUserRegister}
+              className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal"
+              disabled={isLoading}
+            >
+              {isLoading ? t("loading") : isPhoneOtp ? t("register") : t("verify")}
+            </button>
             <span className="text-base font-medium">
               {t("alreadyHaveAnAccount")}{" "}
               <span
@@ -534,28 +527,9 @@ const Register = ({
               </span>
             </span>
           </div>
-          {/* NOTE: Remove this becuase of copy of functionality  */}
-          {/* <div className="flex items-center justify-between my-4 gap-2">
-            <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
-            <span className=" text-[#4B6272] font-bold text-base">
-              {t("or")}
-            </span>
-            <hr className="flex-grow border-t-2 border-dashed border-gray-300" />
-          </div>
-          <div className="my-4">
-            <button className="w-full border-[1px] py-2  px-4 rounded-sm  gap-2 flex items-center justify-center text-base font-normal">
-              <Image
-                src={GoogleLogo}
-                alt="Google logo"
-                height={30}
-                width={30}
-                className="h-[30px] w-[30px] object-cover "
-              />{" "}
-              {t("continue_with_google")}
-            </button>
-          </div> */}
+
           <div className="py-6 flex items-center justify-center">
-            <p className=" text-center ">
+            <p className=" text-center text-sm">
               {t("agreement_updated_message")}{" "}
               {setting?.web_setting?.site_title} {t("terms_of_service")}{" "}
               {t("and")} {t("privacy_policy")}

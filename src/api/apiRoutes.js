@@ -14,6 +14,8 @@ export const registerUser = async ({
   password,
   phoneAuthType = false,
   friend_code,
+  profile
+  
 }) => {
   const formData = new FormData();
   formData.append("name", name);
@@ -23,6 +25,9 @@ export const registerUser = async ({
   formData.append("platform", "web");
   if (type == "email" || (type == "phone" && phoneAuthType == true)) {
     formData.append("password", password);
+  }
+  if(profile){
+    formData.append("profile", profile);
   }
   if (
     type === "phone" ||
