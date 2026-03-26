@@ -68,6 +68,8 @@ function getRedirectUrl(data) {
   const { type, id,type_slug } = data;
   const base = self.location.origin;
 
+  const productRequestURL = type_slug == "" ? `${base}/profile/requested-products` : `${base}/product/${type_slug}`;
+
   switch (type) {
     case "order":
       return `${base}/order-detail/${id}`;
@@ -77,6 +79,8 @@ function getRedirectUrl(data) {
       return `${base}/categories/all`;
     case "cart":
       return `${base}/checkout`;
+    case "product_request":
+      return productRequestURL;
     default:
       return `${base}/`;
   }

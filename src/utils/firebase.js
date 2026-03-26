@@ -107,7 +107,6 @@ export const onMessageListener = () => {
     const messagingInstance = await getMessagingInstance();
     if (messagingInstance) {
       onMessage(messagingInstance, (payload) => {
-        console.log("payload",payload)
         const data = payload.data || {};
          if (Notification.permission === "granted") {
           const notification = new Notification(data.title || "New Notification", {
@@ -141,6 +140,9 @@ export const onMessageListener = () => {
 export const getRedirectUrl = (data) => {
   const { type, id,type_slug } = data || {};
   const base = typeof window !== "undefined" ? window.location.origin : "";
+  const productRequestURL = type_slug == "" ? `${base}/profile/requested-products` : `${base}/product/${type_slug}`;
+
+
   switch (type) {
     case "order":
       return `${base}/order-detail/${id}`;
@@ -150,6 +152,8 @@ export const getRedirectUrl = (data) => {
       return `${base}/categories/all`;
     case "cart":
       return `${base}/checkout`;
+    case "product_request":
+      return productRequestURL;
     default:
       return `${base}/`;
   }
