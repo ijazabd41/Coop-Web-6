@@ -42,7 +42,7 @@ const NewUserModal = ({
   const [friendCode, setFriendCode] = useState(null);
 
   useEffect(() => {
-    if (showNewUser) {
+    if (showNewUser && authType == "google" && process.env.NEXT_PUBLIC_DEMO_MODE == "true") {
       setPhoneNumberWithoutCountryCode("");
     }
   }, [showNewUser]);
@@ -186,6 +186,8 @@ const NewUserModal = ({
     return cartProducts;
   };
 
+
+
   return (
     <Dialog open={showNewUser}>
       <DialogContent className="">
@@ -252,7 +254,8 @@ const NewUserModal = ({
                 type="text"
                 name=""
                 id=""
-                className="py-2 px-4 cardBorder outline-none rounded-sm disabled:text-gray-400"
+                className="py-2 px-4 cardBorder outline-none rounded-sm disa
+                bled:text-gray-400"
                 placeholder={t("friend_code")}
                 value={friendCode}
                 onChange={handleFriendCodeChange}

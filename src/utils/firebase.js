@@ -107,6 +107,7 @@ export const onMessageListener = () => {
     const messagingInstance = await getMessagingInstance();
     if (messagingInstance) {
       onMessage(messagingInstance, (payload) => {
+        console.log("payload",payload)
         const data = payload.data || {};
          if (Notification.permission === "granted") {
           const notification = new Notification(data.title || "New Notification", {
@@ -147,10 +148,6 @@ export const getRedirectUrl = (data) => {
       return `${base}/product/${type_slug}`;
     case "category":
       return `${base}/categories/all`;
-    case "wallet":
-      return `${base}/profile/wallethistory`;
-    case "notification":
-      return `${base}/profile/notifications`;
     case "cart":
       return `${base}/checkout`;
     default:

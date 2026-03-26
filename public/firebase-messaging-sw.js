@@ -67,6 +67,7 @@ self.addEventListener("notificationclick", (event) => {
 function getRedirectUrl(data) {
   const { type, id,type_slug } = data;
   const base = self.location.origin;
+
   switch (type) {
     case "order":
       return `${base}/order-detail/${id}`;
@@ -74,10 +75,8 @@ function getRedirectUrl(data) {
       return `${base}/product/${type_slug}`;
     case "category":
       return `${base}/categories/all`;
-    case "wallet":
-      return `${base}/profile/wallethistory`;
-    case "notification":
-      return `${base}/profile/notifications`;
+    case "cart":
+      return `${base}/checkout`;
     default:
       return `${base}/`;
   }
