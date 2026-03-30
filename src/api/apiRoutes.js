@@ -45,12 +45,22 @@ export const registerUser = async ({
   return response.data;
 };
 
-export const login = async ({ id, fcm, type, password, phoneAuthType }) => {
+export const login = async ({
+  id,
+  fcm,
+  type,
+  password,
+  phoneAuthType,
+  country_code,
+}) => {
   const formData = new FormData();
   formData.append("id", id);
   formData.append("fcm_token", fcm);
   formData.append("type", type);
   formData.append("platform", "web");
+  if (country_code) {
+    formData.append("country_code", country_code);
+  }
   if (type == "phone") {
     if (phoneAuthType == true) {
       formData.append("phone_auth_type", "phone_auth_password");
@@ -105,6 +115,7 @@ export const forgotPassword = async ({
   confirmPassword,
   type,
   otpMethod,
+  country_code,
 }) => {
   const formData = new FormData();
   if (type == "email" || (type == "phone" && otpMethod == "twilio")) {
@@ -115,6 +126,9 @@ export const forgotPassword = async ({
   }
   if (type == "phone") {
     formData.append("mobile", phone);
+    if (country_code) {
+      formData.append("country_code", country_code);
+    }
   }
   formData.append("password", password);
   formData.append("password_confirmation", confirmPassword);
@@ -145,12 +159,16 @@ export const updateProfile = async ({
   email,
   mobileNumber,
   type,
+  country_code,
 }) => {
   const formData = new FormData();
   formData.append("profile", image);
   formData.append("name", name);
   formData.append("email", email);
   formData.append("mobile", mobileNumber);
+  if (country_code) {
+    formData.append("country_code", country_code);
+  }
   const response = await api.post(apiEndPoints.editProfile, formData);
   return response.data;
 };
@@ -441,10 +459,14 @@ export const addAddress = async ({
   longitude,
   is_default = 1,
   alternate_mobile = "",
+  country_code = "",
+  alternate_mobile_country_code = "",
 }) => {
   const formData = new FormData();
   formData.append("name", name);
   formData.append("mobile", mobile);
+  formData.append("country_code", country_code);
+  formData.append("alternate_mobile_country_code", alternate_mobile_country_code);
   formData.append("type", type);
   formData.append("address", address);
   formData.append("landmark", landmark);
@@ -479,11 +501,15 @@ export const updateAddress = async ({
   longitude,
   is_default = 1,
   alternate_mobile = "",
+  country_code = "",
+  alternate_mobile_country_code = "",
 }) => {
   const formData = new FormData();
   formData.append("id", id);
   formData.append("name", name);
   formData.append("mobile", mobile);
+  formData.append("country_code", country_code);
+  formData.append("alternate_mobile_country_code", alternate_mobile_country_code);
   formData.append("type", type);
   formData.append("address", address);
   formData.append("landmark", landmark);

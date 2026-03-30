@@ -275,6 +275,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           phoneNumberWithoutCountryCode,
           fcmToken,
           "phone",
+          `+${countryCode}`,
         );
         setLoading(false);
       } catch (error) {
@@ -381,7 +382,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
   };
 
-  const loginApiCall = async (user, id, fcm, type) => {
+  const loginApiCall = async (user, id, fcm, type, country_code) => {
     setLoading(true);
     try {
       dispatch(setAuthId({ data: Uid, type }));
@@ -393,6 +394,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         type,
         phoneAuthType: isPhoneAuthPassword,
         password: phonePassword,
+        country_code: country_code,
       });
       if (res.status === 1) {
         if (res?.status == 1 && res?.message == "user_deactivated") {
@@ -507,6 +509,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         user?.providerData[0].email,
         fcmToken,
         "google",
+        null
       );
     } catch (error) {
       if (error?.message?.includes("auth/popup-closed-by-user")) {
@@ -658,7 +661,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setError(t("please_enter_password"));
         return;
       } else {
-        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone");
+        loginApiCall(
+          null,
+          phoneNumberWithoutCountryCode,
+          fcmToken,
+          "phone",
+          `+${countryCode}`,
+        );
       }
     } else {
       handleSendOTP(e);
@@ -1030,6 +1039,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         showNewUser={showNewUser}
         setShowNewUser={setShowNewUser}
         setPhoneNumberWithoutCountryCode={setPhoneNumberWithoutCountryCode}
+        setCountryCode={setCountryCode}
         setEmail={setEmail}
         setUserName={setUserName}
         userName={userName}

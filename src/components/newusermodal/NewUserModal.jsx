@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { t } from "@/utils/translation";
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import { RiCloseFill, RiCameraLine } from "react-icons/ri"; // Added camera icon
 import { setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
 import {
@@ -29,6 +31,7 @@ const NewUserModal = ({
   email,
   phoneNumberWithoutCountryCode,
   countryCode,
+  setCountryCode,
   setIsOTP,
 }) => {
   const dispatch = useDispatch();
@@ -259,13 +262,25 @@ const NewUserModal = ({
             </div>
             <div className="flex flex-col gap-1">
               <span className="font-bold text-base">{t("mobileNumber")}</span>
-              <input
-                type="text"
-                className="py-2 px-4 cardBorder outline-none rounded-sm disabled:text-gray-400"
-                placeholder={t("mobileNumber")}
-                value={phoneNumberWithoutCountryCode}
+              <PhoneInput
+                country={(countryCode || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in").replace("+", "")}
+                value={(countryCode || "").replace("+", "") + phoneNumberWithoutCountryCode}
+                onChange={(phone, data) => {
+                  const dialCode = data?.dialCode || "";
+                  const phoneWithoutDialCode = phone.startsWith(dialCode)
+                    ? phone.slice(dialCode.length)
+                    : phone;
+                  setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
+                  setCountryCode("+" + dialCode);
+                }}
                 disabled={authType == "phone"}
-                onChange={handleChangePhoneNumber}
+                containerClass="w-full"
+                inputClass="!w-full !py-2 !pl-12 !pr-4 !cardBorder !outline-none !rounded-sm !h-[40px]"
+                buttonClass="!cardBorder !rounded-sm"
+                placeholder={t("mobileNumber")}
+                inputProps={{
+                  placeholder: t("mobileNumber"),
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">

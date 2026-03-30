@@ -148,7 +148,10 @@ const OrderItems = ({
                   <td className="p-4">
                     <p className="font-bold">
                       {setting?.currency}
-                      {product?.price?.toFixed(
+                      {(product?.discounted_price !== 0
+                        ? product?.discounted_price
+                        : product?.price
+                      )?.toFixed(
                         setting?.decimal_point ? setting?.decimal_point : 0,
                       )}
                     </p>
@@ -303,7 +306,10 @@ const OrderItems = ({
                 <p className="font-bold">{t("price")}:</p>
                 <p className="font-bold">
                   {setting?.currency}
-                  {product?.price?.toFixed(
+                  {(product?.discounted_price !== 0
+                    ? product?.discounted_price
+                    : product?.price
+                  )?.toFixed(
                     setting?.decimal_point ? setting?.decimal_point : 0,
                   )}
                 </p>
