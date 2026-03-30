@@ -25,7 +25,7 @@ const nextConfig = {
         pathname: '/images/**',
       }
     ],
-    // unoptimized: true
+    unoptimized: process.env.NEXT_PUBLIC_SEO === "false" ? true : false
   },
 
   experimental: {
