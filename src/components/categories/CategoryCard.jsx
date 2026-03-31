@@ -13,12 +13,12 @@ const CategoryCard = ({ category, imageSize, padding }) => {
           }}
         >
           <ImageWithPlaceholder
-            src={category.image_url}
-            width={300}
-            height={300}
-            alt="Category Image"
-            className="rounded-full w-full h-full object-cover p-2"
-          />
+        src={category?.image_url}
+        alt={category?.name}
+        fill
+        sizes="(max-width: 768px) 33vw, (max-width: 1024px) 20vw, 150px"
+        className={`transition-all rounded-full duration-500 ease-in-out p-2 group-hover:scale-110 object-contain`}
+      />
         </div>
         <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full line-clamp-2">
           {category?.translations?.name ?? category?.name}
