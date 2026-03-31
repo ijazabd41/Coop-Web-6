@@ -143,6 +143,17 @@ const Header = () => {
       if (response.status == 1) {
         dispatch(setSelectedLanguage({ data: response?.data }));
         document.documentElement.dir = response?.data?.type;
+
+        // Keep URL in sync when language is changed via dropdown
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: { ...router.query, lang: response?.data?.code },
+          },
+          undefined,
+          { shallow: true }
+        );
+
         await api.updateFcmToken({
           langaugeId: response?.data?.admin_lang_id_for_fcm,
           fcmToken,

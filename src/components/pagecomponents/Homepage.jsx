@@ -31,7 +31,7 @@ const Homepage = () => {
     }
   }, []);
 
-  const { isLoading, data, isFetching } = useQuery({
+  const { isLoading, data, isFetching,refetch } = useQuery({
     queryKey: ["shopData", city?.latitude, city?.longitude, language?.id, isRefetch],
     queryFn: async () => {
       const latitude = parseFloat(city?.latitude);
@@ -48,6 +48,12 @@ const Homepage = () => {
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
   });
+
+  useEffect(() => {
+  if (language?.id) {
+    refetch();
+  }
+}, [language?.id]);
 
   const showLoading = isLoading && !data;
 

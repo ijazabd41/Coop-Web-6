@@ -45,7 +45,7 @@ const HorizontalProductCard = ({ product }) => {
     } else {
       setSelectedVariant(inStockVariant);
     }
-  }, []);
+  }, [product]);
 
   const calculateDiscount = (discountPrice, actualPrice) => {
     const difference = actualPrice - discountPrice;
@@ -460,12 +460,11 @@ const HorizontalProductCard = ({ product }) => {
         <div className="col-span-6">
           <div className="aspect-square w-full h-full relative">
             <ImageWithPlaceholder
-              className="object-cover aspect-square h-full w-full rounded-sm"
+              className="object-cover rounded-sm"
               alt={product.name}
               src={product.image_url}
-              width={200}
-              height={200}
-
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 200px"
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (

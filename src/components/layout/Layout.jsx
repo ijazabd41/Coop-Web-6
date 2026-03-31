@@ -24,6 +24,8 @@ const Layout = ({ children }) => {
   const setting = useSelector((state) => state.Setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
 
+  const availableLanguages = useSelector((state) => state.Language.availableLanguages);
+
   const [loading, setLoading] = useState(false);
   // const [showLocation, setShowLocation] = useState(false)
 
@@ -36,6 +38,28 @@ const Layout = ({ children }) => {
     fetchPaymentSetting();
     fetchLanguage();
   }, [language?.id]);
+
+  useEffect(() => {
+    if (!router.isReady || !availableLanguages?.length) return;
+
+    const queryLang = router.query.lang;
+    if (!queryLang) return;
+
+    if (queryLang === language?.code) return;
+
+    const targetLang = availableLanguages.find((l) => l.code === queryLang);
+    if (!targetLang) return;
+
+    api.getSystemLanguages({ id: targetLang.id, isDefault: 0, systemType: 3 })
+      .then((res) => {
+        if (res.status == 1) {
+          dispatch(setSelectedLanguage({ data: res.data }));
+          document.documentElement.dir = res.data.type;
+        }
+      })
+      .catch((err) => console.log("lang sync error", err));
+  }, [router.query.lang, router.isReady, availableLanguages]);
+
 
   const fetchLanguage = async () => {
     try {
