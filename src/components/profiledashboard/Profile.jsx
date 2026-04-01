@@ -237,7 +237,7 @@ const Profile = () => {
                   }}
                   containerClass="mt-1"
                   inputStyle={{ width: "100%" }}
-                  inputClass="!w-full !h-full !rounded-md !cardBorder !py-2 !pl-12 !pr-4 !disabled:text-gray-400"
+                  inputClass="!w-full !h-full !rounded-md !cardBorder !py-2 !pl-12 !pr-4 disabled:text-gray-400"
                   buttonClass="!rounded-l-md !cardBorder "
                 />
               </div>

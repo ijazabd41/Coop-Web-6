@@ -274,8 +274,8 @@ const NewUserModal = ({
                   setCountryCode("+" + dialCode);
                 }}
                 disabled={authType == "phone"}
-                containerClass="w-full"
-                inputClass="!w-full !py-2 !pl-12 !pr-4 !cardBorder !outline-none !rounded-sm !h-[40px]"
+                containerClass="w-full "
+                inputClass="!w-full !py-2 !pl-12 !pr-4 !cardBorder !outline-none !rounded-sm !h-[40px] disabled:text-gray-400"
                 buttonClass="!cardBorder !rounded-sm"
                 placeholder={t("mobileNumber")}
                 inputProps={{

@@ -17,7 +17,7 @@ const CategoryCard = ({ category, imageSize, padding }) => {
         alt={category?.name}
         fill
         sizes="(max-width: 768px) 33vw, (max-width: 1024px) 20vw, 150px"
-        className={`transition-all rounded-full duration-500 ease-in-out p-2 group-hover:scale-110 object-contain`}
+        className={`transition-all rounded-full duration-500 ease-in-out p-2 group-hover:scale-110 object-cover`}
       />
         </div>
         <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full line-clamp-2">
