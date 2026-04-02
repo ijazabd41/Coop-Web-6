@@ -459,14 +459,10 @@ export const addAddress = async ({
   longitude,
   is_default = 1,
   alternate_mobile = "",
-  country_code = "",
-  alternate_mobile_country_code = "",
 }) => {
   const formData = new FormData();
   formData.append("name", name);
   formData.append("mobile", mobile);
-  formData.append("country_code", country_code);
-  formData.append("alternate_mobile_country_code", alternate_mobile_country_code);
   formData.append("type", type);
   formData.append("address", address);
   formData.append("landmark", landmark);
@@ -501,15 +497,11 @@ export const updateAddress = async ({
   longitude,
   is_default = 1,
   alternate_mobile = "",
-  country_code = "",
-  alternate_mobile_country_code = "",
 }) => {
   const formData = new FormData();
   formData.append("id", id);
   formData.append("name", name);
   formData.append("mobile", mobile);
-  formData.append("country_code", country_code);
-  formData.append("alternate_mobile_country_code", alternate_mobile_country_code);
   formData.append("type", type);
   formData.append("address", address);
   formData.append("landmark", landmark);

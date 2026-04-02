@@ -85,7 +85,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE);
+    // Store as plain numeric dial code (e.g. "91") so `+${countryCode}` = "+91"
+    const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "";
+    setCountryCode(dialCode.replace(/^\+/, ""));
   }, []);
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
@@ -93,7 +95,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setInputType("number");
         dispatch(setAuthType({ data: "number" }));
         setPhoneNumber(`+919876543210`);
-        setCountryCode(defaultCountry);
+        // Use numeric dial code ("91"), not ISO code ("in")
+        const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "91";
+        setCountryCode(dialCode.replace(/^\+/, ""));
         setPhoneNumberWithoutCountryCode("9876543210");
         if (inputType != "email") {
           setOtp("123456");
@@ -200,7 +204,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       : value;
     setPhoneNumber(`+${value}`);
     setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
-    setCountryCode("+" + dialCode);
+    setCountryCode(dialCode);
     setOtp("");
   };
   const handleSendOTP = async (e) => {
@@ -690,7 +694,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             country={defaultCountry}
             value={phoneNumber}
             onChange={(phone, data) => handlePhoneNoChange(phone, data)}
-            onCountryChange={(code) => setCountryCode(code)}
+            // onCountryChange={(code) => setCountryCode(code)}
             inputProps={{
               name: "phone",
               required: true,

@@ -222,7 +222,7 @@ const ForgetPasswordModal = ({
       : value;
     setPhoneNumber(`+${value}`);
     setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
-    setCountryCode("+" + dialCode);
+    setCountryCode(dialCode);
   };
 
   const verifyUser = async (e) => {
