@@ -112,7 +112,7 @@ const HomeOfferModal = () => {
             </DialogTitle>
           </DialogHeader>
           <div className="bg-transparent">
-            <div className="h-full w-full">
+            <div className="h-full w-full ">
               <Link
                 href={getHref()}
                 target={type === "popup_url" ? "_blank" : "_self"}

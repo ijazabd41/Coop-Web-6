@@ -36,6 +36,7 @@ const ImageWithPlaceholder = ({
       quality={quality}
       priority={priority}
       className={className}
+      
       onClick={handleOnClick}
       onLoad={() => {
         setIsLoading(false);
