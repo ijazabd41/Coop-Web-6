@@ -51,7 +51,7 @@ const ListViewProductCard = ({ product }) => {
     } else {
       setSelectedVariant(inStockVariant);
     }
-  }, []);
+  }, [product]);
 
   const calculateDiscount = (discountPrice, actualPrice) => {
     const difference = actualPrice - discountPrice;

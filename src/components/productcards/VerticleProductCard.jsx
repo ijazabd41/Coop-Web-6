@@ -53,7 +53,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
     } else {
       setSelectedVariant(inStockVariant);
     }
-  }, []);
+  }, [product]);
 
   const calculateDiscount = (discountPrice, actualPrice) => {
     const difference = actualPrice - discountPrice;
@@ -484,7 +484,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               src={product?.image_url}
               width={300}
               height={300}
-              priority
+              priority={true}
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (

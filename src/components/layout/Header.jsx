@@ -26,12 +26,27 @@ import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { BiCaretRight } from "react-icons/bi";
 import { RxHamburgerMenu } from "react-icons/rx";
-import CartDrawer from "../cart/CartDrawer";
-import Login from "../login/Login";
+// import CartDrawer from "../cart/CartDrawer";
+// import Login from "../login/Login";
 import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 const Location = dynamic(() => import("../locationmodal/Location"), {
+  ssr: false,
+});
+const Login = dynamic(() => import("../login/Login"), {
+  ssr: false,
+});
+const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
+  ssr: false,
+});
+const LogoutModal = dynamic(() => import("../logoutmodal/LogoutModal"), {
+  ssr: false,
+});
+const ProfileDrawer = dynamic(() => import("../profiledashboard/ProfileDrawer"), {
+  ssr: false,
+});
+const MobileNavSidebar = dynamic(() => import("../mobile-nav-sidebar/MobileNavSidebar"), {
   ssr: false,
 });
 import {
@@ -49,8 +64,8 @@ import { useRouter } from "next/router";
 import { setCity } from "@/redux/slices/citySlice";
 import { setLocalTheme } from "@/redux/slices/themeSlice";
 import { useTheme } from "next-themes";
-import LogoutModal from "../logoutmodal/LogoutModal";
-import ProfileDrawer from "../profiledashboard/ProfileDrawer";
+// import LogoutModal from "../logoutmodal/LogoutModal";
+// import ProfileDrawer from "../profiledashboard/ProfileDrawer";
 import { clearCheckout } from "@/redux/slices/checkoutSlice";
 import {
   setFilterSearch,
@@ -62,9 +77,9 @@ import { useMediaQuery } from "react-responsive";
 import { RiCloseFill } from "react-icons/ri";
 import { setSelectedLanguage } from "@/redux/slices/languageSlice";
 import Image from "next/image";
-import MobileNavSidebar from "../mobile-nav-sidebar/MobileNavSidebar";
+// import MobileNavSidebar from "../mobile-nav-sidebar/MobileNavSidebar";
 
-import { setAvailableLanguages } from "@/redux/slices/languageSlice";
+
 import { CiSun } from "react-icons/ci";
 import { FiMoon } from "react-icons/fi";
 
@@ -143,6 +158,17 @@ const Header = () => {
       if (response.status == 1) {
         dispatch(setSelectedLanguage({ data: response?.data }));
         document.documentElement.dir = response?.data?.type;
+
+        // Keep URL in sync when language is changed via dropdown
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: { ...router.query, lang: response?.data?.code },
+          },
+          undefined,
+          { shallow: true }
+        );
+
         await api.updateFcmToken({
           langaugeId: response?.data?.admin_lang_id_for_fcm,
           fcmToken,

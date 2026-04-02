@@ -511,7 +511,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                     <div className="w-full relative">
                       {resultedPlaces?.suggestions?.length > 0 && (
                         <div
-                          className="absolute z-10 w-full bg-white rounded-lg shadow-lg max-h-[200px] overflow-y-auto"
+                          className="absolute z-10 w-full bodyBackgroundColor  rounded-lg shadow-lg max-h-[200px] overflow-y-auto"
                           role="listbox"
                         >
                           {resultedPlaces?.suggestions?.map((item, index) => (
@@ -521,7 +521,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                               className={`p-2 cursor-pointer transition-colors duration-150 ${
                                 highlightedIndex === index
                                   ? "bg-blue-500 text-white"
-                                  : "bg-white hover:bg-gray-100"
+                                  : "bodyBackgroundColor hover:bg-gray-100 hover:text-[#141a1f]"
                               }`}
                               onClick={() =>
                                 handleSelectLocation(item.placePrediction)

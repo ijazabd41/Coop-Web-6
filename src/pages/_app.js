@@ -51,27 +51,6 @@ function AppContent({ Component, pageProps }) {
     };
   }, [router]);
 
-  useEffect(() => {
-    if (!selectedLanguage?.code) return;
-
-    if (!router.isReady) return;
-
-    const currentLang = router.query.lang;
-
-    if (currentLang === selectedLanguage.code) return;
-
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          lang: selectedLanguage.code,
-        },
-      },
-      undefined
-    );
-  }, [selectedLanguage?.code, router.isReady, router.pathname, router.query]);
-
   return (
     <>
       {loading && <Loader screen="full" />}

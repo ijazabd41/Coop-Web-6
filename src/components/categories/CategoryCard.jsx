@@ -17,7 +17,7 @@ const CategoryCard = ({ category, imageSize, padding }) => {
             width={300}
             height={300}
             alt="Category Image"
-            className="rounded-full w-full h-full object-cover p-2 "
+            className="rounded-full w-full h-full object-cover p-2"
           />
         </div>
         <div className="font-semibold h-[42px] leading-5 mt-2 text-center w-full line-clamp-2">

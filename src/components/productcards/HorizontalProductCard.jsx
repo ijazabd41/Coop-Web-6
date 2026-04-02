@@ -45,7 +45,7 @@ const HorizontalProductCard = ({ product }) => {
     } else {
       setSelectedVariant(inStockVariant);
     }
-  }, []);
+  }, [product]);
 
   const calculateDiscount = (discountPrice, actualPrice) => {
     const difference = actualPrice - discountPrice;
@@ -465,7 +465,6 @@ const HorizontalProductCard = ({ product }) => {
               src={product.image_url}
               width={200}
               height={200}
-
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (

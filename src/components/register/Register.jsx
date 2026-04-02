@@ -29,7 +29,8 @@ const Register = ({
   const language = useSelector((state) => state.Language.selectedLanguage);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE);
+    const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "";
+    setCountryCode(dialCode.replace(/^\+/, ""));
   }, []);
 
   const [name, setName] = useState("");
@@ -78,7 +79,8 @@ const Register = ({
       : value;
     setPhoneNumber(`+${value}`);
     setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
-    setCountryCode("+" + (data?.dialCode || ""));
+    // Store WITHOUT "+" so `+${countryCode}` in API calls = "+91"
+    setCountryCode(data?.dialCode || "");
   };
 
   const handleMobileRegister = async (e) => {

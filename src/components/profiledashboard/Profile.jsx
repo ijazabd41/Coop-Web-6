@@ -7,6 +7,8 @@ import * as api from "@/api/apiRoutes";
 import { setCurrentUser } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const validateName = (name) => {
   if (!name.trim()) return "Name is required";
@@ -45,6 +47,7 @@ const Profile = () => {
   const [username, setUsername] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [mobileNumber, setMobileNumber] = useState(user?.mobile);
+  const [countryCode, setCountryCode] = useState(user?.country_code || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in");
   const [profileImage, setProfileImage] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
   const [errors, setErrors] = useState({});
@@ -53,11 +56,12 @@ const Profile = () => {
     setUsername(user?.name);
     setEmail(user?.email);
     setMobileNumber(user?.mobile);
+    setCountryCode(user?.country_code || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in");
   }, []);
 
   useEffect(() => {
     checkIfChecked();
-  }, [username, email, mobileNumber, profileImage]);
+  }, [username, email, mobileNumber, countryCode, profileImage]);
 
   const onImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -71,12 +75,22 @@ const Profile = () => {
       username !== user?.name ||
       email !== user?.email ||
       mobileNumber !== user?.mobile ||
+      countryCode !== user?.country_code ||
       !user?.profileImage
     ) {
       setIsChanged(true);
     } else {
       setIsChanged(false);
     }
+  };
+
+  const handlePhoneNoChange = (value, data) => {
+    const dialCode = data?.dialCode || "";
+    const phoneWithoutDialCode = value.startsWith(dialCode)
+      ? value.slice(dialCode.length)
+      : value;
+    setMobileNumber(phoneWithoutDialCode);
+    setCountryCode("+" + dialCode);
   };
 
   const handleProfileUpdate = async (e) => {
@@ -113,6 +127,7 @@ const Profile = () => {
         name: username,
         email: email,
         mobileNumber: mobileNumber,
+        country_code: countryCode,
         image: profileImage,
         type: authType,
       });
@@ -209,16 +224,21 @@ const Profile = () => {
                 <label htmlFor="mobile" className="block text-sm font-medium ">
                   {t("mobileNumber")} <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="tel"
-                  id="mobile"
-                  name="mobile"
-                  placeholder="Enter your mobile number"
-                  className="mt-1 block w-full rounded-md cardBorder py-2 px-4 disabled:text-gray-400"
-                  defaultValue={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  required
+                <PhoneInput
+                  country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in"}
+                  value={countryCode.replace("+", "") + mobileNumber}
+                  onChange={(phone, data) => handlePhoneNoChange(phone, data)}
                   disabled={authType == "phone"}
+                  inputProps={{
+                    name: "mobile",
+                    id: "mobile",
+                    required: true,
+                    placeholder: t("mobileNumber"),
+                  }}
+                  containerClass="mt-1"
+                  inputStyle={{ width: "100%" }}
+                  inputClass="!w-full !h-full !rounded-md !cardBorder !py-2 !pl-12 !pr-4 disabled:text-gray-400"
+                  buttonClass="!rounded-l-md !cardBorder "
                 />
               </div>
             </div>

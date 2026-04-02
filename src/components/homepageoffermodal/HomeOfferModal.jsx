@@ -117,12 +117,12 @@ const HomeOfferModal = () => {
                 href={getHref()}
                 target={type === "popup_url" ? "_blank" : "_self"}
                 onClick={handlePopupClick}
-                className="block outline-none"
+                 className="block outline-none"
               >
                 <Image
                   src={setting?.setting?.popup_image}
                   alt="Offer image"
-                  height={1000}
+                  fheight={1000}
                   width={1000}
                   className="h-full w-full object-contain focus-visible:outline-none"
                 />
