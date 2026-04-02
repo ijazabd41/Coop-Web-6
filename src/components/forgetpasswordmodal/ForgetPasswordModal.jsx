@@ -268,6 +268,7 @@ const ForgetPasswordModal = ({
         type: forgotPasswordType,
         password: password,
         confirmPassword,
+        country_code: countryCode,
       });
       if (res.status == 1) {
         toast.success(res.message);

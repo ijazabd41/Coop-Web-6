@@ -85,7 +85,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    setCountryCode(process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE);
+    // Store as plain numeric dial code (e.g. "91") so `+${countryCode}` = "+91"
+    const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "";
+    setCountryCode(dialCode.replace(/^\+/, ""));
   }, []);
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
@@ -93,7 +95,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setInputType("number");
         dispatch(setAuthType({ data: "number" }));
         setPhoneNumber(`+919876543210`);
-        setCountryCode(defaultCountry);
+        // Use numeric dial code ("91"), not ISO code ("in")
+        const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "91";
+        setCountryCode(dialCode.replace(/^\+/, ""));
         setPhoneNumberWithoutCountryCode("9876543210");
         if (inputType != "email") {
           setOtp("123456");
@@ -200,7 +204,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       : value;
     setPhoneNumber(`+${value}`);
     setPhoneNumberWithoutCountryCode(phoneWithoutDialCode);
-    setCountryCode("+" + dialCode);
+    setCountryCode(dialCode);
     setOtp("");
   };
   const handleSendOTP = async (e) => {
@@ -275,6 +279,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           phoneNumberWithoutCountryCode,
           fcmToken,
           "phone",
+          `+${countryCode}`,
         );
         setLoading(false);
       } catch (error) {
@@ -381,7 +386,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     }
   };
 
-  const loginApiCall = async (user, id, fcm, type) => {
+  const loginApiCall = async (user, id, fcm, type, country_code) => {
     setLoading(true);
     try {
       dispatch(setAuthId({ data: Uid, type }));
@@ -393,6 +398,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         type,
         phoneAuthType: isPhoneAuthPassword,
         password: phonePassword,
+        country_code: country_code,
       });
       if (res.status === 1) {
         if (res?.status == 1 && res?.message == "user_deactivated") {
@@ -507,6 +513,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         user?.providerData[0].email,
         fcmToken,
         "google",
+        null
       );
     } catch (error) {
       if (error?.message?.includes("auth/popup-closed-by-user")) {
@@ -658,7 +665,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         setError(t("please_enter_password"));
         return;
       } else {
-        loginApiCall(null, phoneNumberWithoutCountryCode, fcmToken, "phone");
+        loginApiCall(
+          null,
+          phoneNumberWithoutCountryCode,
+          fcmToken,
+          "phone",
+          `+${countryCode}`,
+        );
       }
     } else {
       handleSendOTP(e);
@@ -681,7 +694,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             country={defaultCountry}
             value={phoneNumber}
             onChange={(phone, data) => handlePhoneNoChange(phone, data)}
-            onCountryChange={(code) => setCountryCode(code)}
+            // onCountryChange={(code) => setCountryCode(code)}
             inputProps={{
               name: "phone",
               required: true,
@@ -1030,6 +1043,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         showNewUser={showNewUser}
         setShowNewUser={setShowNewUser}
         setPhoneNumberWithoutCountryCode={setPhoneNumberWithoutCountryCode}
+        setCountryCode={setCountryCode}
         setEmail={setEmail}
         setUserName={setUserName}
         userName={userName}

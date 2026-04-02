@@ -14,6 +14,7 @@ const ImageWithPlaceholder = ({
   quality,
   width,
   height,
+  fill,
 }) => {
   const setting = useSelector((state) => state.Setting);
   const [isLoading, setIsLoading] = useState(!src);
@@ -30,9 +31,11 @@ const ImageWithPlaceholder = ({
           : src
       }
       alt={alt}
-      {...(width && height
-        ? { width, height }
-        : {fill: true, sizes: sizes || "100vw" })}
+      {...(fill
+        ? { fill, sizes: sizes || "100vw" }
+        : width && height
+          ? { width, height }
+          : { fill: true, sizes: sizes || "100vw" })}
       quality={quality}
       priority={priority}
       className={className}

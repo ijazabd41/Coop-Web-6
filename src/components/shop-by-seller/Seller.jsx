@@ -11,9 +11,9 @@ const Seller = ({ seller }) => {
                     <ImageWithPlaceholder
                         src={seller?.logo_url}
                         alt={seller?.name}
-                        width={100}
-                        height={100}
-                        className='h-full w-full rounded-md'
+                        fill
+                        sizes="80px"
+                        className='rounded-md object-cover'
                     />
                 </div>
 

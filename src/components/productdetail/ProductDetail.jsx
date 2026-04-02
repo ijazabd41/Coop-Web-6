@@ -59,6 +59,7 @@ import {
 } from "@/redux/slices/productFilterSlice";
 import RecentalyViewedProducts from "../productslist/RecentalyViewedProducts";
 import { setIsRefetch } from "@/redux/slices/shopSlice";
+import ProductDetailSkeleton from "../skeleton/ProductDetailSkeleton";
 
 const ProductDetail = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -430,7 +431,7 @@ const ProductDetail = () => {
     <section>
       {isLoading ? (
         <div className="h-[100vh]">
-          <Loader screen="full" />
+          <ProductDetailSkeleton />
         </div>
       ) : productNotAvailable == true ? (
         <div className="h-full w-full flex flex-col items-center my-4">
