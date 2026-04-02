@@ -196,7 +196,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                       </span>
                     </div>
                     <button
-                      className="primaryBackColor text-white text-xl md:text-[16px] lg:text-xl font-semibold px-4 md:px-0 lg:px-4 py-2 rounded-md flex items-center gap-2 justify-center w-auto md:w-[208px] lg:w-auto"
+                      className="primaryBackColor text-white text-xl md:text-[16px] lg:text-xl font-semibold px-4 md:px-0 lg:px-4 py-2 rounded-md flex items-center gap-2 justify-center w-auto md:w-[190px] lg:w-auto"
                       onClick={handleSubscriptionClick}
                     >
                       {`${t("renew")} ${user?.subscription_name}`}
