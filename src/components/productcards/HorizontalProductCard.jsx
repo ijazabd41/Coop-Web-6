@@ -460,11 +460,11 @@ const HorizontalProductCard = ({ product }) => {
         <div className="col-span-6">
           <div className="aspect-square w-full h-full relative">
             <ImageWithPlaceholder
-              className="object-cover rounded-sm"
+              className="object-cover aspect-square h-full w-full rounded-sm "
               alt={product.name}
               src={product.image_url}
-              fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 200px"
+              width={200}
+              height={200}
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (

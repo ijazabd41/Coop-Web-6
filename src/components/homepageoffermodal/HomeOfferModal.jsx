@@ -112,20 +112,19 @@ const HomeOfferModal = () => {
             </DialogTitle>
           </DialogHeader>
           <div className="bg-transparent">
-            <div className="relative aspect-square w-full max-w-[500px] mx-auto overflow-hidden rounded-md">
+            <div className="h-full w-full ">
               <Link
                 href={getHref()}
                 target={type === "popup_url" ? "_blank" : "_self"}
                 onClick={handlePopupClick}
-                className="block outline-none w-full h-full relative"
+                 className="block outline-none"
               >
                 <Image
                   src={setting?.setting?.popup_image}
                   alt="Offer image"
-                  fill
-                  sizes="(max-width: 768px) 90vw, 500px"
-                  className="object-contain focus-visible:outline-none"
-                  priority
+                  fheight={1000}
+                  width={1000}
+                  className="h-full w-full object-contain focus-visible:outline-none"
                 />
               </Link>
             </div>

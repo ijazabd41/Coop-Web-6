@@ -479,11 +479,11 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
         <div className="flex relative textColor">
           <div className="relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72">
             <ImageWithPlaceholder
-              className="rounded-lg object-cover"
+              className="rounded-lg object-cover h-full w-full " 
               alt={product?.translations?.name ?? product?.name}
               src={product?.image_url}
-              fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1200px) 25vw, 300px"
+              width={300}
+              height={300}
               priority={true}
             />
             {selectedVariant?.discounted_price !== 0 &&
