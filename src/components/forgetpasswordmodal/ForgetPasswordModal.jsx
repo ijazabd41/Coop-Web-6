@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 
+
 const ForgetPasswordModal = ({
   showForgetPassword,
   setShowForgetPassword,
@@ -17,8 +18,8 @@ const ForgetPasswordModal = ({
   isErrorMessage,
 }) => {
   const language = useSelector((state) => state.Language.selectedLanguage);
-  const defaultCountry = process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in";
   const setting = useSelector((state) => state.Setting.setting);
+  const defaultCountry = setting?.nation_code?.toLowerCase() || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE;
   const [stage, setStage] = useState(0);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");

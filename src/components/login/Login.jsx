@@ -51,7 +51,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  const defaultCountry = process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in";
+  const defaultCountry = setting?.nation_code?.toLowerCase() || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE;
 
   const [userName, setUserName] = useState("");
   const [showNewUser, setShowNewUser] = useState(false);
@@ -85,19 +85,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   }, [inputType]);
 
   useEffect(() => {
-    // Store as plain numeric dial code (e.g. "91") so `+${countryCode}` = "+91"
-    const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "";
-    setCountryCode(dialCode.replace(/^\+/, ""));
+    const dialCode = setting?.country_code || process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE;
+    setCountryCode(dialCode);
   }, []);
+
   useEffect(() => {
     if (showLogin === true && showRegister === false) {
       if (process.env.NEXT_PUBLIC_DEMO_MODE == "true") {
         setInputType("number");
         dispatch(setAuthType({ data: "number" }));
         setPhoneNumber(`+919876543210`);
-        // Use numeric dial code ("91"), not ISO code ("in")
-        const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "91";
-        setCountryCode(dialCode.replace(/^\+/, ""));
+        const dialCode = setting?.country_code || process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE;
+        setCountryCode(dialCode);
         setPhoneNumberWithoutCountryCode("9876543210");
         if (inputType != "email") {
           setOtp("123456");
@@ -694,7 +693,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             country={defaultCountry}
             value={phoneNumber}
             onChange={(phone, data) => handlePhoneNoChange(phone, data)}
-            // onCountryChange={(code) => setCountryCode(code)}
+            onCountryChange={(code) => setCountryCode(code)}
             inputProps={{
               name: "phone",
               required: true,

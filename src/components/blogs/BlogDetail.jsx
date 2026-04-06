@@ -101,7 +101,7 @@ const BlogDetail = () => {
               <div className="flex flex-col ">
                 <p className="subTextColor">{t("published_date")}</p>
                 <h4 className="font-bold">
-                  {formatCustomDate(blog?.created_at)}
+                  {blog?.created_at}
                 </h4>
               </div>
               <div className="border h-12 hidden md:block"></div>

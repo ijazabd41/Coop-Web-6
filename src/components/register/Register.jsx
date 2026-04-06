@@ -29,8 +29,8 @@ const Register = ({
   const language = useSelector((state) => state.Language.selectedLanguage);
 
   useEffect(() => {
-    const dialCode = process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE || "";
-    setCountryCode(dialCode.replace(/^\+/, ""));
+    const dialCode = setting?.country_code || process.env.NEXT_PUBLIC_COUNTRY_DIAL_CODE;
+    setCountryCode(dialCode);
   }, []);
 
   const [name, setName] = useState("");
@@ -449,7 +449,7 @@ const Register = ({
                 </span>
                 <PhoneInput
                   inputStyle={{ direction: language?.type }}
-                  country={process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
+                  country={setting?.nation_code?.toLowerCase() || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
                   value={phoneNumber}
                   onChange={(phone, data) => handlePhoneNumberChange(phone, data)}
                   onCountryChange={(code) => setCountryCode(code)}

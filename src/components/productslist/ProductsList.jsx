@@ -61,7 +61,6 @@ const Products = () => {
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
 
-  const isCategoryListing = listing_source === "category";
   const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
 
   const currentCategoryName = useMemo(() => {
@@ -91,8 +90,10 @@ const Products = () => {
 
   useEffect(() => {
     if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
+    // const needsTranslation = categoryBreadcrumb.some(cat => !cat.translations);
+    
     refetchBreadcrumbTranslations();
-  }, [selectedLanguage]);
+  }, [selectedLanguage, categoryBreadcrumb.length > 0]);
 
   const refetchBreadcrumbTranslations = async () => {
     const updated = await Promise.all(
@@ -103,17 +104,30 @@ const Products = () => {
             is_own_data: 1,
           });
           const data = res?.data;
+
+          // Find the matched category from the response array to avoid taking the first one if the API returns a list
+          const matchedCategory = Array.isArray(data)
+            ? data.find((c) => c.slug === category.slug || c.id === category.id)
+            : data;
+
+          if (!matchedCategory) return category;
+
           return {
             ...category,
-            name: data?.[0]?.translations?.name || category.name,
-            translations: data?.[0]?.translations || category.translations,
+            name: matchedCategory?.translations?.name || matchedCategory?.name || category.name,
+            translations: matchedCategory?.translations || category.translations,
           };
         } catch (error) {
           return category;
         }
       }),
     );
+
+    // Only dispatch if there's an actual change to avoid infinite loops
+    const isDifferent = JSON.stringify(updated) !== JSON.stringify(categoryBreadcrumb);
+    if (isDifferent) {
     dispatch(setCategoryBreadcrumb({ data: updated }));
+    }
   };
 
   const resolvedCategory =
@@ -248,7 +262,7 @@ const Products = () => {
     isLoading: isSubCatLoading,
     error,
   } = useQuery({
-    queryKey: ["subCategories", listing_source, category_slug],
+    queryKey: ["subCategories", listing_source, category_slug,language?.id],
     queryFn: async () => {
       
       if (listing_source !== "category" || !category_slug) {
@@ -298,10 +312,37 @@ const Products = () => {
     dispatch(setFilterCategory({ data: category.id }));
     dispatch(setCategorySlug({ data: category.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
-
-    router.push("/products");
+    router.push({
+    pathname: "/products",
+    query: {
+      category: category.slug,
+      category_id: category.id,
+      source: "category",
+      lang: language.code
+    }
+  });
   };
 
+  useEffect(() => {
+  if (!router.isReady) return;
+
+  const { category, breadcrumb, source } = router.query;
+
+  if (category) {
+    dispatch(setCategorySlug({ data: category }));
+  }
+
+  if (source) {
+    dispatch(setListingSource({ data: source }));
+  }
+
+  if (breadcrumb) {
+  const parsed = JSON.parse(breadcrumb);
+
+  dispatch(setCategoryBreadcrumb({ data: parsed }));
+  dispatch(setFilterCategory({ data: parsed.at(-1)?.id }));
+}
+}, [router.isReady]);
   return (
     <section>
       <div>

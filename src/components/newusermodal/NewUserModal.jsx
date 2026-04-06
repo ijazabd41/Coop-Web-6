@@ -263,7 +263,7 @@ const NewUserModal = ({
             <div className="flex flex-col gap-1">
               <span className="font-bold text-base">{t("mobileNumber")}</span>
               <PhoneInput
-                country={(countryCode || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in").replace("+", "")}
+                country={setting?.nation_code?.toLowerCase() || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE}
                 value={(countryCode || "").replace("+", "") + phoneNumberWithoutCountryCode}
                 onChange={(phone, data) => {
                   const dialCode = data?.dialCode || "";

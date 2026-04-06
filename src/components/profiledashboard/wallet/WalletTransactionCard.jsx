@@ -16,7 +16,7 @@ const WalletTransactionCard = ({ transaction }) => {
           </div>
           <div className="text-left md:text-right">
             <p className="SecondaryTextColor break-words">{t("date")}</p>
-            <p className="font-bold">{formatCustomDate(transaction?.created_at)}</p>
+            <p className="font-bold">{transaction?.created_at}</p>
           </div>
         </div>
 

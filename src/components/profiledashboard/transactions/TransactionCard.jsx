@@ -41,7 +41,7 @@ const TransactionCard = ({ transaction }) => {
                     </div>
                     <div className="text-right">
                         <p className="font-semibold">{t("date")}</p>
-                        <p className="">{formatCustomDate(transaction?.created_at)}</p>
+                        <p className="">{transaction?.created_at}</p>
                     </div>
                 </div>
 

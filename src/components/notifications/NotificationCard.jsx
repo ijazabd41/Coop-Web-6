@@ -54,7 +54,7 @@ const NotificationCard = ({ notification }) => {
           <div className="flex items-center gap-2">
             <IoTimeOutline />
             <div className="opacity-70 text-nowrap">
-              {formatCustomDate(notification?.date_sent)}
+              {notification?.date_sent}
             </div>
           </div>
         </div>
