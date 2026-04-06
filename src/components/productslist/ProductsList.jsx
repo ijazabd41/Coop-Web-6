@@ -39,6 +39,23 @@ import {
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 
+const findCategoryPath = (categories, targetId) => {
+  if (!categories || !Array.isArray(categories)) return null;
+
+  for (const category of categories) {
+    if (category.id == targetId) {
+      return [category];
+    }
+    if (category.cat_active_childs && category.cat_active_childs.length > 0) {
+      const path = findCategoryPath(category.cat_active_childs, targetId);
+      if (path) {
+        return [category, ...path];
+      }
+    }
+  }
+  return null;
+};
+
 const Products = () => {
   const total_products_per_page = 12;
   const dispatch = useDispatch();
@@ -87,6 +104,46 @@ const Products = () => {
     }, 500);
     return () => clearTimeout(timer);
   }, [filter?.search]);
+
+  // URL Hydration for shared links
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { category_id, source, category: slug_from_url } = router.query;
+
+    if (source === "category" && category_id) {
+      // Only hydrate if we don't have a breadcrumb or the category ID doesn't match
+      const currentCatId = categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.id;
+      
+      if (String(currentCatId) !== String(category_id) || categoryBreadcrumb.length === 0) {
+        const hydrate = async () => {
+          dispatch(setListingSource({ data: "category" }));
+          dispatch(setFilterCategory({ data: category_id }));
+          dispatch(setCategorySlug({ data: slug_from_url }));
+
+          try {
+            const res = await api.getCategories();
+            if (res.status === 1) {
+              const allCategories = res.data;
+              const path = findCategoryPath(allCategories, category_id);
+              if (path) {
+                const formattedPath = path.map((cat) => ({
+                  id: cat.id,
+                  name: cat.translations?.name || cat.name,
+                  slug: cat.slug,
+                  translations: cat.translations,
+                }));
+                dispatch(setCategoryBreadcrumb({ data: formattedPath }));
+              }
+            }
+          } catch (error) {
+            console.error("Error hydrating category from URL:", error);
+          }
+        };
+        hydrate();
+      }
+    }
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
@@ -323,26 +380,7 @@ const Products = () => {
   });
   };
 
-  useEffect(() => {
-  if (!router.isReady) return;
-
-  const { category, breadcrumb, source } = router.query;
-
-  if (category) {
-    dispatch(setCategorySlug({ data: category }));
-  }
-
-  if (source) {
-    dispatch(setListingSource({ data: source }));
-  }
-
-  if (breadcrumb) {
-  const parsed = JSON.parse(breadcrumb);
-
-  dispatch(setCategoryBreadcrumb({ data: parsed }));
-  dispatch(setFilterCategory({ data: parsed.at(-1)?.id }));
-}
-}, [router.isReady]);
+  
   return (
     <section>
       <div>

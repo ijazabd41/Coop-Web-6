@@ -3,7 +3,7 @@ import React, { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery,QueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import {
   FaLink,
@@ -94,7 +94,7 @@ const ProductDetail = () => {
   const [recentlyVisitedProduct, setRecentlyVisitedProduct] = useState([]);
 
   const ratingsCount = 10;
-
+  const queryClient = new QueryClient();
 
 
   const handleAddRecentlyViewedProduct = async (product) => {
@@ -106,6 +106,38 @@ const ProductDetail = () => {
       console.log("Error", error);
     }
   };
+
+ const UpdateRecentlyViewedCache = (product) => {
+  queryClient.setQueryData(["shopData", city?.latitude, city?.longitude, language?.id], 
+    (oldData) => {
+      if (!oldData) return oldData;
+
+      const newData = { ...oldData };
+
+      const sectionIndex = newData.data.sections.findIndex(
+        (s) => s.product_type === "recently_visited_products"
+      );
+
+      if (sectionIndex !== -1) {
+        const section = newData.data.sections[sectionIndex];
+
+        const existingProducts = section.products || [];
+        const updatedProducts = [
+          product,
+          ...existingProducts.filter((p) => p.id !== product.id),
+        ].slice(0, 10);
+
+        section.products = updatedProducts;
+        section.product_ids = updatedProducts.map((p) => p.id);
+      }
+      else{
+         dispatch(setIsRefetch());
+      }
+
+      return newData;
+    
+  });
+ };
 
   const handleFetchRecentlyViewedProducts = async (product) => {
     try {
@@ -159,7 +191,8 @@ const ProductDetail = () => {
         setSelectedImage(res?.data?.image_url);
         handleAddRecentlyViewedProduct(res?.data);
         handleFetchRecentlyViewedProducts(res?.data);
-        dispatch(setIsRefetch());
+        UpdateRecentlyViewedCache(res?.data);
+       
       } else {
         setProductNotAvailable(true);
       }
