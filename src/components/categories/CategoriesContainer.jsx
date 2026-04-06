@@ -59,7 +59,15 @@ const CategoriesContainer = ({ categories }) => {
     dispatch(setCategorySlug({ data: category.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
 
-    router.push("/products");
+    router.push({
+    pathname: "/products",
+    query: {
+      category: category.slug,
+      category_id: category.id,
+      source: "category",
+      lang: language.code
+    }
+  });
   };
   useEffect(() => {
     dispatch(setCategoryBreadcrumb({ data: [] }));

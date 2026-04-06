@@ -14,6 +14,7 @@ const CategoryFlowBreadcrumb = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const rtl = isRtl();
+  const language = useSelector((state) => state.Language.selectedLanguage);
 
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
@@ -29,7 +30,15 @@ const CategoryFlowBreadcrumb = () => {
     dispatch(setCategorySlug({ data: cat.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
 
-    router.push("/products");
+    router.push({
+    pathname: "/products",
+    query: {
+      category: cat.slug,
+      category_id: cat.id,
+      source: "category",
+      lang: language.code
+    }
+  });
   };
 
   return (

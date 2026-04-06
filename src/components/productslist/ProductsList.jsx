@@ -39,6 +39,23 @@ import {
 import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 
+const findCategoryPath = (categories, targetId) => {
+  if (!categories || !Array.isArray(categories)) return null;
+
+  for (const category of categories) {
+    if (category.id == targetId) {
+      return [category];
+    }
+    if (category.cat_active_childs && category.cat_active_childs.length > 0) {
+      const path = findCategoryPath(category.cat_active_childs, targetId);
+      if (path) {
+        return [category, ...path];
+      }
+    }
+  }
+  return null;
+};
+
 const Products = () => {
   const total_products_per_page = 12;
   const dispatch = useDispatch();
@@ -61,7 +78,6 @@ const Products = () => {
     (state) => state.ProductFilter.categoryBreadcrumb,
   );
 
-  const isCategoryListing = listing_source === "category";
   const currentCategory = categoryBreadcrumb?.[categoryBreadcrumb.length - 1];
 
   const currentCategoryName = useMemo(() => {
@@ -89,10 +105,52 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [filter?.search]);
 
+  // URL Hydration for shared links
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { category_id, source, category: slug_from_url } = router.query;
+
+    if (source === "category" && category_id) {
+      // Only hydrate if we don't have a breadcrumb or the category ID doesn't match
+      const currentCatId = categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.id;
+      
+      if (String(currentCatId) !== String(category_id) || categoryBreadcrumb.length === 0) {
+        const hydrate = async () => {
+          dispatch(setListingSource({ data: "category" }));
+          dispatch(setFilterCategory({ data: category_id }));
+          dispatch(setCategorySlug({ data: slug_from_url }));
+
+          try {
+            const res = await api.getCategories();
+            if (res.status === 1) {
+              const allCategories = res.data;
+              const path = findCategoryPath(allCategories, category_id);
+              if (path) {
+                const formattedPath = path.map((cat) => ({
+                  id: cat.id,
+                  name: cat.translations?.name || cat.name,
+                  slug: cat.slug,
+                  translations: cat.translations,
+                }));
+                dispatch(setCategoryBreadcrumb({ data: formattedPath }));
+              }
+            }
+          } catch (error) {
+            console.error("Error hydrating category from URL:", error);
+          }
+        };
+        hydrate();
+      }
+    }
+  }, [router.isReady, router.query]);
+
   useEffect(() => {
     if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
+    // const needsTranslation = categoryBreadcrumb.some(cat => !cat.translations);
+    
     refetchBreadcrumbTranslations();
-  }, [selectedLanguage]);
+  }, [selectedLanguage, categoryBreadcrumb.length > 0]);
 
   const refetchBreadcrumbTranslations = async () => {
     const updated = await Promise.all(
@@ -103,17 +161,30 @@ const Products = () => {
             is_own_data: 1,
           });
           const data = res?.data;
+
+          // Find the matched category from the response array to avoid taking the first one if the API returns a list
+          const matchedCategory = Array.isArray(data)
+            ? data.find((c) => c.slug === category.slug || c.id === category.id)
+            : data;
+
+          if (!matchedCategory) return category;
+
           return {
             ...category,
-            name: data?.[0]?.translations?.name || category.name,
-            translations: data?.[0]?.translations || category.translations,
+            name: matchedCategory?.translations?.name || matchedCategory?.name || category.name,
+            translations: matchedCategory?.translations || category.translations,
           };
         } catch (error) {
           return category;
         }
       }),
     );
+
+    // Only dispatch if there's an actual change to avoid infinite loops
+    const isDifferent = JSON.stringify(updated) !== JSON.stringify(categoryBreadcrumb);
+    if (isDifferent) {
     dispatch(setCategoryBreadcrumb({ data: updated }));
+    }
   };
 
   const resolvedCategory =
@@ -248,7 +319,7 @@ const Products = () => {
     isLoading: isSubCatLoading,
     error,
   } = useQuery({
-    queryKey: ["subCategories", listing_source, category_slug],
+    queryKey: ["subCategories", listing_source, category_slug,language?.id],
     queryFn: async () => {
       
       if (listing_source !== "category" || !category_slug) {
@@ -298,10 +369,18 @@ const Products = () => {
     dispatch(setFilterCategory({ data: category.id }));
     dispatch(setCategorySlug({ data: category.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
-
-    router.push("/products");
+    router.push({
+    pathname: "/products",
+    query: {
+      category: category.slug,
+      category_id: category.id,
+      source: "category",
+      lang: language.code
+    }
+  });
   };
 
+  
   return (
     <section>
       <div>

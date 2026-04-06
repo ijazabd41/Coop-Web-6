@@ -129,6 +129,21 @@ const Layout = ({ children }) => {
       console.log("Error", error);
     }
   };
+  useEffect(() => {
+  if (!router.isReady) return;
+
+  // If language exists but URL doesn't have it → add it
+  if (language?.code && !router.query.lang) {
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, lang: language.code },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }
+}, [language, router.isReady]);
 
   const fetchSetting = async () => {
     setLoading(true);

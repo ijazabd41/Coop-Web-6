@@ -43,7 +43,7 @@ const PrevOrderCard = ({ order }) => {
               <div>
                 <p className="font-normal text-sm">{t("orderDate")}</p>
                 <p className="font-bold text-sm">
-                  {formatCustomDate(order?.date)}
+                  {order?.date}
                 </p>
               </div>
             </div>

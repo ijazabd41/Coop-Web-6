@@ -130,7 +130,7 @@ const ActiveOrdersCard = ({ order }) => {
                   {t("orderDate")}
                 </p>
                 <p className="font-bold text-sm">
-                  {formatCustomDate(order?.date)}
+                  {order?.date}
                 </p>
               </div>
             </div>

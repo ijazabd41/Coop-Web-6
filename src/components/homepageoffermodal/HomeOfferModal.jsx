@@ -122,7 +122,7 @@ const HomeOfferModal = () => {
                 <Image
                   src={setting?.setting?.popup_image}
                   alt="Offer image"
-                  fheight={1000}
+                  height={1000}
                   width={1000}
                   className="h-full w-full object-contain focus-visible:outline-none"
                 />
