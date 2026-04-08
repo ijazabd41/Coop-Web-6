@@ -105,45 +105,7 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [filter?.search]);
 
-  // URL Hydration for shared links
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    const { category_id, source, category: slug_from_url } = router.query;
-
-    if (source === "category" && category_id) {
-      // Only hydrate if we don't have a breadcrumb or the category ID doesn't match
-      const currentCatId = categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.id;
-      
-      if (String(currentCatId) !== String(category_id) || categoryBreadcrumb.length === 0) {
-        const hydrate = async () => {
-          dispatch(setListingSource({ data: "category" }));
-          dispatch(setFilterCategory({ data: category_id }));
-          dispatch(setCategorySlug({ data: slug_from_url }));
-
-          try {
-            const res = await api.getCategories();
-            if (res.status === 1) {
-              const allCategories = res.data;
-              const path = findCategoryPath(allCategories, category_id);
-              if (path) {
-                const formattedPath = path.map((cat) => ({
-                  id: cat.id,
-                  name: cat.translations?.name || cat.name,
-                  slug: cat.slug,
-                  translations: cat.translations,
-                }));
-                dispatch(setCategoryBreadcrumb({ data: formattedPath }));
-              }
-            }
-          } catch (error) {
-            console.error("Error hydrating category from URL:", error);
-          }
-        };
-        hydrate();
-      }
-    }
-  }, [router.isReady, router.query]);
+  
 
   useEffect(() => {
     if (!categoryBreadcrumb || categoryBreadcrumb.length === 0) return;
@@ -241,6 +203,7 @@ const Products = () => {
       city?.city?.latitude,
       city?.city?.longitude,
       language?.id,
+      resolvedCategory,
     ],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, allPages) => {
@@ -319,7 +282,7 @@ const Products = () => {
     isLoading: isSubCatLoading,
     error,
   } = useQuery({
-    queryKey: ["subCategories", listing_source, category_slug,language?.id],
+    queryKey: ["subCategories", listing_source, category_slug,language?.id,resolvedCategory],
     queryFn: async () => {
       
       if (listing_source !== "category" || !category_slug) {
@@ -351,6 +314,7 @@ const Products = () => {
   });
 
   const handleCategoryClick = (category) => {
+    // Avoid duplicate entries in the breadcrumb.
     const exists = categoryBreadcrumb.find((c) => c.id === category.id);
 
     const newBreadcrumb = exists
@@ -359,26 +323,78 @@ const Products = () => {
         ...categoryBreadcrumb,
         {
           id: category.id,
-          name: category?.translations?.name || category.name,
+            name:
+              category?.translations?.[selectedLanguage?.code]?.name ||
+              category?.translations?.name ||
+              category.name,
           slug: category.slug,
           translations: category.translations,
         },
       ];
 
+    // Update Redux state — the product query reacts to this automatically.
     dispatch(setListingSource({ data: "category" }));
     dispatch(setFilterCategory({ data: category.id }));
     dispatch(setCategorySlug({ data: category.slug }));
     dispatch(setCategoryBreadcrumb({ data: newBreadcrumb }));
-    router.push({
+
+    // Reflect the new category in the URL so the link is shareable.
+    // `shallow: true` keeps Next.js from unmounting / re-mounting the page,
+    // and the hydration effect won't re-run because hasHydrated.current is
+    // already true for this page load.
+    router.replace(
+      {
     pathname: "/products",
     query: {
       category: category.slug,
       category_id: category.id,
       source: "category",
-      lang: language.code
-    }
-  });
+          lang: language?.code,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
+  // URL Hydration for shared links
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { category_id, source, category: slug_from_url } = router.query;
+
+    if (source === "category" && category_id) {
+      // Only hydrate if we don't have a breadcrumb or the category ID doesn't match
+      const currentCatId = categoryBreadcrumb?.[categoryBreadcrumb.length - 1]?.id;
+      
+      if (String(currentCatId) !== String(category_id) || categoryBreadcrumb.length === 0) {
+        const hydrate = async () => {
+          dispatch(setListingSource({ data: "category" }));
+          dispatch(setFilterCategory({ data: category_id }));
+          dispatch(setCategorySlug({ data: slug_from_url }));
+
+          try {
+            const res = await api.getCategories();
+            if (res.status === 1) {
+              const allCategories = res.data;
+              const path = findCategoryPath(allCategories, category_id);
+              if (path) {
+                const formattedPath = path.map((cat) => ({
+                  id: cat.id,
+                  name: cat.translations?.name || cat.name,
+                  slug: cat.slug,
+                  translations: cat.translations,
+                }));
+                dispatch(setCategoryBreadcrumb({ data: formattedPath }));
+              }
+            }
+          } catch (error) {
+            console.error("Error hydrating category from URL:", error);
+          }
+        };
+        hydrate();
+      }
+    }
+  }, [router.isReady, router.query]);
 
   
   return (
