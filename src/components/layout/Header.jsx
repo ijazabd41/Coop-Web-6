@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
+import { MdLightMode } from "react-icons/md";
 import * as api from "@/api/apiRoutes";
 import {
   IoCartOutline,
@@ -26,7 +27,7 @@ import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { BiCaretRight } from "react-icons/bi";
 import { RxHamburgerMenu } from "react-icons/rx";
-// import CartDrawer from "../cart/CartDrawer";
+import CartDrawer from "../cart/CartDrawer";
 // import Login from "../login/Login";
 import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,9 +38,9 @@ const Location = dynamic(() => import("../locationmodal/Location"), {
 const Login = dynamic(() => import("../login/Login"), {
   ssr: false,
 });
-const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
-  ssr: false,
-});
+// const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
+//   ssr: false,
+// });
 const LogoutModal = dynamic(() => import("../logoutmodal/LogoutModal"), {
   ssr: false,
 });
@@ -149,6 +150,7 @@ const Header = () => {
   };
 
   const handleLanguageChange = async (language) => {
+    if (language?.code === router.query.lang) return;
     try {
       const response = await api.getSystemLanguages({
         id: language?.id,
@@ -157,7 +159,7 @@ const Header = () => {
       });
       if (response.status == 1) {
         dispatch(setSelectedLanguage({ data: response?.data }));
-        document.documentElement.dir = response?.data?.type;
+        // document.documentElement.dir = response?.data?.type;
 
         // Keep URL in sync when language is changed via dropdown
         router.replace(
@@ -332,7 +334,7 @@ const Header = () => {
             <div className="flex gap-[8px] flex-last">
               <DropdownMenu>
                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
-                  {themes?.theme == "light" ? <FaSun /> : <FaMoon />}
+                  {themes?.theme == "light" ? <MdLightMode size={20}/> : <FaMoon />}
                   {t(themes?.theme)}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[100px] ">
@@ -340,7 +342,7 @@ const Header = () => {
                     onSelect={() => handleChangeTheme("light")}
                     className="flex gap-2"
                   >
-                    <FaSun />
+                    <MdLightMode size={20}/>
                     {t("light")}
                   </DropdownMenuItem>
                   <DropdownMenuItem

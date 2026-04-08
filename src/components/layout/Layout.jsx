@@ -36,29 +36,34 @@ const Layout = ({ children }) => {
   useEffect(() => {
     fetchSetting();
     fetchPaymentSetting();
+    if (!availableLanguages?.length) {
     fetchLanguage();
+  }
   }, [language?.id]);
 
   useEffect(() => {
-    if (!router.isReady || !availableLanguages?.length) return;
+  if (!router.isReady || !availableLanguages?.length) return;
 
-    const queryLang = router.query.lang;
-    if (!queryLang) return;
+  const queryLang = router.query.lang;
 
-    if (queryLang === language?.code) return;
+  if (!queryLang || queryLang === language?.code) return;
 
-    const targetLang = availableLanguages.find((l) => l.code === queryLang);
-    if (!targetLang) return;
+  const targetLang = availableLanguages.find((l) => l.code === queryLang);
+  if (!targetLang) return;
 
-    api.getSystemLanguages({ id: targetLang.id, isDefault: 0, systemType: 3 })
-      .then((res) => {
-        if (res.status == 1) {
-          dispatch(setSelectedLanguage({ data: res.data }));
-          document.documentElement.dir = res.data.type;
-        }
-      })
-      .catch((err) => console.log("lang sync error", err));
-  }, [router.query.lang, router.isReady, availableLanguages]);
+  api.getSystemLanguages({
+    id: targetLang.id,
+    isDefault: 0,
+    systemType: 3,
+  })
+    .then((res) => {
+      if (res.status == 1 && res.data?.code !== language?.code) {
+        dispatch(setSelectedLanguage({ data: res.data }));
+        document.documentElement.dir = res.data.type;
+      }
+    })
+    .catch((err) => console.log("lang sync error", err));
+}, [router.query.lang, router.isReady, availableLanguages]);
 
 
   const fetchLanguage = async () => {
@@ -131,6 +136,8 @@ const Layout = ({ children }) => {
   };
   useEffect(() => {
   if (!router.isReady) return;
+
+  if (router.query.lang === language.code) return;
 
   // If language exists but URL doesn't have it → add it
   if (language?.code && !router.query.lang) {
