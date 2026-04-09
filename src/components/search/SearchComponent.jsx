@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import {
   Select,
   SelectContent,
@@ -25,18 +27,26 @@ const SearchComponent = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const [categories, setCategories] = useState([]);
+  const [showCategories, setShowCategories] = useState(false);
+  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
   const filter = useSelector((state) => state.ProductFilter);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    if(showCategories){
+      fetchCategories();
+    }
+    setShowCategories(false);
+  }, [showCategories]);
 
   const fetchCategories = async () => {
     try {
+      setIsCategoryLoading(true);
       const categories = await api.getCategories();
       setCategories(categories.data);
     } catch (error) {
       console.log("erorr", error);
+    } finally {
+      setIsCategoryLoading(false);
     }
   };
 
@@ -49,6 +59,7 @@ const SearchComponent = ({
     <>
       <div
         className={`flex w-full  h-full flex-col px-4 py-2 items-center md:flex-row md:headerSearch  md:rounded-[5px] md:ml-[10px]  md:p-0`}
+        onClick={() => setShowCategories(true)}
       >
         <Select
           dir={rtl ? "rtl" : "ltr"}
@@ -60,15 +71,24 @@ const SearchComponent = ({
           >
             <SelectValue placeholder={t("all_categories")} />
           </SelectTrigger>
+          
           <SelectContent className="w-full h-full z-50 md:w-[152px]">
             <SelectItem value="all categories">
               {t("all_categories")}
+              
             </SelectItem>
-            {categories?.map((category) => (
-              <SelectItem key={category?.id} value={`${category?.id}`}>
-                {category?.translations?.name}
-              </SelectItem>
-            ))}
+            {isCategoryLoading ? (
+                <div className="p-2 w-full">
+                  <Skeleton height={25} count={5} className="mb-2" />
+                </div>
+              ) : (
+                categories?.map((category) => (
+                  <SelectItem key={category?.id} value={`${category?.id}`}>
+                    {category?.translations?.name}
+                  </SelectItem>
+                ))
+              )}
+            
           </SelectContent>
         </Select>
         <div className="w-full flex flex-col flex-grow md:relative md:flex-row md:h-full">

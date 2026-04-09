@@ -26,7 +26,7 @@ import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { BiCaretRight } from "react-icons/bi";
 import { RxHamburgerMenu } from "react-icons/rx";
-// import CartDrawer from "../cart/CartDrawer";
+import CartDrawer from "../cart/CartDrawer";
 // import Login from "../login/Login";
 import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,9 +37,9 @@ const Location = dynamic(() => import("../locationmodal/Location"), {
 const Login = dynamic(() => import("../login/Login"), {
   ssr: false,
 });
-const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
-  ssr: false,
-});
+// const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
+//   ssr: false,
+// });
 const LogoutModal = dynamic(() => import("../logoutmodal/LogoutModal"), {
   ssr: false,
 });
@@ -149,6 +149,7 @@ const Header = () => {
   };
 
   const handleLanguageChange = async (language) => {
+    if (language?.code === router.query.lang) return;
     try {
       const response = await api.getSystemLanguages({
         id: language?.id,
@@ -157,7 +158,7 @@ const Header = () => {
       });
       if (response.status == 1) {
         dispatch(setSelectedLanguage({ data: response?.data }));
-        document.documentElement.dir = response?.data?.type;
+        // document.documentElement.dir = response?.data?.type;
 
         // Keep URL in sync when language is changed via dropdown
         router.replace(

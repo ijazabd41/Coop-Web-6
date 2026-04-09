@@ -104,7 +104,7 @@ const OrderDetail = () => {
                 <div className="flex flex-col items-start md:items-end">
                   <span className="font-normal text-sm ">{t("orderDate")}</span>
                   <p className="text-base font-medium">
-                    {formatCustomDate(orderDetail?.date)}
+                    {orderDetail?.date}
                   </p>
                 </div>
                 {Number(
