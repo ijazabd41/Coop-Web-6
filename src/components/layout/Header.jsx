@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FaMoon, FaRegUser, FaSun } from "react-icons/fa";
-import { MdLightMode } from "react-icons/md";
 import * as api from "@/api/apiRoutes";
 import {
   IoCartOutline,
@@ -334,7 +333,7 @@ const Header = () => {
             <div className="flex gap-[8px] flex-last">
               <DropdownMenu>
                 <DropdownMenuTrigger className="w-[100px] border-none flex items-center gap-2 justify-center">
-                  {themes?.theme == "light" ? <MdLightMode size={20}/> : <FaMoon />}
+                  {themes?.theme == "light" ? <FaSun /> : <FaMoon />}
                   {t(themes?.theme)}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[100px] ">
@@ -342,7 +341,7 @@ const Header = () => {
                     onSelect={() => handleChangeTheme("light")}
                     className="flex gap-2"
                   >
-                    <MdLightMode size={20}/>
+                    <FaSun />
                     {t("light")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
