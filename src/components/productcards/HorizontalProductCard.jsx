@@ -461,8 +461,8 @@ const HorizontalProductCard = ({ product }) => {
           <div className="aspect-square w-full h-full relative">
             <ImageWithPlaceholder
               className="object-cover aspect-square h-full w-full rounded-sm "
-              alt={product.name}
-              src={product.image_url}
+              alt={product?.translations?.name}
+              src={product?.image_url}
               width={200}
               height={200}
             />
