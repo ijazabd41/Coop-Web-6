@@ -6,7 +6,7 @@ const Country = ({ country }) => {
             <div className='relative aspect-square w-full max-w-[12rem]'>
                 <ImageWithPlaceholder
                     src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${country.logo}`}
-                    alt={country.name}
+                    alt={country?.translations?.name}
                     className='object-contain w-full h-full rounded-sm'
                     sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
                 />

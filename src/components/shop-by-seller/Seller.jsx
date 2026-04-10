@@ -10,7 +10,7 @@ const Seller = ({ seller }) => {
                 <div className='relative h-[80px] w-[80px]'>
                     <ImageWithPlaceholder
                         src={seller?.logo_url}
-                        alt={seller?.name}
+                        alt={seller?.translations?.name}
                         fill
                         sizes="80px"
                         className='rounded-md object-cover'
