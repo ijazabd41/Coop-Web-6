@@ -377,7 +377,7 @@
   "midtrans": "Midtrans",
   "wallet_recharge_successfull": "Wallet Recharge Successfull",
   "timeslots_not_enabled": "Please enable timeslots from admin panel to get the delivery",
-  "no_products_found": "No product(s) found in cart",
+  "no_products_found": "No product(s) found",
   "limited_product_stock_error": "Oops, Limited Stock Available",
   "max_cart_limit_error": "Apologies, maximum cart quantity limit reached",
   "phonepe": "PhonePe",

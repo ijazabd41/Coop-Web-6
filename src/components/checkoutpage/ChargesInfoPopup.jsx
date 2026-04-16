@@ -25,7 +25,7 @@ const ChargesInfoPopup = ({ message, onClose }) => {
     return (
         <div 
             ref={popupRef} 
-            className="absolute left-0 top-6 z-50 bg-white text-xs p-3 rounded shadow-xl min-w-[220px] font-normal"
+            className="absolute left-0 top-6 z-50 bodyBackgroundColor  text-xs p-3 rounded shadow-xl min-w-[220px] font-normal"
         >
             {message}
         </div>
