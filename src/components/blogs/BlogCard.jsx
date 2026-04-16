@@ -29,7 +29,7 @@ const BlogCard = ({ blog }) => {
         <div className="flex gap-2 items-center">
           <p>{blog?.category?.translations?.name}</p>
           <GoDotFill />
-          <p>{formatOnlyDate(blog?.created_at)}</p>
+          <p>{blog?.created_at}</p>
         </div>
         <div className="flex flex-col gap-2 min-h-14">
           <div>
