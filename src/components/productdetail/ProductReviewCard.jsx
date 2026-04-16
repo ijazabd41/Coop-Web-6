@@ -55,7 +55,7 @@ const ProductReviewCard = ({ review }) => {
                         {review?.review}
                     </p>
                     <div className="flex items-center  text-sm font-normal mb-2">
-                        <span className="mr-2 flex items-center"><FaCalendarAlt size={16} /></span> {formatDate(review?.updated_at)}
+                        <span className="mr-2 flex items-center"><FaCalendarAlt size={16} /></span> {review?.updated_at}
                     </div>
                     <div className="flex gap-2 flex-wrap">
                         {review?.images?.map((image, index) => {

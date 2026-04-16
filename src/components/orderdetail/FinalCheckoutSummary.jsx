@@ -1,10 +1,14 @@
 import { t } from "@/utils/translation";
-import React from "react";
+import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
+import { CgInfo } from "react-icons/cg";
+import ChargesInfoPopup from "../checkoutpage/ChargesInfoPopup";
 
 const FinalCheckoutSummary = ({ orderDetail }) => {
   const setting = useSelector((state) => state.Setting.setting);
+  const [activeTooltip, setActiveTooltip] = useState(null);
+  const [message, setMessage] = useState("");
   return (
     <div className="max-w-md p-6 rounded-md border cartBorder ">
       <div className="flex justify-between items-center mb-4">
@@ -38,7 +42,17 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
                     className="flex justify-between items-center my-2"
                     key={index}
                   >
-                    <span className="">{charge?.title}</span>
+                    <span className="flex items-center relative">{charge?.title} 
+                      <span className="ml-1 subTextColor cursor-pointer" onClick={() => {
+                        setMessage(charge?.is_refundable ? t("refundable_message") : t("non_refundable_message"));
+                        setActiveTooltip(index);
+                      }}>
+                        <CgInfo />
+                      </span>
+                      {activeTooltip === index && (
+                        <ChargesInfoPopup message={message} onClose={() => setActiveTooltip(null)} />
+                      )}
+                    </span>
                     <span className="font-semibold">
                       {setting?.currency}
                       {charge?.amount}

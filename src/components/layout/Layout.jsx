@@ -31,15 +31,15 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     document.documentElement.dir = language?.type;
-  }, []);
+  }, [language?.id]);
 
   useEffect(() => {
     fetchSetting();
     fetchPaymentSetting();
-    if (!availableLanguages?.length) {
+   
     fetchLanguage();
-  }
-  }, [language?.id]);
+  
+  }, []);
 
   useEffect(() => {
   if (!router.isReady || !availableLanguages?.length) return;
@@ -49,7 +49,44 @@ const Layout = ({ children }) => {
   if (!queryLang || queryLang === language?.code) return;
 
   const targetLang = availableLanguages.find((l) => l.code === queryLang);
-  if (!targetLang) return;
+
+  // Invalid lang code in URL → fall back to "en" (or the marked default)
+  if (!targetLang) {
+    const fallbackLang =
+      availableLanguages.find((l) => l.code === "en") ||
+      availableLanguages.find((l) => l.is_default == 1) ||
+      availableLanguages[0];
+
+    if (!fallbackLang || fallbackLang.code === language?.code) {
+      // Already on the correct language, just fix the URL
+      router.replace(
+        { pathname: router.pathname, query: { ...router.query, lang: language?.code } },
+        undefined,
+        { shallow: true }
+      );
+      return;
+    }
+
+    api.getSystemLanguages({
+      id: fallbackLang.id,
+      isDefault: 0,
+      systemType: 3,
+    })
+      .then((res) => {
+        if (res.status == 1) {
+          dispatch(setSelectedLanguage({ data: res.data }));
+          document.documentElement.dir = res.data.type;
+          // Update URL to show the actual fallback code
+          router.replace(
+            { pathname: router.pathname, query: { ...router.query, lang: res.data.code } },
+            undefined,
+            { shallow: true }
+          );
+        }
+      })
+      .catch((err) => console.log("lang fallback error", err));
+    return;
+  }
 
   api.getSystemLanguages({
     id: targetLang.id,
@@ -137,7 +174,7 @@ const Layout = ({ children }) => {
   useEffect(() => {
   if (!router.isReady) return;
 
-  if (router.query.lang === language.code) return;
+  if (router.query.lang === language?.code) return;
 
   // If language exists but URL doesn't have it → add it
   if (language?.code && !router.query.lang) {

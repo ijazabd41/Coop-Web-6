@@ -36,7 +36,7 @@ const CategoryFlowBreadcrumb = () => {
       category: cat.slug,
       category_id: cat.id,
       source: "category",
-      lang: language.code
+      lang: language?.code
     }
   });
   };

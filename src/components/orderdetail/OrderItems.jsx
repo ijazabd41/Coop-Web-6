@@ -62,6 +62,14 @@ const OrderItems = ({
     return canCancel || canReturn;
   });
 
+  // Returns true when a product is cancelled (active_status=7, cancelable_status=0)
+  // Used to show the Action column header even when no cancel/return action is available
+  const showStatus = products?.some(
+    (product) =>
+      Number(product?.active_status) === 7 &&
+      Number(product?.cancelable_status) === 0
+  );
+
   return (
     <div className="rounded-md cardBorder overflow-auto">
       <div className="hidden lg:flex">
@@ -70,8 +78,10 @@ const OrderItems = ({
             <tr>
               <th className="text-left p-4 border-b ">{t("product")}</th>
               <th className="text-left p-4 border-b ">{t("price")}</th>
-              {showAction && (
-                <th className="text-left p-4 border-b">{t("action")}</th>
+              {(showAction || showStatus) && (
+                <th className="text-left p-4 border-b">
+                  {showAction ? t("action") : t("status")}
+                </th>
               )}
             </tr>
           </thead>
@@ -156,7 +166,7 @@ const OrderItems = ({
                       )}
                     </p>
                   </td>
-                  {showAction && (
+                  {(showAction || showStatus) && (
                     <td className="p-4 ">
                       <div className="flex gap-2 flex-col items-start">
                         {Number(product?.active_status) === 6 &&
@@ -214,13 +224,21 @@ const OrderItems = ({
                               </button>
                             )}
 
-                          {Number(product?.active_status) === 7 && (
-                            <button
-                              className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md"
-                              disabled
-                            >
-                              {t("cancelled")}
-                            </button>
+                          {Number(product?.active_status) === 7 &&
+                            Number(product?.cancelable_status) === 0 && (
+                            <div className="flex flex-col gap-1">
+                              <button
+                                className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md"
+                                disabled
+                              >
+                                {t("cancelled")}
+                              </button>
+                              {product?.cancellation_reason && (
+                                <p className=" text-red-500 text-sm">
+                                  <span className="font-bold text-sm text-red-500">{`${t("cancel_reason")} `}</span>{`${product.cancellation_reason}`}
+                                </p>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -316,7 +334,7 @@ const OrderItems = ({
               </div>
               <div className="bottomBorder w-full"></div>
               <div className="w-full">
-                {showAction && (
+                {(showAction || showStatus) && (
                   <div className="flex gap-2 md:gap-3  items-center">
                     {Number(product?.active_status) === 6 &&
                       isShowProductRating &&
@@ -375,14 +393,20 @@ const OrderItems = ({
                           </button>
                         )}
 
-                      {Number(product?.active_status) === 7 && (
-                        <div className="w-full md:w-[151px]">
+                      {Number(product?.active_status) === 7 &&
+                        Number(product?.cancelable_status) === 0 && (
+                        <div className="flex flex-col gap-1 w-full md:w-full">
                           <button
-                            className="px-4 py-2 text-red-500 bg-[#DB3D261F] w-full rounded-md "
+                            className="px-4 py-2 text-red-500 bg-[#DB3D261F] md:w-[151px] rounded-md "
                             disabled
                           >
                             {t("cancelled")}
                           </button>
+                          {product?.cancellation_reason && (
+                            <p className="text-sm text-red-500 ">
+                              <span className="font-bold text-red-500">{`${t("cancel_reason")}: `}</span>{`${product.cancellation_reason}`}
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>

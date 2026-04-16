@@ -65,7 +65,7 @@ const CategoriesContainer = ({ categories }) => {
       category: category.slug,
       category_id: category.id,
       source: "category",
-      lang: language.code
+      lang: language?.code
     }
   });
   };

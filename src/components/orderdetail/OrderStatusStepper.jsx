@@ -35,14 +35,15 @@ const OrderStepper = ({ orderDetail }) => {
       return {
         icon: status.icon,
         label: `${t("your_order_has_been")} ${status.label}`,
-        timestamp: new Date(timestamp).toLocaleString("en-US", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        }),
+        // timestamp: new Date(timestamp).toLocaleString("en-US", {
+        //   day: "2-digit",
+        //   month: "short",
+        //   year: "numeric",
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   hour12: true,
+        // }),
+        timestamp,
       };
     });
     setSteps(updatedSteps);

@@ -112,6 +112,7 @@ export const onMessageListener = () => {
           const notification = new Notification(data.title || "New Notification", {
             body: data.body,
             icon: data.icon,
+            image: data.image,
             data: {
               type: data.type,
               id: data.id,

@@ -30,6 +30,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: payload.data.body,
     icon: payload.data.icon,
+    image: payload.data.image,
     data:{
        type: payload.data.type, 
        slug: payload.data.type_slug,
