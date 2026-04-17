@@ -505,9 +505,9 @@ const HorizontalProductCard = ({ product }) => {
               <h3 className="  text-[16px] font-bold   overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor line-clamp-1">
                 {product?.translations?.name ?? product?.name}
               </h3>
-              {selectedVariant?.few_quantity_left == true && (
+              {/* {selectedVariant?.few_quantity_left == true && (
                 <p className="text-sm text-red-600 font-semibold"> {t("few_quantity_left")}</p>
-              )}
+              )} */}
               {product?.average_rating > 0 &&
                 product?.product_rating == true ? (
                 <div className="rating">
