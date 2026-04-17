@@ -319,7 +319,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   </span>
                 </li>
               </Link>
-              {user?.is_subscription_plans && (
+              {user?.has_active_subscription > 0 && (
                 <Link href={`/profile/subscription`}>
                   <li
                     className={`p-4  cursor-pointer opacity-[0.76] ${
