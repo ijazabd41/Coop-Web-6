@@ -55,7 +55,7 @@ const FAQs = () => {
           ))}
         {totalFaqs > faqs?.length && (
           <button
-            className="px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow"
+            className="px-3 py-[6px] h-full flex items-center rounded font-medium text-whiterounded  focus:outline-none accentButtonBg text-white text-xl shadow"
             onClick={() => handlePageChange(currPage + 1)}
           >
             {t("load_more")}

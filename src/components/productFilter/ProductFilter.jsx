@@ -229,7 +229,7 @@ const Filter = ({
             <div className="flex justify-between items-center  ">
               <h5 className="text-xl font-bold">{t("filters")}</h5>
               <p
-                className="m-0 text-sm font-normal text-[#DB3D26] cursor-pointer"
+                className="m-0 text-sm font-normal primaryColor cursor-pointer"
                 onClick={() => {
                   setSelectedCategories([]);
                   setMinPrice(defaultMinPrice);

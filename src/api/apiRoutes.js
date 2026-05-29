@@ -1,1003 +1,218 @@
 "use client";
-import api from "./axiosMiddleware";
-import * as apiEndPoints from "./apiEndpoints";
-import { ApiError } from "next/dist/server/api-utils";
 
-// Authentication API's
-export const registerUser = async ({
-  name,
-  email,
-  mobile,
-  type,
-  fcm,
-  country_code,
-  password,
-  phoneAuthType = false,
-  friend_code,
-  profile
-  
-}) => {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("country_code", country_code);
-  formData.append("type", type);
-  formData.append("fcm_token", fcm);
-  formData.append("platform", "web");
-  if (type == "email" || (type == "phone" && phoneAuthType == true)) {
-    formData.append("password", password);
+/**
+ * Storefront API — Odoo (Coop Discounts) backend integration.
+ * @see src/api/odoo/
+ */
+import * as odooAuth from "./odoo/services/auth";
+import * as odooProducts from "./odoo/services/products";
+import * as odooCart from "./odoo/services/cart";
+import * as odooOrders from "./odoo/services/orders";
+import * as odooContacts from "./odoo/services/contacts";
+import * as odooSettings from "./odoo/services/settings";
+import * as odooCheckout from "./odoo/services/checkout";
+import * as odooLoyalty from "./odoo/services/loyalty";
+import * as odooInvoices from "./odoo/services/invoices";
+import * as odooDelivery from "./odoo/services/delivery";
+import * as odooBanners from "./odoo/services/banners";
+import * as odooGeo from "./odoo/services/geo";
+import { fail, ok } from "./odoo/utils";
+
+function flattenCartResponse(result) {
+  if (!result || result.status !== 1) return result;
+  const data = result.data || result;
+  return { status: 1, message: result.message || "", data, ...data };
+}
+
+/** Normalized cart blob for Redux `setCart`. */
+export function cartDataFromResponse(res) {
+  if (!res || res.status !== 1) return null;
+  if (res.data?.cart) return res.data;
+  if (res.cart) {
+    return {
+      cart: res.cart,
+      sub_total: res.sub_total,
+      total_amount: res.total_amount,
+      delivery_charge: res.delivery_charge,
+      self_pickup_mode: res.self_pickup_mode,
+      doorstep_delivery_mode: res.doorstep_delivery_mode,
+      order_id: res.order_id,
+    };
   }
-  if(profile){
-    formData.append("profile", profile);
+  return null;
+}
+
+// Authentication
+export const registerUser = (p) => odooAuth.register(p);
+export const login = (p) => odooAuth.login(p);
+export const sendSms = (p) => odooAuth.sendSms(p);
+export const verifyOTP = (p) => odooAuth.verifyOTP(p);
+export const verifyEmail = (p) => odooAuth.verifyEmail(p);
+export const forgotPasswordOtp = (p) => odooAuth.forgotPasswordOTP(p);
+export const forgotPassword = (p) => odooAuth.forgotPassword(p);
+export const resetPassword = (p) => odooAuth.resetPassword(p);
+export const updateProfile = (p) => odooAuth.updateProfile(p);
+export const getUser = () => odooAuth.getUser();
+export const logout = () => odooAuth.logout();
+export const deleteAccount = (p) => odooAuth.deleteAccount(p);
+export const verifyUserByPhoneNum = (p) => odooAuth.verifyUserByPhoneNum(p);
+
+// Location stubs (Google Places — configure separately)
+export const getPlaces = async () => ok({ predictions: [] });
+export const getPlacesDetails = async () => ok({});
+
+// Catalog
+export const getCity = (p) => odooSettings.getCity(p);
+export const getShop = (p) => odooSettings.getShop(p);
+export const getCategories = (p) => odooProducts.getCategories(p);
+export const getProductByFilter = (p) => odooProducts.getProductByFilter(p);
+export const getBrands = (p) => odooProducts.getBrands(p);
+export const getSetting = () => odooSettings.getSetting();
+export const getProductById = (p) => odooProducts.getProductById(p);
+export const getProductRatings = async () => ok([]);
+export const getProductImages = async () => ok([]);
+export const getPaymentSetting = () => odooSettings.getPaymentSetting();
+export const getSystemLanguages = (p) => odooSettings.getSystemLanguages(p);
+export const updateFcmToken = async () => ok(null);
+export const getSlider = async () => odooBanners.getSlider(9);
+export const getOffer = async () => odooBanners.getAllSliders();
+export const getSection = async () => odooBanners.getHomeBanners();
+
+// Cart
+const CART_ERROR_MESSAGES = {
+  cart_unavailable:
+    "Could not open your cart. Please sign in again and try once more.",
+  not_authenticated: "Please sign in to add items to your cart.",
+  create_order_failed:
+    "Could not create a cart on the store. Please try again.",
+  add_to_cart_failed: "Could not add this item to your cart.",
+  invalid_variant: "This product variant is not available.",
+};
+
+function humanizeCartMessage(message) {
+  if (!message) return "";
+  const key = String(message).trim();
+  return CART_ERROR_MESSAGES[key] || key.replace(/_/g, " ");
+}
+
+function normalizeCartApiResult(result) {
+  const flat = flattenCartResponse(result);
+  if (flat?.status !== 1 && flat?.message) {
+    flat.message = humanizeCartMessage(flat.message);
   }
-  if (
-    type === "phone" ||
-    ((type === "email" || "google") && mobile !== null && mobile !== "")
-  ) {
-    formData.append("mobile", mobile);
-  }
-  if (type === "email" || type === "google" || (type === "phone" && email)) {
-    formData.append("email", email);
-  }
-  if (friend_code !== null) {
-    formData.append("friends_code", friend_code);
-  }
-  const response = await api.post(apiEndPoints.register, formData);
-  return response.data;
-};
+  const data = cartDataFromResponse(flat);
+  if (!data) return flat;
+  return { status: 1, message: flat.message || "", data, ...data };
+}
 
-export const login = async ({
-  id,
-  fcm,
-  type,
-  password,
-  phoneAuthType,
-  country_code,
-}) => {
-  const formData = new FormData();
-  formData.append("id", id);
-  formData.append("fcm_token", fcm);
-  formData.append("type", type);
-  formData.append("platform", "web");
-  if (country_code) {
-    formData.append("country_code", country_code);
-  }
-  if (type == "phone") {
-    if (phoneAuthType == true) {
-      formData.append("phone_auth_type", "phone_auth_password");
-    } else {
-      formData.append("phone_auth_type", "phone_auth_otp");
-    }
-  }
-  if (type == "email" || (type == "phone" && phoneAuthType == true)) {
-    formData.append("password", password);
-  }
-  const response = await api.post(apiEndPoints.login, formData);
-  return response.data;
-};
-
-export const sendSms = async ({ mobile }) => {
-  const formData = new FormData();
-  formData.append("phone", mobile);
-  const response = await api.post(apiEndPoints.sendSms, formData);
-  return response.data;
-};
-
-export const verifyOTP = async ({ mobile, otp, country_code }) => {
-  const formData = new FormData();
-  formData.append("phone", mobile);
-  formData.append("otp", otp);
-  formData.append("country_code", country_code);
-  const response = await api.post(apiEndPoints.verifyContact, formData);
-  return response.data;
-};
-
-export const verifyEmail = async ({ email, code }) => {
-  const params = {
-    email: email,
-    code: code,
-  };
-  const response = await api.post(apiEndPoints.verifyEmail, params);
-  return response.data;
-};
-
-export const forgotPasswordOTP = async ({ email }) => {
-  const formData = new FormData();
-  formData.append("email", email);
-  const response = await api.post(apiEndPoints.forgotPasswordOtp, formData);
-  return response.data;
-};
-
-export const forgotPassword = async ({
-  phone,
-  otp,
-  email,
-  password,
-  confirmPassword,
-  type,
-  otpMethod,
-  country_code,
-}) => {
-  const formData = new FormData();
-  if (type == "email" || (type == "phone" && otpMethod == "twilio")) {
-    formData.append("otp", otp);
-  }
-  if (type == "email") {
-    formData.append("email", email);
-  }
-  if (type == "phone") {
-    formData.append("mobile", phone);
-    if (country_code) {
-      formData.append("country_code", country_code);
-    }
-  }
-  formData.append("password", password);
-  formData.append("password_confirmation", confirmPassword);
-  formData.append("type", type);
-  if (type == "phone") {
-    formData.append("otp_verify_method", otpMethod);
-  }
-  const response = await api.post(apiEndPoints.forgotPassword, formData);
-  return response.data;
-};
-
-export const resetPassword = async ({
-  password,
-  newPassword,
-  confirmPassword,
-}) => {
-  const formData = new FormData();
-  formData.append("old_password", password);
-  formData.append("new_password", newPassword);
-  formData.append("new_password_confirmation", confirmPassword);
-  const response = await api.post(apiEndPoints.resetPassword, formData);
-  return response.data;
-};
-
-export const updateProfile = async ({
-  image,
-  name,
-  email,
-  mobileNumber,
-  type,
-  country_code,
-}) => {
-  const formData = new FormData();
-  formData.append("profile", image);
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("mobile", mobileNumber);
-  if (country_code) {
-    formData.append("country_code", country_code);
-  }
-  const response = await api.post(apiEndPoints.editProfile, formData);
-  return response.data;
-};
-export const getUser = async () => {
-  const response = await api.get(apiEndPoints.getUser);
-  return response.data;
-};
-export const logout = async () => {
-  const response = await api.post(`${apiEndPoints.logout}`);
-  return response.data;
-};
-export const deleteUser = async ({ uid = null }) => {
-  const formData = new FormData();
-  formData.append("auth_uid", uid);
-  const response = await api.post(apiEndPoints.deleteAccount);
-  return response.data;
-};
-
-// Location api's
-export const getPlaces = async ({ input }) => {
-  const params = { input: input, source: "web" };
-
-  const response = await api.get(apiEndPoints.getPlaces, { params });
-  return response.data;
-};
-
-export const getPlacesDetails = async ({ placeId }) => {
-  const params = { place_id: placeId, source: "web" };
-  const response = await api.get(apiEndPoints.getPlacecDetails, { params });
-  return response.data;
-};
-
-// General Api's
-export const getCity = async ({ latitude, longitude }) => {
-  let params = { latitude: latitude, longitude: longitude };
-  const response = await api.get(apiEndPoints.getCity, { params });
-  return response.data;
-};
-
-export const getShop = async ({ latitude, longitude }) => {
-  let params = { latitude: latitude, longitude: longitude };
-  const response = await api.get(apiEndPoints.getShop, { params });
-  return response.data;
-};
-
-export const getCategories = async ({
-  slug = "",
-  id = "",
-  limit,
-  offset,
-  is_own_data,
-} = {}) => {
-  const params = {
-    limit,
-    offset,
-    ...(slug && { slug }),
-    ...(id && { id }),
-    ...(is_own_data && { is_own_data }),
-  };
-
-  const response = await api.get(apiEndPoints.getCategory, { params });
-  return response.data;
-};
-
-export const getProductByFilter = async ({
-  latitude,
-  longitude,
-  filters = undefined,
-  tag_names = "",
-  slug = "",
-}) => {
-  const formData = new FormData();
-  formData.append("latitude", latitude);
-  formData.append("longitude", longitude);
-  if (tag_names !== "") {
-    formData.append("tag_names", tag_names);
-  }
-  if (slug !== "") {
-    formData.append("tag_slug", slug);
-  }
-  if (filters !== undefined) {
-    for (const filter in filters) {
-      if (
-        (filters[filter] !== null &&
-          filters[filter] !== undefined &&
-          filters[filter] !== "") ||
-        filters[filter]?.length > 0
-      ) {
-        formData.append(filter, filters[filter]);
-      }
-      if (filters[filter] === "sizes") {
-        formData.append(filter, filters[filter]);
-      }
-    }
-  }
-  const response = await api.post(apiEndPoints.getProducts, formData);
-  return response.data;
-};
-
-export const getBrands = async ({ limit, offset, latitude, longitude }) => {
-  let params = {
-    limit: limit,
-    offset: offset,
-    latitude: latitude,
-    longitude: longitude,
-  };
-  const response = await api.get(apiEndPoints.getBrands, { params });
-  return response.data;
-};
-
-export const getSetting = async () => {
-  const params = {
-    is_web_setting: 1,
-  };
-  const response = await api.get(apiEndPoints.getSettings, { params });
-  return response.data;
-};
-
-export const getProductById = async ({ latitude, longitude, slug, id }) => {
-  const formData = new FormData();
-  formData.append("latitude", latitude);
-  formData.append("longitude", longitude);
-  if (id !== -1) {
-    formData.append("id", id);
-  }
-  if (slug) {
-    formData.append("slug", slug);
-  }
-  const response = await api.post(apiEndPoints.getProductById, formData);
-  return response.data;
-};
-
-export const getProductRatings = async ({ id, limit, offset }) => {
-  const params = {
-    product_id: id,
-    limit: limit,
-    offset: offset,
-  };
-  const response = await api.get(
-    `${apiEndPoints.getProducts}/${apiEndPoints.getProductRatings}`,
-    { params }
+export const getCart = async () => normalizeCartApiResult(await odooCart.getCart());
+export const addToBulkCart = async (p) =>
+  normalizeCartApiResult(await odooCart.bulkAddToCart(p));
+export const addToCart = async (p) =>
+  normalizeCartApiResult(
+    await odooCart.addToCart({
+      product_variant_id: p.product_variant_id,
+      qty: p.qty,
+    })
   );
-
-  return response.data;
-};
-
-export const getProductImages = async ({ id, limit, offset }) => {
-  const formData = new FormData();
-  formData.append("product_id", id);
-  formData.append("limit", limit);
-  formData.append("offset", offset);
-  const response = await api.post(
-    `${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.imageList}`,
-    formData
+export const removeFromCart = async (p) =>
+  normalizeCartApiResult(
+    await odooCart.removeFromCart({
+      product_variant_id: p.product_variant_id,
+      isRemoveAll: p.isRemoveAll,
+    })
   );
-  return response.data;
-};
+export const deleteCart = async () =>
+  normalizeCartApiResult(await odooCart.removeFromCart({ isRemoveAll: 1 }));
+export const getGuestCart = async (p) =>
+  normalizeCartApiResult(await odooCart.getGuestCart(p));
 
-export const getPaymentSetting = async () => {
-  const response = await api.get(
-    `${apiEndPoints.getSettings}/${apiEndPoints.getPaymentMethods}`
-  );
-  return response.data;
-};
+// Address & geo
+export const getAddress = () => odooContacts.getAddress();
+export const addAddress = (p) => odooContacts.addAddress(p);
+export const updateAddress = (p) => odooContacts.updateAddress(p);
+export const deleteAddress = (p) => odooContacts.deleteAddress(p);
+export const getCountries = (p) => odooGeo.getCountries(p);
 
-export const getSystemLanguages = async ({ id, isDefault, systemType }) => {
-  const params = { id: id, is_default: isDefault, system_type: systemType };
-  const response = await api.get(apiEndPoints.getSystemLanguage, { params });
-  return response.data;
-};
+// Wishlist — no Odoo endpoint; client-side only
+export const getFavorite = async () => ok([]);
+export const addToFavorite = async () => fail("favorites_not_in_odoo_api");
+export const removeFromFavorite = async () => fail("favorites_not_in_odoo_api");
 
-export const updateFcmToken = async ({ langaugeId,fcmToken }) => {
-  const formData = new FormData();
-  formData.append("language_id", langaugeId);
-  formData.append("fcm_token", fcmToken);
-  const response = await api.post(apiEndPoints.updateFcmToken, formData);
-  return response.data;
-};
+// Promo / loyalty
+export const getPromo = (p) => odooSettings.getPromo(p);
+export const setPromoCode = (p) => odooSettings.setPromoCode(p);
+export const applyLoyaltyPoint = (p) => odooLoyalty.applyLoyaltyPoint(p);
+export const getLoyaltyPrograms = () => odooLoyalty.getLoyaltyPrograms();
+export const getLoyaltyCoupons = (p) => odooLoyalty.getLoyaltyCoupons(p);
+export const getLoyaltyCards = () => odooLoyalty.getLoyaltyCards();
+export const getLoyaltyReward = (rewardId) => odooLoyalty.getLoyaltyReward(rewardId);
+export const getLoyaltyCouponByCode = (code) =>
+  odooLoyalty.getLoyaltyCouponByCode(code);
+export const validateAndApplyPromoCode = (p) =>
+  odooLoyalty.validateAndApplyPromoCode(p);
+export const updateOrderDelivery = (p) => odooOrders.updateOrderDelivery(p);
+export const listContacts = (p) => odooContacts.listContacts(p);
+export const getContactById = (id) => odooContacts.getContactById(id);
+export const listRiderDeliveries = (p) => odooDelivery.listRiderDeliveries(p);
+export const listRiderOwnDeliveries = (p) =>
+  odooDelivery.listRiderOwnDeliveries(p);
+export const acceptRiderDelivery = (p) => odooDelivery.acceptRiderDelivery(p);
+export const markRiderDeliveryDone = (p) =>
+  odooDelivery.markRiderDeliveryDone(p);
 
-// cart apis
-export const getCart = async ({
-  latitude,
-  longitude,
-  checkout = 0,
-  promocode_id = 0,
-  order_type = "doorstep",
-  is_free_delivery = 0,
-}) => {
-  const params = {
-    latitude: latitude,
-    longitude: longitude,
-    is_checkout: checkout,
-    is_self_pickup: order_type == "doorstep" ? 0 : 1,
-    is_free_delivery,
-  };
-  if (promocode_id !== 0) {
-    params.promocode_id = promocode_id;
-  }
-  const response = await api.get(apiEndPoints.getCart, { params });
-  return response.data;
-};
-
-export const addToBulkCart = async ({ variant_ids, quantities }) => {
-  const params = { variant_ids: variant_ids, quantities: quantities };
-  const response = await api.post(
-    `${apiEndPoints.getCart}/${apiEndPoints.bulkAddToCart}`,
-    null,
-    { params: params }
-  );
-  return response.data;
-};
-
-export const addToCart = async ({ product_id, product_variant_id, qty }) => {
-  const formData = new FormData();
-  formData.append("product_id", product_id);
-  formData.append("product_variant_id", product_variant_id);
-  formData.append("qty", qty);
-  const response = await api.post(
-    `${apiEndPoints.getCart}/${apiEndPoints.add}`,
-    formData
-  );
-  return response.data;
-};
-
-export const removeFromCart = async ({
-  product_id,
-  product_variant_id,
-  isRemoveAll,
-}) => {
-  const formData = new FormData();
-  formData.append("product_id", product_id);
-  formData.append("product_variant_id", product_variant_id);
-  formData.append("is_remove_all", 0);
-  const response = await api.post(
-    `${apiEndPoints.getCart}/${apiEndPoints.remove}`,
-    formData
-  );
-  return response.data;
-};
-
-export const deleteCart = async () => {
-  const formData = new FormData();
-  formData.append("is_remove_all", 1);
-  const response = await api.post(
-    `${apiEndPoints.getCart}/${apiEndPoints.remove}`,
-    formData
-  );
-  return response.data;
-};
-
-export const getGuestCart = async ({
-  latitude,
-  longitude,
-  variant_ids,
-  quantities,
-}) => {
-  const params = {
-    latitude: latitude,
-    longitude: longitude,
-    variant_ids: variant_ids,
-    quantities: quantities,
-  };
-  const response = await api.get(
-    `${apiEndPoints.getCart}/${apiEndPoints.getGuestCart}`,
-    { params }
-  );
-  return response.data;
-};
-
-// Address Apis
-export const getAddress = async () => {
-  const response = await api.get(`${apiEndPoints.getAddress}`);
-  return response.data;
-};
-
-export const addAddress = async ({
-  name,
-  mobile,
-  type,
-  address,
-  landmark,
-  area,
-  pincode,
-  city,
-  state,
-  country,
-  latitiude,
-  longitude,
-  is_default = 1,
-  alternate_mobile = "",
-}) => {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("mobile", mobile);
-  formData.append("type", type);
-  formData.append("address", address);
-  formData.append("landmark", landmark);
-  formData.append("area", area);
-  formData.append("pincode", pincode);
-  formData.append("city", city);
-  formData.append("state", state);
-  formData.append("country", country);
-  formData.append("alternate_mobile", alternate_mobile ? alternate_mobile : "");
-  formData.append("latitude", latitiude);
-  formData.append("longitude", longitude);
-  formData.append("is_default", is_default ? 1 : 0);
-  const response = await api.post(
-    `${apiEndPoints.getAddress}/${apiEndPoints.add}`,
-    formData
-  );
-  return response.data;
-};
-export const updateAddress = async ({
-  id,
-  name,
-  mobile,
-  type,
-  address,
-  landmark,
-  area,
-  pincode,
-  city,
-  state,
-  country,
-  latitiude,
-  longitude,
-  is_default = 1,
-  alternate_mobile = "",
-}) => {
-  const formData = new FormData();
-  formData.append("id", id);
-  formData.append("name", name);
-  formData.append("mobile", mobile);
-  formData.append("type", type);
-  formData.append("address", address);
-  formData.append("landmark", landmark);
-  formData.append("area", area);
-  formData.append("pincode", pincode);
-  formData.append("city", city);
-  formData.append("state", state);
-  formData.append("country", country);
-  formData.append("alternate_mobile", alternate_mobile ? alternate_mobile : "");
-  formData.append("latitude", latitiude);
-  formData.append("longitude", longitude);
-  formData.append("is_default", is_default ? 1 : 0);
-  const response = await api.post(
-    `${apiEndPoints.getAddress}/${apiEndPoints.update}`,
-    formData
-  );
-  return response.data;
-};
-export const deleteAddress = async ({ id }) => {
-  const formData = new FormData();
-  formData.append("id", id);
-  const response = await api.post(
-    `${apiEndPoints.getAddress}/${apiEndPoints.deleteItem}`,
-    formData
-  );
-  return response.data;
-};
-
-// wishlists api
-export const getFavorite = async ({ latitude, longitude, limit, offset }) => {
-  const params = {
-    latitude: latitude,
-    longitude: longitude,
-    limit: limit,
-    offset: offset,
-  };
-  const response = await api.get(apiEndPoints.getFavorite, { params });
-  return response.data;
-};
-export const addToFavorite = async ({ product_id }) => {
-  const formData = new FormData();
-  formData.append("product_id", product_id);
-  const response = await api.post(
-    `${apiEndPoints.getFavorite}/${apiEndPoints.add}`,
-    formData
-  );
-  return response.data;
-};
-export const removeFromFavorite = async ({ product_id }) => {
-  const formData = new FormData();
-  formData.append("product_id", product_id);
-  const response = await api.post(
-    `${apiEndPoints.getFavorite}/${apiEndPoints.remove}`,
-    formData
-  );
-  return response.data;
-};
-
-// promocode api
-export const getPromo = async ({ amount = 0 }) => {
-  const params = { amount: amount };
-  const response = await api.get(`${apiEndPoints.getPromoCode}`, { params });
-  return response.data;
-};
-export const setPromoCode = async ({ promoCodeName, amount = 0 }) => {
-  const params = { promo_code: promoCodeName, total: amount };
-  const response = await api.post(
-    `${apiEndPoints.getPromoCode}/${apiEndPoints.setPromoCode}`,
-    {},
-    { params }
-  );
-  return response.data;
-};
-
-// Checkout api
-export const getTimeSlots = async () => {
-  const response = await api.get(
-    `${apiEndPoints.getSettings}/${apiEndPoints.getTimeSlot}`
-  );
-  return response.data;
-};
-export const placeOrder = async ({
-  productVariantId,
-  quantity,
-  total,
-  deliveryCharge,
-  finalTotal,
-  paymentMethod,
-  addressId,
-  deliveryTime,
-  walletBalance,
-  walletUsed,
-  orderNote,
-  promocodeId = 0,
-  status,
-  order_type = "doorstep",
-}) => {
-  let finalPaymentMethod = paymentMethod;
-  if (paymentMethod == "wallet") {
-    finalPaymentMethod = "Wallet";
-  }
-  const formData = new FormData();
-  formData.append("product_variant_id", productVariantId);
-  formData.append("quantity", quantity);
-  formData.append("total", total);
-  formData.append("delivery_charge", deliveryCharge);
-  formData.append("final_total", finalTotal);
-  formData.append("payment_method", finalPaymentMethod);
-  formData.append("address_id", addressId);
-  formData.append("status", status);
-  formData.append("order_type", order_type);
-  formData.append("delivery_time", deliveryTime);
-  if (walletUsed) {
-    formData.append("wallet_used", 1);
-    formData.append("wallet_balance", walletBalance);
-  }
-  if (orderNote !== "" && orderNote !== null && orderNote !== undefined) {
-    formData.append("order_note", orderNote);
-  }
-  if (promocodeId !== 0) {
-    formData.append("promocode_id", promocodeId);
-  }
-  const response = await api.post(`${apiEndPoints.placeOrder}`, formData);
-  return response.data;
-};
-export const initiateTrasaction = async ({
-  orderId,
-  paymentMethod,
-  type,
-  walletAmount = 0,
-  subscriptionPlanId = 0,
-}) => {
-  const formData = new FormData();
-  if (orderId) {
-    formData.append("order_id", orderId);
-  }
-  formData.append("payment_method", paymentMethod);
-  formData.append("type", type);
-  formData.append("request_from", "website");
-  if (type == "wallet" && walletAmount != 0) {
-    formData.append("wallet_amount", walletAmount);
-  }
-  if(type == "subscription"){
-    formData.append("subscription_plan_id", subscriptionPlanId);
-  }
-  const response = await api.post(
-    `${apiEndPoints.initiateTrasaction}`,
-    formData
-  );
-  return response.data;
-};
-export const addTransaction = async ({
-  orderId,
-  transactionId,
-  paymentMethod,
-  type,
-  subscriptionPlanId = 0,
-  walletAmount = 0,
-}) => {
-  const formData = new FormData();
-  if (orderId) {
-    formData.append("order_id", orderId);
-  }
-  if (walletAmount != 0 && type == "wallet") {
-    formData.append("wallet_amount", walletAmount);
-  }
-  if(type == "subscription"){
-    formData.append(
-      "subscription_plan_id",
-      subscriptionPlanId
-    )
-  }
-  formData.append("transaction_id", transactionId);
-  formData.append("type", type);
-  formData.append("payment_method", paymentMethod);
-  formData.append("request_from", "website");
-  formData.append("device_type", "web");
-  formData.append("app_version", "1.0");
-  const response = await api.post(`${apiEndPoints.addTransaction}`, formData);
-  return response.data;
-};
-export const deleteOrder = async ({ orderId }) => {
-  const formData = new FormData();
-  formData.append("order_id", orderId);
-  const response = await api.post(`${apiEndPoints.deleteOrder}`, formData);
-  return response.data;
-};
-
-// Fetch Notifications
-export const getNotifications = async ({ limit = 7, offset = 0 }) => {
-  const params = { limit, offset };
-  const response = await api.get(`${apiEndPoints.getNotification}`, { params });
-  return response.data;
-};
-
-export const getFAQs = async ({ limit = 7, offset = 0 }) => {
-  const params = { limit, offset };
-  const response = await api.get(`${apiEndPoints.getFaq}`, { params });
-  return response.data;
-};
-
-export const getOrders = async ({
-  limit,
-  offset,
-  orderId,
-  type,
-  orderType,
-}) => {
-  const params = { limit: limit, offset: offset, type: type };
-  if (orderId) {
-    params.order_id = orderId;
-  }
-  if (orderType != "") {
-    params.order_type = orderType;
-  }
-  const response = await api.get(`${apiEndPoints.getOrders}`, { params });
-  return response.data;
-};
-
-export const changeOrderStatus = async ({
-  orderId,
-  orderItemId,
-  status,
-  reason,
-}) => {
-  const formData = new FormData();
-  formData.append("order_id", orderId);
-  formData.append("order_item_id", orderItemId);
-  formData.append("status", status);
-  if (reason) {
-    formData.append("reason", reason);
-  }
-  const response = await api.post(
-    `${apiEndPoints.updateOrderStatus}`,
-    formData
-  );
-  return response.data;
-};
-
-export const reviewProduct = async ({ productId, rating, review, images }) => {
-  const formData = new FormData();
-  formData.append("product_id", productId);
-  formData.append("rate", rating);
-  formData.append("review", review);
-  for (let i = 0; i < images?.length; i++) {
-    formData.append(`image[${i}]`, images[i]);
-  }
-  const response = await api.post(
-    `${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.add}`,
-    formData
-  );
-  return response.data;
-};
-
-export const getProductRating = async ({ ratingId }) => {
-  const formData = new FormData();
-  formData.append("id", ratingId);
-  const response = await api.post(
-    `${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.edit}`,
-    formData
-  );
-  return response.data;
-};
-
-export const updateReviewProduct = async ({
-  ratingId,
-  rating,
-  review,
-  deleteImages,
-  images,
-}) => {
-  const formData = new FormData();
-  formData.append("id", ratingId);
-  formData.append("rate", rating);
-  formData.append("review", review);
-  formData.append("deleteImageIds", `[${deleteImages}]`);
-  for (let i = 0; i < images?.length; i++) {
-    formData.append(`image[${i}]`, images[i]);
-  }
-  const response = await api.post(
-    `${apiEndPoints.getProducts}/${apiEndPoints.rating}/${apiEndPoints.update}`,
-    formData
-  );
-  return response.data;
-};
-
-export const downloadInvoice = async ({ orderId }) => {
-  const formData = new FormData();
-  formData.append("order_id", orderId);
-  const response = await api.post(`${apiEndPoints.getInvoice}`, formData, {
-    responseType: "blob",
+// Checkout & orders
+export const getTimeSlots = () => odooSettings.getTimeSlots();
+export const placeOrder = (p) => odooOrders.placeOrder(p);
+export const initiateTrasaction = (p) =>
+  odooCheckout.initiateTransaction({
+    orderId: p.orderId,
+    paymentMethod: p.paymentMethod,
   });
-  return response;
-};
-
-export const getUserTransactions = async ({ limit, offset, type }) => {
-  const params = { limit: limit, offset: offset, type: type };
-  const response = await api.get(`${apiEndPoints.getTransactions}`, { params });
-  return response.data;
-};
-
-export const liveOrderTracking = async ({ orderId }) => {
-  const params = {
-    order_id: orderId,
-  };
-  const response = await api.get(`${apiEndPoints.liveTracking}`, { params });
-  return response.data;
-};
-
-export const getSellers = async ({ limit, offset, latitude, longitude }) => {
-  const params = {
-    limit,
-    offset,
-    latitude,
-    longitude,
-  };
-  const response = await api.get(`${apiEndPoints.getShopBySellers}`, {
-    params,
+export const addTransaction = (p) =>
+  odooCheckout.addTransaction({
+    orderId: p.orderId,
+    transactionId: p.transaction_id,
+    paymentMethod: p.paymentMethod,
   });
-  return response.data;
-};
-
-export const getCountries = async ({ limit, offset, latitude, longitude }) => {
-  const params = {
-    limit,
-    offset,
-    latitude,
-    longitude,
-  };
-  const response = await api.get(`${apiEndPoints.getShopByCountries}`, {
-    params,
+export const initiateTestTransaction = (p) => odooCheckout.initiateTestTransaction(p);
+export const markTestTransactionDone = (p) => odooCheckout.markTestTransactionDone(p);
+export const deleteOrder = (p) => odooOrders.deleteOrder(p);
+export const getNotifications = (p) => odooSettings.getNotifications(p);
+export const getFAQs = (p) => odooSettings.getFAQs(p);
+export const getOrders = (p) => odooOrders.getOrders(p);
+export const changeOrderStatus = (p) => odooOrders.changeOrderStatus(p);
+export const reviewProduct = (p) =>
+  odooDelivery.submitDeliveryFeedback({
+    userId: p?.user_id,
+    pickingId: p?.order_id,
+    feedback: p?.review,
+    rating: p?.rate,
   });
-  return response.data;
-};
+export const getProductRating = async () => ok([]);
+export const updateReviewProduct = async () => fail("not_supported");
+export const downloadInvoice = (p) => odooInvoices.downloadInvoice(p);
+export const getUserTransactions = async () => ok([]);
+export const liveOrderTracking = (p) =>
+  odooDelivery.liveOrderTracking({ orderId: p.order_id });
+export const getSellers = async () => ok([]);
+export const getOrderStatusPhonepe = async () => fail("not_supported");
 
-export const verifyUserByPhoneNum = async ({ mobile, countryCode, type }) => {
-  const formData = new FormData();
-  formData.append("mobile", mobile);
-  formData.append("country_code", countryCode);
-  formData.append("type", type);
-  const response = await api.post(
-    `${apiEndPoints.verifyUserByPhoneNum}`,
-    formData
-  );
-  return response.data;
-};
+// Blogs / subscriptions — not in Odoo customer API
+export const getBlogsCategories = async () => ok([]);
+export const getBlogs = async () => ok([]);
+export const setBlogCount = async () => ok(null);
+export const getMostViewedBlogs = async () => ok([]);
+export const setProductRequest = async () => fail("not_supported");
+export const getRequestedProducts = async () => ok([]);
+export const getTags = async () => ok([]);
+export const addRecentlyViewedProduct = async () => ok(null);
+export const getRecentlyViewedProducts = async () => ok([]);
+export const getSubscriptionPlans = async () => ok([]);
+export const getUserActivePlan = async () => ok(null);
+export const getSubscriptionFaqs = async () => ok([]);
+export const getMailSettings = async () => ok([]);
+export const updateMailSettings = async () => fail("not_supported");
 
-export const getOrderStatusPhonepe = async ({ token, transaction_id }) => {
-  const params = {
-    token: token,
-    transaction_id: transaction_id,
-  };
-
-  const response = await api.get(apiEndPoints.orderStatusPhonepe, { params });
-  return response.data;
-};
-
-// Blogs section API's
-export const getBlogsCategories = async ({
-  offset = 0,
-  limit = 10,
-  search = "",
-}) => {
-  const params = {
-    limit,
-    offset,
-    ...(search != "" ? { search } : {}),
-  };
-
-  const response = await api.get(apiEndPoints.blogCategories, { params });
-  return response.data;
-};
-
-export const getBlogs = async ({
-  offset,
-  limit,
-  slug,
-  categoryId = null,
-  tag_id = null,
-}) => {
-  const params = {
-    limit,
-    offset,
-    slug,
-    ...(categoryId !== null ? { category_id: categoryId } : null),
-    ...(tag_id !== null ? { tag_id: tag_id } : null),
-  };
-  const response = await api.get(apiEndPoints.blogs, { params });
-  return response.data;
-};
-
-export const setBlogCount = async ({ blogId }) => {
-  const formData = new FormData();
-  formData.append("blog_id", blogId);
-  const response = await api.post(apiEndPoints.blogViewCount, formData);
-  return response.data;
-};
-
-export const getMostViewedBlogs = async ({ limit = 5 }) => {
-  const response = await api.get(
-    `${apiEndPoints.blogs}/${apiEndPoints.mostViewedBlogs}`
-  );
-  return response.data;
-};
-
-export const setProductRequest = async ({ image, description }) => {
-  const formData = new FormData();
-  if (description) {
-    formData.append("description", description);
-  }
-  if (image) {
-    formData.append("image", image);
-  }
-  const response = await api.post(
-    `${apiEndPoints.userProductRequest}/${apiEndPoints?.add}`,
-    formData
-  );
-  return response.data;
-};
-
-export const getRequestedProducts = async ({ limit = 10, offset = 0 }) => {
-  const params = {
-    limit: limit,
-    offset: offset,
-  };
-  const response = await api.get(
-    `${apiEndPoints.userProductRequest}/${apiEndPoints?.list}`,
-    { params }
-  );
-  return response.data;
-};
-
-export const getTags = async () => {
-  const response = await api.get(`${apiEndPoints.blogTags}`);
-  return response.data;
-};
-
-export const addRecentlyViewedProduct = async ({ productId }) => {
-  const formData = new FormData();
-  formData.append("product_id", productId);
-  const response = await api.post(
-    `${apiEndPoints.getSection}/${apiEndPoints.addRecentlyViewedProduct}`,
-    formData
-  );
-  return response.data;
-};
-
-export const getRecentlyViewedProducts = async ({ productId }) => {
-  const params = {
-    product_id: productId,
-  };
-  const response = await api.get(
-    `${apiEndPoints.getProducts}/${apiEndPoints.recentlyVisited}`,
-    { params }
-  );
-  return response.data;
-};
-
-export const getSubscriptionPlans = async () => {
-  const response = await api.get(`${apiEndPoints.subscriptionPlans}`);
-  return response.data;
-};
-
-export const getUserActivePlan = async () => {
-  const response = await api.get(`${apiEndPoints.userActivePlan}`);
-  return response.data;
-};
-
-export const getSubscriptionFaqs = async ({ offset, limit }) => {
-  const params = {
-    offset,
-    limit,
-  };
-  const response = await api.get(`${apiEndPoints.subscriptionFaqs}`, { params });
-  return response.data;
-};
-
-export const getMailSettings = async () => {
-    const response = await api.get(`${apiEndPoints.mailSettings}`);
-    return response.data;
-};
-
-export const updateMailSettings = async ({
-  status_ids,
-  mail_statuses,
-  mobile_statuses,
-  sms_status,
-}) => {
-  const formData = new FormData();
-  formData.append("status_ids", status_ids);
-  formData.append("mail_statuses", mail_statuses);
-  formData.append("mobile_statuses", mobile_statuses);
-  formData.append("sms_status", sms_status);
-  const response = await api.post(
-    `${apiEndPoints.mailSettings}/${apiEndPoints.save}`,
-    formData
-  );
-  return response.data;
-};
+// Homepage sections (new API)
+export const getHomepageSections = () => odooBanners.getHomepageSections();

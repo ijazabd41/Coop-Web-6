@@ -15,6 +15,7 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
       const response = await api.setPromoCode({
         promoCodeName: coupon?.promo_code,
         amount: cart?.cartSubTotal,
+        applyToOrder: true,
       });
       if (response.status == 1) {
         dispatch(setCartPromo({ data: response.data }));
@@ -31,8 +32,8 @@ const CouponCodeCard = ({ coupon, setShowCouponCode }) => {
         <div className="flex items-center gap-4">
           <div className="w-16 h-16  flex-shrink-0 relative">
             <Image
-              src={coupon?.image_url}
-              alt="Promo image"
+              src={coupon?.image_url || "/favicon.ico"}
+              alt={coupon?.promo_code || "Promo image"}
               fill
               sizes="64px"
               className="object-cover"

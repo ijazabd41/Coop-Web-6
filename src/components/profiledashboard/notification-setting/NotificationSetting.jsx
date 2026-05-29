@@ -83,7 +83,7 @@ const NotificationSetting = () => {
                     <div className="mt-6 flex justify-end w-full">
                         <button
                             type="submit"
-                            className="w-28 bg-[#29363f] text-lg font-medium  text-white py-2 px-2 rounded-md "
+                            className="w-28 accentButtonBg text-lg font-medium  text-white py-2 px-2 rounded-md "
                             disabled={submitting}
                             onClick={handleUpdateSettings}
                         >

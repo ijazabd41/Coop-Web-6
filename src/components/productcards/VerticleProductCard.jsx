@@ -472,11 +472,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
 
   return (
     <div>
-      <Link
-        href={`/product/${product?.slug}`}
+      <div
         className="flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.image-card_&]:rounded-none [.cardBorder_&]:rounded-none rounded-md"
       >
-        <div className="flex relative textColor">
+        <Link href={`/product/${product?.slug}`} className="flex relative textColor">
           <div className="relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72">
             <ImageWithPlaceholder
               className="rounded-lg object-cover h-full w-full " 
@@ -488,7 +487,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-medium left-2 lg:left-4 leading-[16px] px-2 py-1 absolute text-center uppercase top-2 lg:top-4">
+              <span className="saleBadgeBg rounded-[4px] text-white text-[14px] font-medium left-2 lg:left-4 leading-[16px] px-2 py-1 absolute text-center uppercase top-2 lg:top-4">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
                   selectedVariant?.price
@@ -517,8 +516,8 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               </li>
             </ul>
           </div>
-        </div>
-        <div className="h-[100px] flex flex-col justify-between ">
+        </Link>
+        <Link href={`/product/${product?.slug}`} className="h-[100px] flex flex-col justify-between ">
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
             {product?.translations?.name ?? product?.name}
           </h3>
@@ -566,24 +565,22 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               </p>
             )}
           </div>
-        </div>
+        </Link>
         {!isProductAvailabel ? (
           <div className="flex gap-0 md:gap-3 h-[80px] md:h-[44px] w-full flex-col md:flex-row">
-            <button
-              onClick={(e) => handleShowVariantModal(e, product)}
-              className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
-            >
-              {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
-              {productsVariants?.length > 1 ? (
+            {productsVariants?.length > 1 && (
+              <button
+                onClick={(e) => handleShowVariantModal(e, product)}
+                className="md:w-1/2 w-full flex items-center my-[5px] justify-between SecondaryTextColor rounded-[4px] px-2 py-1.5 md:py-2  buttonBackground text-sm md:text-nowrap"
+              >
+                {selectedVariant?.name}
                 <div>
                   <MdArrowDropDown size={16} />
                 </div>
-              ) : (
-                <></>
-              )}
-            </button>
+              </button>
+            )}
             {isProductAlreadyAdded ? (
-              <div className="md:w-1/2 w-full cardBorder flex justify-between rounded-sm my-1">
+              <div className={`${productsVariants?.length > 1 ? 'md:w-1/2' : 'w-full'} w-full cardBorder flex justify-between rounded-sm my-1`}>
                 <button
                   className=" md:px-0.5 flex items-center justify-center primaryBackColor  text-white font-bold text-sm w-8  h-[34px] rounded-[2px]"
                   onClick={handleQuantityDecrease}
@@ -606,7 +603,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
               </div>
             ) : (
               <button
-                className={`w-full md:w-1/2 flex gap-1 text-base  my-[5px] p-1 md:p-0 items-center  justify-center rounded-[4px]  hover:primaryBackColor transition-all duration-300 hover:text-white addToCartColor primaryColor `}
+                className={`w-full ${productsVariants?.length > 1 ? 'md:w-1/2' : 'w-full'} flex gap-1 text-base  my-[5px] p-1 md:p-0 items-center  justify-center rounded-[4px]  hover:primaryBackColor transition-all duration-300 hover:text-white addToCartColor primaryColor `}
                 onClick={handleIntialAddToCart}
               >
                 <FaShoppingBasket size={20} />
@@ -615,11 +612,11 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
             )}
           </div>
         ) : (
-          <div className="flex items-center h-[80px] md:h-[44px]  text-[#db3d26] font-extrabold ">
+          <div className="flex items-center h-[80px] md:h-[44px]  primaryColor font-extrabold ">
             {t("OutOfStock")}
           </div>
         )}
-      </Link>
+      </div>
       <ProductDetailModal
         product={product}
         showDetailModal={showProductDetail}

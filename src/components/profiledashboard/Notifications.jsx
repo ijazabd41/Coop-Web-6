@@ -64,7 +64,7 @@ const Notifications = ({ selectedTab, setSelectedTab }) => {
 
         {notifications?.length < totalNotications &&
           <div className="flex justify-center py-4">
-            <button className='px-4 py-2 h-full flex  items-center rounded font-medium text-whiterounded  focus:outline-none bg-[#29363f] text-white text-xl shadow'
+            <button className='px-4 py-2 h-full flex  items-center rounded font-medium text-whiterounded  focus:outline-none accentButtonBg text-white text-xl shadow'
               onClick={() => handleLoadMore(currPage + 1)}
             >
               {t("load_more")}

@@ -52,8 +52,17 @@ const AddressCard = ({
     dispatch(setSelectedAddresForEdit({ data: address }));
   };
 
-  const handleCheckboxChange = () => {
+  const handleCheckboxChange = async () => {
     dispatch(setAddress({ data: address }));
+    try {
+      await api.updateOrderDelivery({
+        shippingContactId: address.id,
+        invoiceContactId:
+          address.contact_type === "invoice" ? address.id : undefined,
+      });
+    } catch (e) {
+      console.log("order delivery sync", e);
+    }
   };
 
   return (
@@ -70,7 +79,7 @@ const AddressCard = ({
                 <input
                   type="checkbox"
                   id={`default-address-${address.id}`}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  className="h-4 w-4 primaryAccentColor focus:ring-[var(--primary-color)] border-gray-300 rounded"
                   checked={checkout?.address?.id === address?.id}
                   onChange={handleCheckboxChange}
                 />
@@ -174,7 +183,7 @@ const AddressCard = ({
             <h1 className="font-bold">{t("delete_address_message")}</h1>
             <div className="flex gap-2 mt-3">
               <button
-                className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+                className="px-4 py-1 primaryBackColor text-white font-bold rounded-sm"
                 onClick={handleDeleteAdress}
               >
                 {t("Ok")}

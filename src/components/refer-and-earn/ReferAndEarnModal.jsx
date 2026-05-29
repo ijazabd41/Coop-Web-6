@@ -97,7 +97,7 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
               </div>
               <button
                 onClick={handleCopyCode}
-                className="bg-[#29363F] text-white px-4 py-2 rounded-lg flex items-center space-x-2  transition-colors"
+                className="accentButtonBg text-white px-4 py-2 rounded-lg flex items-center space-x-2  transition-colors"
               >
                 <IoCopy size={16} />
                 <span>{copied ? t("copied") : t("copy_code")}</span>
@@ -132,7 +132,7 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
             </button>
             <button
               onClick={() => handleShare("whatsapp")}
-              className="bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-600 transition-colors"
+              className="primaryBackColor text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:opacity-90 transition-colors"
             >
               <FaWhatsapp size={20} />
               <span>{t("whatsapp")}</span>

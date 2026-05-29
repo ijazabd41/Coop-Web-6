@@ -1,6 +1,12 @@
 "use client";
 import react, { useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
@@ -306,7 +312,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           setEmail("");
         } else if (response?.status == 1) {
           const tokenSet = await dispatch(
-            setTokenThunk(response?.data?.access_token),
+            setTokenThunk(response?.data?.access_token, response?.data?.user),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: "phone" }));
@@ -407,7 +413,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           return;
         } else {
           const tokenSet = await dispatch(
-            setTokenThunk(res?.data?.access_token),
+            setTokenThunk(res?.data?.access_token, res?.data?.user),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: type }));
@@ -547,7 +553,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           return;
         } else {
           const tokenSet = await dispatch(
-            setTokenThunk(res?.data?.access_token),
+            setTokenThunk(res?.data?.access_token, res?.data?.user),
           );
           await getCurrentUser();
           dispatch(setAuthType({ data: "email" }));
@@ -603,7 +609,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     try {
       const res = await api.verifyEmail({ email: email, code: otp });
       if (res.status == 1) {
-        const tokenSet = await dispatch(setTokenThunk(res?.data?.access_token));
+        const tokenSet = await dispatch(
+          setTokenThunk(res?.data?.access_token, res?.data?.user)
+        );
         await getCurrentUser();
         dispatch(setAuthType({ data: "email" }));
         if (res?.data?.user?.status == 1) {
@@ -701,7 +709,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             }}
           />
           {setting?.phone_auth_password == 1 && (
-            <form className="flex flex-col relative">
+            <div className="flex flex-col relative">
               <input
                 type={showPassword ? "text" : "password"}
                 value={phonePassword}
@@ -723,13 +731,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   {t("forget_password_?")}
                 </p>
               </div>
-            </form>
+            </div>
           )}
         </div>
         <button
           disabled={loading}
           type="submit"
-          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
+          className="accentButtonBg disabled:opacity-60 w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
         >
           {loading ? t("loading") : t("continue")}
         </button>
@@ -790,7 +798,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
         <button
           disabled={loading}
           type="submit"
-          className="bg-[#29363F] disabled:bg-[#29363A] w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
+          className="accentButtonBg disabled:opacity-60 w-full px-4 py-2 text-white rounded-sm text-xl font-normal mt-4"
         >
           {loading ? t("loading") : t("continue")}
         </button>
@@ -811,6 +819,10 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     <>
       <Dialog open={showLogin}>
         <DialogContent className="overflow-y-auto overflow-x-hidden">
+          <DialogTitle className="sr-only">{t("login")}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {t("login_message")}
+          </DialogDescription>
           <DialogHeader className="flex justify-between items-center flex-row">
             <div>
               <h1 className="text-3xl font-bold">{t("login")}</h1>
@@ -901,7 +913,7 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
                   </div>
                   <div className="mt-8 flex justify-center ">
                     <button
-                      className="w-full bg-[#29363F] text-white text-xl py-2 rounded-sm"
+                      className="w-full accentButtonBg text-white text-xl py-2 rounded-sm"
                       type="submit"
                     >
                       {loading == true ? t("loading") : t("login")}

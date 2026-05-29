@@ -130,7 +130,7 @@ const ResetPassword = () => {
                         <div className="mt-6 flex justify-end w-full">
                             <button
                                 type="submit"
-                                className="w-44 bg-[#29363f]  text-white py-2 px-4 rounded-md "
+                                className="w-44 accentButtonBg  text-white py-2 px-4 rounded-md "
                             // disabled={isChanged == false}
 
                             >

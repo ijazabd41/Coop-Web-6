@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"; // Added useRef
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { t } from "@/utils/translation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -8,7 +14,9 @@ import { RiCloseFill, RiCameraLine } from "react-icons/ri"; // Added RiCameraLin
 import * as api from "@/api/apiRoutes";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthType } from "@/redux/slices/userSlice";
+import { setAuthType, setCurrentUser } from "@/redux/slices/userSlice";
+import { setTokenThunk } from "@/redux/thunk/loginthunk";
+import { setIsGuest } from "@/redux/slices/cartSlice";
 import { auth } from "@/utils/firebase";
 import { signInWithPhoneNumber } from "firebase/auth";
 
@@ -83,11 +91,28 @@ const Register = ({
     setCountryCode(data?.dialCode || "");
   };
 
+  const completeRegistrationLogin = async (res) => {
+    if (res?.data?.access_token) {
+      await dispatch(setTokenThunk(res.data.access_token, res.data.user));
+      if (res?.data?.user) {
+        dispatch(setCurrentUser({ data: res.data.user }));
+      }
+      dispatch(setIsGuest({ data: false }));
+      dispatch(setAuthType({ data: inputType === "email" ? "email" : "phone" }));
+    }
+    toast.success(t("succesfull_register_message"));
+    handleCloseRegister();
+    setShowLogin(false);
+    setIsLoading(false);
+  };
+
   const handleMobileRegister = async (e) => {
-    const otpRes = await handleOtpVerification(e);
-    if (!otpRes) {
-      toast.error(t("invalid_otp"));
-      return;
+    if (setting?.phone_auth_password != 1) {
+      const otpRes = await handleOtpVerification(e);
+      if (!otpRes) {
+        toast.error(t("invalid_otp"));
+        return;
+      }
     }
     setIsLoading(true);
     e.preventDefault();
@@ -105,16 +130,14 @@ const Register = ({
         profile: profileImage, // Pass image
       });
       if (res?.status == 1) {
-        toast.success(t("succesfull_register_message"));
-        handleCloseRegister();
-        setIsLoading(false);
+        await completeRegistrationLogin(res);
       } else {
         setIsLoading(false);
         toast.error(t(res?.message));
         // Reset Logic...
         setShowRegister(false);
         setIsPhoneOtp(false);
-        setOtp(null);
+        setOtp("");
         setPassword("");
         setConfirmPassword("");
         setPhoneNumber("");
@@ -147,12 +170,7 @@ const Register = ({
         profile: profileImage, // Pass image
       });
       if (res.status == 1) {
-        setIsLoading(false);
-        dispatch(setAuthType({ data: "email" }));
-        setShowRegister(false);
-        toast.success(t(res?.message));
-        setIsOTP(true);
-        setOtp("");
+        await completeRegistrationLogin(res);
         setPassword("");
         setName("");
         setPhoneNumberWithoutCountryCode("");
@@ -202,7 +220,11 @@ const Register = ({
         setErrorType("confirmpassword");
         return;
       } else {
-        if (inputType == "number") {
+        if (inputType == "number" && setting?.phone_auth_password == 1) {
+          await handleMobileRegister(e);
+          setError("");
+          setErrorType("");
+        } else if (inputType == "number") {
           await handleSendOTP(e);
           setError("");
           setErrorType("");
@@ -335,7 +357,7 @@ const Register = ({
     setName("");
     setEmail("");
     setPhoneNumber("");
-    setOtp(null);
+    setOtp("");
     setIsPhoneOtp(false);
     setPassword("");
     setConfirmPassword("");
@@ -349,6 +371,10 @@ const Register = ({
   return (
     <Dialog open={showRegister}>
       <DialogContent className="overflow-y-auto max-h-[90%]">
+        <DialogTitle className="sr-only">{t("register")}</DialogTitle>
+        <DialogDescription className="sr-only">
+          {t("signupMessage")}
+        </DialogDescription>
         <DialogHeader className="flex justify-between flex-row items-center">
           <div className="">
             <h1 className="text-3xl font-bold">{t("register")}</h1>
@@ -514,7 +540,7 @@ const Register = ({
           <div className="mt-4 flex flex-col justify-center text-center gap-3">
             <button
               onClick={isPhoneOtp ? handleMobileRegister : handleUserRegister}
-              className="bg-[#29363F] py-2 px-4 text-white text-center rounded-sm text-xl font-normal"
+              className="accentButtonBg py-2 px-4 text-white text-center rounded-sm text-xl font-normal"
               disabled={isLoading}
             >
               {isLoading ? t("loading") : isPhoneOtp ? t("register") : t("verify")}

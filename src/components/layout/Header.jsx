@@ -758,7 +758,7 @@ const Header = () => {
                 className={`h-10 w-10 ${
                   mobileActiveKey == 1
                     ? "primaryBackColor text-white  "
-                    : "bg-[#55AE7B14] primaryColor "
+                    : "primaryTintBg primaryColor "
                 }p-2 rounded-full`}
               />
               <span className="text-sm">{t("home")}</span>
@@ -773,7 +773,7 @@ const Header = () => {
                 className={`h-10 w-10 ${
                   mobileActiveKey == 2
                     ? "primaryBackColor text-white "
-                    : "bg-[#55AE7B14] primaryColor "
+                    : "primaryTintBg primaryColor "
                 } p-2 rounded-full`}
               />
               <span className="text-sm">{t("search")}</span>
@@ -788,7 +788,7 @@ const Header = () => {
                 className={`h-10 w-10 ${
                   mobileActiveKey == 3
                     ? "primaryBackColor text-white "
-                    : "bg-[#55AE7B14] primaryColor "
+                    : "primaryTintBg primaryColor "
                 } p-2 rounded-full`}
               />
               <span className="text-sm">

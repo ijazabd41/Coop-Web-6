@@ -66,7 +66,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
           />
         </div>
       ),
-      theme: "border-green-500 bg-[#55AE7B1F] text-green-800",
+      theme: "border-[var(--primary-color)] bg-[var(--light-primary-color)] text-[var(--primary-color)]",
     },
     {
       id: 2,
@@ -191,7 +191,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                         </div>
                       </div>
 
-                      <span className="bg-[#DB3D26] text-white text-sm font-semibold px-3 py-1 rounded-full ">
+                      <span className="saleBadgeBg text-white text-sm font-semibold px-3 py-1 rounded-full ">
                         {t("expired")}
                       </span>
                     </div>
@@ -277,7 +277,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "profile"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("profile")}
@@ -293,7 +293,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                     <li
                       className={`p-4  cursor-pointer opacity-[0.76] ${
                         activeTab == "resetpassword"
-                          ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor primaryColor opacity-100"
+                          ? "navItemActive"
                           : "hover:primaryBackColor hover:text-white hover:opacity-100"
                       }`}
                       onClick={() => handleTabChange("profile")}
@@ -309,7 +309,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "address"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("address")}
@@ -324,7 +324,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                   <li
                     className={`p-4  cursor-pointer opacity-[0.76] ${
                       activeTab == "subscription"
-                        ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                        ? "navItemActive"
                         : "hover:primaryBackColor hover:text-white hover:opacity-100"
                     }`}
                     onClick={() => handleTabChange("subscription")}
@@ -349,7 +349,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "activeorders"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("activeorders")}
@@ -364,7 +364,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "orderhistory"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("orderhistory")}
@@ -378,7 +378,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "wishlist"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("wishlist")}
@@ -410,7 +410,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
               <li
                 className={`p-4  cursor-pointer  opacity-[0.76] ${
                   activeTab == "add-balance"
-                    ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                    ? "navItemActive"
                     : "hover:primaryBackColor hover:text-white hover:opacity-100"
                 }`}
                 onClick={handleWalletBalanceModal}
@@ -423,7 +423,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "wallethistory"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("wallethistory")}
@@ -438,13 +438,27 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "transaction"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("transaction")}
                 >
                   <span className="ml-12 md:ml-[0] lg:ml-12">
                     {t("transaction_history")}
+                  </span>
+                </li>
+              </Link>
+              <Link href={`/profile/loyalty`}>
+                <li
+                  className={`p-4  cursor-pointer opacity-[0.76] ${
+                    activeTab == "loyalty"
+                      ? "navItemActive"
+                      : "hover:primaryBackColor hover:text-white hover:opacity-100"
+                  }`}
+                  onClick={() => handleTabChange("loyalty")}
+                >
+                  <span className="ml-12 md:ml-[0] lg:ml-12">
+                    {t("loyalty_program")}
                   </span>
                 </li>
               </Link>
@@ -462,7 +476,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "notifications"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("notifications")}
@@ -476,7 +490,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4 cursor-pointer opacity-[0.76] ${
                     activeTab == "notification-setting"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("notification_setting")}
@@ -490,7 +504,7 @@ const ProfileSidebar = ({ setSelectedTab, selectedTab }) => {
                 <li
                   className={`p-4  cursor-pointer opacity-[0.76] ${
                     activeTab == "requested-products"
-                      ? "bg-[#55AE7B14] border-l-[#55AE7B] border-l-4 primaryColor opacity-100"
+                      ? "navItemActive"
                       : "hover:primaryBackColor hover:text-white hover:opacity-100"
                   }`}
                   onClick={() => handleTabChange("requested-products")}

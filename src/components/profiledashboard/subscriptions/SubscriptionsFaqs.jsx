@@ -53,7 +53,7 @@ const SubscriptionsFaqs = ({ isOpen, setIsOpen, faqs, totalFaqs, faqLoading, fet
             <div className="col-span-12 mt-6 w-full flex justify-center mx-auto">
               {totalFaqs > faqs?.length ? (
                 <button
-                  className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                  className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
                   onClick={fetchSubscriptionFaqs}
                 >
                   {t("load_more")}

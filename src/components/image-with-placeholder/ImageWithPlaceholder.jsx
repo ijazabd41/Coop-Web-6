@@ -3,6 +3,32 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ImagePlaceholder from "../../assets/image-placeholder/image.png";
 import { useSelector } from "react-redux";
+import { imageUrl } from "@/api/odoo/utils";
+
+function resolveProductImageSrc(src) {
+  if (!src || typeof src !== "string") return "";
+  if (
+    src.startsWith("data:") ||
+    src.startsWith("/api/odoo/") ||
+    src.startsWith("http://") ||
+    src.startsWith("https://")
+  ) {
+    return src.startsWith("/api/odoo/web/image/")
+      ? imageUrl(src)
+      : src;
+  }
+  return imageUrl(src);
+}
+
+function isUrlImageSrc(src) {
+  if (typeof src !== "string" || !src) return false;
+  return (
+    src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("/") ||
+    src.startsWith("data:")
+  );
+}
 
 const ImageWithPlaceholder = ({
   src,
@@ -10,41 +36,51 @@ const ImageWithPlaceholder = ({
   className,
   handleOnClick,
   priority,
-  sizes,
-  quality,
   width,
   height,
 }) => {
-  const setting = useSelector((state) => state.Setting);
-  const [isLoading, setIsLoading] = useState(!src);
+  const setting = useSelector((state) => state.Setting?.setting);
+  const resolvedSrc = resolveProductImageSrc(src);
   const [isError, setIsError] = useState(false);
 
-  // NOTE:Change from nextjs Image to regular img to get rid of placeholder image error
+  useEffect(() => {
+    setIsError(false);
+  }, [resolvedSrc]);
+
+  const placeholder =
+    setting?.web_settings?.placeholder_image ||
+    setting?.web_settings?.web_logo ||
+    ImagePlaceholder;
+
+  if (resolvedSrc && isUrlImageSrc(resolvedSrc) && !isError) {
+    return (
+      <img
+        src={resolvedSrc}
+        alt={alt || "Product image"}
+        className={className}
+        onClick={handleOnClick}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        onError={() => setIsError(true)}
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
+    );
+  }
+
+  const displaySrc = !resolvedSrc || isError ? placeholder : resolvedSrc;
+
   return (
     <Image
-      src={
-        !src || isLoading || isError
-          ? setting?.setting?.web_settings?.placeholder_image
-            ? setting?.setting?.web_settings?.placeholder_image
-            : ImagePlaceholder
-          : src
-      }
-      alt={alt}
+      src={displaySrc}
+      unoptimized
+      alt={alt || "Product image"}
       {...(width && height
         ? { width, height }
-        : {fill: true, sizes: sizes || "100vw" })}
-      quality={quality}
+        : { fill: true, sizes: "100vw" })}
       priority={priority}
       className={className}
-      
       onClick={handleOnClick}
-      onLoad={() => {
-        setIsLoading(false);
-      }}
-      onError={() => {
-        setIsLoading(false);
-        setIsError(true);
-      }}
+      onError={() => setIsError(true)}
     />
   );
 };

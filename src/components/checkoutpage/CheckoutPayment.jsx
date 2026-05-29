@@ -58,6 +58,15 @@ const CheckoutPayment = ({ checkoutData }) => {
       setting?.payment_setting?.[method.key] === "1"
   );
 
+  // Append Test Payment Method
+  enabledPaymentMethods.push({
+    key: "test_payment_method",
+    label: "Test Payment",
+    image: null,
+    isTest: true,
+  });
+
+
   // Function to find the selected method element
   const scrollToSelectedMethod = () => {
     if (!methodsContainerRef.current) return;
@@ -205,15 +214,22 @@ const CheckoutPayment = ({ checkoutData }) => {
                     onClick={()=>{handleSelectedPaymentMethod(method.label)}}
                   >
                     <div className="flex gap-2 items-center">
-                      <Image
-                        src={method.image}
-                        className="h-8 w-8"
-                        height={32}
-                        width={32}
-                        unoptimized
-                        alt={t(method.label)}
-                      />
-                      <p className="font-medium text-base">{t(method.label)}</p>
+                      {method.image ? (
+                        <Image
+                          src={method.image}
+                          className="h-8 w-8"
+                          height={32}
+                          width={32}
+                          unoptimized
+                          alt={t(method.label) || method.label || "Payment Method"}
+                        />
+                      ) : (
+                        <CiWallet className="h-8 w-8 text-gray-500" />
+                      )}
+                      <div className="flex flex-col">
+                        <p className="font-medium text-base">{method.isTest ? method.label : t(method.label)}</p>
+                        {method.isTest && <span className="text-xs text-red-500 font-semibold mt-[-2px]">{t("For Testing Only")}</span>}
+                      </div>
                     </div>
                     <div>
                       <input

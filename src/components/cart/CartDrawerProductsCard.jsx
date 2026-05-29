@@ -260,7 +260,7 @@ const CartDrawerProductsCard = ({ product, cartProductsData, setCartProductsData
                         </div>
 
                         <div className='mt-2'>
-                            <span className='flex items-center gap-1'>{product?.measurement} {product?.unit?.translations?.short_code}</span>
+                            <span className='flex items-center gap-1'>{product?.name}</span>
                         </div>
                         <div className='flex justify-between items-center mt-3 md:mt-4'>
                             <div className='flex border-2 items-center leading-5 w-1/2 justify-between p-1 rounded-sm'>

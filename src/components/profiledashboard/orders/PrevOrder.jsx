@@ -145,7 +145,7 @@ const PrevOrder = () => {
       {totalOrders > prevOrders?.length && (
         <div className="flex justify-center p-4">
           <button
-            className="bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal"
+            className="accentButtonBg py-2 px-4 text-white rounded-sm text-lg font-normal"
             onClick={handleFetchMore}
           >
             {t("load_more")}

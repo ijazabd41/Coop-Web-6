@@ -7,6 +7,7 @@ import Loader from "@/components/loader/Loader";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import SessionBootstrap from "@/components/SessionBootstrap";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -66,6 +67,7 @@ export default function App({ Component, pageProps }) {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
+            <SessionBootstrap />
             <ThemeProvider attribute="class" defaultTheme="light">
               <Suspense fallback={<Loader screen="full" />}>
                 <AppContent Component={Component} pageProps={pageProps} />

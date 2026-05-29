@@ -128,7 +128,7 @@ const OrderItems = ({
                       )}
                       {Number(product?.return_requested) === 7 && (
                         <>
-                          <button className="text-[#DB3D26]">
+                          <button className="primaryColor">
                             {t("return_request_cancel_by_delivery_boy")}
                           </button>
                           <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
@@ -141,7 +141,7 @@ const OrderItems = ({
                         </button>
                       )}
                       {Number(product?.active_status) === 8 && (
-                        <span className="text-[#DB3D26]">{`${t("total")} ${setting?.currency
+                        <span className="primaryColor">{`${t("total")} ${setting?.currency
                           }${product?.refund_amount} ${t("refunded")}`}</span>
                       )}
                       {Number(product?.return_requested) === 3 && (
@@ -188,7 +188,7 @@ const OrderItems = ({
                           ) : (
                             <div>
                               <button
-                                className="px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base"
+                                className="px-4 py-2 primaryTintHover primaryColor primaryTintBg rounded-md flex gap-1 items-center font-medium text-base"
                                 onClick={() => handleShowRating(product)}
                               >
                                 <MdOutlineStar size={20} />
@@ -206,7 +206,7 @@ const OrderItems = ({
                             Number(product?.till_status) &&
                             Number(product?.cancelable_status) === 1 && (
                               <button
-                                className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md hover:bg-red-200"
+                                className="px-4 py-2 text-red-500 errorTintBg rounded-md hover:bg-red-200"
                                 onClick={() => handleCancel(product)}
                               >
                                 {t("cancel")}
@@ -217,7 +217,7 @@ const OrderItems = ({
                             Number(product?.return_status) === 1 &&
                             product?.return_requested === null && (
                               <button
-                                className="text-[#DB3D26] underline"
+                                className="primaryColor underline"
                                 onClick={() => handleReturn(product)}
                               >
                                 {t("return")}
@@ -228,7 +228,7 @@ const OrderItems = ({
                             Number(product?.cancelable_status) === 0 && (
                             <div className="flex flex-col gap-1">
                               <button
-                                className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md"
+                                className="px-4 py-2 text-red-500 errorTintBg rounded-md"
                                 disabled
                               >
                                 {t("cancelled")}
@@ -292,7 +292,7 @@ const OrderItems = ({
                   )}
                   {Number(product?.return_requested) === 7 && (
                     <>
-                      <button className="text-[#DB3D26]">
+                      <button className="primaryColor">
                         {t("return_request_cancel_by_delivery_boy")}
                       </button>
                       <p className="text-xs">{`${t("sellerNote")}: ${product?.cancellation_reason
@@ -305,7 +305,7 @@ const OrderItems = ({
                     </button>
                   )}
                   {Number(product?.active_status) === 8 && (
-                    <span className="text-[#DB3D26]">{`${t("total")} ${setting?.currency
+                    <span className="primaryColor">{`${t("total")} ${setting?.currency
                       }${product?.refund_amount} ${t("refunded")}`}</span>
                   )}
                   {Number(product?.return_requested) === 3 && (
@@ -355,7 +355,7 @@ const OrderItems = ({
                       ) : (
                         <div className="">
                           <button
-                            className="px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base justify-center"
+                            className="px-4 py-2 primaryTintHover primaryColor primaryTintBg rounded-md flex gap-1 items-center font-medium text-base justify-center"
                             onClick={() => handleShowRating(product)}
                           >
                             <MdOutlineStar size={20} />
@@ -374,7 +374,7 @@ const OrderItems = ({
                         Number(product?.cancelable_status) === 1 && (
                           <div className="w-full md:w-[151px]">
                             <button
-                              className="px-4 py-2 text-red-500 bg-[#DB3D261F] rounded-md hover:bg-red-200 w-full font-medium"
+                              className="px-4 py-2 text-red-500 errorTintBg rounded-md hover:bg-red-200 w-full font-medium"
                               onClick={() => handleCancel(product)}
                             >
                               {t("cancel")}
@@ -386,7 +386,7 @@ const OrderItems = ({
                         Number(product?.return_status) === 1 &&
                         product?.return_requested === null && (
                           <button
-                            className="text-[#DB3D26] underline "
+                            className="primaryColor underline "
                             onClick={() => handleReturn(product)}
                           >
                             {t("return")}
@@ -397,7 +397,7 @@ const OrderItems = ({
                         Number(product?.cancelable_status) === 0 && (
                         <div className="flex flex-col gap-1 w-full md:w-full">
                           <button
-                            className="px-4 py-2 text-red-500 bg-[#DB3D261F] md:w-[151px] rounded-md "
+                            className="px-4 py-2 text-red-500 errorTintBg md:w-[151px] rounded-md "
                             disabled
                           >
                             {t("cancelled")}

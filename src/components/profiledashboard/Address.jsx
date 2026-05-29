@@ -94,7 +94,7 @@ const Address = () => {
 
         {/* {total > addresses?.lenght &&
                     <div className='flex justify-center my-2'>
-                        <button onClick={handleLoadMore} className='bg-[#29363f] py-2 px-4 text-white rounded-sm text-lg font-normal'>{t("load_more")}</button>
+                        <button onClick={handleLoadMore} className='accentButtonBg py-2 px-4 text-white rounded-sm text-lg font-normal'>{t("load_more")}</button>
                     </div>
                 } */}
       </div>

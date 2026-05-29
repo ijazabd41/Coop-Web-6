@@ -23,12 +23,24 @@ export const userReducer = createSlice({
             state.status = "fulfill";
             state.authType = action.payload.data;
         },
+        loginSuccess: (state, action) => {
+            state.status = "fulfill";
+            state.user = action.payload.user;
+            state.jwtToken = action.payload.jwtToken || "";
+        },
         logoutAuth: (state, action) => {
             state.status = "loading";
             state.user = null;
             state.fcm_token = null;
             state.authId = "";
             state.jwtToken = "";
+            // Clear Odoo session from localStorage
+            if (typeof window !== "undefined") {
+                try {
+                    const keys = ["odoo_session_id", "odoo_partner_id", "odoo_uid", "odoo_draft_order_id", "odoo_db"];
+                    keys.forEach((k) => window.localStorage.removeItem(k));
+                } catch { /* ignore */ }
+            }
         },
         deductUserBalance: (state, action) => {
             console.log("action", action.payload.data)
@@ -53,5 +65,5 @@ export const userReducer = createSlice({
     }
 });
 
-export const { setCurrentUser, logoutAuth, deductUserBalance, addUserBalance, setFcmToken, setAuthId, setJWTToken, setAuthType } = userReducer.actions;
-export default userReducer.reducer;
+export const { setCurrentUser, loginSuccess, logoutAuth, deductUserBalance, addUserBalance, setFcmToken, setAuthId, setJWTToken, setAuthType } = userReducer.actions;
+export default userReducer.reducer;

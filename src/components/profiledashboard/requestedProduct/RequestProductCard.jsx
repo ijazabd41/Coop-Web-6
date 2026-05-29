@@ -13,7 +13,7 @@ const RequestProductCard = ({ request }) => {
                 ? "bg-yellow-400"
                 : request?.status == "rejected"
                   ? "bg-red-400"
-                  : "bg-green-400"
+                  : "successBg"
                 } text-white  px-2 py-1 rounded`}
             >
               {request?.status == "pending"

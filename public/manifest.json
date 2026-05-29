@@ -1,0 +1,9 @@
+{
+  "name": "Coop Discounts",
+  "short_name": "Coop",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#D61F26",
+  "icons": []
+}

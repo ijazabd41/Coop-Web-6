@@ -84,7 +84,7 @@ const ProductDescription = ({ product, ratingData }) => {
       <div className=" rounded-sm my-2 cardBorder ">
         <div className="flex flex-wrap gap-4 p-4   border-b-2">
           <span
-            className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 0 ? "bg-[#29363F] w-fit text-white" : " "
+            className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 0 ? "accentButtonBg w-fit text-white" : " "
               }`}
             onClick={handleProductDescSelect}
           >
@@ -92,7 +92,7 @@ const ProductDescription = ({ product, ratingData }) => {
           </span>
           {product?.product_rating == true && (
             <span
-              className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 1 ? "bg-[#29363F] w-fit text-white" : ""
+              className={`text-base px-4 md:text-xl py-2 rounded cursor-pointer ${selectedTab == 1 ? "accentButtonBg w-fit text-white" : ""
                 }`}
               onClick={handleProductReviewSelect}
             >

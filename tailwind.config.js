@@ -34,9 +34,21 @@ export default {
 				reverseRotation: 'rotation 1s linear infinite reverse',
 			},
 			colors: {
-				secondary: '#FF3D00', // Adjust this to your desired secondary color
-			},
-			colors: {
+				coop: {
+					red: '#D61F26',
+					'red-dark': '#A8151B',
+					'red-light': '#FF3B42',
+					yellow: '#F5C800',
+					'yellow-dark': '#C9A200',
+					'yellow-light': '#FFD93D',
+					black: '#1A1A1A',
+					'dark-gray': '#333333',
+					'mid-gray': '#9E9E9E',
+					'light-gray': '#F2F2F2',
+					'off-white': '#FFF8F8',
+					success: '#2ECC71',
+					info: '#2980B9',
+				},
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {

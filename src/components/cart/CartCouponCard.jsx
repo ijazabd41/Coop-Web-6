@@ -63,7 +63,7 @@ const CartCouponCard = ({ setShowCouponCode }) => {
               {t("delete")}
             </button>
           </div>
-          <div className="flex items-center justify-between p-2 mt-2 bg-[#55AE7B0A] primaryBorder  rounded-md">
+          <div className="flex items-center justify-between p-2 mt-2 primaryTintBg primaryBorder  rounded-md">
             <div className="flex items-center space-x-2">
               <span className="primaryColor">
                 <MdOutlineCelebration className="primaryColor" size={20} />

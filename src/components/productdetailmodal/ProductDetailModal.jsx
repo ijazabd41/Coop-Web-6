@@ -390,41 +390,35 @@ const ProductDetailModal = ({
                         </div>
                       ) : null}
 
-                      {productDetails?.seller_name !== null && (
-                        <div className="px-2 py-1 ">
-                          <div className="flex text-xs">
-                            <span>
-                              {t("seller")}:
-                              <span className="font-bold">
-                                {product?.seller?.translations?.name}
-                              </span>
+                      <div className="px-2 py-1 ">
+                        <div className="flex text-xs">
+                          <span>
+                            {t("seller")} :
+                            <span className="font-bold pl-1">
+                              {product?.seller?.translations?.name || "N/A"}
                             </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {productDetails?.fssai_lic_no !== "" && (
-                      <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
-                    )}
-                    {productDetails?.fssai_lic_no !== "" && (
-                      <div className="flex items-center gap-3 ">
-                        <div className="text-xs">
-                          {productDetails?.fssai_lic_img && (
-                            <Image
-                              width={36}
-                              height={36}
-                              src={productDetails?.fssai_lic_img}
-                              className="object-contain"
-                              alt="fssaiImage"
-                            />
-                          )}
-                        </div>
-                        <div className="text-xs">
-                          {t("fssai_license_no")} {productDetails?.fssai_lic_no}
+                          </span>
                         </div>
                       </div>
-                    )}
+                    </div>
+
+                    <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
+                    <div className="flex items-center gap-3 ">
+                      {productDetails?.fssai_lic_img && (
+                        <div className="text-xs">
+                          <Image
+                            width={36}
+                            height={36}
+                            src={productDetails?.fssai_lic_img}
+                            className="object-contain"
+                            alt="fssaiImage"
+                          />
+                        </div>
+                      )}
+                      <div className="text-xs">
+                        {t("fssai_license_no")} {productDetails?.fssai_lic_no || "N/A"}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="grid  grid-cols-1 md:grid-cols-12   mt-6 gap-3  justify-center">
@@ -441,7 +435,7 @@ const ProductDetailModal = ({
                       {selectVariant?.discounted_price !== 0 &&
                         selectVariant?.discounted_price !==
                         selectVariant?.price ? (
-                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
+                        <span className="saleBadgeBg rounded-[4px] text-white text-[14px] font-bold left-1 leading-[16px] px-2 py-1 absolute text-center uppercase top-1">
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price
@@ -540,7 +534,7 @@ const ProductDetailModal = ({
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
-                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</p>
+                              <p className="font-bold text-sm">{variant?.name}</p>
                               <span className="flex gap-1 text-[13px]  line-clamp-1">
                                 <p>
                                   {currency}
@@ -597,7 +591,7 @@ const ProductDetailModal = ({
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold ">
+                        <div className="flex items-center h-[80px] md:h-[38px]  primaryColor font-extrabold ">
                           {t("OutOfStock")}
                         </div>
                       )}

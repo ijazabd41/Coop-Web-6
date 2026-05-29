@@ -1,0 +1,1 @@
+const fetch = require('node-fetch'); async function test() { const r = await fetch('http://cooperp.freeddns.org:8076/shop/115718-al-ain-farms-fresh-laban-250-ml-78562'); const html = await r.text(); console.log(html.split('"').filter(s => s.includes('/web/image/'))); } test();

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import CheckoutPayment from "./CheckoutPayment";
 import OrderSummaryCard from "./OrderSummaryCard";
+import LoyaltySelector from "./LoyaltySelector";
 import { useDispatch, useSelector } from "react-redux";
 import dynamic from 'next/dynamic';
 const NewAddressModal = dynamic(() => import('../newaddressmodal/NewAddressModal'), {
@@ -29,9 +30,13 @@ const NewAddressModal = dynamic(() => import('../newaddressmodal/NewAddressModal
 import * as api from "@/api/apiRoutes";
 import {
   clearCartPromo,
+  setCart,
   setCartCheckout,
+  setCartProducts,
   setCartPromo,
+  setCartSubTotal,
 } from "@/redux/slices/cartSlice";
+import { cartDataFromResponse } from "@/api/apiRoutes";
 import { setAllAddresses } from "@/redux/slices/addressSlice";
 import {
   setAddress,
@@ -55,7 +60,7 @@ const StripeModal = dynamic(() => import("./StripeModal"), {
 import PaystackPop from "@paystack/inline-js";
 import CheckoutSkeleton from "./CheckoutSkeleton";
 import { FiPhoneCall, FiTruck } from "react-icons/fi";
-import { MdOutlineStorefront, MdOutlineWatchLater } from "react-icons/md";
+import { MdOutlineStorefront, MdOutlineWatchLater, MdOutlineEmail } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
 
 const Checkout = () => {
@@ -97,6 +102,41 @@ const Checkout = () => {
   // step 3 variables
   const [checkoutData, setCheckoutData] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
+  const [draftOrderId, setDraftOrderId] = useState(null);
+
+  const refreshOdooCart = async () => {
+    try {
+      const response = await api.getCart();
+      const data = cartDataFromResponse(response);
+      if (data) {
+        dispatch(setCart({ data }));
+        dispatch(setCartProducts({ data: data.cart || [] }));
+        dispatch(setCartSubTotal({ data: data.sub_total }));
+        if (data.order_id) setDraftOrderId(data.order_id);
+      }
+      return response;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    refreshOdooCart();
+  }, []);
+
+  useEffect(() => {
+    if (!checkout?.address?.id || !draftOrderId) return;
+    const invoiceContact =
+      address?.allAddresses?.find((a) => a.contact_type === "invoice")?.id ||
+      user?.partner_id ||
+      user?.id;
+    api.updateOrderDelivery({
+      orderId: draftOrderId,
+      shippingContactId: checkout.address.id,
+      invoiceContactId: invoiceContact,
+    });
+  }, [checkout?.address?.id, draftOrderId]);
 
   useEffect(() => {
     fetchAddress();
@@ -564,6 +604,10 @@ const Checkout = () => {
           ) {
             setCheckoutLoading(false);
             await handleInitiateTransaction();
+          } else if (checkout?.selectedPaymentMethod === "Test Payment") {
+            setOrderId(response?.data?.order_id);
+            setCheckoutLoading(false);
+            await handleInitiateTestTransaction(response?.data?.order_id);
           } else {
             setOrderId(response?.data?.order_id);
             setCheckoutLoading(false);
@@ -579,6 +623,39 @@ const Checkout = () => {
       }
     } catch (error) {
       setCheckoutLoading(false);
+      console.log("Error", error);
+    }
+  };
+
+  const handleInitiateTestTransaction = async (currentOrderID) => {
+    try {
+      setPaymentLoading(true);
+      const initTx = await api.initiateTestTransaction({ orderId: currentOrderID });
+      if (initTx?.status === 1) {
+        const markTx = await api.markTestTransactionDone({
+          orderId: currentOrderID,
+          transactionId: initTx.data.transaction_id
+        });
+        if (markTx?.status === 1) {
+          try {
+            await api.downloadInvoice({ orderId: currentOrderID, skipCreate: true });
+          } catch(e) {
+            console.log("Invoice generation skipped or failed", e);
+          }
+          await api.deleteCart();
+          setPaymentLoading(false);
+          return router.push(
+            `/web-payment-status?status=success&type=order&payment_method=test_payment&order_id=${currentOrderID}`
+          );
+        } else {
+          toast.error(markTx?.message || "Test payment failed at mark_done");
+        }
+      } else {
+        toast.error(initTx?.message || "Test payment failed at create");
+      }
+      setPaymentLoading(false);
+    } catch (error) {
+      setPaymentLoading(false);
       console.log("Error", error);
     }
   };
@@ -857,7 +934,7 @@ const Checkout = () => {
                                     <p className="font-medium">
                                       {
                                         checkoutData?.seller_self_pickup
-                                          ?.pickup_store_address
+                                          ?.pickup_store_address || "Al Ghandi Complex, Showroom 03, Nadd Al Hamar, Dubai, UAE"
                                       }
                                     </p>
                                   </div>
@@ -890,7 +967,23 @@ const Checkout = () => {
                                   <p className="font-medium">
                                     {
                                       checkoutData?.seller_self_pickup
-                                        ?.seller_mobile
+                                        ?.seller_mobile || "+971 55 594 4719"
+                                    }
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <div className="flex gap-2 items-center">
+                                  <MdOutlineEmail size={20} />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <h2 className="font-bold text-base">
+                                    {t("email")}
+                                  </h2>
+                                  <p className="font-medium">
+                                    {
+                                      checkoutData?.seller_self_pickup
+                                        ?.seller_email || "info@coop-discounts.com"
                                     }
                                   </p>
                                 </div>
@@ -906,10 +999,10 @@ const Checkout = () => {
                                   <p className="font-medium">
                                     {`${t("today")} ${
                                       checkoutData?.seller_self_pickup
-                                        .opening_time
+                                        ?.opening_time
                                     } - ${
                                       checkoutData?.seller_self_pickup
-                                        .closing_time
+                                        ?.closing_time
                                     }`}
                                   </p>
                                 </div>
@@ -1109,6 +1202,15 @@ const Checkout = () => {
                     checkOutError={checkOutError}
                     checkoutLoading={checkoutLoading}
                   />
+                  {checkout?.currentStep === 3 && (
+                    <LoyaltySelector
+                      orderId={draftOrderId || cart?.checkout?.order_id}
+                      onApplied={async () => {
+                        await refreshOdooCart();
+                        handleFetchCheckout();
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>

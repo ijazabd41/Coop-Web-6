@@ -55,8 +55,16 @@ const Profile = () => {
   useEffect(() => {
     setUsername(user?.name);
     setEmail(user?.email);
-    setMobileNumber(user?.mobile);
-    setCountryCode(user?.country_code || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in");
+
+    let initialMobile = user?.mobile || "";
+    let initialCountryCode = (user?.country_code || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in").replace(/\+/g, "");
+
+    if (initialMobile && initialCountryCode && initialMobile.startsWith(initialCountryCode)) {
+      initialMobile = initialMobile.slice(initialCountryCode.length);
+    }
+
+    setMobileNumber(initialMobile);
+    setCountryCode(initialCountryCode);
   }, []);
 
   useEffect(() => {
@@ -71,11 +79,20 @@ const Profile = () => {
   };
 
   const checkIfChecked = () => {
+    let initialMobile = user?.mobile || "";
+    let initialCountryCode = (user?.country_code || process.env.NEXT_PUBLIC_DEFAULT_COUNTRY_CODE || "in").replace(/\+/g, "");
+
+    if (initialMobile && initialCountryCode && initialMobile.startsWith(initialCountryCode)) {
+      initialMobile = initialMobile.slice(initialCountryCode.length);
+    }
+
+    let currentCountryCode = countryCode ? countryCode.replace(/\+/g, "") : "";
+
     if (
       username !== user?.name ||
       email !== user?.email ||
-      mobileNumber !== user?.mobile ||
-      countryCode !== user?.country_code ||
+      mobileNumber !== initialMobile ||
+      currentCountryCode !== initialCountryCode ||
       !user?.profileImage
     ) {
       setIsChanged(true);
@@ -247,7 +264,7 @@ const Profile = () => {
           <div className="p-4 topBorder flex justify-end w-full">
             <button
               type="submit"
-              className="w-40 bg-[#29363f]  text-white py-2 px-4 rounded-md "
+              className="w-40 accentButtonBg  text-white py-2 px-4 rounded-md "
               disabled={isChanged == false}
             >
               {t("editProfile")}

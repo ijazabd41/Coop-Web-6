@@ -1,13 +1,13 @@
 // HomePageSlider.jsx
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
+import { imageUrl } from "@/api/odoo/utils";
 
 const HomePageSlider = ({ slider }) => {
   const dispatch = useDispatch();
@@ -81,30 +81,19 @@ const HomePageSlider = ({ slider }) => {
         <div className="flex">
           {slides.map((slide, index) => (
             <div
-              className={`relative flex-shrink-0 min-w-0 basis-full ${
-                slideCount > 1 ? "md:basis-2/3" : ""
-              }`}
+              className="relative flex-shrink-0 min-w-0 basis-full w-full"
               key={index}
             >
               <div
-                className="flex flex-col items-center text-center rounded-xl p-2 md:p-4"
+                className="flex flex-col items-center text-center w-full cursor-pointer"
                 onClick={() => handleSliderClick(slide)}
               >
-                <Image
-                  src={slide.image_url}
-                  alt="Fruit Basket"
-                  priority={index === 0}
-                  fetchpriority={index === 0 ? "high" : "auto"}
-                  className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] "
-                  width={1200}
-                  height={650}
-                  sizes="
-                    (max-width: 640px) 304px,
-                    (max-width: 768px) 480px,
-                    (max-width: 1024px) 600px,
-                    (max-width: 1536px) 900px,
-                    1200px
-                  "
+                <img
+                  src={imageUrl(slide.image_url)}
+                  alt={slide.title || slide.name || "Banner"}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] object-cover"
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

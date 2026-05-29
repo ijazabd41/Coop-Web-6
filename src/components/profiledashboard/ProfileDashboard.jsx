@@ -19,6 +19,7 @@ import withAuth from "@/checkauth/CheckAuth";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import RequestProducts from "./RequestProducts";
 import NotificationSetting from "./notification-setting/NotificationSetting";
+import Loyalty from "./loyalty/Loyalty";
 
 const ProfileDashboard = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ const ProfileDashboard = () => {
                 )}
                 {activeTab == "notification-setting" && <NotificationSetting />}
                 {activeTab == "requested-products" && <RequestProducts />}
+                {activeTab == "loyalty" && <Loyalty />}
               </>
             )}
           </div>

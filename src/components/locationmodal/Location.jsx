@@ -19,7 +19,7 @@ import { setShop } from "@/redux/slices/shopSlice";
 import Loader from "../loader/Loader";
 import { RiCloseFill } from "react-icons/ri";
 import { darkThemeStyles } from "@/utils/mapColor";
-import { MAP_CONFIG } from "@/utils/mapConfig";
+import { MAP_CONFIG, mapsEnabled } from "@/utils/mapConfig";
 
 const Location = ({ showLocation, setShowLocation }) => {
   const city = useSelector((state) => state.City);
@@ -38,7 +38,12 @@ const Location = ({ showLocation, setShowLocation }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   
 
-  const { isLoaded } = useJsApiLoader(MAP_CONFIG);
+  const { isLoaded, loadError } = useJsApiLoader(
+    mapsEnabled
+      ? MAP_CONFIG
+      : { id: "google-map-script", googleMapsApiKey: "", libraries: [] }
+  );
+  const mapReady = mapsEnabled && isLoaded && !loadError;
 
   const [localLocation, setlocalLocation] = useState({
     city: "",
@@ -557,7 +562,7 @@ const Location = ({ showLocation, setShowLocation }) => {
                         setisInputFields(false);
                       }}
                     /> */}
-                    {mapView && isLoaded ? (
+                    {mapView && mapReady ? (
                       <GoogleMap
                         streetViewControl={false}
                         tilt={true}

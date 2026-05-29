@@ -32,7 +32,7 @@ const DeleteModal = ({ showDelete, setShowDelete }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await api.deleteUser({ uid: user?.authId });
+      const response = await api.deleteAccount({ uid: user?.authId });
       if (response.status == 1) {
         if (user?.authType == "phone" || user?.authType == "google") {
           // const user = auth.currentUser;
@@ -93,7 +93,7 @@ const DeleteModal = ({ showDelete, setShowDelete }) => {
               {t("cancel")}
             </button>
             <button
-              className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+              className="px-4 py-1 primaryBackColor text-white font-bold rounded-sm"
               onClick={handleDelete}
             >
               {t("Ok")}

@@ -43,7 +43,7 @@ const WalletTransactionCard = ({ transaction }) => {
           </div>
           <div>
             {transaction?.type == "credit" ? (
-              <span className="border border-green-500 text-green-500 font-bold text-sm py-1 px-2 rounded">
+              <span className="successBorder successColor font-bold text-sm py-1 px-2 rounded">
                 {t("credit")}
               </span>
             ) : (

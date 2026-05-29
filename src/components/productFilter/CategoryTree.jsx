@@ -34,7 +34,7 @@ const CategoryTree = ({
   // Initialize selected categories from filter
   useEffect(() => {
     if (initialFilter?.category_id) {
-      const categories = initialFilter?.category_id?.split(",");
+      const categories = String(initialFilter?.category_id).split(",");
       const catNum = categories
         .filter((cat) => cat !== "")
         .map((cat) => parseInt(cat));

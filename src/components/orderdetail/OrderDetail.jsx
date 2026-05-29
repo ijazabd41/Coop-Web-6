@@ -28,12 +28,52 @@ const OrderDetail = () => {
     }
   }, [orderid]);
 
+  const enrichOrderWithSavedAddress = (order, savedAddresses = []) => {
+    if (!order?.order_address?.trim()) {
+      /* fall through to saved-address lookup */
+    } else {
+      return order;
+    }
+    if (!order) return order;
+    const shipId = order.partner_shipping_id;
+    const saved = savedAddresses.find(
+      (a) => String(a.id) === String(shipId)
+    );
+    if (!saved) return order;
+    const formatted = [
+      saved.address,
+      saved.landmark,
+      saved.area,
+      saved.city,
+      saved.state,
+      saved.pincode,
+      saved.country,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    return {
+      ...order,
+      order_address: formatted || order.order_address,
+      order_mobile: order.order_mobile || saved.mobile,
+      user_name: order.user_name || saved.name,
+    };
+  };
+
   const handleFetchOrderDetail = async () => {
     setLoading(true);
     try {
+      let savedAddresses = address?.allAddresses || [];
+      if (!savedAddresses.length) {
+        const addrRes = await api.getAddress();
+        if (addrRes?.status === 1 && Array.isArray(addrRes.data)) {
+          savedAddresses = addrRes.data;
+        }
+      }
       const response = await api.getOrders({ orderId: orderid });
       if (response?.status == 1) {
-        setOrderDetail(response.data[0]);
+        setOrderDetail(
+          enrichOrderWithSavedAddress(response.data[0], savedAddresses)
+        );
         setLoading(false);
       } else {
         console.log("Error", response);
@@ -48,12 +88,11 @@ const OrderDetail = () => {
   const handleDownloadInvoice = async () => {
     try {
       const response = await api.downloadInvoice({ orderId: orderid });
-      var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-      var fileLink = document.createElement("a");
-      fileLink.href = fileURL;
-      fileLink.setAttribute("download", "Invoice-No:" + orderid + ".pdf");
-      document.body.appendChild(fileLink);
-      fileLink.click();
+      if (response.status === 1 && response.data?.url) {
+        window.open(response.data.url, "_blank");
+      } else {
+        toast.error("Invoice not available");
+      }
     } catch (error) {
       if (error.request.statusText) {
         toast.error(error.request.statusText);
@@ -85,7 +124,9 @@ const OrderDetail = () => {
                   <span className="font-normal text-base">
                     {t("orderNumber")}:
                   </span>
-                  <h1 className="text-2xl font-bold">#{orderDetail?.id}</h1>
+                  <h1 className="text-2xl font-bold">
+                    #{orderDetail?.orders_id || orderDetail?.id}
+                  </h1>
                 </div>
                 <div className="md:border-l-2">
                   <div className="md:ml-2 flex flex-col">
@@ -107,12 +148,9 @@ const OrderDetail = () => {
                     {orderDetail?.date}
                   </p>
                 </div>
-                {Number(
-                  orderDetail?.active_status < 6 &&
-                  parseInt(orderDetail?.otp) !== 0 &&
-                  orderDetail.order_type == "doorstep" &&
-                  orderDetail?.otp !== null
-                ) ? (
+                {Number(orderDetail?.active_status) < 6 &&
+                  parseInt(orderDetail?.otp, 10) > 0 &&
+                  orderDetail?.order_type == "doorstep" ? (
                   <div className="flex flex-col items-start md:items-end">
                     <span className="font-normal text-sm ">{t("otp")}</span>
                     <p className="text-base font-medium">{orderDetail?.otp}</p>
@@ -124,7 +162,7 @@ const OrderDetail = () => {
                 {/* {Number(orderDetail?.active_status) === 6 ? ( */}
                 <div className="md:border-l-2">
                   <button
-                    className="flex items-center gap-2 bg-[#29363F] p-2 md:ml-2 rounded-md text-white"
+                    className="flex items-center gap-2 accentButtonBg p-2 md:ml-2 rounded-md text-white"
                     onClick={handleDownloadInvoice}
                   >
                     <MdOutlineFileDownload size={22} /> {t("GetInvoice")}
@@ -134,16 +172,16 @@ const OrderDetail = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 px-2 md:px-0 md:gap-8">
-              {orderDetail?.order_note !== "" && (
+              {orderDetail?.order_note ? (
                 <div className="col-span-12 flex flex-col gap-3 mb-8 md:mb-2">
                   <h3 className="font-bold text-2xl">
                     {t("order_note_title")}
                   </h3>
-                  <div className="cardBorder p-4 rounded-sm text-base font-normal">
-                    <p>{orderDetail?.order_note}</p>
+                  <div className="cardBorder p-4 rounded-sm text-base font-normal whitespace-pre-wrap">
+                    <p>{orderDetail.order_note}</p>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               <div className="col-span-12 md:col-span-8 flex flex-col gap-8">
                 {orderDetail?.order_type == "doorstep" ? (

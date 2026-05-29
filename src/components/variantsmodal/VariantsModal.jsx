@@ -388,7 +388,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                     className="flex justify-between items-center px-4 py-2"
                     key={variant?.id}
                   >
-                    <div className="font-medium text-lg">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</div>
+                    <div className="font-medium text-lg">{variant?.name}</div>
                     <div className="flex items-center gap-1">
                       <div className="flex items-center gap-3 font-bold text-base ">
                         {setting?.setting?.currency}
@@ -431,7 +431,7 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
                             </button>
                           )
                         ) : (
-                          <div className="font-bold text-[#db3d26]">
+                          <div className="font-bold primaryColor">
                             {t("out_of_stock")}
                           </div>
                         )}

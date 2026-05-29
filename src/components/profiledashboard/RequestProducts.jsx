@@ -78,7 +78,7 @@ const RequestProducts = () => {
         <div className="flex justify-center">
           {totalRequests > requestedProducts.length && (
             <button
-              className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3 my-2"
+              className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3 my-2"
               onClick={() => getRequestedProducts(true, offset)}
             >
               {t("load_more")}

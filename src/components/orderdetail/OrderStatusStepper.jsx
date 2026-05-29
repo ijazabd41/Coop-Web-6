@@ -30,22 +30,29 @@ const OrderStepper = ({ orderDetail }) => {
   }, [orderDetail]);
 
   const handleGetSteps = () => {
-    const updatedSteps = orderDetail?.status?.map(([statusCode, timestamp]) => {
-      const status = statusMappings[statusCode] || {};
-      return {
-        icon: status.icon,
-        label: `${t("your_order_has_been")} ${status.label}`,
-        // timestamp: new Date(timestamp).toLocaleString("en-US", {
-        //   day: "2-digit",
-        //   month: "short",
-        //   year: "numeric",
-        //   hour: "2-digit",
-        //   minute: "2-digit",
-        //   hour12: true,
-        // }),
-        timestamp,
-      };
-    });
+    const raw = orderDetail?.status;
+    const entries = Array.isArray(raw)
+      ? raw
+      : orderDetail?.active_status
+        ? [[orderDetail.active_status, orderDetail?.date || ""]]
+        : [];
+
+    const updatedSteps = entries
+      .map((entry) => {
+        const statusCode = Array.isArray(entry) ? entry[0] : entry?.code;
+        const timestamp = Array.isArray(entry)
+          ? entry[1]
+          : entry?.timestamp || orderDetail?.date || "";
+        const status = statusMappings[Number(statusCode)] || {};
+        if (!status.icon) return null;
+        return {
+          icon: status.icon,
+          label: `${t("your_order_has_been")} ${status.label}`,
+          timestamp,
+        };
+      })
+      .filter(Boolean);
+
     setSteps(updatedSteps);
   };
 

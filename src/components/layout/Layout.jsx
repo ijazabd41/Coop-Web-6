@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { setPaymentSetting, setSetting } from "@/redux/slices/settingSlice";
+import { setCity } from "@/redux/slices/citySlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "@/api/apiRoutes";
@@ -25,6 +26,7 @@ const Layout = ({ children }) => {
   const language = useSelector((state) => state.Language.selectedLanguage);
 
   const availableLanguages = useSelector((state) => state.Language.availableLanguages);
+  const city = useSelector((state) => state.City);
 
   const [loading, setLoading] = useState(false);
   // const [showLocation, setShowLocation] = useState(false)
@@ -193,13 +195,30 @@ const Layout = ({ children }) => {
     setLoading(true);
     try {
       const res = await api.getSetting();
+      if (res?.status !== 1 || !res?.data) {
+        return;
+      }
       const setting = JSON.parse(atob(res.data));
       dispatch(setSetting({ data: setting }));
       dispatch(setFavoriteProductIds({ data: setting?.favorite_product_ids }));
-      const themeColor = setting?.web_settings?.color;
+      if (setting?.default_city && !city?.city) {
+        dispatch(
+          setCity({
+            data: {
+              city: setting.default_city.name,
+              latitude: setting.default_city.latitude,
+              longitude: setting.default_city.longitude,
+            },
+          })
+        );
+      }
+      const brandPrimary =
+        process.env.NEXT_PUBLIC_BRAND_PRIMARY || "#D61F26";
+      const brandLight =
+        process.env.NEXT_PUBLIC_BRAND_LIGHT || "#FFE8E9";
       document.documentElement.style.setProperty(
         "--primary-color",
-        setting?.web_settings?.color
+        setting?.web_settings?.color || brandPrimary
       );
       if (setting?.favicon) {
         const link =
@@ -215,22 +234,22 @@ const Layout = ({ children }) => {
       }
       document.documentElement.style.setProperty(
         "--light-primary-color",
-        setting?.web_settings?.light_color
+        setting?.web_settings?.light_color || brandLight
       );
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchPaymentSetting = async () => {
-    setLoading(true);
     try {
       const res = await api.getPaymentSetting();
-      dispatch(setPaymentSetting({ data: JSON.parse(atob(res.data)) }));
+      if (res?.status === 1 && res?.data) {
+        dispatch(setPaymentSetting({ data: JSON.parse(atob(res.data)) }));
+      }
     } catch (error) {
-      setLoading(false);
       console.log("error", error);
     }
   };
@@ -256,7 +275,7 @@ const Layout = ({ children }) => {
     <section>
       {loading ? (
         <Loader screen="full" />
-      ) : setting?.setting?.web_settings?.website_mode == 1 ? (
+      ) : Number(setting?.setting?.web_settings?.website_mode) === 1 ? (
         <MaintanceMode
           message={setting?.setting?.web_settings?.website_mode_remark}
         />

@@ -100,7 +100,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="font-bold text-base">
                 {t("total")} {t("amount")}
               </span>
-              <span className="text-green-600 font-bold">
+              <span className="successColor font-bold">
                 {setting?.currency}
                 {Number(orderDetail?.remaining_final)}
               </span>

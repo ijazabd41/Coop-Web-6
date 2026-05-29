@@ -72,7 +72,7 @@ const ForgetPasswordModal = ({
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await api.forgotPasswordOTP({ email: email });
+      const res = await api.forgotPasswordOtp({ email: email });
       if (res.status == 1) {
         setStage(1);
         toast.success(t("verification_mail_sent_successfully"));

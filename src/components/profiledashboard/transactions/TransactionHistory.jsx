@@ -88,7 +88,7 @@ const TransactionHistory = () => {
                 </div>
 
                 {total > transaction?.length && <div className='flex justify-center'>
-                    <button className='bg-[#29363f] text-white font-bold text-base p-2 my-2 rounded-sm' onClick={handleFetchMore}>{t("load_more")}</button>
+                    <button className='accentButtonBg text-white font-bold text-base p-2 my-2 rounded-sm' onClick={handleFetchMore}>{t("load_more")}</button>
                 </div>}
             </div>
         </div>

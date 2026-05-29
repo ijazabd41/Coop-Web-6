@@ -119,7 +119,7 @@ const RequestedProductModal = ({ showModal, setShowModal, setFlag }) => {
           <div className="mt-6 flex justify-end w-full">
             <button
               type="button"
-              className="w-40 bg-[#29363f]  text-white py-2 px-4 rounded-md "
+              className="w-40 accentButtonBg  text-white py-2 px-4 rounded-md "
               onClick={handleSubmit}
               disabled={loading}
             >

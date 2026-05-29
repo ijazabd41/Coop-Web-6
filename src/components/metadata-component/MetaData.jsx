@@ -28,7 +28,7 @@ const MetaData = ({
   // Additional SEO
   canonicalUrl = ogUrl,
   robots = "index, follow",
-  themeColor = "#000000",
+  themeColor = process.env.NEXT_PUBLIC_BRAND_PRIMARY || "#D61F26",
 
   // Structured Data
   structuredData = null,

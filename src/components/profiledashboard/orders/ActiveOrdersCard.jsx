@@ -16,7 +16,7 @@ const ActiveOrdersCard = ({ order }) => {
   const setting = useSelector((state) => state.Setting);
 
   const getOrderStatus = () => {
-    switch (order?.active_status) {
+    switch (String(order?.active_status)) {
       case "1":
         return (
           <span className="w-[150px] text-sm p-2 text-center md:w-10/12 paymentPendingStatus rounded-sm md:text-base font-bold ">

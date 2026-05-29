@@ -96,7 +96,9 @@ const NewUserModal = ({
       const result = await api.registerUser(formData);
 
       if (result?.status == 1) {
-        const tokenSet = await dispatch(setTokenThunk(result?.data?.access_token));
+        const tokenSet = await dispatch(
+          setTokenThunk(result?.data?.access_token, result?.data?.user)
+        );
         await getCurrentUser();
         dispatch(setAuthType({ data: authType }));
         dispatch(setIsGuest({ data: false }));
@@ -294,7 +296,7 @@ const NewUserModal = ({
               />
             </div>
             <button
-              className="bg-[#29363F] py-2 my-2 px-4 cursor-pointer text-white text-center rounded-sm text-xl font-normal"
+              className="accentButtonBg py-2 my-2 px-4 cursor-pointer text-white text-center rounded-sm text-xl font-normal"
               onClick={handleUserRegister}
             >
               {loading ? t("loading") : t("register")}

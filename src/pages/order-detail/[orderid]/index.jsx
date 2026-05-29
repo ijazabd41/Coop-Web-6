@@ -1,8 +1,9 @@
 import React from 'react'
+import dynamic from 'next/dynamic'
+import MetaData from '@/components/metadata-component/MetaData'
+
 const OrderDetailPage = dynamic(() => import('@/components/pagecomponents/OrderDetailPage'), {
     ssr: false})
-import MetaData from '@/components/metadata-component/MetaData'
-import dynamic from 'next/dynamic'
 
 const index = () => {
     return (

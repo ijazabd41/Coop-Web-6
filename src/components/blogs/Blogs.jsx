@@ -128,7 +128,7 @@ const Blogs = () => {
             {blogs?.length < totalBlogs && (
               <div className="w-full flex justify-center mt-6">
                 <button
-                  className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                  className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
                   onClick={() => handleFetchBlogs(true, offset)}
                 >
                   {t("load_more")}

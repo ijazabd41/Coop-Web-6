@@ -476,7 +476,7 @@ const ListViewProductCard = ({ product }) => {
               />
               {selectedVariant?.discounted_price !== 0 &&
                 selectedVariant?.discounted_price !== selectedVariant?.price ? (
-                <span className="bg-[#db3d26] rounded-[4px]  text-white text-[14px] font-bold left-2 leading-none px-2 py-1 absolute text-center uppercase top-2 whitespace-nowrap">
+                <span className="saleBadgeBg rounded-[4px]  text-white text-[14px] font-bold left-2 leading-none px-2 py-1 absolute text-center uppercase top-2 whitespace-nowrap">
                   {calculateDiscount(
                     selectedVariant?.discounted_price,
                     selectedVariant?.price
@@ -566,7 +566,7 @@ const ListViewProductCard = ({ product }) => {
                 className="w-full SecondaryTextColor flex items-center  justify-between rounded-[4px] p-2 buttonBackground line-clamp-1"
                 onClick={(e) => handleShowVariantModal(e, product)}
               >
-                {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code ?? selectedVariant?.unit?.short_code}`}
+                {selectedVariant?.name}
                 {productsVariants?.length > 1 ? (
                   <div>
                     <MdArrowDropDown size={22} />
@@ -610,7 +610,7 @@ const ListViewProductCard = ({ product }) => {
               </div>
             </div>
           ) : (
-            <div className="  w-full flex items-center  justify-center text-center h-[38px]  text-[#db3d26] font-extrabold ">
+            <div className="  w-full flex items-center  justify-center text-center h-[38px]  primaryColor font-extrabold ">
               {t("OutOfStock")}
             </div>
           )}

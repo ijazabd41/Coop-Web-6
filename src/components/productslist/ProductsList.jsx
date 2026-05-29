@@ -587,7 +587,7 @@ const Products = () => {
                   <div className="col-span-12 mt-6 w-full flex justify-center mx-auto">
                     {totalProducts > productResult?.length ? (
                       <button
-                        className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                        className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
                         onClick={handleFetchMore}
                       >
                         {t("load_more")}

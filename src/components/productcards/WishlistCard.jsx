@@ -247,8 +247,7 @@ const WishlistCard = ({
               className="font-normal text-sm flex gap-1 items-center cursor-pointer"
               onClick={handleShowVariatModal}
             >
-              {product?.variants[0]?.measurement}
-              {product?.variants[0]?.unit?.translations?.name}
+              {product?.variants[0]?.name}
               {product?.variants?.length > 1 && <IoMdArrowDropdown />}
             </p>
           </div>
@@ -280,7 +279,7 @@ const WishlistCard = ({
             </div>
           ) : (
             <button
-              className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]"
+              className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold primaryTintBg"
               onClick={handleIntialAddToCart}
             >
               <FaShoppingBasket size={22} />
@@ -340,8 +339,7 @@ const WishlistCard = ({
                 className="font-normal text-sm flex gap-1 items-center cursor-pointer"
                 onClick={handleShowVariatModal}
               >
-                {product?.variants[0]?.measurement}
-                {product?.variants[0]?.stock_unit_name}
+                {product?.variants[0]?.name}
                 {product?.variants?.length > 1 && <IoMdArrowDropdown />}
               </p>
             </div>
@@ -394,7 +392,7 @@ const WishlistCard = ({
               </div>
             ) : (
               <button
-                className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]"
+                className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold primaryTintBg"
                 onClick={handleIntialAddToCart}
               >
                 <FaShoppingBasket size={22} />

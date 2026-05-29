@@ -468,7 +468,7 @@ const HorizontalProductCard = ({ product }) => {
             />
             {selectedVariant?.discounted_price !== 0 &&
               selectedVariant?.discounted_price !== selectedVariant?.price ? (
-              <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-semibold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
+              <span className="saleBadgeBg rounded-[4px] text-white text-[14px] font-semibold left-2 leading-[16px] px-2 py-1 absolute text-center uppercase top-2">
                 {calculateDiscount(
                   selectedVariant?.discounted_price,
                   selectedVariant?.price
@@ -555,7 +555,7 @@ const HorizontalProductCard = ({ product }) => {
                   className=" w-full flex items-center justify-between rounded-[4px] p-2 buttonBackground  SecondaryTextColor"
                   onClick={(e) => handleShowVariantModal(e, product)}
                 >
-                  {`${selectedVariant?.measurement} ${selectedVariant?.unit?.translations?.short_code}`}
+                  {selectedVariant?.name}
                   {productsVariants?.length > 1 ? (
                     <div>
                       <MdArrowDropDown size={22} />
@@ -600,7 +600,7 @@ const HorizontalProductCard = ({ product }) => {
                 )}
               </div>
             ) : (
-              <div className="flex items-center h-[92px]  text-[#db3d26] font-extrabold ">
+              <div className="flex items-center h-[92px]  primaryColor font-extrabold ">
                 {t("OutOfStock")}
               </div>
             )}

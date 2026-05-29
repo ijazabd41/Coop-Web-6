@@ -55,8 +55,9 @@ const Cart = () => {
         quantities: quantities?.join(","),
       });
       if (response.status == 1) {
-        setCartProductsData(response.data.cart);
-        dispatch(setCartSubTotal({ data: response?.data?.sub_total }));
+        const cartList = response?.data?.cart || response?.cart || [];
+        setCartProductsData(cartList);
+        dispatch(setCartSubTotal({ data: response?.data?.sub_total ?? response?.sub_total }));
       }
       setLoading(false);
       setInitialLoad(false);
@@ -75,8 +76,9 @@ const Cart = () => {
         longitude: city?.longitude,
       });
       if (cartData?.status == 1) {
-        setCartProductsData(cartData?.data?.cart);
-        dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
+        const cartList = cartData?.data?.cart || cartData?.cart || [];
+        setCartProductsData(cartList);
+        dispatch(setCartSubTotal({ data: cartData?.data?.sub_total ?? cartData?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
         dispatch(
           setDoorStepDeliveryMode({

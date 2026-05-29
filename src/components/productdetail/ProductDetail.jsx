@@ -509,7 +509,7 @@ const ProductDetail = () => {
                       {selectVariant?.discounted_price !== 0 &&
                         selectVariant?.discounted_price !==
                         selectVariant?.price ? (
-                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 px-2 absolute text-center uppercase  top-3">
+                        <span className="saleBadgeBg rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 px-2 absolute text-center uppercase  top-3">
                           {calculateDiscount(
                             selectVariant?.discounted_price,
                             selectVariant?.price,
@@ -576,10 +576,9 @@ const ProductDetail = () => {
                       </h2>
 
                       <div className="flex gap-4 items-center flex-wrap">
-                        {product?.seller_name !== null && (
-                          <div className="p-4 backgroundColor rounded-sm flex gap-2">
-                            {/* <div className="flex text-xs"> */}
-                            <span text-base>{t("seller")} :</span>
+                        <div className="p-4 backgroundColor rounded-sm flex gap-2">
+                          <span className="text-base">{t("seller")} :</span>
+                          {product?.seller?.translations?.name ? (
                             <span
                               className="font-bold text-base cursor-pointer underline"
                               onClick={() =>
@@ -588,9 +587,10 @@ const ProductDetail = () => {
                             >
                               {product?.seller?.translations?.name}
                             </span>
-                            {/* </div> */}
-                          </div>
-                        )}
+                          ) : (
+                            <span className="font-bold text-base">N/A</span>
+                          )}
+                        </div>
 
                         <div className="flex gap-4">
                           {ratingData?.average_rating > 0 &&
@@ -640,27 +640,23 @@ const ProductDetail = () => {
                           ) : null}
                         </div>
 
-                        {product?.fssai_lic_no !== "" && (
-                          <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
-                        )}
-                        {product?.fssai_lic_no !== "" && (
-                          <div className="flex items-center gap-3">
+                        <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
+                        <div className="flex items-center gap-3">
+                          {product?.fssai_lic_img && (
                             <div className="text-xs">
-                              {product?.fssai_lic_img && (
-                                <Image
-                                  width={100}
-                                  height={100}
-                                  src={product?.fssai_lic_img}
-                                  className="w-9 h-9 object-contain"
-                                  alt="fssaiImage"
-                                />
-                              )}
+                              <Image
+                                width={100}
+                                height={100}
+                                src={product?.fssai_lic_img}
+                                className="w-9 h-9 object-contain"
+                                alt="fssaiImage"
+                              />
                             </div>
-                            <div className="text-xs">
-                              {t("fssai_license_no")} {product?.fssai_lic_no}
-                            </div>
+                          )}
+                          <div className="text-xs">
+                            {t("fssai_license_no")} {product?.fssai_lic_no || "N/A"}
                           </div>
-                        )}
+                        </div>
                       </div>
                       {selectVariant?.few_quantity_left == true && (
                         <p className="text-sm text-red-600 font-bold ">
@@ -711,7 +707,7 @@ const ProductDetail = () => {
                               key={variant.id}
                               onClick={() => handleChangeVariant(variant)}
                             >
-                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</p>
+                              <p className="font-bold text-sm">{variant?.name}</p>
                               <span className="flex gap-1 text-[13px] line-clamp-1 font-semibold">
                                 <p>
                                   {currency}
@@ -768,7 +764,7 @@ const ProductDetail = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold ">
+                        <div className="flex items-center h-[80px] md:h-[38px]  primaryColor font-extrabold ">
                           {t("OutOfStock")}
                         </div>
                       )}

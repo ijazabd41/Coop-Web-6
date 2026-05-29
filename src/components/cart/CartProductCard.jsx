@@ -346,7 +346,7 @@ const CartProductCard = ({
               {product?.product?.translations?.name}
             </h3>
             <p className="text-xs font-normal">
-              {product?.measurement} {product?.unit?.translations?.short_code}
+              {product?.name}
             </p>
           </div>
         </div>
@@ -422,7 +422,7 @@ const CartProductCard = ({
               </h3>
 
               <p className="text-xs font-normal">
-                {product?.measurement} {product?.unit_code}
+                {product?.name}
               </p>
             </div>
           </div>

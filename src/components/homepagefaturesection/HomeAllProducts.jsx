@@ -108,7 +108,7 @@ const HomeAllProducts = () => {
           {hasNextPage && (
             <div className="flex justify-center mt-4">
               <button
-                className="bg-[#29363f] rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
+                className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"
                 onClick={() => fetchNextPage()}
                 disabled={isFetchingNextPage}
               >

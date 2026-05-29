@@ -8,6 +8,7 @@ import {
 } from "firebase/messaging";
 import { setFcmToken } from "@/redux/slices/userSlice";
 import { createStickyNote } from "./stickynote";
+import { isFirebaseConfigured } from "./integrations";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -57,6 +58,7 @@ export const registerNotificationClickHandler = () => {
 };
 
 export const registerServiceWorker = () => {
+  if (!isFirebaseConfigured()) return;
   if (typeof window !== "undefined" && "serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js")
@@ -73,6 +75,7 @@ export const registerServiceWorker = () => {
 };
 
 export const fetchToken = async (dispatch) => {
+  if (!isFirebaseConfigured()) return;
   try {
     const messagingInstance = await getMessagingInstance();
     if (!messagingInstance) {
@@ -98,7 +101,9 @@ export const fetchToken = async (dispatch) => {
       );
     }
   } catch (err) {
-    console.error("An error occurred while retrieving token.", err);
+    if (process.env.NODE_ENV === "development") {
+      console.debug("[Firebase] push token skipped:", err?.message || err);
+    }
   }
 };
 

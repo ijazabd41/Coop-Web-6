@@ -73,7 +73,7 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
                             {t("cancel")}
                         </button>
                         <button
-                            className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+                            className="px-4 py-1 primaryBackColor text-white font-bold rounded-sm"
                             onClick={handleAddToCart}
                         >
                             {t("Ok")}

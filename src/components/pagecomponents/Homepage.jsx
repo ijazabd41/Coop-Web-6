@@ -45,7 +45,7 @@ const Homepage = () => {
       return response.data;
     },
 
-    enabled: !!city,
+    enabled: !!(city?.latitude || setting?.default_city?.latitude),
 
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,

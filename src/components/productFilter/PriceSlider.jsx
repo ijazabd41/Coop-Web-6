@@ -45,7 +45,7 @@ const PriceSlider = ({
             }}
           >
             <Slider.Track className="relative h-[15px] w-full grow rounded-full bg-white border border-gray-200">
-              <Slider.Range className="absolute h-full rounded-full bg-green-600" />
+              <Slider.Range className="absolute h-full rounded-full primaryBackColor" />
             </Slider.Track>
 
             <Slider.Thumb
