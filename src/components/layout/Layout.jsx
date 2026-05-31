@@ -17,6 +17,11 @@ import {
 } from "@/redux/slices/languageSlice";
 import { useRouter } from "next/router";
 import MaintanceMode from "../error/MaintanceMode";
+import {
+  setCart,
+  setCartSubTotal,
+  setIsGuest,
+} from "@/redux/slices/cartSlice";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -24,6 +29,7 @@ const Layout = ({ children }) => {
   const theme = useSelector((state) => state.Theme.theme);
   const setting = useSelector((state) => state.Setting);
   const language = useSelector((state) => state.Language.selectedLanguage);
+  const user = useSelector((state) => state.User.user);
 
   const availableLanguages = useSelector((state) => state.Language.availableLanguages);
   const city = useSelector((state) => state.City);
@@ -42,6 +48,26 @@ const Layout = ({ children }) => {
     fetchLanguage();
   
   }, []);
+
+  useEffect(() => {
+    if (!user?.jwtToken) return;
+
+    dispatch(setIsGuest({ data: false }));
+
+    const syncCart = async () => {
+      try {
+        const response = await api.getCart();
+        if (response?.status === 1) {
+          dispatch(setCart({ data: response }));
+          dispatch(setCartSubTotal({ data: response?.sub_total ?? 0 }));
+        }
+      } catch (error) {
+        console.log("cart sync error", error);
+      }
+    };
+
+    syncCart();
+  }, [user?.jwtToken, dispatch]);
 
   useEffect(() => {
   if (!router.isReady || !availableLanguages?.length) return;

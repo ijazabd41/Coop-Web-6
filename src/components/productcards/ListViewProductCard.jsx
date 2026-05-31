@@ -16,7 +16,6 @@ import {
   addGuestCartTotal,
   addtoGuestCart,
   setCart,
-  setCartProducts,
   setCartSubTotal,
   subGuestCartTotal,
 } from "@/redux/slices/cartSlice";
@@ -26,6 +25,7 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { getCartLineQty } from "@/utils/cartHelpers";
 
 const ListViewProductCard = ({ product }) => {
   const dispatch = useDispatch();
@@ -82,35 +82,8 @@ const ListViewProductCard = ({ product }) => {
         qty: qty,
       });
       if (response.status === 1) {
-        if (
-          cart?.cartProducts?.find(
-            (product) =>
-              product?.product_id == productId &&
-              product?.product_variant_id == productVId
-          )?.qty == undefined
-        ) {
-          dispatch(setCart({ data: response }));
-          const updatedCartCount = [
-            ...cart?.cartProducts,
-            { product_id: productId, product_variant_id: productVId, qty: qty },
-          ];
-          dispatch(setCartProducts({ data: updatedCartCount }));
-          dispatch(setCartSubTotal({ data: response?.sub_total }));
-        } else {
-          const updatedProducts = cart?.cartProducts?.map((product) => {
-            if (
-              product.product_id == productId &&
-              product?.product_variant_id == productVId
-            ) {
-              return { ...product, qty: qty };
-            } else {
-              return product;
-            }
-          });
-          dispatch(setCart({ data: response }));
-          dispatch(setCartProducts({ data: updatedProducts }));
-          dispatch(setCartSubTotal({ data: response?.sub_total }));
-        }
+        dispatch(setCart({ data: response }));
+        dispatch(setCartSubTotal({ data: response?.sub_total }));
       } else if (response?.data?.one_seller_error_code == 1) {
         setSingleSellerModal(true);
       } else {
@@ -128,13 +101,8 @@ const ListViewProductCard = ({ product }) => {
         product_variant_id: variantId,
       });
       if (response?.status === 1) {
-        const updatedProducts = cart?.cartProducts?.filter(
-          (product) =>
-            product?.product_id != productId &&
-            product?.product_variant_id != variantId
-        );
+        dispatch(setCart({ data: response }));
         dispatch(setCartSubTotal({ data: response?.sub_total }));
-        dispatch(setCartProducts({ data: updatedProducts }));
       } else {
         toast.error(response.message);
       }
@@ -288,37 +256,34 @@ const ListViewProductCard = ({ product }) => {
       handleValidateAddNewProduct(quantity, product);
     }
   };
-  const handleValidateAddExistingProduct = (productQuantity, product) => {
-    const productQty = productQuantity?.find(
-      (prdct) => prdct?.product_id == product?.id
-    )?.qty;
-    if (Number(product.is_unlimited_stock)) {
-      if (productQty < Number(product?.total_allowed_quantity)) {
-        addToCart(
-          product.id,
-          selectedVariant?.id,
-          cart?.cartProducts?.find(
-            (prdct) => prdct?.product_variant_id == selectedVariant?.id
-          )?.qty + 1
-        );
-      } else {
-        toast.error(t("max_cart_limit_error"));
-      }
-    } else {
-      if (productQty >= Number(selectedVariant.stock)) {
-        toast.error(t("out_of_stock_message"));
-      } else if (Number(productQty) >= Number(product.total_allowed_quantity)) {
-        toast.error(t("max_cart_limit_error"));
-      } else {
-        addToCart(
-          product.id,
-          selectedVariant?.id,
-          cart?.cartProducts?.find(
-            (prdct) => prdct?.product_variant_id == selectedVariant?.id
-          )?.qty + 1
-        );
-      }
+  const handleValidateAddExistingProduct = (product) => {
+    const productQty = getCartLineQty(
+      cart?.cartProducts,
+      product,
+      selectedVariant?.id
+    );
+    const nextQty = productQty + 1;
+
+    if ((productQty || 0) >= Number(product?.total_allowed_quantity)) {
+      toast.error(t("max_cart_limit_error"));
+      return;
     }
+    if (
+      selectedVariant?.is_unlimited_stock == 0 &&
+      selectedVariant?.stock <= 0
+    ) {
+      toast.error(t("out_of_stock_message"));
+      return;
+    }
+    if (
+      selectedVariant?.is_unlimited_stock == 0 &&
+      nextQty > Number(selectedVariant?.stock)
+    ) {
+      toast.error(t("out_of_stock_message"));
+      return;
+    }
+
+    addToCart(product.id, selectedVariant?.id, nextQty);
   };
   const handleQuantityIncrease = (e) => {
     e.preventDefault();
@@ -328,47 +293,32 @@ const ListViewProductCard = ({ product }) => {
       handleValidateAddExistingGuestProduct(
         productQuantity,
         product,
-        cart?.guestCart?.find(
-          (prdct) =>
-            prdct?.product_id == product?.id &&
-            prdct?.product_variant_id == selectedVariant?.id
-        )?.qty + 1
+        getCartLineQty(cart?.guestCart, product, selectedVariant?.id) + 1
       );
     } else {
-      const quantity = getProductQuantities(cart?.cartProducts);
-      handleValidateAddExistingProduct(quantity, product);
+      handleValidateAddExistingProduct(product);
     }
   };
   const handleQuantityDecrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    const currentQty = cart?.isGuest
+      ? getCartLineQty(cart?.guestCart, product, selectedVariant?.id)
+      : getCartLineQty(cart?.cartProducts, product, selectedVariant?.id);
+
     if (cart?.isGuest) {
       AddToGuestCart(
         product,
         product?.id,
         selectedVariant?.id,
-        cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        )?.qty - 1,
+        currentQty - 1,
         1,
         "remove"
       );
+    } else if (currentQty <= 1) {
+      removeFromCart(product?.id, selectedVariant?.id);
     } else {
-      if (
-        cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == selectedVariant?.id
-        ).qty == 1
-      ) {
-        removeFromCart(product?.id, selectedVariant?.id);
-      } else {
-        addToCart(
-          product.id,
-          selectedVariant.id,
-          cart?.cartProducts?.find(
-            (prdct) => prdct?.product_variant_id == selectedVariant?.id
-          )?.qty - 1
-        );
-      }
+      addToCart(product.id, selectedVariant.id, currentQty - 1);
     }
   };
   const handleShowVariantModal = (e, product) => {
@@ -425,24 +375,11 @@ const ListViewProductCard = ({ product }) => {
 
   const productsVariants = product.variants;
 
-  const isProductAlreadyAdded =
-    (cart?.isGuest === false &&
-      cart?.cartProducts?.find(
-        (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty > 0) ||
-    (cart?.isGuest === true &&
-      cart?.guestCart?.find(
-        (prdct) => prdct?.product_variant_id === selectedVariant?.id
-      )?.qty > 0);
+  const addedQuantity = cart?.isGuest
+    ? getCartLineQty(cart?.guestCart, product, selectedVariant?.id)
+    : getCartLineQty(cart?.cartProducts, product, selectedVariant?.id);
 
-  const addedQuantity =
-    cart.isGuest === false
-      ? cart?.cartProducts?.find(
-        (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty
-      : cart?.guestCart?.find(
-        (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty;
+  const isProductAlreadyAdded = addedQuantity > 0;
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&

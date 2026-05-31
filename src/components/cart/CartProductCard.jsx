@@ -4,6 +4,7 @@ import * as api from "@/api/apiRoutes";
 import {
   addtoGuestCart,
   clearCartPromo,
+  setCart,
   setCartProducts,
   setCartPromo,
   setCartSubTotal,
@@ -152,21 +153,7 @@ const CartProductCard = ({
                 qty: Number(cartProductQty.qty + 1),
               });
               if (response.status == 1) {
-                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-                  if (
-                    cartProduct?.product_id == product?.product_id &&
-                    cartProduct?.product_variant_id ==
-                    product?.product_variant_id
-                  ) {
-                    return { ...cartProduct, qty: cartProductQty?.qty + 1 };
-                  } else {
-                    return cartProduct;
-                  }
-                });
-
-                dispatch(setCartSubTotal({ data: response.sub_total }));
-                dispatch(setCartProducts({ data: updatedProducts }));
-                await handleApplyCoupon(response.sub_total);
+                await applyCartResponse(response);
               }
             } catch (error) {
               console.log("Error", error);
@@ -200,20 +187,7 @@ const CartProductCard = ({
                 qty: Number(cartProductQty.qty + 1),
               });
               if (response.status == 1) {
-                let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-                  if (
-                    cartProduct?.product_id == product?.product_id &&
-                    cartProduct?.product_variant_id ==
-                    product?.product_variant_id
-                  ) {
-                    return { ...cartProduct, qty: cartProductQty?.qty + 1 };
-                  } else {
-                    return cartProduct;
-                  }
-                });
-                dispatch(setCartSubTotal({ data: response.sub_total }));
-                dispatch(setCartProducts({ data: updatedProducts }));
-                await handleApplyCoupon(response.sub_total);
+                await applyCartResponse(response);
               }
             } catch (error) {
               console.log("Error", error);
@@ -227,6 +201,14 @@ const CartProductCard = ({
   };
 
   // Calling this function on every increament decreament so total adjust with coupon card
+  const applyCartResponse = async (response) => {
+    const cartList = response?.cart || [];
+    setCartProductsData(cartList);
+    dispatch(setCart({ data: response }));
+    dispatch(setCartSubTotal({ data: response.sub_total }));
+    await handleApplyCoupon(response.sub_total);
+  };
+
   const handleApplyCoupon = async (total) => {
     try {
       const response = await api.setPromoCode({
@@ -291,19 +273,7 @@ const CartProductCard = ({
             qty: Number(cartProductQty.qty - 1),
           });
           if (response.status == 1) {
-            let updatedProducts = cart?.cartProducts?.map((cartProduct) => {
-              if (
-                cartProduct?.product_id == product?.product_id &&
-                cartProduct?.product_variant_id == product?.product_variant_id
-              ) {
-                return { ...cartProduct, qty: cartProductQty?.qty - 1 };
-              } else {
-                return cartProduct;
-              }
-            });
-            dispatch(setCartSubTotal({ data: response.sub_total }));
-            dispatch(setCartProducts({ data: updatedProducts }));
-            await handleApplyCoupon(response.sub_total);
+            await applyCartResponse(response);
           }
         } catch (error) {
           console.log("Error", error);

@@ -154,35 +154,8 @@ const WishlistCard = ({
         qty: qty,
       });
       if (response.status === 1) {
-        if (
-          cart?.cartProducts?.find(
-            (product) =>
-              product?.product_id == productId &&
-              product?.product_variant_id == productVId,
-          )?.qty == undefined
-        ) {
-          dispatch(setCart({ data: response }));
-          const updatedCartCount = [
-            ...cart?.cartProducts,
-            { product_id: productId, product_variant_id: productVId, qty: qty },
-          ];
-          dispatch(setCartProducts({ data: updatedCartCount }));
-          dispatch(setCartSubTotal({ data: response?.sub_total }));
-        } else {
-          const updatedProducts = cart?.cartProducts?.map((product) => {
-            if (
-              product.product_id == productId &&
-              product?.product_variant_id == productVId
-            ) {
-              return { ...product, qty: qty };
-            } else {
-              return product;
-            }
-          });
-          dispatch(setCart({ data: response }));
-          dispatch(setCartProducts({ data: updatedProducts }));
-          dispatch(setCartSubTotal({ data: response?.sub_total }));
-        }
+        dispatch(setCart({ data: response }));
+        dispatch(setCartSubTotal({ data: response?.sub_total }));
       } else if (response?.data?.one_seller_error_code == 1) {
         setSingleSellerModal(true);
       } else {

@@ -13,6 +13,7 @@ import { MdOutlineFileDownload, MdOutlineWatchLater } from "react-icons/md";
 import Loader from "../loader/Loader";
 import { FiPhoneCall } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 const OrderDetail = () => {
   const router = useRouter();
@@ -94,13 +95,11 @@ const OrderDetail = () => {
         toast.error("Invoice not available");
       }
     } catch (error) {
-      if (error.request.statusText) {
-        toast.error(error.request.statusText);
-      } else if (error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error(t("something_went_wrong"));
-      }
+      const message =
+        error?.response?.data?.message ||
+        error?.request?.statusText ||
+        error?.message;
+      toast.error(message || t("something_went_wrong"));
     }
   };
 

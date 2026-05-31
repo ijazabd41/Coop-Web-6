@@ -1,11 +1,12 @@
 import { t } from "@/utils/translation";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { setCheckoutTotal } from "@/redux/slices/checkoutSlice";
 import { useDispatch } from "react-redux";
 import { CgInfo } from "react-icons/cg";
 import ChargesInfoPopup from "./ChargesInfoPopup";
+import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 
 const OrderSummaryCard = ({
   step,
@@ -22,43 +23,149 @@ const OrderSummaryCard = ({
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [message, setMessage] = useState("");
 
+  const decimalPoint = setting?.decimal_point ?? 2;
+  const currency = setting?.currency || "AED";
+
+  const formatAmount = (value) =>
+    Number(value || 0).toFixed(decimalPoint);
+
+  const cartItems = useMemo(() => {
+    const items = checkoutData?.cart?.length
+      ? checkoutData.cart
+      : cart?.cartProducts || cart?.cart || [];
+    return Array.isArray(items) ? items : [];
+  }, [checkoutData?.cart, cart?.cartProducts, cart?.cart]);
+
+  const deliveryAmount = useMemo(() => {
+    if (checkOutError) return 0;
+    if (
+      typeof checkoutData?.delivery_charge === "object" &&
+      checkoutData?.delivery_charge !== null
+    ) {
+      return Number(checkoutData.delivery_charge.total_delivery_charge || 0);
+    }
+    return Number(checkoutData?.delivery_charge || 0);
+  }, [checkOutError, checkoutData?.delivery_charge]);
+
+  const promoDiscount = useMemo(() => {
+    if (checkOutError) return 0;
+    return Number(
+      checkoutData?.promocode_details?.discount || cart?.promo_code?.discount || 0
+    );
+  }, [checkOutError, checkoutData?.promocode_details?.discount, cart?.promo_code?.discount]);
+
+  const summaryTotals = useMemo(() => {
+    if (checkOutError) {
+      const fallback = Number(cart?.cartSubTotal || 0);
+      return {
+        subTotal: fallback,
+        taxAmount: 0,
+        deliveryAmount: 0,
+        promoDiscount: 0,
+        total: fallback,
+      };
+    }
+
+    const subTotal = Number(
+      checkoutData?.amount_untaxed ?? checkoutData?.sub_total ?? 0
+    );
+    const taxAmount = Number(checkoutData?.tax_amount || 0);
+    const total = Number(checkoutData?.total_amount || 0);
+
+    return {
+      subTotal,
+      taxAmount,
+      deliveryAmount,
+      promoDiscount,
+      total,
+    };
+  }, [
+    checkOutError,
+    cart?.cartSubTotal,
+    checkoutData?.amount_untaxed,
+    checkoutData?.sub_total,
+    checkoutData?.tax_amount,
+    checkoutData?.total_amount,
+    deliveryAmount,
+    promoDiscount,
+  ]);
+
   useEffect(() => {
-    // Calculate new total amount based on wallet balance usage
     if (checkout?.isWalletChecked) {
       const updatedTotal = Math.max(
-        (checkoutData?.total_amount || 0) - (user?.user?.balance || 0),
-        0 // Ensure total doesn't go below 0
+        (summaryTotals.total || 0) - (user?.user?.balance || 0),
+        0
       );
       dispatch(setCheckoutTotal({ data: updatedTotal }));
     } else {
-      dispatch(setCheckoutTotal({ data: checkoutData?.total_amount || 0 }));
-      // setCheckoutTotal(checkoutData?.total_amount || 0); // Reset to original total
+      dispatch(setCheckoutTotal({ data: summaryTotals.total || 0 }));
     }
   }, [
     checkout?.isWalletChecked,
-    checkoutData?.total_amount,
+    summaryTotals.total,
     user?.user?.balance,
+    dispatch,
   ]);
 
   return (
     <div className="w-full mx-auto cardBorder rounded-lg p-6 ">
+      {cartItems.length > 0 && (
+        <div className="mb-4">
+          <h3 className="font-bold text-base mb-3">
+            {t("order_summary")} ({cartItems.length} {t("items")})
+          </h3>
+          <div className="max-h-64 overflow-y-auto space-y-3 pr-1">
+            {cartItems.map((item) => {
+              const qty = Number(item?.qty ?? item?.quantity ?? 1);
+              const unitPrice = Number(item?.price ?? item?.discounted_price ?? 0);
+              const lineTax = Number(item?.tax_amount || 0);
+              const lineTotal = Number(
+                item?.line_total ?? item?.sub_total ?? unitPrice * qty
+              );
+
+              return (
+                <div
+                  key={item?.order_line_id || item?.id || item?.product_variant_id}
+                  className="flex gap-3 pb-3 border-b border-gray-100 last:border-b-0 last:pb-0"
+                >
+                  <div className="relative h-14 w-14 flex-shrink-0 rounded-md overflow-hidden backgroundColor">
+                    <ImageWithPlaceholder
+                      src={item?.image_url}
+                      alt={item?.name}
+                      width={56}
+                      height={56}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium line-clamp-2 leading-snug">
+                      {item?.name}
+                    </p>
+                    <p className="text-xs subTextColor mt-1">
+                      {qty} x {currency} {formatAmount(unitPrice)}
+                    </p>
+                    {lineTax > 0 && (
+                      <p className="text-xs subTextColor">
+                        {t("tax")}: + {currency} {formatAmount(lineTax)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-sm font-semibold whitespace-nowrap">
+                    {currency} {formatAmount(lineTotal)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <hr className="border-gray-300 my-4" />
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-2">
         <span className="font-bold ">{t("sub_total")}</span>
-        {checkOutError == false ? (
-          <span className="font-semibold ">
-            {setting?.currency}{" "}
-            {checkoutData?.sub_total?.toFixed(
-              setting?.decimal_point ? setting?.decimal_point : 0
-            )}
-          </span>
-        ) : (
-          <span className="font-semibold ">
-            {setting?.currency}{" "}
-            {cart?.cartSubTotal?.toFixed(
-              setting?.decimal_point ? setting?.decimal_point : 0
-            )}
-          </span>
-        )}
+        <span className="font-semibold ">
+          {currency} {formatAmount(summaryTotals.subTotal)}
+        </span>
       </div>
 
       {checkoutData?.additional_charges?.length > 0
@@ -119,22 +226,22 @@ const OrderSummaryCard = ({
         </div>
       )}
 
-      {checkOutError == false && Number(checkoutData?.tax_amount) > 0 && (
+      {checkOutError == false && summaryTotals.taxAmount > 0 && (
         <div className="flex justify-between items-center mb-2">
           <span className="font-semibold">{t("tax") || "Tax / VAT"}</span>
           <span className="">
-            + {setting?.currency} {Number(checkoutData.tax_amount).toFixed(setting?.decimal_point ?? 2)}
+            + {currency} {formatAmount(summaryTotals.taxAmount)}
           </span>
         </div>
       )}
 
-      {(checkoutData?.promocode_details?.discount > 0 || cart?.promo_code?.discount > 0) && checkOutError == false && (
+      {promoDiscount > 0 && checkOutError == false && (
         <div className="flex justify-between items-center mb-2">
           <span className="font-semibold">
             {t("promoDiscount")}
           </span>
           <span className="">
-            - {setting?.currency} {Number(checkoutData?.promocode_details?.discount || cart?.promo_code?.discount || 0).toFixed(setting?.decimal_point ?? 2)}
+            - {currency} {formatAmount(promoDiscount)}
           </span>
         </div>
       )}
@@ -153,26 +260,14 @@ const OrderSummaryCard = ({
       <hr className="border-gray-300 mb-4" />
       <div className="flex justify-between items-center mb-6 backgroundColor p-3 rounded-sm">
         <span className="text-lg font-bold ">{t("total")}</span>
-        {checkOutError == false ? (
-          <span className="font-semibold ">
-            {setting?.currency}{" "}
-            {checkout?.isWalletChecked
-              ? (
-                  Number(checkoutData?.total_amount) -
-                  Number(checkout?.usedWalletBalance)
-                ).toFixed(setting?.decimal_point ? setting?.decimal_point : 0)
-              : checkoutData?.total_amount?.toFixed(
-                  setting?.decimal_point ? setting?.decimal_point : 0
-                )}
-          </span>
-        ) : (
-          <span className="font-semibold ">
-            {setting?.currency}{" "}
-            {cart?.cartSubTotal?.toFixed(
-              setting?.decimal_point ? setting?.decimal_point : 0
-            )}
-          </span>
-        )}
+        <span className="font-semibold ">
+          {currency}{" "}
+          {checkout?.isWalletChecked
+            ? formatAmount(
+                Number(summaryTotals.total) - Number(checkout?.usedWalletBalance)
+              )
+            : formatAmount(summaryTotals.total)}
+        </span>
       </div>
       <button
         className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor"

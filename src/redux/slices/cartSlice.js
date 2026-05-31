@@ -1,6 +1,17 @@
 // import { ActionTypes } from "../action-type";
 import { createSlice } from "@reduxjs/toolkit";
 
+function syncCartProductsFromPayload(state, payload) {
+  if (!payload) return;
+  const cartItems = payload?.cart || payload?.data?.cart;
+  if (!Array.isArray(cartItems)) return;
+  state.cartProducts = cartItems.map((product) => ({
+    product_id: product?.product_id,
+    product_variant_id: product?.product_variant_id,
+    qty: product?.qty ?? product?.quantity ?? 1,
+  }));
+}
+
 const initialState = {
   status: "loading",
   cart: null,
@@ -24,6 +35,7 @@ export const cartReducer = createSlice({
     setCart: (state, action) => {
       state.status = "fulfill";
       state.cart = action.payload.data;
+      syncCartProductsFromPayload(state, action.payload.data);
     },
     setCartCheckout: (state, action) => {
       state.status = "fulfill";

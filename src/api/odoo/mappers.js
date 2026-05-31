@@ -44,7 +44,8 @@ function resolveStock(template) {
 /** Map Odoo product.template record to eGrocer product card shape. */
 export function mapProductTemplate(template) {
   const templateId = template.id;
-  const variantTuples = template.product_variant_id || [];
+  const variantTuples =
+    template.product_variant_id || template.product_variant_ids || [];
   const variants = [];
   const stockInfo = resolveStock(template);
 
@@ -68,7 +69,7 @@ export function mapProductTemplate(template) {
     }
   } else {
     const price = num(template.list_price);
-    const fallbackVariantId = resolveVariantId(template);
+    const fallbackVariantId = resolveVariantId(template) || templateId;
     variants.push({
       id: fallbackVariantId,
       product_id: templateId,
@@ -220,17 +221,27 @@ function lineImageUrl(productRef, variantId) {
 export function mapOrderLine(line, orderActiveStatus = 2) {
   const productRef = resolveLineProduct(line);
   const variantId = productRef?.id;
-  const productName = stripHtml(productRef?.name || line.name || "");
+  const templateId = m2oId(productRef?.product_tmpl_id) || variantId;
+  const productName = stripSkuPrefix(
+    stripHtml(productRef?.name || line.name || "")
+  );
   const qty = num(line.product_uom_qty, 1);
   const price = num(line.price_unit);
-  const subtotal = num(line.price_subtotal || line.price_total, price * qty);
+  const subtotalExTax = num(line.price_subtotal);
+  const lineTax = num(line.price_tax);
+  const lineTotal = num(
+    line.price_total,
+    subtotalExTax + lineTax || price * qty
+  );
+  const subtotal =
+    subtotalExTax || (lineTotal ? Math.max(0, lineTotal - lineTax) : price * qty);
   const activeStatus = Number(orderActiveStatus) || 2;
   const img = lineImageUrl(productRef, variantId);
 
   return {
     id: line.id,
     order_line_id: line.id,
-    product_id: variantId,
+    product_id: templateId,
     product_variant_id: variantId,
     name: productName,
     qty,
@@ -238,6 +249,9 @@ export function mapOrderLine(line, orderActiveStatus = 2) {
     price,
     discounted_price: price,
     sub_total: subtotal,
+    sub_total_ex_tax: subtotal,
+    tax_amount: lineTax,
+    line_total: lineTotal,
     image_url: img,
     variant_name: productName,
     status: 1,
@@ -250,13 +264,33 @@ export function mapOrderLine(line, orderActiveStatus = 2) {
 export function mapCartFromOrder(order, lines, cartItems = null) {
   const cartItemsResolved =
     cartItems || lines.map((line) => mapOrderLine(line));
-  const subTotal = cartItemsResolved.reduce((s, i) => s + num(i.sub_total), 0);
+
+  const lineSubtotalExTax = cartItemsResolved.reduce(
+    (s, i) => s + num(i.sub_total_ex_tax ?? i.sub_total),
+    0
+  );
+  const lineTaxTotal = cartItemsResolved.reduce(
+    (s, i) => s + num(i.tax_amount),
+    0
+  );
+  const lineGrandTotal = cartItemsResolved.reduce(
+    (s, i) => s + num(i.line_total ?? i.sub_total),
+    0
+  );
+
+  const amountUntaxed = num(order?.amount_untaxed, lineSubtotalExTax);
+  const taxAmount = num(order?.amount_tax, lineTaxTotal);
   const deliveryCharge = num(order?.delivery_charge || order?.amount_delivery);
-  const totalAmount = num(order?.amount_total, subTotal + deliveryCharge);
+  const totalAmount = num(
+    order?.amount_total,
+    amountUntaxed + taxAmount + deliveryCharge
+  );
 
   return {
     cart: cartItemsResolved,
-    sub_total: subTotal,
+    sub_total: amountUntaxed,
+    amount_untaxed: amountUntaxed,
+    items_total: lineGrandTotal,
     delivery_charge: deliveryCharge,
     total_amount: totalAmount,
     total: totalAmount,
@@ -265,7 +299,7 @@ export function mapCartFromOrder(order, lines, cartItems = null) {
     doorstep_delivery_mode: 1,
     cod_allowed: 1,
     tip_amount: 0,
-    tax_amount: num(order?.amount_tax),
+    tax_amount: taxAmount,
   };
 }
 
@@ -388,11 +422,14 @@ export function mapPaymentProviders(providers) {
 
 /** Resolve default product.product id from Odoo template payload. */
 export function resolveVariantId(templateOrVariant) {
-  const variants = templateOrVariant?.product_variant_id || [];
+  const variants =
+    templateOrVariant?.product_variant_id ||
+    templateOrVariant?.product_variant_ids ||
+    [];
   if (Array.isArray(variants) && variants.length > 0) {
-    return m2oId(variants[0]) || templateOrVariant?.id;
+    return m2oId(variants[0]) || null;
   }
-  return templateOrVariant?.id;
+  return null;
 }
 
 /** Build storefront settings blob (base64 in legacy API). */

@@ -4,6 +4,7 @@ import {
   mapCartFromOrder,
   mapOrderLine,
   mapProductTemplate,
+  resolveVariantId,
 } from "../mappers";
 import { embeddedRecord, imageFromOdooRecord, imageUrl, m2oId, odooWebImageUrl } from "../utils";
 import {
@@ -154,7 +155,16 @@ export async function getCart() {
     if (!order?.id) return ok({ cart: [], sub_total: 0, total_amount: 0 });
     const lines = await fetchOrderLines(order.id);
     const cartItems = await buildOrderItemsWithImages(lines);
-    const cart = mapCartFromOrder(order, lines, cartItems);
+
+    let orderTotals = order;
+    try {
+      const freshOrderPayload = await odooGet(`/api/order/${order.id}`);
+      orderTotals = odooDataList(freshOrderPayload)[0] || order;
+    } catch {
+      /* use draft order snapshot */
+    }
+
+    const cart = mapCartFromOrder(orderTotals, lines, cartItems);
     return ok(cart);
   } catch (e) {
     console.error("[Odoo] getCart", e);
@@ -162,21 +172,60 @@ export async function getCart() {
   }
 }
 
-async function getLineForVariant(orderId, variantId) {
+async function resolveOdooProductId(productId) {
+  const id = Number(productId);
+  if (!id) return null;
+
   try {
-    const payload = await odooGet("/api/order-line", {
-      domain: `[('order_id','=','${orderId}')]`,
+    const variantPayload = await odooGet("/api/product", {
+      domain: `[('id','=',${id})]`,
+      limit: 1,
     });
-    const lines = odooDataList(payload);
-    const line = lines.find((l) => m2oIdLine(l) === Number(variantId));
-    if (line?.id) return line;
+    if (odooDataList(variantPayload).length > 0) return id;
   } catch {
-    /* ignore */
+    /* not a product.product id */
+  }
+
+  try {
+    const tplPayload = await odooGet(`/api/bcp-product-template/${id}`);
+    const template = odooDataList(tplPayload)[0];
+    if (template) {
+      const variantId = resolveVariantId(template);
+      if (variantId) return variantId;
+    }
+  } catch {
+    /* fall through */
+  }
+
+  return id;
+}
+
+function lineProductRef(line) {
+  const raw = line?.product_id;
+  if (Array.isArray(raw) && raw[0] && typeof raw[0] === "object") return raw[0];
+  if (raw && typeof raw === "object") return raw;
+  return null;
+}
+
+function findExistingOrderLine(lines, variantId, templateId) {
+  for (const line of lines) {
+    const lineVariantId = m2oIdLine(line);
+    if (variantId && lineVariantId === variantId) return line;
+    if (templateId && lineVariantId === templateId) return line;
+
+    const productRef = lineProductRef(line);
+    const tmplId = m2oId(productRef?.product_tmpl_id);
+    if (templateId && tmplId === templateId) return line;
+    if (variantId && tmplId === variantId) return line;
   }
   return null;
 }
 
-export async function addToCart({ product_variant_id, qty = 1 }) {
+export async function addToCart({
+  product_variant_id,
+  product_id,
+  qty = 1,
+}) {
   try {
     const session = getOdooSession();
     if (!session?.sessionId) {
@@ -186,14 +235,26 @@ export async function addToCart({ product_variant_id, qty = 1 }) {
     const order = await getOrCreateDraftOrder();
     if (!order?.id) return fail("cart_unavailable");
 
-    let variantId = Number(product_variant_id);
+    const templateId = product_id ? Number(product_id) : null;
+    const requestedId = Number(product_variant_id || product_id);
+    if (!requestedId) return fail("invalid_variant");
+
+    const variantId = await resolveOdooProductId(requestedId);
     if (!variantId) return fail("invalid_variant");
 
-    const existingLine = await getLineForVariant(order.id, variantId);
+    const lines = await fetchOrderLines(order.id);
+    const existingLine = findExistingOrderLine(lines, variantId, templateId);
+    const addQty = Number(qty) || 1;
 
     if (existingLine?.id) {
       const existingQty = Number(existingLine.product_uom_qty) || 0;
-      const newQty = existingQty + Number(qty);
+      const requestedQty = addQty;
+      const newQty =
+        requestedQty > existingQty
+          ? requestedQty
+          : requestedQty < existingQty
+            ? requestedQty
+            : existingQty + requestedQty;
       await odooGet(`/api/order-line/${existingLine.id}/update`, {
         product_uom_qty: newQty,
       });
@@ -211,9 +272,10 @@ export async function addToCart({ product_variant_id, qty = 1 }) {
         payload.response?.[0]?.id ||
         odooDataList(payload)[0]?.id ||
         payload.data?.rec_id;
-      if (lineId && qty > 1) {
+
+      if (lineId && addQty !== 1) {
         await odooGet(`/api/order-line/${lineId}/update`, {
-          product_uom_qty: qty,
+          product_uom_qty: addQty,
         });
       }
     }
@@ -227,6 +289,7 @@ export async function addToCart({ product_variant_id, qty = 1 }) {
 
 export async function removeFromCart({
   product_variant_id,
+  product_id,
   isRemoveAll = 0,
 }) {
   try {
@@ -252,9 +315,12 @@ export async function removeFromCart({
       return ok({ cart: [], sub_total: 0, total_amount: 0 });
     }
 
-    const line = lines.find(
-      (l) => m2oIdLine(l) === Number(product_variant_id)
-    );
+    const templateId = product_id ? Number(product_id) : null;
+    const requestedId = Number(product_variant_id || product_id);
+    const variantId = requestedId
+      ? await resolveOdooProductId(requestedId)
+      : null;
+    const line = findExistingOrderLine(lines, variantId, templateId);
     if (line) {
       await odooGet(`/api/order/${order.id}/remove_card_item`, {
         line_ids: `[${line.id}]`
@@ -269,8 +335,11 @@ export async function removeFromCart({
 
 function m2oIdLine(line) {
   const p = line.product_id;
-  if (Array.isArray(p)) return Number(p[0]);
-  if (p && typeof p === "object") return Number(p.id);
+  if (Array.isArray(p)) {
+    if (p[0] && typeof p[0] === "object") return Number(p[0].id) || 0;
+    return Number(p[0]) || 0;
+  }
+  if (p && typeof p === "object") return Number(p.id) || 0;
   return Number(p) || 0;
 }
 

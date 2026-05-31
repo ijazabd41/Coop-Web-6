@@ -24,6 +24,16 @@ function flattenCartResponse(result) {
   return { status: 1, message: result.message || "", data, ...data };
 }
 
+export function cartProductsFromResponse(res) {
+  const cart = res?.data?.cart || res?.cart || [];
+  if (!Array.isArray(cart)) return [];
+  return cart.map((product) => ({
+    product_id: product?.product_id,
+    product_variant_id: product?.product_variant_id,
+    qty: product?.qty ?? product?.quantity ?? 1,
+  }));
+}
+
 /** Normalized cart blob for Redux `setCart`. */
 export function cartDataFromResponse(res) {
   if (!res || res.status !== 1) return null;
@@ -32,6 +42,7 @@ export function cartDataFromResponse(res) {
     return {
       cart: res.cart,
       sub_total: res.sub_total,
+      amount_untaxed: res.amount_untaxed,
       total_amount: res.total_amount,
       delivery_charge: res.delivery_charge,
       tax_amount: res.tax_amount,
@@ -113,6 +124,7 @@ export const addToCart = async (p) =>
   normalizeCartApiResult(
     await odooCart.addToCart({
       product_variant_id: p.product_variant_id,
+      product_id: p.product_id,
       qty: p.qty,
     })
   );
@@ -120,6 +132,7 @@ export const removeFromCart = async (p) =>
   normalizeCartApiResult(
     await odooCart.removeFromCart({
       product_variant_id: p.product_variant_id,
+      product_id: p.product_id,
       isRemoveAll: p.isRemoveAll,
     })
   );

@@ -204,6 +204,7 @@ const Checkout = () => {
       });
       if (response?.status == 1) {
         dispatch(setCartCheckout({ data: response?.data }));
+        dispatch(setCartProducts({ data: response?.data?.cart || [] }));
         dispatch(setCheckoutTotal({ data: response?.data?.total_amount }));
         setCheckoutData(response?.data);
         setCheckOutError(false);
