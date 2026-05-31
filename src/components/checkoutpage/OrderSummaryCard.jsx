@@ -86,21 +86,24 @@ const OrderSummaryCard = ({
         : null}
       {checkOutError == false && checkout?.orderType == "doorstep" && (
         <div className="flex justify-between items-center mb-2">
-
-          <span className="flex items-center wrap relative"><span className="flex flex-wrap">{t("delivery_charge")}</span>  <span className="ml-1 subTextColor cursor-pointer" onClick={()=>{
-            setMessage(
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold">{t("delivery_charge_details")}</span>
-                {checkoutData?.delivery_charge?.sellers_info?.map((seller, i) => (
-                  <div key={i} className="flex justify-between items-center text-xs gap-4">
-                    <span className="">{seller.seller_name}</span>
-                    <span className="font-medium whitespace-nowrap">{setting?.currency} {seller.delivery_charge}</span>
+          <span className="flex items-center wrap relative">
+            <span className="flex flex-wrap">{t("delivery_charge")}</span>
+            {checkoutData?.delivery_charge?.sellers_info?.length > 0 && (
+              <span className="ml-1 subTextColor cursor-pointer" onClick={()=>{
+                setMessage(
+                  <div className="flex flex-col gap-2">
+                    <span className="font-semibold">{t("delivery_charge_details")}</span>
+                    {checkoutData?.delivery_charge?.sellers_info?.map((seller, i) => (
+                      <div key={i} className="flex justify-between items-center text-xs gap-4">
+                        <span className="">{seller.seller_name}</span>
+                        <span className="font-medium whitespace-nowrap">{setting?.currency} {seller.delivery_charge}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            );
-            setActiveTooltip('delivery');
-          }}><CgInfo /></span>
+                );
+                setActiveTooltip('delivery');
+              }}><CgInfo /></span>
+            )}
             {activeTooltip === 'delivery' && (
               <ChargesInfoPopup message={message} onClose={() => setActiveTooltip(null)} />
             )}
@@ -108,19 +111,30 @@ const OrderSummaryCard = ({
           <span className=" flex flex-nowrap">
             <span>{setting?.currency}{" "}</span>
             <span>
-            {checkoutData?.delivery_charge?.total_delivery_charge}
+            {typeof checkoutData?.delivery_charge === 'object' && checkoutData?.delivery_charge !== null
+              ? checkoutData?.delivery_charge?.total_delivery_charge
+              : checkoutData?.delivery_charge ?? 0}
             </span>
           </span>
         </div>
       )}
 
-      {checkoutData?.promocode_details && checkOutError == false && (
+      {checkOutError == false && Number(checkoutData?.tax_amount) > 0 && (
         <div className="flex justify-between items-center mb-2">
-          <a href="#" className="">
-            {t("promoDiscount")}
-          </a>
+          <span className="font-semibold">{t("tax") || "Tax / VAT"}</span>
           <span className="">
-            - {setting?.currency} {checkoutData?.promocode_details?.discount}
+            + {setting?.currency} {Number(checkoutData.tax_amount).toFixed(setting?.decimal_point ?? 2)}
+          </span>
+        </div>
+      )}
+
+      {(checkoutData?.promocode_details?.discount > 0 || cart?.promo_code?.discount > 0) && checkOutError == false && (
+        <div className="flex justify-between items-center mb-2">
+          <span className="font-semibold">
+            {t("promoDiscount")}
+          </span>
+          <span className="">
+            - {setting?.currency} {Number(checkoutData?.promocode_details?.discount || cart?.promo_code?.discount || 0).toFixed(setting?.decimal_point ?? 2)}
           </span>
         </div>
       )}

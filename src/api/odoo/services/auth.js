@@ -1,6 +1,11 @@
 import { ODOO_DB } from "../config";
 import { odooAuthenticate, odooGet, odooGetQuiet } from "../client";
-import { getOdooSession, clearOdooSession, setOdooSession } from "../session";
+import {
+  getOdooSession,
+  clearOdooSession,
+  setOdooSession,
+  setDraftOrderId,
+} from "../session";
 import { store } from "@/redux/store";
 import { mapPartnerToUser } from "../mappers";
 import { fail, ok, isOdooSuccess, odooDataList } from "../utils";
@@ -24,6 +29,8 @@ export async function login({ id, password, type, country_code }) {
       loginId = `${country_code}${id}`.replace(/\++/g, "");
     }
 
+    const prevPartnerId = getOdooSession()?.partnerId;
+
     const auth = await odooAuthenticate({
       login: loginId,
       password,
@@ -42,6 +49,13 @@ export async function login({ id, password, type, country_code }) {
     }
 
     const session = getOdooSession();
+    if (
+      prevPartnerId &&
+      session?.partnerId &&
+      prevPartnerId !== session.partnerId
+    ) {
+      setDraftOrderId(null);
+    }
     await ensureWebsiteCustomer(session.partnerId);
     const partnerPayload = await odooGet(`/api/contacts/${session.partnerId}`);
     const partner = odooDataList(partnerPayload)[0] || {
@@ -54,6 +68,21 @@ export async function login({ id, password, type, country_code }) {
       uid: auth.result.uid,
       username: auth.result.username,
     });
+
+    // Match reference behavior: update contact with device and geo info
+    const devId = typeof window !== "undefined" && window.navigator ? 
+      ('web-' + (window.navigator.platform || 'browser').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20)) : 
+      'web';
+      
+    odooGetQuiet(`/api/contacts/${session.partnerId}/update`, {
+      name: auth.result.name || '',
+      email: auth.result.username?.includes('@') ? auth.result.username : '',
+      phone: auth.result.username?.includes('@') ? '' : auth.result.username,
+      deviceid: devId,
+      firebase: '',
+      latitude: process.env.NEXT_PUBLIC_DEFAULT_LATITUDE || '25.2048',
+      longitude: process.env.NEXT_PUBLIC_DEFAULT_LONGITUDE || '55.2708'
+    }).catch(() => {});
 
     return ok(
       {

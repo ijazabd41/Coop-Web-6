@@ -231,10 +231,13 @@ export function resolveOrderPartnerIds({
   shippingAddressId,
   invoiceAddressId,
   partnerId,
+  uid,
 }) {
   const pid = partnerId;
-  const shippingId = shippingAddressId || pid;
+  let shippingId = shippingAddressId || pid;
   let invoiceId = invoiceAddressId || pid;
+  if (uid && shippingId === uid && pid) shippingId = pid;
+  if (uid && invoiceId === uid && pid) invoiceId = pid;
   if (!invoiceAddressId && shippingAddressId) {
     invoiceId = pid;
   }

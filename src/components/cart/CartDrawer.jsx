@@ -191,8 +191,15 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
           ) : cartProductsData?.length !== 0 ? (
             <>
               <div className="flex-grow overflow-y-auto gap-2 p-2 flex flex-col">
-                {cartProductsData?.map((product) => (
-                  <div key={product?.id}>
+                {cartProductsData?.map((product, index) => (
+                  <div
+                    key={
+                      product?.line_id ||
+                      product?.cart_item_id ||
+                      product?.product_variant_id ||
+                      `cart-line-${index}`
+                    }
+                  >
                     <CartProductsCard
                       product={product}
                       cartProductsData={cartProductsData}

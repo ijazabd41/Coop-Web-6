@@ -7,7 +7,13 @@ import {
 } from "../mappers";
 import { m2oId } from "../utils";
 import { getOdooSession, setDraftOrderId } from "../session";
-import { fail, isOdooSuccess, odooDataList, ok } from "../utils";
+import {
+  fail,
+  isOdooAccessError,
+  isOdooSuccess,
+  odooDataList,
+  ok,
+} from "../utils";
 import {
   buildOrderItemsWithImages,
   fetchOrderLines,
@@ -47,16 +53,24 @@ function extractTransactionId(txPayload) {
 /** Provider ids to try for payment (COD custom provider often 422 on Odoo — demo works). */
 function checkoutProviderIds(providers, paymentMethod, preferredId) {
   const method = String(paymentMethod || "").toUpperCase();
-  if (method === "TEST PAYMENT") return []; // Handled explicitly in Checkout.jsx
+  if (method === "TEST PAYMENT") {
+    const demo = providers.find((p) => providerCode(p) === "demo");
+    return demo?.id ? [demo.id] : [];
+  }
   
   const demo = providers.find((p) => providerCode(p) === "demo");
+  const customCod = providers.find((p) => providerCode(p) === "custom" || String(p.name || "").toLowerCase().includes("cash"));
+  
   const ids = [];
-  if ((method === "COD" || method === "CASH") && demo?.id) {
-    ids.push(demo.id);
-  }
+  
   if (preferredId && !ids.includes(preferredId)) {
     ids.push(preferredId);
   }
+  
+  if (method === "COD" || method === "CASH") {
+    if (customCod?.id && !ids.includes(customCod.id)) ids.push(customCod.id);
+  }
+  
   if (demo?.id && !ids.includes(demo.id)) {
     ids.push(demo.id);
   }
@@ -106,6 +120,46 @@ async function finalizePayment(orderId, providerId, paymentMethod, providers) {
   }
 
   return { ok: false, message: "payment_confirmation_failed" };
+}
+
+const CHECKOUT_SESSION_MSG =
+  "Your cart session expired or is invalid. Please refresh the page, review your cart, and try again.";
+
+async function syncCheckoutOrder(
+  orderId,
+  partners,
+  { orderNote, carrierId } = {}
+) {
+  const extras = { origin: "website" };
+  if (orderNote) extras.note = orderNote;
+  if (carrierId) extras.carrier_id = carrierId;
+
+  const attempts = [
+    {
+      ...extras,
+      partner_id: partners.partner_id,
+      partner_shipping_id: partners.partner_shipping_id,
+      partner_invoice_id: partners.partner_invoice_id,
+    },
+    {
+      ...extras,
+      partner_shipping_id: partners.partner_shipping_id,
+      partner_invoice_id: partners.partner_invoice_id,
+    },
+    {
+      ...extras,
+      partner_shipping_id: partners.partner_shipping_id,
+    },
+  ];
+
+  let lastPayload = null;
+  for (const params of attempts) {
+    const payload = await odooGetQuiet(`/api/order/${orderId}/update`, params);
+    lastPayload = payload;
+    if (isOdooSuccess(payload)) return payload;
+    if (!isOdooAccessError(payload?.message)) break;
+  }
+  return lastPayload;
 }
 
 async function loadShippingPartner(order, session) {
@@ -227,6 +281,7 @@ export async function updateOrderDelivery({
       shippingAddressId: shippingContactId,
       invoiceAddressId: invoiceContactId,
       partnerId: session?.partnerId,
+      uid: session?.uid,
     });
 
     const params = {
@@ -263,10 +318,21 @@ export async function placeOrder({
     const lines = await fetchOrderLines(order.id);
     if (!lines.length) return fail("empty_cart");
 
+    const orderPartner = m2oId(order.partner_id);
+    if (
+      session.partnerId &&
+      orderPartner &&
+      orderPartner !== session.partnerId
+    ) {
+      setDraftOrderId(null);
+      return fail(CHECKOUT_SESSION_MSG);
+    }
+
     const partners = resolveOrderPartnerIds({
       shippingAddressId: addressId,
       invoiceAddressId: invoiceAddressId,
       partnerId: session?.partnerId,
+      uid: session?.uid,
     });
 
     let resolvedCarrierId = carrierId;
@@ -280,16 +346,17 @@ export async function placeOrder({
       }
     }
 
-    const updateParams = {
-      origin: "website",
-      partner_id: partners.partner_id,
-      partner_shipping_id: partners.partner_shipping_id,
-      partner_invoice_id: partners.partner_invoice_id,
-    };
-    if (orderNote) updateParams.note = orderNote;
-    if (resolvedCarrierId) updateParams.carrier_id = resolvedCarrierId;
-
-    await odooGet(`/api/order/${order.id}/update`, updateParams);
+    const updatePayload = await syncCheckoutOrder(order.id, partners, {
+      orderNote,
+      carrierId: resolvedCarrierId,
+    });
+    if (!isOdooSuccess(updatePayload)) {
+      if (isOdooAccessError(updatePayload?.message)) {
+        setDraftOrderId(null);
+        return fail(CHECKOUT_SESSION_MSG);
+      }
+      return fail(updatePayload?.message || "order_update_failed");
+    }
 
     if (promocodeId) {
       try {
@@ -318,7 +385,10 @@ export async function placeOrder({
 
     const method = String(paymentMethod || "").toUpperCase();
     const requiresImmediateConfirm =
-      method === "COD" || method === "WALLET" || method === "CASH";
+      method === "COD" ||
+      method === "WALLET" ||
+      method === "CASH" ||
+      method === "TEST PAYMENT";
 
     const paid = await finalizePayment(
       order.id,
@@ -340,9 +410,16 @@ export async function placeOrder({
     } catch (e) {}
 
     setDraftOrderId(null);
-    const freshOrder = await odooGet(`/api/order/${order.id}`);
-    const orderRow = odooDataList(freshOrder)[0] || order;
-    const freshLines = await fetchOrderLines(order.id);
+    const freshOrder = await odooGetQuiet(`/api/order/${order.id}`);
+    const orderRow = isOdooSuccess(freshOrder)
+      ? odooDataList(freshOrder)[0] || order
+      : order;
+    let freshLines = lines;
+    try {
+      freshLines = await fetchOrderLines(order.id);
+    } catch {
+      /* keep lines from before confirm */
+    }
     const cart = mapCartFromOrder(orderRow, freshLines);
 
     return ok({
@@ -352,7 +429,12 @@ export async function placeOrder({
     });
   } catch (e) {
     console.error("[Odoo] placeOrder", e);
-    return fail(e?.message || "place_order_failed");
+    const raw = e?.message || e?.odooPayload?.message || "place_order_failed";
+    if (isOdooAccessError(raw)) {
+      setDraftOrderId(null);
+      return fail(CHECKOUT_SESSION_MSG);
+    }
+    return fail(raw);
   }
 }
 

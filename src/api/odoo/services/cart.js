@@ -25,6 +25,16 @@ function orderState(order) {
   return Array.isArray(state) ? state[0] : state;
 }
 
+function orderPartnerId(order) {
+  return m2oId(order?.partner_id) || m2oId(order?.partner_shipping_id);
+}
+
+function draftBelongsToPartner(order, partnerId) {
+  if (!partnerId) return true;
+  const owner = orderPartnerId(order);
+  return !owner || owner === partnerId;
+}
+
 function extractOrderId(payload) {
   if (!payload) return null;
   const candidates = [
@@ -76,7 +86,12 @@ export async function getOrCreateDraftOrder() {
     try {
       const check = await odooGet(`/api/order/${orderId}`);
       const row = odooDataList(check)[0];
-      if (isOdooSuccess(check) && row && orderState(row) === "draft") {
+      if (
+        isOdooSuccess(check) &&
+        row &&
+        orderState(row) === "draft" &&
+        draftBelongsToPartner(row, partnerId)
+      ) {
         return row;
       }
       setDraftOrderId(null);
@@ -87,13 +102,15 @@ export async function getOrCreateDraftOrder() {
 
   if (partnerId) {
     const draft = await fetchDraftOrder(partnerId);
-    if (draft?.id) {
+    if (draft?.id && draftBelongsToPartner(draft, partnerId)) {
       setDraftOrderId(draft.id);
       return draft;
     }
   }
 
-  const created = await odooGet("/api/order/create_order");
+  const created = await odooGet("/api/order/create_order", {
+    sources: "COOPDISCOUNT-WEB",
+  });
   if (!isOdooSuccess(created)) {
     throw new Error(created?.message || "create_order_failed");
   }
@@ -123,45 +140,8 @@ export async function fetchOrderLines(orderId) {
   return odooDataList(payload);
 }
 
-/** Map order lines and backfill image_url from product template when missing. */
 export async function buildOrderItemsWithImages(lines, orderActiveStatus = 2) {
-  const items = [];
-  for (const line of lines) {
-    let item = mapOrderLine(line, orderActiveStatus);
-    const ref = embeddedRecord(line.product_id);
-    const tmplId = m2oId(ref?.product_tmpl_id);
-    const variantId = item.product_variant_id || m2oId(line.product_id);
-    const img = String(item.image_url || "");
-    const needsImage =
-      !img ||
-      img.includes("/api/odoo/") ||
-      img.includes("/image_1024") ||
-      img.includes("/api/odoo/api/");
-    if (needsImage && (tmplId || variantId)) {
-      try {
-        if (tmplId) {
-          const payload = await odooGet(`/api/bcp-product-template/${tmplId}`);
-          const tpl = odooDataList(payload)[0];
-          if (tpl) {
-            item = { ...item, image_url: mapProductTemplate(tpl).image_url };
-          }
-        } else if (variantId) {
-          const payload = await odooGet("/api/bcp-product-template", {
-            domain: `[('product_variant_id','in',[${variantId}])]`,
-            limit: 1,
-          });
-          const tpl = odooDataList(payload)[0];
-          if (tpl) {
-            item = { ...item, image_url: mapProductTemplate(tpl).image_url };
-          }
-        }
-      } catch {
-        /* optional enrichment */
-      }
-    }
-    items.push(item);
-  }
-  return items;
+  return lines.map((line) => mapOrderLine(line, orderActiveStatus));
 }
 
 export async function getCart() {
@@ -182,6 +162,20 @@ export async function getCart() {
   }
 }
 
+async function getLineForVariant(orderId, variantId) {
+  try {
+    const payload = await odooGet("/api/order-line", {
+      domain: `[('order_id','=','${orderId}')]`,
+    });
+    const lines = odooDataList(payload);
+    const line = lines.find((l) => m2oIdLine(l) === Number(variantId));
+    if (line?.id) return line;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
 export async function addToCart({ product_variant_id, qty = 1 }) {
   try {
     const session = getOdooSession();
@@ -195,23 +189,33 @@ export async function addToCart({ product_variant_id, qty = 1 }) {
     let variantId = Number(product_variant_id);
     if (!variantId) return fail("invalid_variant");
 
-    const payload = await odooGet("/api/order-line/create", {
-      order_id: order.id,
-      product_id: variantId,
-      product_uom_qty: 1,
-    });
+    const existingLine = await getLineForVariant(order.id, variantId);
 
-    if (!isOdooSuccess(payload)) {
-      return fail(payload?.message || "add_to_cart_failed");
-    }
-
-    const lineId =
-      payload.response?.[0]?.id ||
-      odooDataList(payload)[0]?.id;
-    if (lineId && qty > 1) {
-      await odooGet(`/api/order-line/${lineId}/update`, {
-        product_uom_qty: qty,
+    if (existingLine?.id) {
+      const existingQty = Number(existingLine.product_uom_qty) || 0;
+      const newQty = existingQty + Number(qty);
+      await odooGet(`/api/order-line/${existingLine.id}/update`, {
+        product_uom_qty: newQty,
       });
+    } else {
+      const payload = await odooGet("/api/order-line/create", {
+        order_id: order.id,
+        product_id: variantId,
+      });
+
+      if (!isOdooSuccess(payload)) {
+        return fail(payload?.message || "add_to_cart_failed");
+      }
+
+      const lineId =
+        payload.response?.[0]?.id ||
+        odooDataList(payload)[0]?.id ||
+        payload.data?.rec_id;
+      if (lineId && qty > 1) {
+        await odooGet(`/api/order-line/${lineId}/update`, {
+          product_uom_qty: qty,
+        });
+      }
     }
 
     return getCart();
@@ -265,7 +269,9 @@ export async function removeFromCart({
 
 function m2oIdLine(line) {
   const p = line.product_id;
-  return Array.isArray(p) ? p[0] : p?.id;
+  if (Array.isArray(p)) return Number(p[0]);
+  if (p && typeof p === "object") return Number(p.id);
+  return Number(p) || 0;
 }
 
 export async function updateCartLineQty({ lineId, qty }) {

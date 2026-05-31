@@ -78,7 +78,7 @@ export function withApiParams(params = {}) {
 export async function odooGet(path, params = {}, options = {}) {
   const config = { params: withApiParams(params) };
   if (options.quiet) {
-    config.validateStatus = (status) => status < 500;
+    config.validateStatus = () => true;
   }
   const response = await odooClient.get(path, config);
   if (options.quiet && response.status >= 400) {
@@ -91,9 +91,18 @@ export async function odooGet(path, params = {}, options = {}) {
   return unwrapOdooPayload(response.data);
 }
 
-/** Same as odooGet but does not throw on 4xx (avoids console noise for optional calls). */
+/** Same as odooGet but does not throw on 4xx/5xx (avoids console noise for optional calls). */
 export async function odooGetQuiet(path, params = {}) {
-  return odooGet(path, params, { quiet: true });
+  try {
+    return await odooGet(path, params, { quiet: true });
+  } catch (error) {
+    const status = error?.response?.status || 500;
+    return {
+      success: 0,
+      _httpStatus: status,
+      message: `http_${status}`,
+    };
+  }
 }
 
 export async function odooPost(path, body = null, params = {}) {

@@ -54,35 +54,7 @@ export function odooPublicBase() {
   ).replace(/\/$/, "");
 }
 
-/** Models where Odoo returns 500 if a field segment is appended (per BCP API / Postman). */
-const ODOO_IMAGE_NO_FIELD_MODELS = [];
-
-function stripOdooImageFieldSuffix(imgPath) {
-  for (const model of ODOO_IMAGE_NO_FIELD_MODELS) {
-    const prefix = `/web/image/${model}/`;
-    if (imgPath.startsWith(prefix)) {
-      const afterModel = imgPath.slice(prefix.length);
-      const slashIdx = afterModel.indexOf("/");
-      if (slashIdx > 0) {
-        return prefix + afterModel.slice(0, slashIdx);
-      }
-      break;
-    }
-  }
-  return imgPath;
-}
-
-function variantIdFromTemplate(template) {
-  const variantTuples = template?.product_variant_id;
-  if (!Array.isArray(variantTuples) || variantTuples.length === 0) return null;
-  const first = variantTuples[0];
-  if (first != null && typeof first === "object") return first.id ?? null;
-  return Number(first) || null;
-}
-
-/** Extract `/web/image/...` from Odoo API paths that embed it.
- *  Also strips field names from models that 500 when fields are specified.
- */
+/** Extract `/web/image/...` from Odoo API paths that embed it. */
 export function normalizeOdooImagePath(path) {
   if (path == null || path === false) return "";
   let raw = String(path).trim();
@@ -97,7 +69,7 @@ export function normalizeOdooImagePath(path) {
   if (webIdx >= 0) {
     let imgPath = raw.slice(webIdx).split("?")[0];
     imgPath = imgPath.replace(/^\/+/, "/");
-    return stripOdooImageFieldSuffix(imgPath);
+    return imgPath;
   }
 
   if (!raw.startsWith("http") && !raw.startsWith("/") && raw.length > 80) {
@@ -167,48 +139,32 @@ export function imageUrl(path) {
 
 /**
  * Standard Odoo image URL for a model record.
- *
- * IMPORTANT: This Odoo backend returns 500 for:
- *   /web/image/product.template/{id}/image_1024
- *   /web/image/product.public.category/{id}/cover_image
- * But works for:
- *   /web/image/product.product/{variant_id}/image_1024  (variant model)
- *   /web/image/product.template/{id}                    (no field)
- *   /web/image/product.public.category/{id}             (no field)
+ * Maps to the exact paths used in the reference implementation.
  */
 export function odooWebImageUrl(model, recordId, field = "image_1024") {
   if (!model || !recordId) return "";
-  if (ODOO_IMAGE_NO_FIELD_MODELS.includes(model)) {
-    return imageUrl(`/web/image/${model}/${recordId}`);
-  }
+  
+  // Exact mappings from reference api.js
+  if (model === "product.template") return imageUrl(`/web/image/product.template/${recordId}/image_1024`);
+  if (model === "product.public.category") return imageUrl(`/web/image/product.public.category/${recordId}/image_1024`);
+  if (model === "slider.image") return imageUrl(`/web/image/slider.image/${recordId}/image`);
+  if (model === "deal.day.slider") return imageUrl(`/web/image/deal.day.slider/${recordId}/banner_image`);
+  if (model === "res.partner") return imageUrl(`/web/image/res.partner/${recordId}/image_1920`);
+
   return imageUrl(`/web/image/${model}/${recordId}/${field}`);
 }
 
 /**
  * Product image URL per `bcp-product-template` API (Postman CD.COM docs).
- * API returns `image_1024` like `/web/image/product.template/{id}/image_1024` (500 on this host);
- * working URLs: `/web/image/product.product/{variant_id}/image_1024` or `/web/image/product.template/{id}`.
  */
 export function productTemplateImageUrl(template) {
   if (!template?.id) return "";
-  const templateId = template.id;
-  const variantId = variantIdFromTemplate(template);
-  if (variantId) {
-    return imageUrl(`/web/image/product.product/${variantId}/image_1024`);
-  }
-  return imageUrl(`/web/image/product.template/${templateId}`);
+  return imageUrl(`/web/image/product.template/${template.id}/image_1024`);
 }
 
-/** Pick best image from an Odoo record, falling back to `/web/image/{model}/{id}/...`. */
+/** Pick best image from an Odoo record. */
 export function imageFromOdooRecord(record, model, recordId) {
   const id = recordId || record?.id;
-
-  if (model === "product.template" && id) {
-    return productTemplateImageUrl({
-      id,
-      product_variant_id: record?.product_variant_id,
-    });
-  }
 
   if (model && id) {
     return odooWebImageUrl(model, id);
@@ -271,6 +227,11 @@ export function ok(data, extra = {}) {
 
 export function fail(message = "request_failed", extra = {}) {
   return { status: 0, message, data: null, ...extra };
+}
+
+export function isOdooAccessError(message) {
+  const raw = String(message || "");
+  return raw.includes("not allowed to access") || raw.includes("AccessError");
 }
 
 export function toBase64Json(obj) {

@@ -34,6 +34,7 @@ export function cartDataFromResponse(res) {
       sub_total: res.sub_total,
       total_amount: res.total_amount,
       delivery_charge: res.delivery_charge,
+      tax_amount: res.tax_amount,
       self_pickup_mode: res.self_pickup_mode,
       doorstep_delivery_mode: res.doorstep_delivery_mode,
       order_id: res.order_id,

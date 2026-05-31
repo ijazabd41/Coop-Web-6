@@ -9,6 +9,37 @@ import { getCategories } from "./products";
 import { fail, isOdooSuccess, odooDataList, ok, toBase64Json } from "../utils";
 import { imageUrl } from "../utils";
 
+function templateHasImage(template) {
+  return Boolean(
+    template?.image_1024 ||
+      template?.image_1920 ||
+      template?.image_512 ||
+      template?.image_128 ||
+      template?.image
+  );
+}
+
+/** Homepage slider cards may use slider.image media when the template has no image. */
+function withSectionProductImage(product, img, rawTemplate) {
+  const sliderImage =
+    img?.image_url ||
+    (img?.id ? imageUrl(`/web/image/slider.image/${img.id}/image`) : "");
+
+  const templateImage =
+    templateHasImage(rawTemplate) && rawTemplate?.id
+      ? imageUrl(`/web/image/product.template/${rawTemplate.id}/image_1024`)
+      : "";
+
+  const image_url = templateImage || sliderImage || product?.image_url || "";
+  if (!image_url) return product;
+
+  return {
+    ...product,
+    image_url,
+    images: image_url ? [image_url] : product?.images || [],
+  };
+}
+
 export async function getSetting() {
   try {
     let logoUrl = "";
@@ -141,13 +172,18 @@ export async function getShop() {
     }
 
     let sectionProducts = [];
+    const sectionTemplatesById = {};
     if (productIds.size > 0) {
       const validIds = Array.from(productIds).filter(id => id && !isNaN(id));
       if (validIds.length > 0) {
         const domain = `[('id', 'in', [${validIds.join(",")}])]`;
         const secPayload = await odooGet("/api/bcp-product-template", { domain, limit: 1000 });
         if (isOdooSuccess(secPayload)) {
-          sectionProducts = odooDataList(secPayload).map(mapProductTemplate);
+          const rows = odooDataList(secPayload);
+          sectionProducts = rows.map(mapProductTemplate);
+          for (const row of rows) {
+            sectionTemplatesById[row.id] = row;
+          }
         }
       }
     }
@@ -155,17 +191,28 @@ export async function getShop() {
     const createSection = (slidersList, id, title) => {
       const prods = [];
       slidersList.forEach(slider => {
-        const sliderProdIds = new Set();
         if (slider.image_ids) {
           slider.image_ids.forEach(img => {
-            const pid = extractId(img.product_id);
-            if (pid) sliderProdIds.add(pid);
+            if (img.product_id && Array.isArray(img.product_id) && img.product_id[0] && typeof img.product_id[0] === 'object') {
+              const inlineProduct = img.product_id[0];
+              const mapped = mapProductTemplate({
+                ...inlineProduct,
+                product_variant_ids: inlineProduct.product_variant_id || inlineProduct.product_variant_ids,
+              });
+              prods.push(withSectionProductImage(mapped, img, inlineProduct));
+            } else {
+              const pid = extractId(img.product_id);
+              if (pid) {
+                const found = sectionProducts.find(p => Number(p.id) === pid);
+                if (found) {
+                  prods.push(
+                    withSectionProductImage(found, img, sectionTemplatesById[pid])
+                  );
+                }
+              }
+            }
           });
         }
-        
-        sectionProducts.forEach(p => {
-          if (sliderProdIds.has(Number(p.id))) prods.push(p);
-        });
       });
       if (prods.length === 0) return null;
       return {

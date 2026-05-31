@@ -23,13 +23,16 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
   }, []);
 
   useEffect(() => {
-    if (cart?.promo_code?.promo_code) {
+    if (cart?.promo_code?.promo_code && !cart.promo_code.is_loyalty_point) {
       setCodeInput(cart.promo_code.promo_code);
       setPreview({
         points: cart.promo_code.points,
         discount: cart.promo_code.discount,
         promo_code: cart.promo_code.promo_code,
       });
+    } else if (!cart?.promo_code) {
+      setCodeInput("");
+      setPreview(null);
     }
   }, [cart?.promo_code]);
 
@@ -84,7 +87,7 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
         orderId,
       });
       if (res?.status === 1) {
-        dispatch(setCartPromo({ data: res.data }));
+        dispatch(setCartPromo({ data: { ...res.data, is_loyalty_point: false } }));
         setPreview({
           points: res.data.points,
           discount: res.data.discount,
@@ -101,9 +104,10 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
     setLoading(false);
   };
 
-  const handleApplyCard = async () => {
-    if (!selectedCardId) return toast.error(t("please_select_reward"));
-    const card = cards.find((c) => String(c.id) === String(selectedCardId));
+  const handleApplyCard = async (overrideCardId) => {
+    const targetId = overrideCardId || selectedCardId;
+    if (!targetId) return toast.error(t("please_select_reward"));
+    const card = cards.find((c) => String(c.id) === String(targetId));
     if (!card) return;
     setLoading(true);
     try {
@@ -122,6 +126,7 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
               points: card.points,
               reward_id: card.reward_id,
               cart_id: card.cart_id,
+              is_loyalty_point: true,
             },
           })
         );
@@ -143,90 +148,88 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
     setSelectedCardId("");
   };
 
-  return (
-    <div className="cardBorder p-4 rounded-lg backgroundColor my-4">
-      <h3 className="font-bold text-lg mb-2">{t("have_coupon")}</h3>
+  const isLoyaltyApplied = cart?.promo_code?.is_loyalty_point;
+  const isCouponApplied = cart?.promo_code && !cart?.promo_code?.is_loyalty_point;
 
-      <div className="flex flex-col gap-2 mb-3">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            className="cardBorder p-2 rounded-sm w-full outline-none"
-            placeholder={t("coupon")}
-            value={codeInput}
-            onChange={(e) => setCodeInput(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={handleLookupCode}
-            disabled={lookupLoading}
-            className="cardBorder px-3 py-2 rounded-sm text-sm whitespace-nowrap"
-          >
-            {lookupLoading ? t("loading") : t("view_coupon")}
-          </button>
-        </div>
-        {preview && (
-          <p className="text-sm textColor">
-            {t("loyalty_points_available")}:{" "}
-            <strong>{preview.points ?? 0}</strong>
-            {preview.discount > 0 && (
-              <>
-                {" "}
-                · {t("promoDiscount")}: {setting?.currency}
-                {Number(preview.discount).toFixed(
-                  setting?.decimal_point ?? 2
-                )}
-              </>
-            )}
-          </p>
+  return (
+    <div className="my-4">
+      <div className="flex w-full mb-6 border border-gray-300 rounded-md overflow-hidden shadow-sm bg-white">
+        <input
+          type="text"
+          className="p-3 outline-none flex-1 min-w-0"
+          placeholder={t("gift_card_or_discount_code") || "Gift card or discount code..."}
+          value={codeInput}
+          onChange={(e) => setCodeInput(e.target.value)}
+          disabled={!!isCouponApplied}
+        />
+        {isCouponApplied ? (
+           <button
+             type="button"
+             onClick={handleClear}
+             className="px-6 py-3 bg-gray-100 text-gray-800 text-base font-medium border-l border-gray-300 hover:bg-gray-200 transition-colors"
+           >
+             {t("delete") || "Remove"}
+           </button>
+        ) : (
+           <button
+             type="button"
+             onClick={handleApplyCode}
+             disabled={loading || !codeInput.trim()}
+             className="px-6 py-3 bg-gray-100 text-gray-800 text-base font-medium border-l border-gray-300 disabled:opacity-50 hover:bg-gray-200 transition-colors"
+           >
+             {loading && !isLoyaltyApplied ? t("applying") || "Applying..." : t("apply") || "Apply"}
+           </button>
         )}
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleApplyCode}
-            disabled={loading || !codeInput.trim()}
-            className="primaryBackColor text-white px-4 py-2 rounded-sm disabled:opacity-50 text-sm"
-          >
-            {loading ? t("applying") : t("apply")}
-          </button>
-          {cart?.promo_code && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="cardBorder px-4 py-2 rounded-sm text-sm"
-            >
-              {t("delete")}
-            </button>
-          )}
-        </div>
       </div>
 
+      {preview && !isLoyaltyApplied && (
+        <p className="text-sm text-gray-600 mb-4 px-1">
+          {t("loyalty_points_available") || "Points available"}:{" "}
+          <strong>{Number(preview.points ?? 0).toFixed(2)}</strong>
+          {preview.discount > 0 && (
+            <>
+              {" "}
+              · {t("promoDiscount") || "Discount"}: {setting?.currency}
+              {Number(preview.discount).toFixed(
+                setting?.decimal_point ?? 2
+              )}
+            </>
+          )}
+        </p>
+      )}
+
       {cards.length > 0 && (
-        <>
-          <h4 className="font-semibold text-sm mb-2">{t("apply_loyalty_points")}</h4>
-          <div className="flex gap-2 items-center">
-            <select
-              className="cardBorder p-2 rounded-sm w-full outline-none"
-              value={selectedCardId}
-              onChange={(e) => setSelectedCardId(e.target.value)}
-            >
-              <option value="">{t("select_loyalty_card")}</option>
-              {cards.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.promo_code} — {c.points} {t("loyalty_points_available")}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={handleApplyCard}
-              disabled={loading || !selectedCardId}
-              className="primaryBackColor text-white px-4 py-2 rounded-sm disabled:opacity-50 whitespace-nowrap"
-            >
-              {loading ? t("applying") : t("apply")}
-            </button>
-          </div>
-        </>
+        (() => {
+          const bestCard = cards.reduce((prev, current) => (prev.points > current.points ? prev : current), cards[0]);
+          if (!bestCard || bestCard.points <= 0) return null;
+
+          return (
+            <div className="border border-gray-400 rounded-md overflow-hidden shadow-sm">
+              <div className="bg-[#d1d5db] px-4 py-3 flex justify-between items-center border-b border-gray-400">
+                <span className="font-bold text-gray-900 text-[15px]">{t("loyalty_points_label") || "Loyalty point(s)"}</span>
+                <span className="font-bold text-gray-900 text-[15px]">{Number(bestCard.points).toFixed(2)}</span>
+              </div>
+              <div className="bg-white px-4 py-4 flex justify-between items-center">
+                <div>
+                  <h4 className="font-bold text-gray-900 text-[15px] mb-1">{t("loyalty_reward") || "Loyalty Reward"}</h4>
+                  <p className="text-gray-700 text-[15px]">
+                    {t("discount") || "Discount"}: {setting?.currency}{Number(bestCard.discount).toFixed(setting?.decimal_point ?? 2)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={isLoyaltyApplied ? handleClear : () => handleApplyCard(bestCard.id)}
+                  disabled={loading}
+                  className={isLoyaltyApplied
+                    ? "px-6 py-2.5 bg-red-500 text-white font-medium text-[15px] rounded-md hover:bg-red-600 transition-colors disabled:opacity-50 shadow-sm"
+                    : "px-6 py-2.5 bg-[#22c55e] text-white font-medium text-[15px] rounded-md hover:bg-[#16a34a] transition-colors disabled:opacity-50 shadow-sm"}
+                >
+                  {loading && isLoyaltyApplied ? t("removing") || "Removing..." : (loading ? t("applying") || "Applying..." : (isLoyaltyApplied ? t("remove") || "Remove" : t("claim") || "Claim"))}
+                </button>
+              </div>
+            </div>
+          );
+        })()
       )}
     </div>
   );

@@ -1,18 +1,27 @@
-import { odooGet } from "../client";
+import { odooGet, odooGetQuiet } from "../client";
 import { getOdooSession } from "../session";
 import { fail, isOdooSuccess, odooDataList, ok } from "../utils";
 
 export async function getDeliveryMethods() {
   try {
-    const uid = getOdooSession()?.uid || 2;
-    const payload = await odooGet("/api/delivery-method", { user_id: uid });
+    let payload = await odooGetQuiet("/api/delivery-method", {});
+    if (!isOdooSuccess(payload)) {
+      const uid = getOdooSession()?.uid;
+      if (uid) {
+        payload = await odooGetQuiet("/api/delivery-method", { user_id: uid });
+      }
+    }
     if (!isOdooSuccess(payload)) return ok([]);
     return ok(
       odooDataList(payload).map((d) => ({
         id: d.id,
         name: d.name || d.display_name,
         price: d.fixed_price || d.price || 0,
-        carrier_id: d.carrier_id ? (Array.isArray(d.carrier_id) ? d.carrier_id[0] : d.carrier_id) : d.id,
+        carrier_id: d.carrier_id
+          ? Array.isArray(d.carrier_id)
+            ? d.carrier_id[0]
+            : d.carrier_id
+          : d.id,
       }))
     );
   } catch {

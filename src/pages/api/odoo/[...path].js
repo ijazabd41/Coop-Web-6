@@ -12,16 +12,29 @@ function buildTargetUrl(pathSegments, query) {
   const pathname = "/" + pathSegments.join("/");
   const url = new URL(pathname, `${ODOO_BASE}/`);
 
+  const ODOO_LITERAL_KEYS = new Set(['args', 'domain', 'line_ids']);
+  const listParams = [];
+
   Object.entries(query).forEach(([key, value]) => {
     if (key === "path" || value === undefined || value === null) return;
     if (Array.isArray(value)) {
-      value.forEach((v) => url.searchParams.append(key, String(v)));
+      value.forEach((v) => {
+        if (ODOO_LITERAL_KEYS.has(key)) listParams.push([key, String(v)]);
+        else url.searchParams.append(key, String(v));
+      });
     } else {
-      url.searchParams.append(key, String(value));
+      if (ODOO_LITERAL_KEYS.has(key)) listParams.push([key, String(value)]);
+      else url.searchParams.append(key, String(value));
     }
   });
 
-  return url.toString();
+  let urlStr = url.toString();
+  for (const [k, v] of listParams) {
+    const val = encodeURIComponent(v).replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+    urlStr += (urlStr.includes('?') ? '&' : '?') + k + '=' + val;
+  }
+
+  return urlStr;
 }
 
 function extractSessionId(setCookieHeader) {
@@ -97,9 +110,6 @@ export default async function handler(req, res) {
       res.send(buffer);
     } else {
       const text = await upstream.text();
-      if (pathname.includes("api/contacts") && contentType.includes("application/json")) {
-        require("fs").writeFileSync("d:/Egrocer/Egrocer/debug_proxy_contacts.json", JSON.stringify({ url: targetUrl, data: JSON.parse(text) }, null, 2));
-      }
       res.send(text);
     }
   } catch (error) {

@@ -57,9 +57,25 @@ const Loyalty = () => {
         {cards?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {cards.map((card, idx) => (
-              <div key={idx} className="border p-4 rounded-md shadow-sm">
-                <p className="font-semibold">{t("card_number")}: {card.code || card.display_name}</p>
-                <p>{t("points")}: {card.points}</p>
+              <div key={idx} className="border flex items-center p-4 rounded-lg shadow-sm bg-white border-l-8 border-l-[#00a8b3]">
+                <div className="mr-5">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="-rotate-12">
+                    <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" fill="#F0F8FF" stroke="#102A43" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" fill="#F0F8FF" stroke="#102A43" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 11L13.22 8.52L16 8.12L14 6.16L14.46 3.4L12 4.69L9.54 3.4L10 6.16L8 8.12L10.78 8.52L12 11Z" fill="#C5E4F3" stroke="#102A43" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div className="flex flex-col">
+                  <h4 className="text-2xl font-bold text-gray-900 mb-1">
+                    {t("loyalty_program")}
+                  </h4>
+                  <p className="text-gray-500 text-lg mb-1">
+                    {Number(card.points).toFixed(2)} {t("loyalty_points", "Loyalty point(s)")}
+                  </p>
+                  <p className="text-[#00a8b3] text-lg">
+                    {t("reward_waiting", "A reward is waiting for you")}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

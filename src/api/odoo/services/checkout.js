@@ -1,13 +1,59 @@
-import { odooGet } from "../client";
+import { odooGet, odooGetQuiet } from "../client";
 import { getOdooSession } from "../session";
 import { fail, isOdooSuccess, odooDataList, ok } from "../utils";
 
+function providerCode(p) {
+  return Array.isArray(p?.code) ? p.code[0] : p?.code;
+}
+
+function extractTransactionId(txPayload) {
+  const row = txPayload?.response?.[0];
+  if (row?.id) return row.id;
+  return txPayload?.response?.transaction_id || txPayload?.response?.id || null;
+}
+
+async function loadPaymentProviders() {
+  const payload = await odooGetQuiet("/api/payment-provider", {
+    domain: "[('state','in',['enabled','test'])]",
+  });
+  return isOdooSuccess(payload) ? odooDataList(payload) : [];
+}
+
+async function orderIsConfirmed(orderId) {
+  const payload = await odooGetQuiet(`/api/order/${orderId}`);
+  if (!isOdooSuccess(payload)) return false;
+  const order = odooDataList(payload)[0];
+  const state = Array.isArray(order?.state) ? order.state[0] : order?.state;
+  return Boolean(state && state !== "draft");
+}
+
+async function confirmOrderSale(orderId) {
+  const payload = await odooGetQuiet(`/api/order/${orderId}/update`, {
+    state: "sale",
+  });
+  return isOdooSuccess(payload);
+}
+
+async function createTransaction(orderId, providerId) {
+  return odooGetQuiet(`/api/order/${orderId}/get_or_create_transaction`, {
+    args: `[${providerId}]`,
+  });
+}
+
+function providerIdsToTry(providers, preferredId) {
+  const demo = providers.find((p) => providerCode(p) === "demo");
+  const ids = [];
+  if (demo?.id) ids.push(demo.id);
+  if (preferredId && !ids.includes(preferredId)) ids.push(preferredId);
+  for (const p of providers) {
+    if (p?.id && !ids.includes(p.id)) ids.push(p.id);
+  }
+  return ids;
+}
+
 export async function initiateTransaction({ orderId, paymentMethod }) {
   try {
-    const payPayload = await odooGet("/api/payment-provider", {
-      domain: "[('state','in',['enabled','test'])]",
-    });
-    const providers = odooDataList(payPayload);
+    const providers = await loadPaymentProviders();
     let provider = providers.find((p) => {
       const name = (p.name || "").toLowerCase();
       if (paymentMethod === "COD") return name.includes("cash");
@@ -16,91 +62,128 @@ export async function initiateTransaction({ orderId, paymentMethod }) {
     if (!provider) provider = providers[0];
     if (!provider?.id) return fail("no_payment_provider");
 
-    const tx = await odooGet(
-      `/api/order/${orderId}/get_or_create_transaction`,
-      { args: `[${provider.id}]` }
-    );
-    if (!isOdooSuccess(tx)) return fail(tx?.message);
-    const txId =
-      tx?.data?.id ||
-      tx?.response?.[0]?.id ||
-      tx?.response?.transaction_id ||
-      tx?.response?.id;
-    return ok({
-      transaction_id: txId,
-      provider_id: provider.id,
-      payment_url: tx?.response?.landing_route || null,
-    });
+    for (const pid of providerIdsToTry(providers, provider.id)) {
+      const tx = await createTransaction(orderId, pid);
+      if (!isOdooSuccess(tx)) continue;
+      const txId = extractTransactionId(tx);
+      if (!txId) continue;
+      return ok({
+        transaction_id: txId,
+        provider_id: pid,
+        payment_url: tx?.response?.landing_route || null,
+      });
+    }
+    return fail("payment_transaction_failed");
   } catch (e) {
     console.error("[Odoo] initiateTransaction", e);
-    return fail(e?.message);
+    return fail("payment_transaction_failed");
   }
 }
 
 export async function addTransaction({ orderId, transactionId, paymentMethod }) {
   try {
-    const payload = await odooGet(
-      `/api/order/${orderId}/order_transaction_mark_done`,
-      {
-        args: `[${transactionId}]`,
-        transaction_id: transactionId,
-      }
+    const providers = await loadPaymentProviders();
+    const demo = providers.find((p) => providerCode(p) === "demo");
+    const markIds = [demo?.id, providers[0]?.id].filter(
+      (id, i, arr) => id && arr.indexOf(id) === i
     );
-    if (!isOdooSuccess(payload)) return fail(payload?.message);
-    return ok({ order_id: orderId });
+
+    for (const providerId of markIds) {
+      const payload = await odooGetQuiet(
+        `/api/order/${orderId}/order_transaction_mark_done`,
+        {
+          transaction_id: transactionId,
+          provider_id: providerId,
+        }
+      );
+      if (isOdooSuccess(payload)) {
+        return ok({ order_id: orderId });
+      }
+    }
+    return fail("payment_confirmation_failed");
   } catch (e) {
-    return fail(e?.message);
+    return fail(e?.message || "payment_confirmation_failed");
   }
 }
 
 export async function getDeliveryMethods() {
-  try {
-    const uid = getOdooSession()?.uid || 2;
-    const payload = await odooGet("/api/delivery-method", { user_id: uid });
-    if (!isOdooSuccess(payload)) return ok([]);
-    return ok(
-      odooDataList(payload).map((d) => ({
-        id: d.id,
-        name: d.name || d.display_name,
-        price: d.fixed_price || 0,
-      }))
-    );
-  } catch {
-    return ok([]);
-  }
+  const { getDeliveryMethods: load } = await import("./delivery");
+  return load();
 }
 
 export async function initiateTestTransaction({ orderId }) {
   try {
-    const tx = await odooGet(`/api/order/${orderId}/get_or_create_transaction`, { args: `[6]` });
-    if (isOdooSuccess(tx)) {
-      const txId = tx?.data?.id || tx?.response?.[0]?.id || tx?.response?.transaction_id || tx?.response?.id;
+    if (await orderIsConfirmed(orderId)) {
+      return ok({
+        transaction_id: null,
+        provider_id: null,
+        already_confirmed: true,
+      });
+    }
+
+    const providers = await loadPaymentProviders();
+    for (const pid of providerIdsToTry(providers, null)) {
+      const tx = await createTransaction(orderId, pid);
+      if (!isOdooSuccess(tx)) continue;
+      const txId = extractTransactionId(tx);
       if (txId) {
-        return ok({ transaction_id: txId, provider_id: 6 });
+        return ok({ transaction_id: txId, provider_id: pid });
       }
     }
-    return fail(tx?.message || "Failed to create test transaction.");
+
+    if (await confirmOrderSale(orderId)) {
+      return ok({
+        transaction_id: null,
+        provider_id: null,
+        already_confirmed: true,
+      });
+    }
+
+    return fail("test_payment_failed");
   } catch (e) {
-    const errBody = e?.response?.data ? JSON.stringify(e.response.data) : null;
-    console.warn(`[Odoo] initiateTestTransaction attempt failed`, errBody || e?.message);
-    return fail(errBody || e?.message || "Failed to create test transaction.");
+    console.warn("[Odoo] initiateTestTransaction", e?.message);
+    return fail("test_payment_failed");
   }
 }
 
-export async function markTestTransactionDone({ orderId, transactionId }) {
+export async function markTestTransactionDone({
+  orderId,
+  transactionId,
+  providerId,
+}) {
   try {
-    const payload = await odooGet(`/api/order/${orderId}/order_transaction_mark_done`, {
-      provider_id: 6,
-      transaction_id: transactionId
-    });
-    if (isOdooSuccess(payload)) {
+    if (!transactionId) {
+      if ((await orderIsConfirmed(orderId)) || (await confirmOrderSale(orderId))) {
+        return ok({ order_id: orderId });
+      }
+      return fail("test_payment_failed");
+    }
+
+    const providers = await loadPaymentProviders();
+    const demo = providers.find((p) => providerCode(p) === "demo");
+    const markIds = [providerId, demo?.id].filter(
+      (id, i, arr) => id && arr.indexOf(id) === i
+    );
+
+    for (const pid of markIds) {
+      const payload = await odooGetQuiet(
+        `/api/order/${orderId}/order_transaction_mark_done`,
+        {
+          transaction_id: transactionId,
+          provider_id: pid,
+        }
+      );
+      if (isOdooSuccess(payload)) {
+        return ok({ order_id: orderId });
+      }
+    }
+
+    if (await orderIsConfirmed(orderId)) {
       return ok({ order_id: orderId });
     }
-    return fail(payload?.message || "Test mark_done failed.");
+    return fail("test_payment_failed");
   } catch (e) {
-    const errBody = e?.response?.data ? JSON.stringify(e.response.data) : null;
-    console.warn(`[Odoo] markTestTransactionDone attempt failed`, errBody || e?.message);
-    return fail(errBody || e?.message || "Test mark_done failed.");
+    console.warn("[Odoo] markTestTransactionDone", e?.message);
+    return fail("test_payment_failed");
   }
 }
-

@@ -607,7 +607,14 @@ const Checkout = () => {
           } else if (checkout?.selectedPaymentMethod === "Test Payment") {
             setOrderId(response?.data?.order_id);
             setCheckoutLoading(false);
-            await handleInitiateTestTransaction(response?.data?.order_id);
+            try {
+              await api.deleteCart();
+            } catch (e) {
+              console.log(e);
+            }
+            return router.push(
+              `/web-payment-status?status=success&type=order&payment_method=test_payment&order_id=${response?.data?.order_id}`
+            );
           } else {
             setOrderId(response?.data?.order_id);
             setCheckoutLoading(false);

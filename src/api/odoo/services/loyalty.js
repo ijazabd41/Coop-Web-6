@@ -39,7 +39,7 @@ function mapLoyaltyCouponRow(c) {
   };
 }
 
-async function resolveRewardDiscount(rewardId, orderAmount = 0) {
+async function resolveRewardDiscount(rewardId, orderAmount = 0, availablePoints = 0) {
   if (!rewardId) return 0;
   try {
     const payload = await odooGet(`/api/loyalty-reward/${rewardId}`, {
@@ -58,6 +58,9 @@ async function resolveRewardDiscount(rewardId, orderAmount = 0) {
       const value = num(reward.discount ?? reward.discount_max_amount);
       if (mode === "percent") {
         return (orderAmount * value) / 100;
+      }
+      if (mode === "per_point") {
+        return value * availablePoints;
       }
       return value;
     }
@@ -96,7 +99,7 @@ export async function getLoyaltyCoupons({ partnerId } = {}) {
       odooDataList(payload).map(async (c) => {
         const mapped = mapLoyaltyCouponRow(c);
         if (!mapped.discount && mapped.reward_id) {
-          mapped.discount = await resolveRewardDiscount(mapped.reward_id);
+          mapped.discount = await resolveRewardDiscount(mapped.reward_id, 0, mapped.points);
         }
         return mapped;
       })
@@ -173,7 +176,7 @@ export async function validateAndApplyPromoCode({
   if (!card.reward_id) return fail("invalid_promo_code");
 
   const discount =
-    card.discount || (await resolveRewardDiscount(card.reward_id, amount));
+    card.discount || (await resolveRewardDiscount(card.reward_id, amount, card.points));
 
   const applied = await applyLoyaltyPoint({
     orderId,
@@ -202,7 +205,7 @@ export async function validatePromoCode({ promoCodeName, amount = 0 }) {
     const card = byCode.data;
     const discount =
       card.discount ||
-      (await resolveRewardDiscount(card.reward_id, amount));
+      (await resolveRewardDiscount(card.reward_id, amount, card.points));
     return ok({
       ...card,
       discount,
@@ -219,7 +222,7 @@ export async function validatePromoCode({ promoCodeName, amount = 0 }) {
   );
   if (!match) return fail("invalid_promo_code");
   const discount =
-    match.discount || (await resolveRewardDiscount(match.reward_id, amount));
+    match.discount || (await resolveRewardDiscount(match.reward_id, amount, match.points));
   return ok({
     ...match,
     discount,
