@@ -14,7 +14,6 @@ import NoCartData from "@/assets/Empty_Cart.svg";
 import Image from "next/image";
 import {
   clearCartPromo,
-  setCart,
   setCartProducts,
   setCartPromo,
   setCartSubTotal,
@@ -72,7 +71,6 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
       });
       if (cartData?.status == 1) {
         setCartProductsData(cartData?.data?.cart);
-        dispatch(setCart({ data: cartData }));
         dispatch(setCartSubTotal({ data: cartData?.data?.sub_total }));
         dispatch(setSelfPickupMode({ data: cartData?.data?.self_pickup_mode }));
         dispatch(
@@ -82,6 +80,15 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
         );
         setCartData(cartData?.data);
         await handleApplyCoupon();
+        const productsData = cartData?.data?.cart?.map((product) => {
+          return {
+            product_id: product?.product_id,
+            product_variant_id: product?.product_variant_id,
+            qty: product?.qty,
+          };
+        });
+
+        dispatch(setCartProducts({ data: productsData }));
         setLoading(false);
       } else {
         dispatch(setCartProducts({ data: [] }));

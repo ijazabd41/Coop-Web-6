@@ -221,7 +221,7 @@ function lineImageUrl(productRef, variantId) {
 export function mapOrderLine(line, orderActiveStatus = 2) {
   const productRef = resolveLineProduct(line);
   const variantId = productRef?.id;
-  const templateId = m2oId(productRef?.product_tmpl_id) || variantId;
+  const templateId = m2oId(productRef?.product_tmpl_id);
   const productName = stripSkuPrefix(
     stripHtml(productRef?.name || line.name || "")
   );
@@ -241,7 +241,7 @@ export function mapOrderLine(line, orderActiveStatus = 2) {
   return {
     id: line.id,
     order_line_id: line.id,
-    product_id: templateId,
+    product_id: templateId || variantId,
     product_variant_id: variantId,
     name: productName,
     qty,
