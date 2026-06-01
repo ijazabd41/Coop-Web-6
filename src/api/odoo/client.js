@@ -8,10 +8,15 @@ import {
 } from "./config";
 import { clearOdooSession, getOdooSession, setOdooSession } from "./session";
 import { isOdooSuccess, unwrapOdooPayload } from "./utils";
+import {
+  buildCacheKey,
+  cachedFetch,
+  defaultCacheTtl,
+} from "./requestCache";
 
 const odooClient = axios.create({
   baseURL: ODOO_CLIENT_BASE_URL,
-  timeout: 60000,
+  timeout: 30000,
   withCredentials: true,
 });
 
@@ -76,19 +81,35 @@ export function withApiParams(params = {}) {
 }
 
 export async function odooGet(path, params = {}, options = {}) {
-  const config = { params: withApiParams(params) };
-  if (options.quiet) {
-    config.validateStatus = () => true;
+  const ttl =
+    options.cacheTtl !== undefined
+      ? options.cacheTtl
+      : options.skipCache
+        ? 0
+        : defaultCacheTtl(path);
+
+  const run = async () => {
+    const config = { params: withApiParams(params) };
+    if (options.quiet) {
+      config.validateStatus = () => true;
+    }
+    const response = await odooClient.get(path, config);
+    if (options.quiet && response.status >= 400) {
+      return {
+        success: 0,
+        _httpStatus: response.status,
+        message: `http_${response.status}`,
+      };
+    }
+    return unwrapOdooPayload(response.data);
+  };
+
+  if (ttl <= 0) {
+    return run();
   }
-  const response = await odooClient.get(path, config);
-  if (options.quiet && response.status >= 400) {
-    return {
-      success: 0,
-      _httpStatus: response.status,
-      message: `http_${response.status}`,
-    };
-  }
-  return unwrapOdooPayload(response.data);
+
+  const key = buildCacheKey(path, withApiParams(params));
+  return cachedFetch(run, key, ttl);
 }
 
 /** Same as odooGet but does not throw on 4xx/5xx (avoids console noise for optional calls). */

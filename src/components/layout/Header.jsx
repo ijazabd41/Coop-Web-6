@@ -26,8 +26,6 @@ import { LuUser } from "react-icons/lu";
 import { FaPhoneVolume, FaXTwitter } from "react-icons/fa6";
 import { BiCaretRight } from "react-icons/bi";
 import { RxHamburgerMenu } from "react-icons/rx";
-import CartDrawer from "../cart/CartDrawer";
-// import Login from "../login/Login";
 import { t } from "@/utils/translation";
 import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
@@ -37,9 +35,10 @@ const Location = dynamic(() => import("../locationmodal/Location"), {
 const Login = dynamic(() => import("../login/Login"), {
   ssr: false,
 });
-// const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
-//   ssr: false,
-// });
+const CartDrawer = dynamic(() => import("../cart/CartDrawer"), {
+  ssr: false,
+  loading: () => null,
+});
 const LogoutModal = dynamic(() => import("../logoutmodal/LogoutModal"), {
   ssr: false,
 });

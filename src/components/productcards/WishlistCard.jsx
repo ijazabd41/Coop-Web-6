@@ -4,7 +4,12 @@ import { BiTrash } from "react-icons/bi";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { IoMdArrowDropdown } from "react-icons/io";
-import VariantsModal from "../variantsmodal/VariantsModal";
+import dynamic from "next/dynamic";
+
+const VariantsModal = dynamic(() => import("../variantsmodal/VariantsModal"), {
+  ssr: false,
+  loading: () => null,
+});
 import {
   setCart,
   setCartProducts,

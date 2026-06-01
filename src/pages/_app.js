@@ -9,13 +9,14 @@ import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import SessionBootstrap from "@/components/SessionBootstrap";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createAppQueryClient } from "@/lib/queryClient";
 
-import { Nunito, Poppins } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 
 const nunito = Nunito({
   subsets: ['latin'],
-  weight: ['200','300','400','500','600','700','800','900'],
+  weight: ['400', '600', '700'],
   variable: '--font-family',
   display: 'swap',
 });
@@ -27,7 +28,7 @@ const nunito = Nunito({
 //   display: 'swap',
 // });
 
-const queryClient = new QueryClient();
+const queryClient = createAppQueryClient();
 
 function AppContent({ Component, pageProps }) {
   const router = useRouter();

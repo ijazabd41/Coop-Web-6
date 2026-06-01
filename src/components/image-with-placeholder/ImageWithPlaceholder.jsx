@@ -1,9 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import Image from "next/image";
 import ImagePlaceholder from "../../assets/image-placeholder/image.png";
 import { useSelector } from "react-redux";
 import { imageUrl } from "@/api/odoo/utils";
+
+const SEO_UNOPTIMIZED = process.env.NEXT_PUBLIC_SEO === "false";
 
 function resolveProductImageSrc(src) {
   if (!src || typeof src !== "string") return "";
@@ -38,6 +40,7 @@ const ImageWithPlaceholder = ({
   priority,
   width,
   height,
+  sizes = "(max-width: 768px) 50vw, 25vw",
 }) => {
   const setting = useSelector((state) => state.Setting?.setting);
   const resolvedSrc = resolveProductImageSrc(src);
@@ -53,16 +56,27 @@ const ImageWithPlaceholder = ({
     ImagePlaceholder;
 
   if (resolvedSrc && isUrlImageSrc(resolvedSrc) && !isError) {
+    const dimProps =
+      width && height
+        ? { width, height }
+        : { fill: true, sizes };
+
     return (
-      <img
+      <Image
         src={resolvedSrc}
         alt={alt || "Product image"}
         className={className}
         onClick={handleOnClick}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
+        priority={priority}
+        loading={priority ? undefined : "lazy"}
+        unoptimized={SEO_UNOPTIMIZED}
+        {...dimProps}
+        style={
+          width && height
+            ? { objectFit: "cover" }
+            : { objectFit: "cover", width: "100%", height: "100%" }
+        }
         onError={() => setIsError(true)}
-        style={{ width: "100%", height: "100%", objectFit: "cover" }}
       />
     );
   }
@@ -85,4 +99,4 @@ const ImageWithPlaceholder = ({
   );
 };
 
-export default ImageWithPlaceholder;
+export default memo(ImageWithPlaceholder);

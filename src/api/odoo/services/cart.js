@@ -1,4 +1,5 @@
 import { odooGet } from "../client";
+import { invalidateCache } from "../requestCache";
 import { store } from "@/redux/store";
 import {
   mapCartFromOrder,
@@ -280,6 +281,7 @@ export async function addToCart({
       }
     }
 
+    invalidateCache("/api/order");
     return getCart();
   } catch (e) {
     console.error("[Odoo] addToCart", e);
@@ -326,6 +328,7 @@ export async function removeFromCart({
         line_ids: `[${line.id}]`
       });
     }
+    invalidateCache("/api/order");
     return getCart();
   } catch (e) {
     console.error("[Odoo] removeFromCart", e);
@@ -348,6 +351,7 @@ export async function updateCartLineQty({ lineId, qty }) {
     product_uom_qty: qty,
   });
   if (!isOdooSuccess(payload)) return fail(payload?.message);
+  invalidateCache("/api/order");
   return getCart();
 }
 

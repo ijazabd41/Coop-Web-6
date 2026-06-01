@@ -2,8 +2,16 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaRegEye, FaShoppingBasket, FaStar } from "react-icons/fa";
 import { t } from "@/utils/translation";
-import VariantsModal from "../variantsmodal/VariantsModal";
-import ProductDetailModal from "../productdetailmodal/ProductDetailModal";
+import dynamic from "next/dynamic";
+
+const VariantsModal = dynamic(() => import("../variantsmodal/VariantsModal"), {
+  ssr: false,
+  loading: () => null,
+});
+const ProductDetailModal = dynamic(
+  () => import("../productdetailmodal/ProductDetailModal"),
+  { ssr: false, loading: () => null }
+);
 import { useDispatch, useSelector } from "react-redux";
 import {
   addGuestCartTotal,

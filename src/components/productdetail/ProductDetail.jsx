@@ -1,9 +1,9 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery,QueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import {
   FaLink,
@@ -94,7 +94,7 @@ const ProductDetail = () => {
   const [recentlyVisitedProduct, setRecentlyVisitedProduct] = useState([]);
 
   const ratingsCount = 10;
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
 
   const handleAddRecentlyViewedProduct = async (product) => {

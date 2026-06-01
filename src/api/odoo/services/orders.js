@@ -20,6 +20,7 @@ import {
   getOrCreateDraftOrder,
 } from "./cart";
 import { resolveOrderPartnerIds } from "./contacts";
+import { invalidateCache } from "../requestCache";
 
 function providerCode(p) {
   return Array.isArray(p?.code) ? p.code[0] : p?.code;
@@ -294,6 +295,7 @@ export async function updateOrderDelivery({
 
     const payload = await odooGet(`/api/order/${order.id}/update`, params);
     if (!isOdooSuccess(payload)) return fail(payload?.message);
+    invalidateCache("/api/order");
     return ok({ order_id: order.id });
   } catch (e) {
     return fail(e?.message);
@@ -410,6 +412,7 @@ export async function placeOrder({
     } catch (e) {}
 
     setDraftOrderId(null);
+    invalidateCache("/api/order");
     const freshOrder = await odooGetQuiet(`/api/order/${order.id}`);
     const orderRow = isOdooSuccess(freshOrder)
       ? odooDataList(freshOrder)[0] || order

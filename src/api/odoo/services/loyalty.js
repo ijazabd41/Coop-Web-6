@@ -2,6 +2,7 @@ import { odooGet } from "../client";
 import { getOdooSession } from "../session";
 import { fail, isOdooSuccess, m2oId, odooDataList, ok } from "../utils";
 import { getOrCreateDraftOrder } from "./cart";
+import { invalidateCache } from "../requestCache";
 
 function num(value, fallback = 0) {
   const n = Number(value);
@@ -155,6 +156,7 @@ export async function applyLoyaltyPoint({ orderId, rewardId, cartId }) {
           "failed_to_apply_loyalty"
       );
     }
+    invalidateCache("/api/order");
     return ok(payload.data || payload.response || payload);
   } catch (e) {
     return fail(e?.message);

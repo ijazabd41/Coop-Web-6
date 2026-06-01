@@ -9,7 +9,12 @@ import * as api from "@/api/apiRoutes";
 import { ToastContainer } from "react-toastify";
 import Loader from "../loader/Loader";
 import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
-import PushNotification from "../firebasenotification/PushNotification";
+import dynamic from "next/dynamic";
+
+const PushNotification = dynamic(
+  () => import("../firebasenotification/PushNotification"),
+  { ssr: false }
+);
 import LangFile from "@/utils/en.json";
 import {
   setAvailableLanguages,
@@ -36,11 +41,9 @@ const Layout = ({ children }) => {
   }, [language?.id]);
 
   useEffect(() => {
-    fetchSetting();
-    fetchPaymentSetting();
-   
-    fetchLanguage();
-  
+    Promise.all([fetchSetting(), fetchPaymentSetting(), fetchLanguage()]).catch(
+      () => {}
+    );
   }, []);
 
   useEffect(() => {

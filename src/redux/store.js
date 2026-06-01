@@ -7,6 +7,18 @@ import { thunk } from "redux-thunk";
 const persistConfig = {
     key: 'root',
     storage,
+    /** Transient UI state rehydrates from API; avoids stale checkout/filters. */
+    whitelist: [
+        'User',
+        'Language',
+        'Theme',
+        'City',
+        'Setting',
+        'Cart',
+        'Addresses',
+        'Favorite',
+        'Shop',
+    ],
 };
 
 
