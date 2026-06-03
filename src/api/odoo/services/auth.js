@@ -88,6 +88,10 @@ export async function login({ id, password, type, country_code }) {
       {
         access_token: auth.sessionId,
         user,
+        cd_mobile_role: auth.result?.cd_mobile_role || null,
+        cd_session_id: auth.sessionId,
+        cd_user_id: auth.result?.uid,
+        cd_user_name: auth.result?.name,
       },
       { message: "" }
     );

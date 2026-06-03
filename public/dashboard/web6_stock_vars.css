@@ -1,0 +1,8 @@
+/* Coop Discounts — Web6 stock manager (yellow accent on dark; load after web6_vars.css) */
+:root {
+  --primary: #F5C800;
+  --primary-lt: rgba(245, 200, 0, 0.15);
+  --nav-active-bg: rgba(245, 200, 0, 0.12);
+  --chart-1: #F5C800;
+  --chart-2: #FF3B42;
+}

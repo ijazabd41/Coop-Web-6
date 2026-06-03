@@ -27,6 +27,11 @@ const LogoutModal = ({ showLogout, setShowLogout }) => {
         try {
             const response = await api.logout();
             if (response.status == 1) {
+                localStorage.removeItem("role_code");
+                localStorage.removeItem("cd_role_code");
+                localStorage.removeItem("cd_session_id");
+                localStorage.removeItem("cd_user_id");
+                localStorage.removeItem("cd_user_name");
                 dispatch(clearAllFilter())
                 dispatch(logoutAuth())
                 dispatch(setJWTToken({ data: "" }))

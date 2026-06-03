@@ -33,8 +33,30 @@ function apiImagePatterns() {
   }
 }
 
+const dashboardTheme = process.env.NEXT_PUBLIC_DASHBOARD_THEME || 'web1'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
+  async redirects() {
+    return [
+      {
+        source: '/dashboard/owner',
+        destination: `/dashboard/${dashboardTheme}_owner_dashboard.html`,
+        permanent: false,
+      },
+      {
+        source: '/dashboard/delivery',
+        destination: `/dashboard/${dashboardTheme}_delivery_dashboard.html`,
+        permanent: false,
+      },
+      {
+        source: '/dashboard/stock',
+        destination: `/dashboard/${dashboardTheme}_stock_dashboard.html`,
+        permanent: false,
+      },
+    ]
+  },
 
   images: {
     formats: ['image/avif', 'image/webp'],

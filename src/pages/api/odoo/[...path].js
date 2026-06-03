@@ -80,6 +80,7 @@ export default async function handler(req, res) {
   const init = {
     method: req.method,
     headers,
+    cache: "no-store",
   };
 
   if (req.method !== "GET" && req.method !== "HEAD" && req.body !== undefined) {

@@ -93,10 +93,13 @@ export async function addTransaction({ orderId, transactionId, paymentMethod }) 
         `/api/order/${orderId}/order_transaction_mark_done`,
         {
           transaction_id: transactionId,
-          provider_id: providerId,
+          args: `[${providerId}]`,
         }
       );
       if (isOdooSuccess(payload)) {
+        try {
+          await odooGetQuiet(`/api/order/${orderId}/create_invoice`);
+        } catch (e) {}
         return ok({ order_id: orderId });
       }
     }

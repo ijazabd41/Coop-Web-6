@@ -274,7 +274,7 @@ const OrderSummaryCard = ({
         disabled={step !== 3 || checkoutLoading}
         onClick={handlePlaceOrder}
       >
-        {t("place_order")}
+        {checkoutLoading ? (t("processing") || "Processing...") : t("place_order")}
       </button>
       <div className="text-center rounded w-full hover:primaryBackColor hover:text-white p-2 mt-2">
         <Link href="/cart" className=" underline font-medium  w-full ">

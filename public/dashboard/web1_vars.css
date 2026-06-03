@@ -1,0 +1,30 @@
+/* Coop Discounts — Web1 light dashboard theme */
+:root {
+  --font:          'Nunito', 'Inter', sans-serif;
+  --bg:            #FFF8F8;
+  --sidebar-bg:    #FFFFFF;
+  --topbar-bg:     #FFFFFF;
+  --card-bg:       #FFFFFF;
+  --border:        #F2F2F2;
+  --primary:       #D61F26;
+  --primary-lt:    #FFE8E9;
+  --text:          #1A1A1A;
+  --text-mid:      #333333;
+  --text-soft:     #9E9E9E;
+  --green:         #2ECC71;
+  --green-lt:      #E8F8F0;
+  --red:           #A8151B;
+  --red-lt:        #FFE8E9;
+  --nav-hover:     #FFF8F8;
+  --nav-active-bg: #FFE8E9;
+  --card-shadow:   0 4px 16px rgba(214, 31, 38, 0.08);
+  --chart-1:       #D61F26;
+  --chart-2:       #F5C800;
+  --chart-3:       #2980B9;
+  --chart-4:       #2ECC71;
+  --chart-5:       #9E9E9E;
+}
+.c1 { color: var(--chart-1); }
+.c2 { color: var(--chart-2); }
+.c3 { color: var(--chart-3); }
+.c4 { color: var(--chart-4); }

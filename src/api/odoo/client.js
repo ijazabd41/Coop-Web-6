@@ -55,6 +55,10 @@ odooClient.interceptors.request.use((config) => {
   if (!config.headers["Content-Type"]) {
     config.headers["Content-Type"] = "application/json";
   }
+  // Prevent aggressive browser caching of GET requests
+  config.headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+  config.headers["Pragma"] = "no-cache";
+  config.headers["Expires"] = "0";
   return config;
 });
 

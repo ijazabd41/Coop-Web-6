@@ -311,55 +311,43 @@ export async function placeOrder({
   orderNote,
   order_type,
   promocodeId,
+  cartProducts,
+  deliveryTime,
 }) {
   try {
     const session = getOdooSession();
+    
+    // Step 1: Order Initialization
     const order = await getOrCreateDraftOrder();
     if (!order?.id) return fail("no_cart");
 
-    const lines = await fetchOrderLines(order.id);
-    if (!lines.length) return fail("empty_cart");
-
-    const orderPartner = m2oId(order.partner_id);
-    if (
-      session.partnerId &&
-      orderPartner &&
-      orderPartner !== session.partnerId
-    ) {
-      setDraftOrderId(null);
-      return fail(CHECKOUT_SESSION_MSG);
+    // Step 2: Cart Synchronization
+    const oldLines = await fetchOrderLines(order.id);
+    if (oldLines.length > 0) {
+      const lineIds = oldLines.map((l) => l.id);
+      await odooGet(`/api/order/${order.id}/remove_card_item`, {
+        line_ids: JSON.stringify(lineIds)
+      });
     }
 
-    const partners = resolveOrderPartnerIds({
-      shippingAddressId: addressId,
-      invoiceAddressId: invoiceAddressId,
-      partnerId: session?.partnerId,
-      uid: session?.uid,
-    });
-
-    let resolvedCarrierId = carrierId;
-    if (!resolvedCarrierId) {
-      try {
-        const { getDeliveryMethods } = await import("./delivery");
-        const methods = await getDeliveryMethods();
-        resolvedCarrierId = methods.data?.[0]?.carrier_id || methods.data?.[0]?.id;
-      } catch {
-        /* optional */
+    if (cartProducts && cartProducts.length > 0) {
+      for (const item of cartProducts) {
+        const payload = await odooGet("/api/order-line/create", {
+          order_id: order.id,
+          product_id: item.product_variant_id || item.product_id,
+        });
+        const lineId = payload.response?.[0]?.id || odooDataList(payload)[0]?.id || payload.data?.rec_id;
+        if (lineId && item.qty > 1) {
+          await odooGet(`/api/order-line/${lineId}/update`, {
+            product_uom_qty: item.qty,
+          });
+        }
       }
+    } else {
+      return fail("empty_cart");
     }
 
-    const updatePayload = await syncCheckoutOrder(order.id, partners, {
-      orderNote,
-      carrierId: resolvedCarrierId,
-    });
-    if (!isOdooSuccess(updatePayload)) {
-      if (isOdooAccessError(updatePayload?.message)) {
-        setDraftOrderId(null);
-        return fail(CHECKOUT_SESSION_MSG);
-      }
-      return fail(updatePayload?.message || "order_update_failed");
-    }
-
+    // Step 3: Rewards & Discounts
     if (promocodeId) {
       try {
         const { getLoyaltyCoupons, applyLoyaltyPoint } = await import("./loyalty");
@@ -378,58 +366,100 @@ export async function placeOrder({
       }
     }
 
-    const payPayload = await odooGet("/api/payment-provider", {
-      domain: "[('state','in',['enabled','test'])]",
+    // Step 4: Attach Delivery & Addresses
+    const partners = resolveOrderPartnerIds({
+      shippingAddressId: addressId,
+      invoiceAddressId: invoiceAddressId,
+      partnerId: session?.partnerId,
+      uid: session?.uid,
     });
-    const providers = odooDataList(payPayload);
-    const provider = resolveProvider(providers, paymentMethod);
-    const providerId = provider?.id;
+    
+    let resolvedCarrierId = carrierId;
+    if (!resolvedCarrierId) {
+      try {
+        const { getDeliveryMethods } = await import("./delivery");
+        const methods = await getDeliveryMethods();
+        resolvedCarrierId = methods.data?.[0]?.carrier_id || methods.data?.[0]?.id;
+      } catch {}
+    }
 
+    const updateParams = {
+      origin: "COOPDISCOUNT-WEB",
+      partner_shipping_id: partners.partner_shipping_id,
+      partner_invoice_id: partners.partner_invoice_id,
+    };
+    if (resolvedCarrierId) updateParams.carrier_id = resolvedCarrierId;
+    
+    await odooGet(`/api/order/${order.id}/update`, updateParams);
+
+    // Step 5: Attach Final Notes & Payment Method String
+    const finalNote = `[DELIVERY] ${deliveryTime || ""} | Payment Method: ${paymentMethod} | ${orderNote || ""}`.trim();
+    await odooGet(`/api/order/${order.id}/update`, { note: finalNote });
+
+    // Block/pause based on payment provider type
     const method = String(paymentMethod || "").toUpperCase();
-    const requiresImmediateConfirm =
-      method === "COD" ||
-      method === "WALLET" ||
-      method === "CASH" ||
-      method === "TEST PAYMENT";
+    const isCOD = method === "COD" || method === "CASH";
+    const isSynchronous = isCOD || method === "WALLET" || method === "TEST PAYMENT";
 
-    const paid = await finalizePayment(
-      order.id,
-      providerId,
-      paymentMethod,
-      providers
-    );
+    if (isCOD) {
+      // According to documentation, COD doesn't have a gateway callback.
+      // We skip the transaction API entirely and confirm the order directly.
+      await odooGetQuiet(`/api/order/${order.id}/update`, { state: "sale" });
+    } else {
+      // Step 6: Initialize Payment Transaction for Gateways & Wallets
+      const payPayload = await odooGet("/api/payment-provider", {
+        domain: "[('state','in',['enabled','test'])]",
+      });
+      const providers = odooDataList(payPayload);
+      const provider = resolveProvider(providers, paymentMethod);
+      let providerId = provider?.id;
 
-    if (requiresImmediateConfirm && !paid.ok) {
-      return fail(paid.message);
+      if (!providerId) return fail("no_payment_provider");
+
+      if (isSynchronous) {
+        const demo = providers.find((p) => providerCode(p) === "demo" || String(p.name).toLowerCase().includes("demo"));
+        if (demo?.id) {
+          providerId = demo.id;
+        }
+      }
+
+      let txPayload = await odooGetQuiet(`/api/order/${order.id}/get_or_create_transaction`, {
+        args: `[${providerId}]`
+      });
+      let transactionId = extractTransactionId(txPayload);
+
+      if (!isSynchronous) {
+        // Pause here and return tx details to frontend for external providers
+        setDraftOrderId(null);
+        invalidateCache("/api/order");
+        return ok({
+          order_id: order.id,
+          transaction_id: transactionId,
+          provider_id: providerId,
+          redirectUrl: txPayload?.response?.landing_route || txPayload?.response?.redirectUrl || null,
+          client_secret: txPayload?.response?.client_secret || txPayload?.response?.[0]?.client_secret || null,
+          id: transactionId
+        });
+      }
+
+      // Step 7: Confirm Order (Mark Done) for Synchronous Gateways/Wallets
+      if (transactionId) {
+        await odooGetQuiet(`/api/order/${order.id}/order_transaction_mark_done`, {
+          transaction_id: transactionId,
+          args: `[${providerId}]`,
+        });
+      }
     }
 
-    if (!paid.ok) {
-      await odooGetQuiet(`/api/order/${order.id}/update`, { state: "sent" });
-    }
-
+    // Step 8: Generate Invoice
     try {
       await odooGetQuiet(`/api/order/${order.id}/create_invoice`);
     } catch (e) {}
 
     setDraftOrderId(null);
     invalidateCache("/api/order");
-    const freshOrder = await odooGetQuiet(`/api/order/${order.id}`);
-    const orderRow = isOdooSuccess(freshOrder)
-      ? odooDataList(freshOrder)[0] || order
-      : order;
-    let freshLines = lines;
-    try {
-      freshLines = await fetchOrderLines(order.id);
-    } catch {
-      /* keep lines from before confirm */
-    }
-    const cart = mapCartFromOrder(orderRow, freshLines);
 
-    return ok({
-      order_id: order.id,
-      orders_id: orderRow.name || order.name,
-      ...cart,
-    });
+    return ok({ order_id: order.id });
   } catch (e) {
     console.error("[Odoo] placeOrder", e);
     const raw = e?.message || e?.odooPayload?.message || "place_order_failed";

@@ -340,6 +340,17 @@ export function mapPartnerToAddress(partner, index = 0) {
   };
 }
 
+function extractPaymentMethod(order) {
+  if (order.payment_method) return order.payment_method;
+  if (order.note) {
+    const match = String(order.note).match(/Payment Method:\s*([^|]+)/i);
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+  }
+  return "COD"; // fallback
+}
+
 export function mapOrder(order, shippingPartner = null) {
   const odooState = Array.isArray(order.state) ? order.state[0] : order.state;
   const legacyActiveStatus = odooStateToLegacyActiveStatus(odooState);
@@ -367,7 +378,7 @@ export function mapOrder(order, shippingPartner = null) {
     remaining_final: num(order.amount_total),
     remaining_total: num(order.amount_total),
     delivery_charge: num(order.amount_delivery),
-    payment_method: order.payment_method || "COD",
+    payment_method: extractPaymentMethod(order),
     items,
     order_items: items,
     address: orderAddress,

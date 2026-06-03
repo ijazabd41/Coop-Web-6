@@ -109,6 +109,10 @@ const Checkout = () => {
       const response = await api.getCart();
       const data = cartDataFromResponse(response);
       if (data) {
+        if (!data.cart || data.cart.length === 0) {
+          toast.error(t("your_cart_is_empty") || "Your cart is empty. Redirecting to cart...");
+          return router.push('/cart');
+        }
         dispatch(setCart({ data }));
         dispatch(setCartProducts({ data: data.cart || [] }));
         dispatch(setCartSubTotal({ data: data.sub_total }));
@@ -152,6 +156,7 @@ const Checkout = () => {
   }, [cart?.cart, checkout?.address, cart?.cartProducts]);
 
   useEffect(() => {
+    if (checkoutLoading || paymentLoading) return;
     handleFetchCheckout();
   }, [
     cart?.cart,
@@ -160,6 +165,8 @@ const Checkout = () => {
     cart?.cartProducts,
     checkout?.orderType,
     checkout?.timeSlot,
+    checkoutLoading,
+    paymentLoading,
   ]);
 
   const getCurrentUser = async () => {
@@ -486,15 +493,20 @@ const Checkout = () => {
       });
       rzpay.on("payment.failed", (response) => {
         api.deleteOrder({ orderId: order_id });
+        toast.error(t("payment_failed") || "Payment failed. Please try again.");
+        setCheckoutLoading(false);
       });
       rzpay.open();
     } catch (error) {
       console.error("Error initializing Razorpay:", error);
+      setCheckoutLoading(false);
     }
   };
 
   const handleRazorpayCancel = async (order_id) => {
     await api.deleteOrder({ orderId: order_id });
+    toast.error(t("payment_cancelled") || "Payment cancelled. Order not placed.");
+    setCheckoutLoading(false);
   };
 
   const handlePayStackPayment = async (
@@ -516,6 +528,8 @@ const Checkout = () => {
         label: setting?.setting && setting?.setting?.support_email,
         onClose: function () {
           api.deleteOrder({ orderId: orderId });
+          toast.error(t("payment_cancelled") || "Payment cancelled. Order not placed.");
+          setCheckoutLoading(false);
           // setWalletAmount(user.user.balance);
           // dispatch(setWallet({ data: 0 }));
         },
@@ -545,6 +559,7 @@ const Checkout = () => {
       handler.openIframe();
     } catch (error) {
       console.log("Paytabs Error", error);
+      setCheckoutLoading(false);
     }
   };
 
@@ -578,14 +593,20 @@ const Checkout = () => {
       ) {
         toast.error(t("please_select_address"));
         return;
+      } else if (
+        checkout?.timeSlot == null &&
+        checkout?.orderType == "doorstep" &&
+        timeSlotsData?.time_slots_is_enabled == "true"
+      ) {
+        toast.error(t("please_select_time_slot"));
+        return;
       } else {
         setCheckoutLoading(true);
         const response = await api.placeOrder({
           productVariantId: cart?.checkout?.product_variant_id,
           quantity: cart?.checkout?.quantity,
           total: cart?.checkout?.sub_total,
-          deliveryCharge:
-            cart?.checkout?.delivery_charge?.total_delivery_charge,
+          deliveryCharge: cart?.checkout?.delivery_charge?.total_delivery_charge,
           finalTotal: checkout?.checkoutTotal,
           walletUsed: checkout?.isWalletChecked,
           walletBalance: checkout?.usedWalletBalance,
@@ -596,33 +617,53 @@ const Checkout = () => {
           promocodeId: cart?.promo_code?.promo_code_id,
           status: status,
           order_type: checkout?.orderType,
+          cartProducts: cart?.cartProducts,
         });
         if (response?.status == 1) {
           dispatch(setOrderNote(""));
-          if (
-            checkout?.selectedPaymentMethod === "COD" ||
-            checkout?.selectedPaymentMethod === "wallet"
-          ) {
-            setCheckoutLoading(false);
-            await handleInitiateTransaction();
-          } else if (checkout?.selectedPaymentMethod === "Test Payment") {
-            setOrderId(response?.data?.order_id);
-            setCheckoutLoading(false);
+          const method = String(checkout?.selectedPaymentMethod || "").toUpperCase();
+          const isSynchronous = method === "COD" || method === "WALLET" || method === "TEST PAYMENT" || method === "CASH";
+          setOrderId(response?.data?.order_id);
+
+          if (isSynchronous) {
             try {
               await api.deleteCart();
-            } catch (e) {
-              console.log(e);
-            }
+            } catch (e) {}
             return router.push(
-              `/web-payment-status?status=success&type=order&payment_method=test_payment&order_id=${response?.data?.order_id}`
+              `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}&order_id=${response?.data?.order_id}`
             );
           } else {
-            setOrderId(response?.data?.order_id);
-            setCheckoutLoading(false);
-            await handleInitiateTransaction(
-              response?.data?.order_id,
-              capilizePaymeneMethod,
-            );
+            const txResponseData = response?.data;
+            if (checkout?.selectedPaymentMethod == "paystack") {
+              handlePayStackPayment(
+                response?.data?.order_id,
+                checkout?.checkoutTotal,
+                capilizePaymeneMethod
+              );
+            } else if (checkout?.selectedPaymentMethod == "phonepe") {
+              dispatch(setPhonePeCheckoutDetails(txResponseData));
+              router.push(txResponseData?.redirectUrl);
+            } else if (checkout?.selectedPaymentMethod == "razorpay") {
+              handleRozarpayPayment(
+                response?.data?.order_id,
+                txResponseData?.transaction_id,
+                checkout?.checkoutTotal,
+                capilizePaymeneMethod
+              );
+            } else if (checkout?.selectedPaymentMethod == "stripe") {
+              setStripeOrderId(response?.data?.order_id);
+              setStripeClientSecret(txResponseData?.client_secret);
+              setStripeTransactionId(txResponseData?.transaction_id || txResponseData?.id);
+              setShowStripe(true);
+            } else {
+              dispatch(clearCartPromo());
+              const redirectUrl = txResponseData?.redirectUrl;
+              if (redirectUrl) {
+                router.push(redirectUrl);
+              } else {
+                console.error("Unsupported payment method:", checkout?.selectedPaymentMethod);
+              }
+            }
           }
         } else {
           setCheckoutLoading(false);
@@ -632,114 +673,7 @@ const Checkout = () => {
     } catch (error) {
       setCheckoutLoading(false);
       console.log("Error", error);
-    }
-  };
-
-  const handleInitiateTestTransaction = async (currentOrderID) => {
-    try {
-      setPaymentLoading(true);
-      const initTx = await api.initiateTestTransaction({ orderId: currentOrderID });
-      if (initTx?.status === 1) {
-        const markTx = await api.markTestTransactionDone({
-          orderId: currentOrderID,
-          transactionId: initTx.data.transaction_id
-        });
-        if (markTx?.status === 1) {
-          try {
-            await api.downloadInvoice({ orderId: currentOrderID, skipCreate: true });
-          } catch(e) {
-            console.log("Invoice generation skipped or failed", e);
-          }
-          await api.deleteCart();
-          setPaymentLoading(false);
-          return router.push(
-            `/web-payment-status?status=success&type=order&payment_method=test_payment&order_id=${currentOrderID}`
-          );
-        } else {
-          toast.error(markTx?.message || "Test payment failed at mark_done");
-        }
-      } else {
-        toast.error(initTx?.message || "Test payment failed at create");
-      }
-      setPaymentLoading(false);
-    } catch (error) {
-      setPaymentLoading(false);
-      console.log("Error", error);
-    }
-  };
-
-  const handleInitiateTransaction = async (
-    currentOrderID,
-    capilizePaymeneMethod,
-  ) => {
-    try {
-      if (checkout?.selectedPaymentMethod == "COD") {
-        // redirect after successfull COD order
-        return router.push(
-          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`,
-        );
-      } else if (checkout?.selectedPaymentMethod == "wallet") {
-        // redirect after successfull wallet order
-        return router.push(
-          `/web-payment-status?status=success&type=order&payment_method=${checkout?.selectedPaymentMethod}`,
-        );
-      } else if (checkout?.selectedPaymentMethod == "paystack") {
-        handlePayStackPayment(
-          currentOrderID,
-          checkout?.checkoutTotal,
-          capilizePaymeneMethod,
-        );
-      } else {
-        const response = await api.initiateTrasaction({
-          orderId: currentOrderID,
-          paymentMethod: capilizePaymeneMethod,
-          type: "order",
-        });
-        if (response.status == 1) {
-          if (checkout?.selectedPaymentMethod == "phonepe") {
-            dispatch(setPhonePeCheckoutDetails(response?.data));
-          }
-          if (checkout?.selectedPaymentMethod == "razorpay") {
-            handleRozarpayPayment(
-              currentOrderID,
-              response?.data?.transaction_id,
-              checkout?.checkoutTotal,
-              capilizePaymeneMethod,
-            );
-          } else if (checkout?.selectedPaymentMethod == "stripe") {
-            setStripeOrderId(currentOrderID);
-            setStripeClientSecret(response?.data?.client_secret);
-            setStripeTransactionId(response?.data?.id);
-            setShowStripe(true);
-          } else {
-            dispatch(clearCartPromo());
-            //  payment methods redirect urls
-            const paymentUrls = {
-              cashfree: response?.data?.redirectUrl,
-              phonepe: response?.data?.redirectUrl,
-              paytabs: response?.data?.redirectUrl,
-              paypal: response?.data?.paypal_redirect_url,
-              midtrans: response?.data?.snapUrl,
-            };
-            // Select specific paymentUrls
-            const redirectUrl = paymentUrls[checkout?.selectedPaymentMethod];
-            if (redirectUrl) {
-              router.push(redirectUrl);
-            } else {
-              console.error(
-                "Unsupported payment method:",
-                selectedPaymentMethod,
-              );
-            }
-          }
-        } else {
-          // setIsOrderPlaced(false)
-          await api.deleteOrder({ orderId: orderId });
-          toast.error(response?.message);
-        }
-      }
-    } catch (error) {
-      console.log(("Error", error));
+      toast.error(t("something_went_wrong") || "Something went wrong. Please try again.");
     }
   };
 

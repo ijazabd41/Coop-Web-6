@@ -1,0 +1,42 @@
+/* Coop Discounts — Web6 dark dashboard theme */
+:root {
+  --font:          'Nunito', 'Poppins', sans-serif;
+  --bg:            #141414;
+  --sidebar-bg:    #1A1A1A;
+  --topbar-bg:     #1A1A1A;
+  --card-bg:       #202934;
+  --border:        rgba(255,255,255,.08);
+  --primary:       #FF3B42;
+  --primary-lt:    rgba(214, 31, 38, 0.18);
+  --text:          #FFFFFF;
+  --text-mid:      #9E9E9E;
+  --text-soft:     #666666;
+  --green:         #2ECC71;
+  --green-lt:      rgba(46, 204, 113, 0.15);
+  --red:           #FF3B42;
+  --red-lt:        rgba(214, 31, 38, 0.2);
+  --nav-hover:     rgba(255,255,255,.04);
+  --nav-active-bg: rgba(214, 31, 38, 0.12);
+  --card-shadow:   0 4px 20px rgba(0, 0, 0, 0.35);
+  --chart-1:       #FF3B42;
+  --chart-2:       #F5C800;
+  --chart-3:       #2980B9;
+  --chart-4:       #2ECC71;
+  --chart-5:       #4A5568;
+}
+.data-table th { color: #666666; border-bottom-color: rgba(255,255,255,.08); }
+.data-table td { border-bottom-color: rgba(255,255,255,.05); }
+.data-table tr:hover td { background: rgba(255,255,255,.03); }
+.stock-item, .delivery-row { border-bottom-color: rgba(255,255,255,.06); }
+.pill-blue   { background: rgba(41, 128, 185, 0.2); color: #5DADE2; }
+.pill-amber  { background: rgba(245, 200, 0, 0.2); color: #F5C800; }
+.pill-green  { background: rgba(46, 204, 113, 0.15); color: #2ECC71; }
+.pill-gray   { background: rgba(255,255,255,.06); color: #9E9E9E; }
+select { background: var(--card-bg) !important; color: var(--text) !important; }
+.progress-wrap { background: rgba(255,255,255,.08); }
+input[type="number"], input[type="text"] {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: rgba(255,255,255,.15) !important;
+}
+input::placeholder { color: var(--text-soft) !important; }

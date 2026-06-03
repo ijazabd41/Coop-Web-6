@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FiX, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff } from "react-icons/fi";
 import * as api from "@/api/apiRoutes";
 import { loginSuccess } from "@/redux/slices/userSlice";
+import { redirectToRoleDashboard } from "@/lib/dashboardRedirect";
 
 /**
  * Premium login/signup modal that appears when guests try to:
@@ -78,6 +79,13 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
             user: res.data.user,
           })
         );
+        if (res.data?.cd_mobile_role?.role_code) {
+          localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
+        }
+        if (redirectToRoleDashboard(res.data)) {
+          onClose();
+          return;
+        }
         toast.success("Welcome back!");
         onSuccess?.(res.data.user);
         onClose();

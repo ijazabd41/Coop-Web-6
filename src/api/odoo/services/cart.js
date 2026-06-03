@@ -110,9 +110,14 @@ export async function getOrCreateDraftOrder() {
     }
   }
 
-  const created = await odooGet("/api/order/create_order", {
+  const createParams = {
     sources: "COOPDISCOUNT-WEB",
-  });
+    website_id: process.env.NEXT_PUBLIC_WEBSITE_ID || 1,
+  };
+  if (partnerId) {
+    createParams.partner_id = partnerId;
+  }
+  const created = await odooGet("/api/order/create_order", createParams);
   if (!isOdooSuccess(created)) {
     throw new Error(created?.message || "create_order_failed");
   }

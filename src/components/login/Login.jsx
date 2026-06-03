@@ -47,6 +47,7 @@ import Register from "../register/Register";
 import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
 import Link from "next/link";
+import { redirectToRoleDashboard } from "@/lib/dashboardRedirect";
 
 export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
@@ -429,6 +430,19 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             await addToBulkCart(res?.data.access_token);
           }
           await fetchCart();
+          if (res?.data?.cd_mobile_role?.role_code) {
+            localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
+            localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+          }
+          if (res?.data?.cd_session_id) {
+            localStorage.setItem("cd_session_id", res.data.cd_session_id);
+            localStorage.setItem("cd_user_id", String(res.data.cd_user_id || ""));
+            localStorage.setItem("cd_user_name", res.data.cd_user_name || "");
+          }
+          if (redirectToRoleDashboard(res?.data)) {
+            setLoading(false);
+            return;
+          }
           setError("");
           setOtp("");
           setPhoneNumber("");
@@ -569,6 +583,19 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
             await addToBulkCart(res?.data.access_token);
           }
           await fetchCart();
+          if (res?.data?.cd_mobile_role?.role_code) {
+            localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
+            localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+          }
+          if (res?.data?.cd_session_id) {
+            localStorage.setItem("cd_session_id", res.data.cd_session_id);
+            localStorage.setItem("cd_user_id", String(res.data.cd_user_id || ""));
+            localStorage.setItem("cd_user_name", res.data.cd_user_name || "");
+          }
+          if (redirectToRoleDashboard(res?.data)) {
+            setLoading(false);
+            return;
+          }
           setError("");
           setOtp("");
           setPhoneNumber("");
