@@ -72,11 +72,11 @@ const ForgetPasswordModal = ({
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await api.forgotPasswordOtp({ email: email });
+      const res = await api.forgotPassword({ email: email });
       if (res.status == 1) {
-        setStage(1);
-        toast.success(t("verification_mail_sent_successfully"));
+        toast.success(res.message || t("verification_mail_sent_successfully"));
         setLoading(false);
+        handleShowModal(); // Close modal and reset state
       } else {
         if (res.message == "email_is_not_registered") {
           toast.error(t("email_is_not_registered"));

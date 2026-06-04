@@ -239,8 +239,19 @@ export async function forgotPasswordOTP() {
   return fail("use_odoo_portal_reset");
 }
 
-export async function forgotPassword() {
-  return fail("use_odoo_portal_reset");
+export async function forgotPassword({ email }) {
+  try {
+    const payload = await odooGet("/api/contacts/forgot_password_by_mail", {
+      login: email,
+    });
+    if (!isOdooSuccess(payload)) {
+      return fail(payload?.message || "forgot_password_failed");
+    }
+    return ok(null, { message: "Password reset link sent to your email" });
+  } catch (e) {
+    console.error("[Odoo] forgotPassword", e);
+    return fail(e?.message || "forgot_password_failed");
+  }
 }
 
 export async function deleteAccount() {
