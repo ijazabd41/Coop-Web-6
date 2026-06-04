@@ -1,4 +1,6 @@
-export default function DeliveryDashboardPage() {
+import withDashboardAuth from "@/checkauth/withDashboardAuth";
+
+function DeliveryDashboardPage() {
   return (
     <iframe
       src="/dashboard/web6_delivery_dashboard.html"
@@ -12,4 +14,6 @@ export default function DeliveryDashboardPage() {
     />
   );
 }
+
+export default withDashboardAuth(DeliveryDashboardPage);
 

@@ -9,7 +9,7 @@
 //   Module:     /api/dashboard/full        (needs module installed)
 
 const CdApi = (() => {
-  const BASE = 'http://cooperp.freeddns.org:8076';
+  const BASE = '/api/odoo';
   const DB   = 'staging-apr17';
 
   // ── Auth helpers ──────────────────────────────────────────
@@ -20,11 +20,11 @@ const CdApi = (() => {
 
   const headers = () => ({
     'Content-Type': 'application/json',
-    'Cookie': `session_id=${session()}`,
+    'X-Odoo-Session': session(),
   });
 
   const _get = async (path, params = {}) => {
-    const url = new URL(BASE + path);
+    const url = new URL(BASE + path, window.location.origin);
     url.searchParams.set('by_AJR', '1');
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
     try {
@@ -34,14 +34,22 @@ const CdApi = (() => {
         return { error: 'not_available',
                  message: 'Module not installed or session expired. Run login first.' };
       }
-      return JSON.parse(text);
-    } catch (e) { return { error: e.message }; }
+      const data = JSON.parse(text);
+      if (data.error && typeof data.error === 'object') {
+        return { error: 'server_error', message: data.error.data?.message || data.error.message || 'Server Error' };
+      }
+      if (data.success === 0) {
+        return { error: 'api_error', message: data.message || 'API Error' };
+      }
+      return data;
+    } catch (e) { return { error: 'exception', message: e.message }; }
   };
 
   // ── LOGIN ─────────────────────────────────────────────────
   const login = async (loginEmail, password) => {
+    const url = new URL(BASE + '/web/session/authenticate', window.location.origin);
     try {
-      const res  = await fetch(`${BASE}/web/session/authenticate`, {
+      const res  = await fetch(url, {
         method:      'POST',
         headers:     { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -70,8 +78,29 @@ const CdApi = (() => {
     window.location.href = 'login.html';
   };
 
-  const isLoggedIn = () => !!session();
-  const requireLogin = () => { if (!isLoggedIn()) window.location.href = 'login.html'; };
+  const isLoggedIn = () => !!session() || !!localStorage.getItem('token');
+  const requireLogin = () => {
+    if (!isLoggedIn()) {
+      window.location.href = '/';
+      return;
+    }
+    
+    const r = roleCode() || localStorage.getItem('role_code') || '';
+    const path = window.location.pathname.toLowerCase();
+    
+    let allowed = true;
+    if (path.includes('owner')) {
+      allowed = (r === 'company_owner' || r === 'store_manager');
+    } else if (path.includes('delivery')) {
+      allowed = (r === 'delivery_manager' || r === 'delivery_boy');
+    } else if (path.includes('stock')) {
+      allowed = (r === 'stock_manager');
+    }
+    
+    if (!allowed) {
+      window.location.href = '/';
+    }
+  };
 
   const fmtK = (v) =>
     v >= 1000000 ? (v/1000000).toFixed(1)+'M'

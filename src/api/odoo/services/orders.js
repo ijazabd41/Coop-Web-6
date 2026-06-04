@@ -311,6 +311,8 @@ export async function placeOrder({
   orderNote,
   order_type,
   promocodeId,
+  rewardId,
+  loyaltyCartId,
   cartProducts,
   deliveryTime,
 }) {
@@ -348,7 +350,18 @@ export async function placeOrder({
     }
 
     // Step 3: Rewards & Discounts
-    if (promocodeId) {
+    if (rewardId && loyaltyCartId) {
+      try {
+        const { applyLoyaltyPoint } = await import("./loyalty");
+        await applyLoyaltyPoint({
+          orderId: order.id,
+          rewardId: rewardId,
+          cartId: loyaltyCartId,
+        });
+      } catch (loyaltyErr) {
+        console.warn("[Odoo] loyalty apply on placeOrder", loyaltyErr);
+      }
+    } else if (promocodeId) {
       try {
         const { getLoyaltyCoupons, applyLoyaltyPoint } = await import("./loyalty");
         const cardId = Number(promocodeId);

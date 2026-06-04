@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   currentStep: 1,
   address: null,
+  billingAddress: null,
+  sameAsBilling: true,
   selectedDate: null,
   timeSlot: null,
   formattedDate: null,
@@ -24,6 +26,12 @@ export const checkoutReducer = createSlice({
     },
     setAddress: (state, action) => {
       state.address = action.payload.data;
+    },
+    setBillingAddress: (state, action) => {
+      state.billingAddress = action.payload.data;
+    },
+    setSameAsBilling: (state, action) => {
+      state.sameAsBilling = action.payload.data;
     },
     setSelectedDate: (state, action) => {
       state.selectedDate = action.payload.data;
@@ -60,6 +68,8 @@ export const checkoutReducer = createSlice({
       Object.assign(state, {
         currentStep: 1,
         address: null,
+        billingAddress: null,
+        sameAsBilling: true,
         selectedDate: null,
         timeSlot: null,
         formattedDate: null,
@@ -89,6 +99,8 @@ export const {
   setUserWalletBalance,
   setPhonePeCheckoutDetails,
   setOrderType,
+  setBillingAddress,
+  setSameAsBilling,
 } = checkoutReducer.actions;
 
 export default checkoutReducer.reducer;

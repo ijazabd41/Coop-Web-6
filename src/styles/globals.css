@@ -4,7 +4,7 @@
 
 :root {
   /* COOP Discounts brand palette (coop-brand-colors.html) */
-  --coop-red: #EA2629;
+  --coop-red: #D61F26;
   --coop-red-dark: #A8151B;
   --coop-red-light: #FF3B42;
   --coop-yellow: #F5C800;
@@ -18,7 +18,7 @@
   --coop-black: #1A1A1A;
   --coop-success: #2ECC71;
   --coop-warning: #F5C800;
-  --coop-error: #EA2629;
+  --coop-error: #D61F26;
   --coop-info: #2980B9;
 
   --body-background-color: var(--coop-off-white);
@@ -28,7 +28,7 @@
   --font-color: var(--coop-black);
   --light-primary-color: #FFE8E9;
   --footer-background-color: var(--coop-black);
-  --icons-background-color: #ea26291f;
+  --icons-background-color: #d61f261f;
   --button-background-color: var(--coop-light-gray);
   --accent-button-bg: var(--coop-black);
   --font-family: "Nunito", sans-serif;
@@ -76,7 +76,7 @@
   --brand-bg-color: #40454A;
   --secondary-text-color: rgba(255, 255, 255, 0.66);
   --short-description-text-color: #fff;
-  --icons-background-color: #ea262930;
+  --icons-background-color: #d61f2630;
   --order-status-payment-pending-color: var(--coop-warning);
   --order-status-in-process-color: var(--coop-warning);
   --order-status-processed: #805AD5;
@@ -218,7 +218,7 @@
   }
 
   .errorTintBg {
-    background-color: #ea26291f;
+    background-color: #d61f261f;
   }
 
   .successColor {

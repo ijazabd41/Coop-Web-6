@@ -22,6 +22,7 @@ const OrderDetail = () => {
   const [orderDetail, setOrderDetail] = useState([]);
   const [deliveryAddress, setDeliveryAddress] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
 
   useEffect(() => {
     if (orderid) {
@@ -87,6 +88,7 @@ const OrderDetail = () => {
   };
 
   const handleDownloadInvoice = async () => {
+    setInvoiceLoading(true);
     try {
       const response = await api.downloadInvoice({ orderId: orderid });
       if (response.status === 1 && response.data?.url) {
@@ -100,6 +102,8 @@ const OrderDetail = () => {
         error?.request?.statusText ||
         error?.message;
       toast.error(message || t("something_went_wrong"));
+    } finally {
+      setInvoiceLoading(false);
     }
   };
 
@@ -161,10 +165,23 @@ const OrderDetail = () => {
                 {/* {Number(orderDetail?.active_status) === 6 ? ( */}
                 <div className="md:border-l-2">
                   <button
-                    className="flex items-center gap-2 accentButtonBg p-2 md:ml-2 rounded-md text-white"
+                    className="flex items-center gap-2 accentButtonBg p-2 md:ml-2 rounded-md text-white disabled:opacity-50"
                     onClick={handleDownloadInvoice}
+                    disabled={invoiceLoading}
                   >
-                    <MdOutlineFileDownload size={22} /> {t("GetInvoice")}
+                    {invoiceLoading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {t("loading") || "Loading..."}
+                      </>
+                    ) : (
+                      <>
+                        <MdOutlineFileDownload size={22} /> {t("GetInvoice")}
+                      </>
+                    )}
                   </button>
                 </div>
                 {/* ) : null} */}

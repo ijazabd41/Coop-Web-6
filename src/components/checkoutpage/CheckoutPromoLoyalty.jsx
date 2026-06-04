@@ -22,19 +22,23 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
     fetchCards();
   }, []);
 
+  const isLoyaltyCode = (code) => cards.some((c) => c.promo_code === code);
+  const isLoyaltyApplied = cart?.promo_code?.is_loyalty_point || (cart?.promo_code?.promo_code && isLoyaltyCode(cart.promo_code.promo_code));
+  const isCouponApplied = cart?.promo_code && !isLoyaltyApplied;
+
   useEffect(() => {
-    if (cart?.promo_code?.promo_code && !cart.promo_code.is_loyalty_point) {
+    if (cart?.promo_code?.promo_code && !isLoyaltyApplied) {
       setCodeInput(cart.promo_code.promo_code);
       setPreview({
         points: cart.promo_code.points,
         discount: cart.promo_code.discount,
         promo_code: cart.promo_code.promo_code,
       });
-    } else if (!cart?.promo_code) {
+    } else {
       setCodeInput("");
       setPreview(null);
     }
-  }, [cart?.promo_code]);
+  }, [cart?.promo_code, isLoyaltyApplied]);
 
   const fetchCards = async () => {
     try {
@@ -148,8 +152,7 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
     setSelectedCardId("");
   };
 
-  const isLoyaltyApplied = cart?.promo_code?.is_loyalty_point;
-  const isCouponApplied = cart?.promo_code && !cart?.promo_code?.is_loyalty_point;
+  // isLoyaltyApplied and isCouponApplied are defined at the top of the component
 
   return (
     <div className="my-4">

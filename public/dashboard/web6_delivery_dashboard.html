@@ -201,16 +201,24 @@ let currentRole='manager', delOffset=0, ruOffset=0, allDels=[], drivers=[], otpD
 
 window.addEventListener('DOMContentLoaded',()=>{
   CdApi.requireLogin();
-  const n=CdApi.userName(), role=CdApi.roleCode();
+  const n=CdApi.userName() || localStorage.getItem('userName') || '';
+  const role=CdApi.roleCode() || localStorage.getItem('role_code') || '';
   document.getElementById('sbname').textContent=n;
   document.getElementById('sbav').textContent=n?n[0].toUpperCase():'D';
   document.getElementById('sbrole').textContent=role.replace(/_/g,' ');
-  if(role==='delivery_boy'||role==='delivery_manager'&&false) setRole('rider',document.querySelector('.rt-btn:last-child'));
+  
+  if (role === 'delivery_boy') {
+    document.querySelector('.role-toggle').style.display = 'none';
+    setRole('rider', document.querySelector('.rt-btn:last-child'));
+  } else if (role === 'delivery_manager' || role === 'store_manager' || role === 'company_owner') {
+    setRole('manager', document.querySelector('.rt-btn.active'));
+  }
+  
   statusChart=new Chart(document.getElementById('c-status'),{
     type:'doughnut',
     data:{labels:['Unassigned','In Transit','Delivered','Cancelled'],
-      datasets:[{data:[0,0,0,0],backgroundColor:['#FCA5A5','#93C5FD','#86EFAC','#D1D5DB'],borderWidth:0}]},
-    options:{cutout:'60%',plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:6}}}}
+      datasets:[{data:[0,0,0,0],backgroundColor:['#FCA5A5','#3B82F6','#22C55E','#4B5563'],borderWidth:0}]},
+    options:{cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94A3B8',font:{size:10},padding:6}}}}
   });
   loadStats(); loadCurrentView();
 });

@@ -14,7 +14,7 @@ import {
   defaultCacheTtl,
 } from "./requestCache";
 
-const odooClient = axios.create({
+export const odooClient = axios.create({
   baseURL: ODOO_CLIENT_BASE_URL,
   timeout: 30000,
   withCredentials: true,
@@ -130,9 +130,10 @@ export async function odooGetQuiet(path, params = {}) {
   }
 }
 
-export async function odooPost(path, body = null, params = {}) {
+export async function odooPost(path, body = null, params = {}, options = {}) {
   const { data } = await odooClient.post(path, body, {
     params: withApiParams(params),
+    ...options
   });
   return unwrapOdooPayload(data);
 }

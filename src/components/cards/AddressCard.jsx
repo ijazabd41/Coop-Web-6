@@ -4,7 +4,7 @@ import {
   setSelectedAddresForEdit,
   setSelectedAddress,
 } from "@/redux/slices/addressSlice";
-import { setAddress } from "@/redux/slices/checkoutSlice";
+import { setAddress, setBillingAddress } from "@/redux/slices/checkoutSlice";
 import * as api from "@/api/apiRoutes";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { FaRegEdit } from "react-icons/fa";
@@ -19,6 +19,7 @@ const AddressCard = ({
   fetchAddress,
   finalOrderAddress,
   fromAddress,
+  isBilling = false,
 }) => {
   const dispatch = useDispatch();
 
@@ -53,15 +54,19 @@ const AddressCard = ({
   };
 
   const handleCheckboxChange = async () => {
-    dispatch(setAddress({ data: address }));
-    try {
-      await api.updateOrderDelivery({
-        shippingContactId: address.id,
-        invoiceContactId:
-          address.contact_type === "invoice" ? address.id : undefined,
-      });
-    } catch (e) {
-      console.log("order delivery sync", e);
+    if (isBilling) {
+      dispatch(setBillingAddress({ data: address }));
+    } else {
+      dispatch(setAddress({ data: address }));
+      try {
+        await api.updateOrderDelivery({
+          shippingContactId: address.id,
+          invoiceContactId:
+            address.contact_type === "invoice" ? address.id : undefined,
+        });
+      } catch (e) {
+        console.log("order delivery sync", e);
+      }
     }
   };
 
@@ -70,7 +75,7 @@ const AddressCard = ({
       <div className="py-6 px-4 w-full border-b ">
         <div className="flex justify-between items-center mb-2">
           <h2 className="font-semibold text-lg">
-            {t("delivery_to")}:{" "}
+            {isBilling ? t("billing_to") || "Billing to" : t("delivery_to")}:{" "}
             <span className="font-bold">{address?.name}</span>
           </h2>
           {!fromAddress && (
@@ -78,9 +83,9 @@ const AddressCard = ({
               {!finalOrderAddress && (
                 <input
                   type="checkbox"
-                  id={`default-address-${address.id}`}
+                  id={`default-address-${address.id}${isBilling ? '-billing' : ''}`}
                   className="h-4 w-4 primaryAccentColor focus:ring-[var(--primary-color)] border-gray-300 rounded"
-                  checked={checkout?.address?.id === address?.id}
+                  checked={isBilling ? checkout?.billingAddress?.id === address?.id : checkout?.address?.id === address?.id}
                   onChange={handleCheckboxChange}
                 />
               )}

@@ -433,11 +433,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           if (res?.data?.cd_mobile_role?.role_code) {
             localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
             localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+          } else {
+            localStorage.removeItem("role_code");
+            localStorage.removeItem("cd_role_code");
           }
           if (res?.data?.cd_session_id) {
             localStorage.setItem("cd_session_id", res.data.cd_session_id);
             localStorage.setItem("cd_user_id", String(res.data.cd_user_id || ""));
             localStorage.setItem("cd_user_name", res.data.cd_user_name || "");
+          } else {
+            localStorage.removeItem("cd_session_id");
+            localStorage.removeItem("cd_user_id");
+            localStorage.removeItem("cd_user_name");
           }
           if (redirectToRoleDashboard(res?.data)) {
             setLoading(false);
@@ -586,11 +593,18 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
           if (res?.data?.cd_mobile_role?.role_code) {
             localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
             localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+          } else {
+            localStorage.removeItem("role_code");
+            localStorage.removeItem("cd_role_code");
           }
           if (res?.data?.cd_session_id) {
             localStorage.setItem("cd_session_id", res.data.cd_session_id);
             localStorage.setItem("cd_user_id", String(res.data.cd_user_id || ""));
             localStorage.setItem("cd_user_name", res.data.cd_user_name || "");
+          } else {
+            localStorage.removeItem("cd_session_id");
+            localStorage.removeItem("cd_user_id");
+            localStorage.removeItem("cd_user_name");
           }
           if (redirectToRoleDashboard(res?.data)) {
             setLoading(false);

@@ -63,6 +63,7 @@ export const verifyEmail = (p) => odooAuth.verifyEmail(p);
 export const forgotPasswordOtp = (p) => odooAuth.forgotPasswordOTP(p);
 export const forgotPassword = (p) => odooAuth.forgotPassword(p);
 export const resetPassword = (p) => odooAuth.resetPassword(p);
+export const updateUserPassword = (p) => odooAuth.updateUserPassword(p);
 export const updateProfile = (p) => odooAuth.updateProfile(p);
 export const getUser = () => odooAuth.getUser();
 export const logout = () => odooAuth.logout();

@@ -47,6 +47,7 @@ import {
   setCheckoutTotal,
   setPhonePeCheckoutDetails,
   setOrderType,
+  setSameAsBilling,
 } from "@/redux/slices/checkoutSlice";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -131,16 +132,15 @@ const Checkout = () => {
 
   useEffect(() => {
     if (!checkout?.address?.id || !draftOrderId) return;
-    const invoiceContact =
-      address?.allAddresses?.find((a) => a.contact_type === "invoice")?.id ||
-      user?.partner_id ||
-      user?.id;
+    const invoiceContact = checkout.sameAsBilling
+        ? checkout.address.id
+        : checkout.billingAddress?.id || user?.partner_id || user?.id;
     api.updateOrderDelivery({
       orderId: draftOrderId,
       shippingContactId: checkout.address.id,
       invoiceContactId: invoiceContact,
     });
-  }, [checkout?.address?.id, draftOrderId]);
+  }, [checkout?.address?.id, checkout?.billingAddress?.id, checkout?.sameAsBilling, draftOrderId, user]);
 
   useEffect(() => {
     fetchAddress();
@@ -153,16 +153,14 @@ const Checkout = () => {
 
   useEffect(() => {
     validateCouponCode();
-  }, [cart?.cart, checkout?.address, cart?.cartProducts]);
+  }, [checkout?.address, cart?.cartSubTotal]);
 
   useEffect(() => {
     if (checkoutLoading || paymentLoading) return;
     handleFetchCheckout();
   }, [
-    cart?.cart,
     cart?.promo_code,
     checkout?.address,
-    cart?.cartProducts,
     checkout?.orderType,
     checkout?.timeSlot,
     checkoutLoading,
@@ -179,13 +177,16 @@ const Checkout = () => {
   };
 
   const validateCouponCode = async () => {
+    if (!cart?.promo_code?.promo_code) return;
+    if (cart?.promo_code?.is_loyalty_point) return;
+
     try {
       const response = await api.setPromoCode({
         promoCodeName: cart?.promo_code?.promo_code,
         amount: cart?.cartSubTotal,
       });
       if (response.status == 1) {
-        dispatch(setCartPromo({ data: response.data }));
+        dispatch(setCartPromo({ data: { ...response.data, is_loyalty_point: false } }));
       } else {
         dispatch(clearCartPromo());
       }
@@ -355,6 +356,9 @@ const Checkout = () => {
     if (checkOutError) {
       toast.error(checkOutErrorMsg);
       // toast.error(t(checkOutErrorMsg));
+      return;
+    } else if (!checkout?.sameAsBilling && !checkout?.billingAddress) {
+      toast.error(t("please_select_billing_address") || "Please select a billing address");
       return;
     } else {
       dispatch(setCurrentStep({ data: 2 }));
@@ -602,6 +606,14 @@ const Checkout = () => {
         return;
       } else {
         setCheckoutLoading(true);
+
+        // Filter out loyalty reward items so they aren't added as regular products
+        // before the backend applies the actual loyalty point discount logic.
+        const filteredCartProducts = cart?.cartProducts?.filter((item) => {
+          const itemName = item?.name?.toLowerCase() || "";
+          return itemName !== "loyalty reward" && item?.name !== (t("loyalty_reward") || "Loyalty Reward");
+        }) || [];
+
         const response = await api.placeOrder({
           productVariantId: cart?.checkout?.product_variant_id,
           quantity: cart?.checkout?.quantity,
@@ -615,9 +627,11 @@ const Checkout = () => {
           orderNote: checkout?.orderNote,
           paymentMethod: checkout?.selectedPaymentMethod,
           promocodeId: cart?.promo_code?.promo_code_id,
+          rewardId: cart?.promo_code?.reward_id,
+          loyaltyCartId: cart?.promo_code?.cart_id,
           status: status,
           order_type: checkout?.orderType,
-          cartProducts: cart?.cartProducts,
+          cartProducts: filteredCartProducts,
         });
         if (response?.status == 1) {
           dispatch(setOrderNote(""));
@@ -818,6 +832,41 @@ const Checkout = () => {
                                 );
                               })}
                             </div>
+                            <div className="mt-4 border-t pt-4 px-2">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  className="h-4 w-4 primaryAccentColor rounded"
+                                  checked={checkout?.sameAsBilling}
+                                  onChange={(e) => dispatch(setSameAsBilling({ data: e.target.checked }))}
+                                />
+                                <span className="font-semibold text-base">{t("same_as_billing_address") || "Make delivery address same as billing address"}</span>
+                              </label>
+                            </div>
+                            {!checkout?.sameAsBilling && (
+                              <div className="mt-4 bg-gray-50 p-2 rounded-md">
+                                <div className="flex justify-between items-center mb-4 px-2">
+                                  <span className="font-bold text-base md:text-xl">
+                                    {t("choose_billing_address") || "Choose Billing Address"}
+                                  </span>
+                                </div>
+                                <div className="flex flex-col h-full">
+                                  {address?.allAddresses?.map((addr) => {
+                                    return (
+                                      <div key={`billing-${addr?.id}`}>
+                                        <AddressCard
+                                          address={addr}
+                                          setShowAddAddres={setShowAddAddres}
+                                          setIsAddressSelected={setIsAddressSelected}
+                                          fetchAddress={fetchAddress}
+                                          isBilling={true}
+                                        />
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
                             <div className="flex justify-end m-4">
                               <button
                                 onClick={handleFirstStep}

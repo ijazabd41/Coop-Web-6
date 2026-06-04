@@ -14,7 +14,7 @@ const withAuth = (WrappedComponent) => {
             const privateRoutes = ['/profile', '/checkout', '/profile/address', '/profile/activeorders', '/profile/orderhistory', '/profile/wishlist', '/profile/wallethistory', "/profile/transaction", '/profile/notifications', '/profile/subscription'];
             const isPrivateRoute = privateRoutes.includes(router.pathname);
 
-            if (isPrivateRoute && !user?.jwtToken) {
+            if (isPrivateRoute && (!user?.jwtToken || user?.jwtToken === "undefined" || user?.jwtToken === "null" || !user?.user)) {
                 router.push("/");
             } else if (router.pathname === "/profile/subscription" && !user?.user?.is_subscription_plans) {
                 router.push("/");

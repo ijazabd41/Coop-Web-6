@@ -33,7 +33,11 @@ const OrderSummaryCard = ({
     const items = checkoutData?.cart?.length
       ? checkoutData.cart
       : cart?.cartProducts || cart?.cart || [];
-    return Array.isArray(items) ? items : [];
+    const itemsArray = Array.isArray(items) ? items : [];
+    return itemsArray.filter((item) => {
+      const itemName = item?.name?.toLowerCase() || "";
+      return itemName !== "loyalty reward" && item?.name !== (t("loyalty_reward") || "Loyalty Reward");
+    });
   }, [checkoutData?.cart, cart?.cartProducts, cart?.cart]);
 
   const deliveryAmount = useMemo(() => {

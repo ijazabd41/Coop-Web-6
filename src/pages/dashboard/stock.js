@@ -1,4 +1,6 @@
-export default function StockDashboardPage() {
+import withDashboardAuth from "@/checkauth/withDashboardAuth";
+
+function StockDashboardPage() {
   return (
     <iframe
       src="/dashboard/web6_stock_dashboard.html"
@@ -12,4 +14,6 @@ export default function StockDashboardPage() {
     />
   );
 }
+
+export default withDashboardAuth(StockDashboardPage);
 

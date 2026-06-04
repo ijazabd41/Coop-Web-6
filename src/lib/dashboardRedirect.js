@@ -17,10 +17,8 @@ function extractRoleCode(loginData) {
   const userRole = loginData?.user?.cd_mobile_role?.role_code;
   const flatRole = loginData?.role_code;
   const userFlatRole = loginData?.user?.role_code;
-  const localRole =
-    typeof window !== "undefined" ? window.localStorage.getItem("role_code") : null;
 
-  return normalizeRoleCode(directRole || userRole || flatRole || userFlatRole || localRole);
+  return normalizeRoleCode(directRole || userRole || flatRole || userFlatRole);
 }
 
 export function getDashboardPathFromRoleCode(roleCode) {

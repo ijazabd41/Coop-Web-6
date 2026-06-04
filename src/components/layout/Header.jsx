@@ -228,7 +228,7 @@ const Header = () => {
 
   const handleProfileClick = () => {
     setMobileActiveKey(3);
-    if (user?.jwtToken) {
+    if (user?.jwtToken && user?.jwtToken !== "undefined" && user?.user) {
       setShowProfile(true);
     } else {
       setShowLogin(true);
@@ -504,7 +504,7 @@ const Header = () => {
                     </span>
                   </div>
                 </div>
-                {user?.jwtToken !== "" ? (
+                {(user?.jwtToken && user?.jwtToken !== "undefined" && user?.user) ? (
                   <div className="flex gap-2 items-center cursor-pointer">
                     <div className="flex ">
                       <DropdownMenu>
@@ -658,7 +658,7 @@ const Header = () => {
                   <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap truncate max-w-[252px] md:max-w-40">
                     <>
                       {city.status === "fulfill" ? (
-                        city?.city?.formatted_address
+                        city?.city?.formatted_address || city?.city?.city || city?.city?.name || t("select_location") || "Select Location"
                       ) : (
                         <div className="d-flex justify-content-center">
                           <div className="spinner-border" role="status">
@@ -791,7 +791,7 @@ const Header = () => {
                 } p-2 rounded-full`}
               />
               <span className="text-sm">
-                {user?.jwtToken ? t("profile") : t("login")}
+                {(user?.jwtToken && user?.jwtToken !== "undefined" && user?.user) ? t("profile") : t("login")}
               </span>
             </div>
           </div>

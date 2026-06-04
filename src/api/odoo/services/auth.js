@@ -1,5 +1,5 @@
 import { ODOO_DB } from "../config";
-import { odooAuthenticate, odooGet, odooGetQuiet } from "../client";
+import { odooAuthenticate, odooGet, odooGetQuiet, odooPost, odooClient } from "../client";
 import {
   getOdooSession,
   clearOdooSession,
@@ -19,6 +19,23 @@ async function ensureWebsiteCustomer(partnerId) {
     });
   } catch {
     /* Odoo may ignore unknown fields; registration still succeeds */
+  }
+}
+
+export async function getCsrfToken() {
+  try {
+    const res = await odooClient.get("/web", {
+      headers: { "Accept": "text/html" },
+      responseType: "text",
+    });
+    const match = res.data.match(/csrf_token:\s*"([^"]+)"/);
+    return match ? match[1] : null;
+  } catch (e) {
+    if (e.response && e.response.data) {
+      const match = String(e.response.data).match(/csrf_token:\s*"([^"]+)"/);
+      return match ? match[1] : null;
+    }
+    return null;
   }
 }
 
@@ -190,7 +207,7 @@ export async function logout() {
   return ok(null, { message: "Logged out successfully" });
 }
 
-export async function updateProfile({ name, email, mobileNumber, country_code }) {
+export async function updateProfile({ name, email, mobileNumber, country_code, image }) {
   const session = getOdooSession();
   if (!session?.partnerId) return fail("not_authenticated");
   try {
@@ -200,6 +217,9 @@ export async function updateProfile({ name, email, mobileNumber, country_code })
       phone = `${cc}${phone}`;
     }
     const params = { name, email, phone };
+    if (image) {
+      params.image_1920 = image;
+    }
     const payload = await odooGet(
       `/api/contacts/${session.partnerId}/update`,
       params
@@ -220,6 +240,21 @@ export async function resetPassword({ password, newPassword }) {
     });
     if (!isOdooSuccess(payload)) return fail(payload?.message || "reset_failed");
     return ok(null);
+  } catch (e) {
+    return fail(e?.message);
+  }
+}
+
+export async function updateUserPassword({ password }) {
+  const session = getOdooSession();
+  if (!session?.uid) return fail("not_authenticated");
+  try {
+    const payload = await odooGet(`/api/user/${session.uid}/update`, {
+      by_AJR: 1,
+      password: password,
+    });
+    if (!isOdooSuccess(payload)) return fail(payload?.message || "password_update_failed");
+    return ok(null, { message: "Password updated successfully" });
   } catch (e) {
     return fail(e?.message);
   }

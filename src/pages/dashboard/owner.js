@@ -1,4 +1,6 @@
-export default function OwnerDashboardPage() {
+import withDashboardAuth from "@/checkauth/withDashboardAuth";
+
+function OwnerDashboardPage() {
   return (
     <iframe
       src="/dashboard/web6_owner_dashboard.html"
@@ -12,4 +14,6 @@ export default function OwnerDashboardPage() {
     />
   );
 }
+
+export default withDashboardAuth(OwnerDashboardPage);
 

@@ -84,8 +84,15 @@ export default async function handler(req, res) {
   };
 
   if (req.method !== "GET" && req.method !== "HEAD" && req.body !== undefined) {
-    init.body =
-      typeof req.body === "string" ? req.body : JSON.stringify(req.body);
+    if (
+      req.headers["content-type"]?.includes("application/x-www-form-urlencoded") &&
+      typeof req.body === "object"
+    ) {
+      init.body = new URLSearchParams(req.body).toString();
+    } else {
+      init.body =
+        typeof req.body === "string" ? req.body : JSON.stringify(req.body);
+    }
   }
 
   try {
@@ -124,6 +131,8 @@ export default async function handler(req, res) {
 
 export const config = {
   api: {
-    bodyParser: true,
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
   },
 };

@@ -24,6 +24,11 @@ const OrderItems = ({
   const [showUpdateRating, setShowUpdateRating] = useState(false);
   const [ratingId, setRatingId] = useState(null);
 
+  const filteredProducts = products?.filter((product) => {
+    const productName = product?.name?.toLowerCase() || "";
+    return productName !== "loyalty reward" && product?.name !== (t("loyalty_reward") || "Loyalty Reward");
+  }) || [];
+
   const handleCancel = (product) => {
     setSelectedProduct(product);
     setShowCancelModal(true);
@@ -48,7 +53,7 @@ const OrderItems = ({
     setShowUpdateRating(true);
   };
 
-  const showAction = products?.some((product) => {
+  const showAction = filteredProducts?.some((product) => {
     const canCancel =
       Number(product?.active_status) <= 6 &&
       Number(product?.active_status) <= Number(product?.till_status) &&
@@ -64,7 +69,7 @@ const OrderItems = ({
 
   // Returns true when a product is cancelled (active_status=7, cancelable_status=0)
   // Used to show the Action column header even when no cancel/return action is available
-  const showStatus = products?.some(
+  const showStatus = filteredProducts?.some(
     (product) =>
       Number(product?.active_status) === 7 &&
       Number(product?.cancelable_status) === 0
@@ -86,7 +91,7 @@ const OrderItems = ({
             </tr>
           </thead>
           <tbody>
-            {products?.map((product) => {
+            {filteredProducts.map((product) => {
               const userRating = product?.item_rating?.find(
                 (rating) => rating?.user?.id === user?.id,
               );
@@ -251,7 +256,7 @@ const OrderItems = ({
         </table>
       </div>
       <div className="flex flex-col lg:hidden ">
-        {products?.map((product) => {
+        {filteredProducts.map((product) => {
           const userRating = product?.item_rating?.find(
             (rating) => rating?.user?.id === user?.id,
           );

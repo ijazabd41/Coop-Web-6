@@ -10,6 +10,43 @@ import { toast } from "react-toastify";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = document.createElement("img");
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 250;
+        const MAX_HEIGHT = 250;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
+        resolve(dataUrl.split(",")[1]);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+
 const validateName = (name) => {
   if (!name.trim()) return "Name is required";
   if (name.length < 2) return "Name must be at least 2 characters";
@@ -51,6 +88,45 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+    if (!newPassword) {
+      toast.error(t("password_required") || "Password is required");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error(t("password_length") || "Password must be at least 6 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error(t("passwords_do_not_match") || "Passwords do not match");
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    try {
+      const response = await api.updateUserPassword({
+        password: newPassword,
+      });
+      if (response?.status == 1) {
+        toast.success(response.message || t("password_updated") || "Password updated successfully");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        toast.error(response.message || t("password_update_failed") || "Failed to update password");
+      }
+    } catch (error) {
+      console.log("Error", error);
+      toast.error(t("something_went_wrong") || "Something went wrong");
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
 
   useEffect(() => {
     setUsername(user?.name);
@@ -140,12 +216,17 @@ const Profile = () => {
 
     setErrors({});
     try {
+      let imageBase64 = undefined;
+      if (profileImage && profileImage instanceof File) {
+        imageBase64 = await fileToBase64(profileImage);
+      }
+
       const response = await api.updateProfile({
         name: username,
         email: email,
         mobileNumber: mobileNumber,
         country_code: countryCode,
-        image: profileImage,
+        image: imageBase64,
         type: authType,
       });
       if (response?.status == 1) {
@@ -271,6 +352,57 @@ const Profile = () => {
             </button>
           </div>
         </form>
+
+        {authType !== "google" && (
+          <form
+            className="w-full justify-center items-center flex flex-col border-t mt-4"
+            onSubmit={handlePasswordUpdate}
+          >
+            <div className="flex flex-col w-[90%] md:w-1/2 pt-8 pb-8 gap-6">
+              <h3 className="text-xl font-semibold">{t("update_password") || "Update Password"}</h3>
+              <div>
+                <div className="mb-4">
+                  <label htmlFor="newPassword" className="block text-sm font-medium">
+                    {t("new_password") || "New Password"} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    placeholder={t("enter_new_password") || "Enter new password"}
+                    className="mt-1 block w-full rounded-md cardBorder py-2 px-4"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium">
+                    {t("confirm_password") || "Confirm Password"} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder={t("confirm_new_password") || "Confirm new password"}
+                    className="mt-1 block w-full rounded-md cardBorder py-2 px-4"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 topBorder flex justify-end w-full">
+              <button
+                type="submit"
+                className="w-40 accentButtonBg text-white py-2 px-4 rounded-md disabled:opacity-50"
+                disabled={!newPassword || isUpdatingPassword}
+              >
+                {isUpdatingPassword ? t("updating") || "Updating..." : t("update_password") || "Update Password"}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

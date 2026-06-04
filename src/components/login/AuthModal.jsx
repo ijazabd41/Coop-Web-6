@@ -81,6 +81,10 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
         );
         if (res.data?.cd_mobile_role?.role_code) {
           localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
+          localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+        } else {
+          localStorage.removeItem("role_code");
+          localStorage.removeItem("cd_role_code");
         }
         if (redirectToRoleDashboard(res.data)) {
           onClose();
