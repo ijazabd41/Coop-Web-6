@@ -35,7 +35,7 @@ export default {
 			},
 			colors: {
 				coop: {
-					red: '#D61F26',
+					red: '#EA2629',
 					'red-dark': '#A8151B',
 					'red-light': '#FF3B42',
 					yellow: '#F5C800',
