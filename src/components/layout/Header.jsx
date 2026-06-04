@@ -390,7 +390,7 @@ const Header = () => {
         <div className="headerBackgroundColor pb-0 md:pb-3 relative">
           <div className="center-header headerBackgroundColor container">
             <div className="  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2">
-              <div className="  relative order-2 lg:order-1 h-[50px] lg:h-[65px] w-[185px] lg:w-[240px]">
+              <div className="  relative order-2 lg:order-1 h-[60px] lg:h-[80px] w-[210px] lg:w-[280px]">
                 <Link href={"/"} className="relative block w-full h-full">
                   {setting?.setting?.web_settings?.web_logo && (
                     <Image
