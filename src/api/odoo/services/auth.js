@@ -183,8 +183,11 @@ export async function getUser() {
 }
 
 export async function logout() {
+  try {
+    await odooGetQuiet('/web/session/destroy');
+  } catch (e) {}
   clearOdooSession();
-  return ok(null);
+  return ok(null, { message: "Logged out successfully" });
 }
 
 export async function updateProfile({ name, email, mobileNumber, country_code }) {

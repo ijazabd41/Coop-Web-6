@@ -37,7 +37,7 @@ export const userReducer = createSlice({
             // Clear Odoo session from localStorage
             if (typeof window !== "undefined") {
                 try {
-                    const keys = ["odoo_session_id", "odoo_partner_id", "odoo_uid", "odoo_draft_order_id", "odoo_db"];
+                    const keys = ["odoo_session_id", "odoo_partner_id", "odoo_uid", "odoo_draft_order_id", "odoo_db", "cd_session_id", "cd_user_id", "cd_user_name", "role_code", "cd_role_code"];
                     keys.forEach((k) => window.localStorage.removeItem(k));
                 } catch { /* ignore */ }
             }

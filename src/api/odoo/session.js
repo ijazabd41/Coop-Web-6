@@ -43,6 +43,7 @@ export function clearOdooSession() {
   const ls = safeStorage();
   if (!ls) return;
   Object.values(STORAGE_KEYS).forEach((k) => ls.removeItem(k));
+  ["cd_session_id", "cd_user_id", "cd_user_name", "role_code", "cd_role_code"].forEach((k) => ls.removeItem(k));
 }
 
 export function setDraftOrderId(orderId) {
