@@ -113,7 +113,7 @@ export async function addAddress({
   const type =
     contact_type === "invoice" ? "invoice" : "delivery";
   try {
-    const payload = await odooGet("/api/contacts/new_address", {
+    const params = {
       lang: "en_US",
       tz: "Asia/Dubai",
       tz_offset: "+0400",
@@ -124,11 +124,14 @@ export async function addAddress({
       street2: "",
       city: city || "",
       zip: pincode || "",
-      state_id: state_id || "",
-      country_id: country_id || 2,
       type,
       email: "",
-    });
+    };
+    if (state_id) params.state_id = state_id;
+    if (country_id) params.country_id = country_id;
+    else params.country_id = 2; // Default to UAE
+
+    const payload = await odooGet("/api/contacts/new_address", params);
 
     let newId =
       payload?.data?.rec_id ||

@@ -63,6 +63,7 @@ import CheckoutSkeleton from "./CheckoutSkeleton";
 import { FiPhoneCall, FiTruck } from "react-icons/fi";
 import { MdOutlineStorefront, MdOutlineWatchLater, MdOutlineEmail } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
+import { pushErrorLog } from "@/utils/errorLogger";
 
 const Checkout = () => {
   const router = useRouter();
@@ -466,6 +467,14 @@ const Checkout = () => {
               }
             } catch (error) {
               console.error("Transaction error:", error);
+              pushErrorLog({
+                error_title: 'Razorpay Transaction Error',
+                error_detail: error.stack || error.message || String(error),
+                source: 'web',
+                user_email: user?.user?.email || '',
+                screen_name: '/checkout (Razorpay)',
+                priority: '3',
+              });
             }
           }
         },
@@ -503,6 +512,14 @@ const Checkout = () => {
       rzpay.open();
     } catch (error) {
       console.error("Error initializing Razorpay:", error);
+      pushErrorLog({
+        error_title: 'Razorpay Init Error',
+        error_detail: error.stack || error.message || String(error),
+        source: 'web',
+        user_email: user?.user?.email || '',
+        screen_name: '/checkout (Razorpay Init)',
+        priority: '2',
+      });
       setCheckoutLoading(false);
     }
   };
@@ -688,6 +705,14 @@ const Checkout = () => {
       setCheckoutLoading(false);
       console.log("Error", error);
       toast.error(t("something_went_wrong") || "Something went wrong. Please try again.");
+      pushErrorLog({
+        error_title: 'Place Order Error',
+        error_detail: error.stack || error.message || String(error),
+        source: 'web',
+        user_email: user?.user?.email || '',
+        screen_name: '/checkout (Place Order)',
+        priority: '3',
+      });
     }
   };
 

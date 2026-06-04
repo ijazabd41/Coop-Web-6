@@ -45,11 +45,40 @@ function AppContent({ Component, pageProps }) {
     router.events.on("routeChangeComplete", handleComplete);
     router.events.on("routeChangeError", handleComplete);
 
+    // Global uncaught error handler
+    const handleError = (event) => {
+      import('@/utils/errorLogger').then(({ pushErrorLog }) => {
+        pushErrorLog({
+          error_title: event.message || 'Uncaught Error',
+          error_detail: event.error?.stack || event.message,
+          screen_name: window.location.pathname,
+          priority: '2',
+        });
+      });
+    };
+
+    // Global unhandled promise rejection handler
+    const handleUnhandledRejection = (event) => {
+      import('@/utils/errorLogger').then(({ pushErrorLog }) => {
+        pushErrorLog({
+          error_title: 'Unhandled Promise Rejection',
+          error_detail: event.reason?.stack || String(event.reason),
+          screen_name: window.location.pathname,
+          priority: '2',
+        });
+      });
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
     // Cleanup event listeners
     return () => {
       router.events.off("routeChangeStart", handleStart);
       router.events.off("routeChangeComplete", handleComplete);
       router.events.off("routeChangeError", handleComplete);
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
   }, [router]);
 

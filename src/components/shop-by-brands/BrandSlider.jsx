@@ -27,7 +27,7 @@ const BrandSlider = ({ brands }) => {
         <section>
             <div className='container feature-section' dir={language?.type}>
                 <div className='flex justify-between items-center mb-3'>
-                    <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>{t("shop_by")} {t("brands")}</h2>
+                    <h2 className='textColor text-xl sm:text-3xl font-extrabold tracking-[2px] leading-[29px] m-0'>Imarati Items</h2>
                     <div className={`flex items-center gap-4`}>
                         <Link href={"/brands"} className='hover:primaryColor'>{t("see_all")}</Link>
                         <div className={` md:flex hidden gap-2 ${language?.type == "RTL" ? "flex-row-reverse" : ""}`}>

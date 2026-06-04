@@ -10,6 +10,7 @@ import BrandSlider from '../shop-by-brands/BrandSlider';
 import CountrySlider from '../shop-by-country/CountrySlider';
 import SellerSlider from '../shop-by-seller/SellerSlider';
 import PromoStrip from './PromoStrip';
+import MobileAppBanner from './MobileAppBanner';
 
 import HomeOfferSection from './HomeOfferSection';
 
@@ -25,6 +26,9 @@ const FeatureSections = () => {
                 
                 {/* 2. Promo Strip */}
                 <PromoStrip />
+
+                {/* 2.5 Mobile App Banner */}
+                <MobileAppBanner />
 
                 {/* 3. Shop By Category */}
                 {shop?.categories?.length > 0 && <Categories categories={shop} />}

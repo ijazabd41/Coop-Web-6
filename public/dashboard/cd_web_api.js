@@ -75,7 +75,7 @@ const CdApi = (() => {
   const logout = () => {
     ['cd_session_id','cd_user_id','cd_user_name','cd_role_code','cd_role_name']
       .forEach(k => localStorage.removeItem(k));
-    window.location.href = 'login.html';
+    window.location.href = '/';
   };
 
   const isLoggedIn = () => !!session() || !!localStorage.getItem('token');

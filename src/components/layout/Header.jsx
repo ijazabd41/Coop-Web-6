@@ -389,74 +389,103 @@ const Header = () => {
         </div>
         <div className="headerBackgroundColor pb-0 md:pb-3 relative">
           <div className="center-header headerBackgroundColor container">
-            <div className="  px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 columns-3 border-b-2  md:border-none py-2">
-              <div className="  relative order-2 lg:order-1 h-[60px] lg:h-[80px] w-[210px] lg:w-[280px]">
-                <Link href={"/"} className="relative block w-full h-full">
-                  {setting?.setting?.web_settings?.web_logo && (
-                    <Image
-                      src={setting?.setting?.web_settings?.web_logo}
-                      alt="Logo"
-                      fill
-                      priority={true}
-                      fetchpriority="high"
-                      loading="eager"
-                      className="object-contain"
-                    />
-                  )}
-                </Link>
+            <div className="px-2 flex justify-between items-center pb-[8px] md:py-[12px] lg:py-4 border-b-2 md:border-none py-2 w-full">
+              <div className="flex items-center order-2 lg:order-1">
+                <div className="relative h-[50px] lg:h-[65px] w-[130px] lg:w-[160px] flex items-center flex-shrink-0 mr-0 lg:mr-4 xl:mr-6">
+                  <Link href={"/"} className="relative block w-full h-full flex items-center">
+                    {setting?.setting?.web_settings?.web_logo && (
+                      <Image
+                        src={setting?.setting?.web_settings?.web_logo}
+                        alt="Logo"
+                        fill
+                        priority={true}
+                        fetchpriority="high"
+                        loading="eager"
+                        className="object-contain object-left"
+                      />
+                    )}
+                  </Link>
+                </div>
+                <div className="hidden lg:flex items-center gap-3 flex-shrink-0 mr-0 lg:mr-6 xl:mr-10"
+                    onClick={handleOpenLocation}
+                  >
+                    <span className="p-3 iconBackgroundColor rounded-full flex items-center justify-center h-[48px] w-[48px]">
+                      <IoLocationOutline size={24} className="iconsColor" />
+                    </span>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-sm shortDescriptionText leading-none mb-1">
+                        {t("deliver_to")}
+                      </span>
+                      <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap truncate max-w-[200px] leading-none">
+                        <>
+                          {city.status === "fulfill" ? (
+                            city?.city?.formatted_address || city?.city?.city || city?.city?.name || t("select_location") || "Select Location"
+                          ) : (
+                            <div className="d-flex justify-content-center">
+                              <div className="spinner-border" role="status">
+                                <span className="visually-hidden">
+                                  {t("loading")}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      </span>
+                    </div>
+                </div>
+                <div className="hidden lg:flex items-center flex-shrink-0">
+                  <ul className="flex gap-6 xl:gap-8 items-center">
+                    <Link
+                      href={"/"}
+                      className={router.pathname === "/" ? "primaryColor" : ""}
+                    >
+                      <li>{t("home")}</li>
+                    </Link>
+                    <Link
+                      href={"/about-us"}
+                      className={
+                        router.pathname === "/about-us" ? "primaryColor" : ""
+                      }
+                    >
+                      <li>{t("about_us")}</li>
+                    </Link>
+                    <Link
+                      href={"/faqs"}
+                      className={
+                        router.pathname === "/faqs" ? "primaryColor" : ""
+                      }
+                    >
+                      <li> {t("faq")}</li>
+                    </Link>
+                    <Link
+                      href={"/contact-us"}
+                      className={
+                        router.pathname === "/contact-us" ? "primaryColor" : ""
+                      }
+                    >
+                      <li>{t("contact_us")}</li>
+                    </Link>
+                    <Link
+                      href={"/blogs"}
+                      className={
+                        router.pathname === "/blogs" ? "primaryColor" : ""
+                      }
+                    >
+                      <li>{t("blogs")}</li>
+                    </Link>
+                  </ul>
+                </div>
               </div>
-              <div className="hidden lg:flex order-2">
-                <ul className="flex gap-6">
-                  <Link
-                    href={"/"}
-                    className={router.pathname === "/" ? "primaryColor" : ""}
-                  >
-                    <li>{t("home")}</li>
-                  </Link>
-                  <Link
-                    href={"/about-us"}
-                    className={
-                      router.pathname === "/about-us" ? "primaryColor" : ""
-                    }
-                  >
-                    <li>{t("about_us")}</li>
-                  </Link>
-                  <Link
-                    href={"/faqs"}
-                    className={
-                      router.pathname === "/faqs" ? "primaryColor" : ""
-                    }
-                  >
-                    <li> {t("faq")}</li>
-                  </Link>
-                  <Link
-                    href={"/contact-us"}
-                    className={
-                      router.pathname === "/contact-us" ? "primaryColor" : ""
-                    }
-                  >
-                    <li>{t("contact_us")}</li>
-                  </Link>
-                  <Link
-                    href={"/blogs"}
-                    className={
-                      router.pathname === "/blogs" ? "primaryColor" : ""
-                    }
-                  >
-                    <li>{t("blogs")}</li>
-                  </Link>
-                </ul>
-              </div>
-              <div className="flex sm:order-1 md:order-1 lg:hidden hover:cursor-pointer">
+              <div className="flex sm:order-1 lg:hidden hover:cursor-pointer flex-shrink-0">
                 <RxHamburgerMenu size={21} onClick={handleMobileNav} />
               </div>
-              <div className=" gap-4 order-3 hidden md:flex lg:flex ">
+              <div className="gap-6 order-4 hidden lg:flex items-center flex-shrink-0">
                 <div
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-3 cursor-pointer"
                   onClick={handleCartOpen}
                 >
                   {/* <span className='p-3 iconBackgroundColor rounded-full '><IoCartOutline size={24} className='iconsColor' /></span> */}
-                  <span className="p-3 iconBackgroundColor rounded-full relative">
+                  <span className="p-3 iconBackgroundColor rounded-full relative flex items-center justify-center h-[48px] w-[48px]">
                     <BiCart size={24} className="iconsColor" />
                     {cart.isGuest == true ? (
                       <p
@@ -486,9 +515,9 @@ const Header = () => {
                       </p>
                     )}
                   </span>
-                  <div className="flex flex-col ">
-                    <span className="text-sm">{t("your_cart")}</span>
-                    <span className="text-base font-bold">
+                  <div className="flex flex-col justify-center">
+                    <span className="text-sm leading-none mb-1 text-gray-500">{t("your_cart")}</span>
+                    <span className="text-base font-bold leading-none">
                       {setting.setting && setting.setting.currency}
                       {cart.isGuest == true
                         ? cart?.guestCartTotal?.toFixed(
@@ -505,15 +534,16 @@ const Header = () => {
                   </div>
                 </div>
                 {(user?.jwtToken && user?.jwtToken !== "undefined" && user?.user) ? (
-                  <div className="flex gap-2 items-center cursor-pointer">
-                    <div className="flex ">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="flex items-center border-none outline-none gap-2 p-0 shadow-none font-bold text-base ">
-                          <span className="p-3 iconBackgroundColor rounded-full">
-                            <LuUser size={24} className="iconsColor" />
-                          </span>
-                          {t("profile")}
-                        </DropdownMenuTrigger>
+                  <div className="flex items-center cursor-pointer">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center border-none outline-none gap-3 p-0 shadow-none text-left">
+                        <span className="p-3 iconBackgroundColor rounded-full flex items-center justify-center h-[48px] w-[48px]">
+                          <LuUser size={24} className="iconsColor" />
+                        </span>
+                        <div className="flex flex-col justify-center">
+                          <span className="text-base font-bold leading-none">{t("profile")}</span>
+                        </div>
+                      </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <Link href={"/profile"}>
                             <DropdownMenuItem className="items-center flex justify-start h-full">
@@ -575,23 +605,22 @@ const Header = () => {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </div>
                   </div>
                 ) : (
                   <div
-                    className="flex gap-2 items-center cursor-pointer"
+                    className="flex gap-3 items-center cursor-pointer"
                     onClick={handleLoginOpen}
                   >
-                    <span className="p-3 iconBackgroundColor rounded-full">
+                    <span className="p-3 iconBackgroundColor rounded-full flex items-center justify-center h-[48px] w-[48px]">
                       <LuUser size={24} className="iconsColor" />
                     </span>
-                    <div className="flex ">
-                      <span className="text-base font-bold">{t("login")}</span>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-base font-bold leading-none">{t("login")}</span>
                     </div>
                   </div>
                 )}
               </div>
-              <div className="flex md:hidden gap-2 order-3 items-center">
+              <div className="flex lg:hidden gap-4 order-5 items-center flex-shrink-0">
                 <div>
                   {themes?.theme == "light" ? (
                     <CiSun
@@ -605,7 +634,7 @@ const Header = () => {
                     />
                   )}
                 </div>
-                <div onClick={handleCartOpen} className="relative">
+                <div onClick={handleCartOpen} className="relative flex items-center">
                   <IoCartOutline size={24} />{" "}
                   {cart.isGuest == true ? (
                     <p
@@ -640,22 +669,19 @@ const Header = () => {
           </div>
           <div className="bottom-header ">
             <div className="container mx-auto flex md:grid md:grid-cols-12 md:items-center justify-between mt-2 mb-2 md:mb-4 px-2 ">
-              {/* First column: col-3 equivalent */}
+              {/* Mobile-only location block */}
               <div
-                className=" md:col-span-4 lg:col-span-3 flex gap-2 items-center cursor-pointer"
+                className="md:hidden flex gap-2 items-center cursor-pointer"
                 onClick={handleOpenLocation}
               >
-                <span className="p-3 iconBackgroundColor hidden md:block rounded-full">
-                  <IoLocationOutline size={24} className="iconsColor " />
-                </span>
-                <span className="block md:hidden">
+                <span className="block">
                   <LuMapPin size={24} />
                 </span>
                 <div className="flex flex-col">
                   <span className="text-sm shortDescriptionText">
                     {t("deliver_to")}
                   </span>
-                  <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap truncate max-w-[252px] md:max-w-40">
+                  <span className="block text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap truncate max-w-[252px]">
                     <>
                       {city.status === "fulfill" ? (
                         city?.city?.formatted_address || city?.city?.city || city?.city?.name || t("select_location") || "Select Location"
@@ -675,7 +701,7 @@ const Header = () => {
               <div className=" md:hidden flex items-center">
                 <BiCaretRight size={18} />
               </div>
-              <div className="hidden md:block lg:col-span-6 md:col-span-8">
+              <div className={`hidden md:block md:col-span-12 ${setting?.setting?.support_number ? "lg:col-span-9" : "lg:col-span-12"}`}>
                 <SearchComponent
                   isSuggLoading={isSuggLoading}
                   isMobile={isMobile}

@@ -5,6 +5,7 @@ import { FiX, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff } from "react-ico
 import * as api from "@/api/apiRoutes";
 import { loginSuccess } from "@/redux/slices/userSlice";
 import { redirectToRoleDashboard } from "@/lib/dashboardRedirect";
+import { pushErrorLog } from "@/utils/errorLogger";
 
 /**
  * Premium login/signup modal that appears when guests try to:
@@ -105,6 +106,14 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
+      pushErrorLog({
+        error_title: 'AuthModal Login Error',
+        error_detail: err.stack || err.message || String(err),
+        source: 'web',
+        user_email: loginForm.email,
+        screen_name: '/auth-modal (Login)',
+        priority: '1',
+      });
     } finally {
       setLoading(false);
     }
@@ -142,6 +151,14 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
+      pushErrorLog({
+        error_title: 'AuthModal Register Error',
+        error_detail: err.stack || err.message || String(err),
+        source: 'web',
+        user_email: registerForm.email,
+        screen_name: '/auth-modal (Register)',
+        priority: '1',
+      });
     } finally {
       setLoading(false);
     }

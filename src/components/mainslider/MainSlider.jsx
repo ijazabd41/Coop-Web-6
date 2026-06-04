@@ -93,7 +93,7 @@ const HomePageSlider = ({ slider }) => {
                   alt={slide.title || slide.name || "Banner"}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding="async"
-                  className="swiper-image w-full max-h-[900px] h-[200px] sm:h-[250px] md:h-[380px] lg:h-[570px] 2xl:h-[700px] object-cover"
+                  className="swiper-image w-full h-auto max-h-[900px] object-contain"
                   onClick={() => handleSliderClick(slide)}
                 />
               </div>

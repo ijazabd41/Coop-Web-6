@@ -149,8 +149,11 @@ const NewAddressModal = ({
         fetchAddress();
         setLoading(false);
         toast.success(t("address_added_success"));
+        setShowAddAddres(false);
       } else {
         setLoading(false);
+        toast.error(response?.message || t("failed_to_add_address") || "Failed to add address");
+        return; // Don't reset and close if there's an error
       }
       setaddressDetails({
         name: "",
@@ -166,7 +169,6 @@ const NewAddressModal = ({
         address_type: "Home",
         is_default: false,
       });
-      setShowAddAddres(false);
     } else {
       setLoading(true);
       const response = await api.updateAddress({
@@ -193,6 +195,7 @@ const NewAddressModal = ({
         setLoading(false);
       } else {
         setLoading(false);
+        toast.error(response?.message || t("failed_to_update_address") || "Failed to update address");
       }
     }
   };

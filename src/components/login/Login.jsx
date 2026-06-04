@@ -48,6 +48,7 @@ import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
 import Link from "next/link";
 import { redirectToRoleDashboard } from "@/lib/dashboardRedirect";
+import { pushErrorLog } from "@/utils/errorLogger";
 
 export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const city = useSelector((state) => state.City.city);
@@ -489,6 +490,13 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       }
     } catch (error) {
       console.error("error", error);
+      pushErrorLog({
+        error_title: 'Login Error',
+        error_detail: error.stack || error.message || String(error),
+        source: 'web',
+        screen_name: '/login (Phone/Google)',
+        priority: '1',
+      });
       setLoading(false);
     }
   };
@@ -642,6 +650,15 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
       }
     } catch (error) {
       console.log("error", error);
+      pushErrorLog({
+        error_title: 'Email Login Error',
+        error_detail: error.stack || error.message || String(error),
+        source: 'web',
+        user_email: email,
+        screen_name: '/login (Email)',
+        priority: '1',
+      });
+      setLoading(false);
     }
   };
 
