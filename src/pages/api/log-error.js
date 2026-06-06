@@ -4,12 +4,12 @@ export default async function handler(req, res) {
   }
 
   const odooBaseUrl = process.env.ODOO_BASE_URL;
-  const apiKey = process.env.ODOO_ERROR_LOGGER_API_KEY;
+  const sessionId = req.headers['x-odoo-session'] || '';
 
-  if (!odooBaseUrl || !apiKey) {
+  if (!odooBaseUrl) {
     return res.status(500).json({ 
       status: 'error', 
-      message: 'Server configuration error: ODOO_BASE_URL or ODOO_ERROR_LOGGER_API_KEY is missing' 
+      message: 'Server configuration error: ODOO_BASE_URL is missing' 
     });
   }
 
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'X-Odoo-Session': sessionId,
       },
       body: JSON.stringify(req.body),
     });

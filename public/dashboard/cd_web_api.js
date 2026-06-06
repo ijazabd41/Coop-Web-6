@@ -58,10 +58,11 @@ const CdApi = (() => {
           params:  { db: DB, login: loginEmail, password }
         })
       });
+      const newSession = res.headers.get('X-Odoo-Session');
       const data   = await res.json();
       const result = data.result || {};
       if (result.uid) {
-        localStorage.setItem('cd_session_id', result.session_id || '');
+        localStorage.setItem('cd_session_id', newSession || result.session_id || '');
         localStorage.setItem('cd_user_id',    String(result.uid));
         localStorage.setItem('cd_user_name',  result.name || '');
         const role = result.cd_mobile_role || {};
@@ -89,12 +90,14 @@ const CdApi = (() => {
     const path = window.location.pathname.toLowerCase();
     
     let allowed = true;
-    if (path.includes('owner')) {
-      allowed = (r === 'company_owner' || r === 'store_manager');
+    if (path.includes('store_manager')) {
+      allowed = (r === 'store_manager' || r === 'stock_manager');
+    } else if (path.includes('owner')) {
+      allowed = (r === 'company_owner');
     } else if (path.includes('delivery')) {
       allowed = (r === 'delivery_manager' || r === 'delivery_boy');
     } else if (path.includes('stock')) {
-      allowed = (r === 'stock_manager');
+      allowed = (r === 'stock_manager' || r === 'store_keeper');
     }
     
     if (!allowed) {

@@ -1,9 +1,10 @@
 const ROLE_DASHBOARD_PATHS = {
   company_owner: "/dashboard/owner",
-  store_manager: "/dashboard/owner",
+  store_manager: "/dashboard/web_store_manager_delivery 1.html",
   delivery_manager: "/dashboard/delivery",
   delivery_boy: "/dashboard/delivery",
-  stock_manager: "/dashboard/stock",
+  stock_manager: "/dashboard/web_store_manager_delivery 1.html",
+  store_keeper: "/dashboard/stock",
 };
 
 function normalizeRoleCode(roleCode) {

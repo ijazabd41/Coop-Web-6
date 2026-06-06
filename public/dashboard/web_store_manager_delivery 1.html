@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!DOCT🛒 html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>COOP â€” Store Manager Delivery Dashboard</title>
+<title>COOP Store Manager Delivery Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* â”€â”€ Tokens â”€â”€ */
+/*  Tokens  */
 :root{
   --bg:#F4F6F9;--card:#fff;--border:#E8ECF2;
   --primary:#875A7B;--primary-dk:#6C3D66;
@@ -23,7 +23,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height:100vh}
 
-/* â”€â”€ Sidebar â”€â”€ */
+/*  Sidebar  */
 .sb{width:240px;background:var(--card);border-right:1px solid var(--border);
   display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50}
 .sb-logo{padding:20px 20px 14px;font-size:1.4rem;font-weight:800;
@@ -50,7 +50,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
   color:var(--mid);cursor:pointer}
 .sb-footer:hover{color:var(--s-can)}
 
-/* â”€â”€ Main â”€â”€ */
+/*  Main  */
 .main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:linear-gradient(135deg,var(--primary),var(--primary-dk));
   color:#fff;padding:0 24px;height:56px;display:flex;align-items:center;
@@ -65,7 +65,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .tb-btn:hover{background:rgba(255,255,255,.25)}
 .content{padding:18px;flex:1}
 
-/* â”€â”€ Date filter bar â”€â”€ */
+/*  Date filter bar  */
 .filter-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
 .p-btn{padding:6px 14px;border:1px solid var(--border);border-radius:20px;
   background:var(--card);font-size:.75rem;font-weight:600;cursor:pointer;
@@ -77,7 +77,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
   font-size:.75rem;font-family:inherit;color:var(--text)}
 .filter-count{margin-left:auto;font-size:.8rem;font-weight:600;color:var(--mid)}
 
-/* â”€â”€ KPI Grid â”€â”€ */
+/*  KPI Grid  */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:var(--card);border-radius:12px;padding:14px;text-align:center;
@@ -95,11 +95,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .kpi.c-green{border-color:var(--s-del)}.kpi.c-green .kpi-num{color:var(--s-del)}
 .kpi.c-red{border-color:var(--s-can)}.kpi.c-red .kpi-num{color:var(--s-can)}
 
-/* â”€â”€ Two column â”€â”€ */
+/*  Two column  */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 @media(max-width:900px){.two-col{grid-template-columns:1fr}}
 
-/* â”€â”€ Panel â”€â”€ */
+/*  Panel  */
 .panel{background:var(--card);border-radius:12px;
   box-shadow:0 2px 6px rgba(0,0,0,.05);overflow:hidden;margin-bottom:14px}
 .panel-hdr{background:var(--primary);color:#fff;padding:11px 16px;
@@ -107,7 +107,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .panel-hdr button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
   color:#fff;border-radius:6px;padding:3px 10px;font-size:.75rem;cursor:pointer}
 
-/* â”€â”€ Source rows â”€â”€ */
 .src-row{display:flex;align-items:center;padding:9px 14px;cursor:pointer;
   border-bottom:1px solid #f3f4f6;transition:.1s}
 .src-row:hover{background:#fafafa}
@@ -117,7 +116,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .src-bar{height:3px;background:#f3f4f6;margin:0 14px}
 .src-fill{height:100%;border-radius:2px;transition:width .5s}
 
-/* â”€â”€ Recent orders â”€â”€ */
 .rec-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #f3f4f6}
 .rec-row:last-child{border-bottom:none}
 .rec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:10px}
@@ -128,7 +126,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .rec-src{font-size:.72rem;font-weight:700}
 .rec-state{font-size:.72rem;color:var(--mid)}
 
-/* â”€â”€ Orders list tab â”€â”€ */
 .order-card{background:var(--card);border-radius:12px;border:1px solid var(--border);
   margin-bottom:10px;overflow:hidden;cursor:pointer;transition:.15s;
   box-shadow:0 1px 4px rgba(0,0,0,.04)}
@@ -150,7 +147,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .quick-btn{border:none;border-radius:7px;padding:4px 12px;font-size:.72rem;
   font-weight:700;cursor:pointer;color:#fff}
 
-/* â”€â”€ Detail slide-in â”€â”€ */
 .detail-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200}
 .detail-backdrop.open{display:flex;justify-content:flex-end}
 .detail-panel{width:480px;max-width:96vw;height:100vh;background:#fff;
@@ -174,7 +170,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 .act-btn.outline{background:transparent;border:1px solid var(--border);color:var(--mid)}
 .act-btn.danger{background:rgba(231,74,59,.08);color:var(--s-can);border:1px solid rgba(231,74,59,.3)}
 
-/* â”€â”€ Misc â”€â”€ */
 .empty{text-align:center;padding:32px;color:var(--soft)}
 .spin{animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -183,40 +178,37 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 </head>
 <body>
 
-<!-- â”€â”€ SIDEBAR â”€â”€ -->
 <aside class="sb">
-  <div class="sb-logo">COOP<span>.DEL</span></div>
+  <div class="sb-logo">🛒 COOP<span>.DEL</span></div>
   <div class="sb-user">
     <div class="sb-av" id="sb-av">S</div>
     <div>
-      <div class="sb-name" id="sb-name">â€”</div>
+      <div class="sb-name" id="sb-name">CD.COM</div>
       <div class="sb-role">Store Manager</div>
     </div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section">Overview</div>
-    <a class="sb-item active" onclick="showTab('dashboard',this)">ðŸ“Š Dashboard</a>
+    <a class="sb-item active" onclick="showTab('dashboard',this)"> 📊 Dashboard</a>
     <div class="sb-section">Orders</div>
-    <a class="sb-item" onclick="showTab('orders',this)">
-      ðŸ“‹ All Orders <span class="sb-badge" id="sb-total">0</span>
+    <a class="sb-item" onclick="showTab('orders',this)"> 📦 All Orders <span class="sb-badge" id="sb-total">0</span>
     </a>
-    <a class="sb-item" onclick="showTab('pending',this)">
-      â³ Pending Approval <span class="sb-badge" id="sb-pending">0</span>
+    <a class="sb-item" onclick="showTab('pending',this)"> ⏳ Pending Approval <span class="sb-badge" id="sb-pending">0</span>
     </a>
-    <a class="sb-item" onclick="showTab('ready',this)">ðŸ“¦ Ready for Pickup</a>
-    <a class="sb-item" onclick="showTab('dispatched',this)">ðŸšš Dispatched</a>
+    <a class="sb-item" onclick="showTab('ready',this)"> 🛍️ Ready for Pickup</a>
+    <a class="sb-item" onclick="showTab('dispatched',this)"> 🚚 Dispatched</a>
   </nav>
-  <div class="sb-footer" onclick="doLogout()">ðŸšª Logout</div>
+  <div class="sb-footer" onclick="doLogout()"> 🚪 Logout</div>
 </aside>
 
-<!-- â”€â”€ MAIN â”€â”€ -->
+<!--  MAIN  -->
 <div class="main">
   <div class="topbar">
-    <div class="tb-title" id="tb-title">Delivery Dashboard</div>
+    <div class="tb-title" id="tb-title">🚚 Delivery Dashboard</div>
     <div class="tb-right">
       <div class="tb-live"><div class="tb-dot"></div>Live</div>
       <span id="tb-time" style="opacity:.7;font-size:.76rem"></span>
-      <button class="tb-btn" onclick="hardRefresh()"><span id="ref-icon">âŸ³</span></button>
+      <button class="tb-btn" onclick="hardRefresh()">🔄<span id="ref-icon"></span></button>
     </div>
   </div>
 
@@ -224,12 +216,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
     <div id="err-bar" style="display:none;background:#fef2f2;border:1px solid #fecaca;
       color:#991b1b;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.85rem"></div>
 
-    <!-- â•â• DASHBOARD TAB â•â• -->
+    <!--  DASHBOARD TAB  -->
     <div id="tab-dashboard" class="tab-body active">
       <!-- Date filter bar -->
       <div class="filter-bar">
         <button class="p-btn active" onclick="setPeriod('today',this)">Today</button>
-        <button class="p-btn" onclick="setPeriod('yesterday',this)">Yesterday</button>
+        <button class="p-btn" onclick="setPeriod('yesterday',this)">🛒/button>
         <button class="p-btn" onclick="setPeriod('this_week',this)">This Week</button>
         <button class="p-btn" onclick="setPeriod('this_month',this)">This Month</button>
         <button class="p-btn" onclick="setPeriod('last_6_months',this)">Last 6 Months</button>
@@ -237,7 +229,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
         <button class="p-btn" onclick="setPeriod('custom',this)" id="btn-custom">Custom</button>
         <div id="custom-range" style="display:none" class="custom-range">
           <input type="date" class="date-inp" id="date-from">
-          <span style="color:var(--mid);font-weight:600">â†’</span>
+          <span style="color:var(--mid);font-weight:600"></span>
           <input type="date" class="date-inp" id="date-to">
           <button class="p-btn active" onclick="applyCustom()">Apply</button>
         </div>
@@ -247,28 +239,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
       <!-- KPI Grid -->
       <div class="kpi-grid">
         <div class="kpi c-purple" onclick="openFilter('')">
-          <div class="kpi-num" id="k-total">â€”</div><div class="kpi-lbl">Total Orders</div>
+          <div class="kpi-num" id="k-total"></div><div class="kpi-lbl">Total Orders</div>
         </div>
         <div class="kpi c-orange" onclick="openFilter('new')">
-          <div class="kpi-num" id="k-pending">â€”</div><div class="kpi-lbl">Pending Approval</div>
+          <div class="kpi-num" id="k-pending"></div><div class="kpi-lbl">Pending Approval</div>
         </div>
         <div class="kpi c-blue" onclick="openFilter('approved')">
-          <div class="kpi-num" id="k-approved">â€”</div><div class="kpi-lbl">Approved</div>
+          <div class="kpi-num" id="k-approved"></div><div class="kpi-lbl">Approved</div>
         </div>
         <div class="kpi c-teal" onclick="openFilter('ready')">
-          <div class="kpi-num" id="k-ready">â€”</div><div class="kpi-lbl">Ready for Pickup</div>
+          <div class="kpi-num" id="k-ready"></div><div class="kpi-lbl">Ready for Pickup</div>
         </div>
         <div class="kpi c-indigo" onclick="openFilter('accepted')">
-          <div class="kpi-num" id="k-accepted">â€”</div><div class="kpi-lbl">Driver Accepted</div>
+          <div class="kpi-num" id="k-accepted"></div><div class="kpi-lbl">Driver Accepted</div>
         </div>
         <div class="kpi c-yellow" onclick="openFilter('dispatched')">
-          <div class="kpi-num" id="k-dispatched">â€”</div><div class="kpi-lbl">Dispatched</div>
+          <div class="kpi-num" id="k-dispatched"></div><div class="kpi-lbl">Dispatched</div>
         </div>
         <div class="kpi c-green" onclick="openFilter('delivered')">
-          <div class="kpi-num" id="k-delivered">â€”</div><div class="kpi-lbl">Delivered</div>
+          <div class="kpi-num" id="k-delivered"></div><div class="kpi-lbl">Delivered</div>
         </div>
         <div class="kpi c-red" onclick="openFilter('cancelled')">
-          <div class="kpi-num" id="k-cancelled">â€”</div><div class="kpi-lbl">Cancelled</div>
+          <div class="kpi-num" id="k-cancelled"></div><div class="kpi-lbl">Cancelled</div>
         </div>
       </div>
 
@@ -276,12 +268,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
       <div class="two-col">
         <!-- Source breakdown -->
         <div class="panel">
-          <div class="panel-hdr">ðŸŒ Orders by Source</div>
+          <div class="panel-hdr"> Orders by Source</div>
           <div id="src-list"></div>
         </div>
         <!-- Source donut chart -->
         <div class="panel">
-          <div class="panel-hdr">ðŸ“Š Distribution</div>
+          <div class="panel-hdr"> Distribution</div>
           <div style="padding:16px"><canvas id="src-chart" height="220"></canvas></div>
         </div>
       </div>
@@ -289,14 +281,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
       <!-- Recent orders -->
       <div class="panel">
         <div class="panel-hdr">
-          ðŸ• Recent Orders
-          <button onclick="showTab('orders',document.querySelector('.sb-item:nth-child(4)'))">View All</button>
+           Recent Orders
+          <button onclick="showTab('orders',document.querySelector('.sb-item:nth-child(4)'))"> 👀 View All</button>
         </div>
         <div id="recent-list"></div>
       </div>
     </div>
 
-    <!-- â•â• ORDERS TAB â•â• -->
+    <!--  ORDERS TAB  -->
     <div id="tab-orders" class="tab-body">
       <div class="filter-bar" style="margin-bottom:12px">
         <select id="ord-source" onchange="loadOrders()" style="padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:.78rem;font-family:inherit">
@@ -313,7 +305,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
           <option value="internal">Internal</option>
         </select>
         <span class="filter-count" id="ord-count">0 orders</span>
-        <button class="p-btn" onclick="loadOrders()">âŸ³ Refresh</button>
+        <button class="p-btn" onclick="loadOrders()"> 🔄 Refresh</button>
       </div>
       <div id="ord-list"></div>
       <div style="padding:8px 0">
@@ -321,31 +313,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
       </div>
     </div>
 
-    <!-- â•â• PENDING TAB â•â• -->
+    <!--  PENDING TAB  -->
     <div id="tab-pending" class="tab-body">
       <div class="panel">
-        <div class="panel-hdr">â³ Pending Approval
-          <button onclick="loadStateOrders('pending','new')">âŸ³ Refresh</button>
+        <div class="panel-hdr"> Pending Approval
+          <button onclick="loadStateOrders('pending','new')"> 🔄 Refresh</button>
         </div>
         <div id="pending-list"></div>
       </div>
     </div>
 
-    <!-- â•â• READY TAB â•â• -->
+    <!--  READY TAB  -->
     <div id="tab-ready" class="tab-body">
       <div class="panel">
-        <div class="panel-hdr">ðŸ“¦ Ready for Pickup
-          <button onclick="loadStateOrders('ready-list','ready')">âŸ³ Refresh</button>
+        <div class="panel-hdr"> Ready for Pickup
+          <button onclick="loadStateOrders('ready-list','ready')"> 🔄 Refresh</button>
         </div>
         <div id="ready-list"></div>
       </div>
     </div>
 
-    <!-- â•â• DISPATCHED TAB â•â• -->
+    <!--  DISPATCHED TAB  -->
     <div id="tab-dispatched" class="tab-body">
       <div class="panel">
-        <div class="panel-hdr">ðŸšš Dispatched
-          <button onclick="loadStateOrders('dispatched-list','dispatched')">âŸ³ Refresh</button>
+        <div class="panel-hdr"> Dispatched
+          <button onclick="loadStateOrders('dispatched-list','dispatched')"> 🔄 Refresh</button>
         </div>
         <div id="dispatched-list"></div>
       </div>
@@ -353,11 +345,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
   </div>
 </div>
 
-<!-- â”€â”€ DETAIL PANEL â”€â”€ -->
+<!--  DETAIL PANEL  -->
 <div class="detail-backdrop" id="detail-bd" onclick="closeDetail(event)">
   <div class="detail-panel">
     <div class="dp-hdr" id="dp-hdr">
-      <button class="dp-close" onclick="closeDetail()">âœ•</button>
+      <button class="dp-close" onclick="closeDetail()"></button>
       <div style="font-size:.78rem;opacity:.75;margin-bottom:3px" id="dp-src"></div>
       <div style="font-size:1.1rem;font-weight:800" id="dp-name"></div>
       <div id="dp-state-badge" style="margin-top:7px"></div>
@@ -368,12 +360,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height
 </div>
 
 <script>
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-// CONFIG â€” update BASE to your Odoo server URL
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// 
+// CONFIG  update BASE to your Odoo server URL
+// 
 const BASE = '/api/odoo';
 
-// â”€â”€ Source / State maps â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Source / State maps 
 const SRC = {
   coopplus_web:{l:'COOPPLUS Website',c:'#4E73DF'},
   coopplus_app:{l:'COOPPLUS Mobile',c:'#1CC88A'},
@@ -400,17 +392,18 @@ const sc = k => (SRC[k]||{c:'#858796'}).c;
 const stl = k => (ST[k]||{l:k}).l;
 const stc = k => (ST[k]||{c:'#858796'}).c;
 
-// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  State 
 let S = {
   period:'today', dateFrom:'', dateTo:'',
   dashData:{}, ordItems:[], ordOffset:0, ordTotal:0,
   detailId:null, srcChart:null, refreshTimer:null,
 };
 
-// â”€â”€ API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  API 
 async function api(path, params={}) {
   const url = new URL(BASE + path, window.location.origin);
   url.searchParams.set('by_AJR', '1');
+  url.searchParams.set('t', Date.now());
   Object.entries(params).forEach(([k,v]) => { if(v!==undefined&&v!=='') url.searchParams.set(k,v); });
   try {
     const r = await fetch(url, {
@@ -426,16 +419,28 @@ async function api(path, params={}) {
 function ok(r)  { return r && r.success === 1; }
 function dat(r) { return r.data || r; }
 
-// â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Init 
 window.addEventListener('DOMContentLoaded', async () => {
   const name = localStorage.getItem('cd_user_name') || 'Manager';
   document.getElementById('sb-name').textContent = name;
   document.getElementById('sb-av').textContent   = (name[0]||'S').toUpperCase();
   await loadDashboard();
-  S.refreshTimer = setInterval(() => { if(!document.hidden) loadDashboard(true); }, 30000);
+  S.refreshTimer = setInterval(() => {
+    if(!document.hidden) {
+      loadDashboard(true);
+      const activeTab = document.querySelector('.tab-body.active');
+      if (activeTab) {
+        const id = activeTab.id;
+        if (id === 'tab-orders') { S.ordOffset=0; S.ordItems=[]; loadOrders(); }
+        else if (id === 'tab-pending') loadStateOrders('pending-list','new');
+        else if (id === 'tab-ready') loadStateOrders('ready-list','ready');
+        else if (id === 'tab-dispatched') loadStateOrders('dispatched-list','dispatched');
+      }
+    }
+  }, 30000);
 });
 
-// â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Tab switching 
 const TAB_TITLES = {
   dashboard:'Delivery Dashboard', orders:'All Orders',
   pending:'Pending Approval', ready:'Ready for Pickup', dispatched:'Dispatched',
@@ -452,7 +457,7 @@ function showTab(name, el) {
   if (name==='dispatched')loadStateOrders('dispatched-list','dispatched');
 }
 
-// â”€â”€ Period â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Period 
 const PERIOD_LABELS = {
   today:'Today',yesterday:'Yesterday',this_week:'This Week',
   this_month:'This Month',last_6_months:'Last 6 Months',all:'All Time',custom:'Custom',
@@ -471,7 +476,7 @@ function applyCustom() {
   loadDashboard();
 }
 
-// â”€â”€ Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Dashboard 
 async function loadDashboard(silent=false) {
   const params = {period: S.period};
   if (S.period==='custom') { params.date_from=S.dateFrom; params.date_to=S.dateTo; }
@@ -522,7 +527,7 @@ function renderRecent(items) {
       <div class="rec-dot" style="background:${stc(o.state)}"></div>
       <div class="rec-info">
         <div class="rec-name">${o.name}</div>
-        <div class="rec-cust">${o.partner||'â€”'}</div>
+        <div class="rec-cust">${o.partner||''}</div>
       </div>
       <div class="rec-right">
         <div class="rec-src" style="color:${sc(o.source)}">${sl(o.source)}</div>
@@ -552,7 +557,7 @@ function renderSourceChart(bs) {
   }
 }
 
-// â”€â”€ Orders list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Orders list 
 async function loadOrders() {
   const source = document.getElementById('ord-source').value;
   const params = {limit:25, offset:0};
@@ -601,10 +606,10 @@ function renderOrderList(cid, items, showQuick) {
     if (showQuick) {
       if (state==='new')
         qBtn=`<button class="quick-btn" style="background:#1CC88A"
-          onclick="event.stopPropagation();qApprove(${o.id},this)">âœ… Approve</button>`;
+          onclick="event.stopPropagation();qApprove(${o.id},this)"> ✅ Approve</button>`;
       else if (state==='approved')
         qBtn=`<button class="quick-btn" style="background:#36B9CC"
-          onclick="event.stopPropagation();qReady(${o.id},this)">ðŸ“¦ Ready</button>`;
+          onclick="event.stopPropagation();qReady(${o.id},this)"> 🛍️ Ready</button>`;
     }
     return `<div class="order-card" onclick="openDetail(${o.id})">
       <div class="oc-stripe" style="background:${c}"></div>
@@ -622,7 +627,7 @@ function renderOrderList(cid, items, showQuick) {
         ${o.origin?`<div class="oc-origin">Ref: ${o.origin}</div>`:''}
       </div>
       <div class="oc-footer">
-        <span class="oc-driver">${drv?'ðŸ '+drv:'â€”'}</span>
+        <span class="oc-driver">${drv?' '+drv:''}</span>
         <div style="display:flex;align-items:center;gap:8px">
           ${o.scheduled_date?`<span class="oc-date">${o.scheduled_date.substring(0,10)}</span>`:''}
           ${qBtn}
@@ -635,19 +640,19 @@ function renderOrderList(cid, items, showQuick) {
 async function qApprove(id,btn) {
   btn.textContent='...';btn.disabled=true;
   const r = await api(`/api/skytec-delivery/orders/${id}/approve`);
-  btn.textContent = ok(r)?'âœ…':'Error';
+  btn.textContent = ok(r)?'':'Error';
   btn.style.background = ok(r)?'#1CC88A':'#E74A3B';
   if(ok(r)) setTimeout(()=>{loadDashboard(true);loadStateOrders('pending-list','new');},500);
 }
 async function qReady(id,btn) {
   btn.textContent='...';btn.disabled=true;
   const r = await api(`/api/skytec-delivery/orders/${id}/ready`);
-  btn.textContent = ok(r)?'âœ…':'Error';
+  btn.textContent = ok(r)?'':'Error';
   btn.style.background = ok(r)?'#36B9CC':'#E74A3B';
   if(ok(r)) setTimeout(()=>{loadDashboard(true);},500);
 }
 
-// â”€â”€ Detail panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Detail panel 
 async function openDetail(id) {
   S.detailId = id;
   document.getElementById('detail-bd').classList.add('open');
@@ -697,17 +702,17 @@ async function openDetail(id) {
   // Action buttons
   const acts = [];
   if (state==='new')
-    acts.push({l:'âœ… Approve Delivery',c:'#1CC88A',a:`doAction('approve')`});
+    acts.push({l:'✅ Approve Delivery',c:'#1CC88A',a:`doAction('approve')`});
   if (state==='approved')
-    acts.push({l:'ðŸ“¦ Mark Ready for Pickup',c:'#36B9CC',a:`doAction('ready')`});
+    acts.push({l:'🛍️ Mark Ready for Pickup',c:'#36B9CC',a:`doAction('ready')`});
   if (state==='ready')
-    acts.push({l:'ðŸš€ Mark Driver Accepted',c:'#6F42C1',a:`doAction('accept')`});
+    acts.push({l:'👍 Mark Driver Accepted',c:'#6F42C1',a:`doAction('accept')`});
   if (state==='accepted')
-    acts.push({l:'ðŸšš Dispatch',c:'#FFC107',tc:'#333',a:`doAction('dispatch')`});
+    acts.push({l:'🚚 Dispatch',c:'#FFC107',tc:'#333',a:`doAction('dispatch')`});
   if (state==='dispatched')
-    acts.push({l:'âœ… Mark Delivered',c:'#1CC88A',a:`doAction('delivered')`});
+    acts.push({l:'🎉 Mark Delivered',c:'#1CC88A',a:`doAction('delivered')`});
   if (!['delivered','cancelled'].includes(state))
-    acts.push({l:'âŒ Cancel',c:'danger',a:`doAction('cancel')`});
+    acts.push({l:'❌ Cancel',c:'danger',a:`doAction('cancel')`});
 
   document.getElementById('dp-actions').innerHTML = acts.map(a =>
     a.c==='danger'
@@ -719,7 +724,7 @@ async function openDetail(id) {
 async function doAction(action) {
   const id  = S.detailId;
   const btn = event.target;
-  btn.textContent='â³ Processing...';btn.disabled=true;
+  btn.textContent=' Processing...';btn.disabled=true;
   const r = await api(`/api/skytec-delivery/orders/${id}/${action}`);
   if (ok(r)) {
     closeDetail();
@@ -737,7 +742,7 @@ function closeDetail(e) {
   document.getElementById('detail-bd').classList.remove('open');
 }
 
-// â”€â”€ Navigate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Navigate 
 function openFilter(state) {
   const tab = state==='new'?'pending':state==='ready'?'ready':state==='dispatched'?'dispatched':'orders';
   showTab(tab, null);
@@ -748,7 +753,7 @@ function openSource(src) {
   loadOrders();
 }
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Helpers 
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
 function showErr(m){const e=document.getElementById('err-bar');e.textContent=m;e.style.display=m?'block':'none';}
 async function hardRefresh(){
@@ -764,3 +769,4 @@ function doLogout() {
 </script>
 </body>
 </html>
+

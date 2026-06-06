@@ -18,6 +18,7 @@ export const pushErrorLog = async (params) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Odoo-Session': typeof window !== 'undefined' ? (localStorage.getItem('cd_session_id') || '') : '',
       },
       body: JSON.stringify(payload),
     });

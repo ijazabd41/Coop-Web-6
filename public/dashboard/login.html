@@ -82,7 +82,7 @@ async function doLogin() {
   err.style.display = 'none';
 
   try {
-    const result = await CdApi.login({ login, password: pass });
+    const result = await CdApi.login(login, pass);
     if (result.uid) {
       redirect(CdApi.roleCode());
     } else {
@@ -103,11 +103,12 @@ function redirect(role) {
   // Change web1_ to web6_ if you use the dark theme
   const theme = localStorage.getItem('cd_theme') || 'web1';
   const map = {
-    'company_owner':    theme + '_owner_dashboard.html',
-    'store_manager':    'web_store_manager_delivery.html',
+    'store_manager':    'web_store_manager_delivery 1.html',
+    'stock_manager':    'web_store_manager_delivery 1.html',
+    'store_keeper':     theme + '_stock_dashboard.html',
     'delivery_manager': theme + '_delivery_dashboard.html',
     'delivery_boy':     theme + '_delivery_dashboard.html',
-    'stock_manager':    theme + '_stock_dashboard.html',
+    'company_owner':    theme + '_owner_dashboard.html'
   };
   window.location.href = map[role] || theme + '_owner_dashboard.html';
 }
