@@ -623,6 +623,7 @@ function initCharts(){
 async function _api(path, params={}){
   const url=new URL('http://cooperp.freeddns.org:8076'+path);
   url.searchParams.set('by_AJR','1');
+    url.searchParams.set('t', Date.now());
   Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
   try{
     const res=await fetch(url,{headers:{'Content-Type':'application/json','Cookie':'session_id='+CdApi.session()},credentials:'include'});
