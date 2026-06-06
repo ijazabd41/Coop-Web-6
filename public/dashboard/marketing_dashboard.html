@@ -621,7 +621,7 @@ function initCharts(){
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 async function _api(path, params={}){
-  const url=new URL('http://cooperp.freeddns.org:8076'+path);
+  const url=new URL('/api/odoo'+path, window.location.origin);
   url.searchParams.set('by_AJR','1');
     url.searchParams.set('t', Date.now());
   Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
