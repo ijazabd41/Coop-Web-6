@@ -108,7 +108,8 @@ function redirect(role) {
     'store_keeper':     theme + '_stock_dashboard.html',
     'delivery_manager': theme + '_delivery_dashboard.html',
     'delivery_boy':     theme + '_delivery_dashboard.html',
-    'company_owner':    theme + '_owner_dashboard.html'
+    'company_owner':    theme + '_owner_dashboard.html',
+    'marketing_manager':'marketing_dashboard.html'
   };
   window.location.href = map[role] || theme + '_owner_dashboard.html';
 }

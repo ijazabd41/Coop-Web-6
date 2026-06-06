@@ -5,6 +5,7 @@ const ROLE_DASHBOARD_PATHS = {
   delivery_boy: "/dashboard/delivery",
   stock_manager: "/dashboard/web_store_manager_delivery 1.html",
   store_keeper: "/dashboard/stock",
+  marketing_manager: "/dashboard/marketing_dashboard.html",
 };
 
 function normalizeRoleCode(roleCode) {
