@@ -6,7 +6,7 @@
   --topbar-bg:     #FFFFFF;
   --card-bg:       #FFFFFF;
   --border:        #F2F2F2;
-  --primary:       #D61F26;
+  --primary: #E62C31;
   --primary-lt:    #FFE8E9;
   --text:          #1A1A1A;
   --text-mid:      #333333;
@@ -17,8 +17,8 @@
   --red-lt:        #FFE8E9;
   --nav-hover:     #FFF8F8;
   --nav-active-bg: #FFE8E9;
-  --card-shadow:   0 4px 16px rgba(214, 31, 38, 0.08);
-  --chart-1:       #D61F26;
+  --card-shadow:   0 4px 16px rgba(230, 44, 49, 0.08);
+  --chart-1: #E62C31;
   --chart-2:       #F5C800;
   --chart-3:       #2980B9;
   --chart-4:       #2ECC71;
