@@ -626,7 +626,7 @@ async function _api(path, params={}){
     url.searchParams.set('t', Date.now());
   Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
   try{
-    const res=await fetch(url,{headers:{'Content-Type':'application/json','Cookie':'session_id='+CdApi.session()},credentials:'include'});
+    const res=await fetch(url,{headers:{'Content-Type':'application/json','X-Odoo-Session': CdApi.session()},credentials:'include'});
     const text=await res.text();
     if(text.trim().startsWith('<')) return{error:'not_available',message:'Module not installed or session expired'};
     return JSON.parse(text);
