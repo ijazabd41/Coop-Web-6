@@ -123,12 +123,13 @@ const CategoriesContainer = ({ categories }) => {
               prevEl: ".category-button-next",
             }}
             breakpoints={{
-              0: { slidesPerView: 1.5 },
-              320: { slidesPerView: 2 },
-              375: { slidesPerView: 2.5 },
-              425: { slidesPerView: 3 },
-              768: { slidesPerView: 4 },
-              1024: { slidesPerView: 6 },
+              0: { slidesPerView: 2.5 },
+              320: { slidesPerView: 3 },
+              375: { slidesPerView: 3.5 },
+              425: { slidesPerView: 4 },
+              768: { slidesPerView: 6 },
+              1024: { slidesPerView: 8 },
+              1280: { slidesPerView: 10 },
             }}
           >
             {categories?.categories?.map((category, index) => {
@@ -139,8 +140,8 @@ const CategoriesContainer = ({ categories }) => {
                 >
                   <CategoryCard
                     category={category}
-                    imageSize={122}
-                    padding={16}
+                    imageSize={86}
+                    padding={10}
                   />
                 </SwiperSlide>
               );

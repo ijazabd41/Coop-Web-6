@@ -25,7 +25,7 @@ const Category = () => {
   // const [totalCategories, setTotalCategories] = useState(0);
 
   const [page, setPage] = useState(1);
-  const categoryPerPage = 12;
+  const categoryPerPage = 24;
   const slug_id = slug === "all" ? "" : slug;
 
   // // Reset page when slug changes
@@ -114,12 +114,12 @@ const Category = () => {
       <BreadCrumb title={title} />
       <div className="container">
         <div
-          className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 h-auto my-5 px-2`}
+          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 h-auto my-5 px-2`}
         >
           {isLoading
             ? Array.from({ length: categoryPerPage }).map((_, index) => (
               <div key={index} className="col-span-1">
-                <CardSkeleton height={180} />
+                <CardSkeleton height={140} />
               </div>
             ))
             : categories?.data?.map((category) => (
@@ -128,7 +128,7 @@ const Category = () => {
                 className="col-span-1"
                 onClick={() => handleCategoryClick(category)}
               >
-                <CategoryCard category={category} imageSize={122} />
+                <CategoryCard category={category} imageSize={86} padding={10} />
               </div>
             ))}
         </div>
