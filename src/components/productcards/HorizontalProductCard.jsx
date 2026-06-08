@@ -260,7 +260,7 @@ const HorizontalProductCard = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     if (cart?.isGuest) {
-      const quantity = getProductQuantities(cart?.cartProducts);
+      const quantity = getProductQuantities(cart?.guestCart);
       handleAddNewProductGuest(quantity, product);
     } else {
       const quantity = getProductQuantities(cart?.cartProducts);
