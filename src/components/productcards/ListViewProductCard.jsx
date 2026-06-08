@@ -229,17 +229,22 @@ const ListViewProductCard = ({ product }) => {
     const productQty = productQuantity?.find(
       (prdct) => prdct?.product_id == product?.id
     )?.qty;
-    if (
-      selectedVariant?.is_unlimited_stock == 0 &&
-      selectedVariant?.stock == 0
-    ) {
-      toast.error(t("out_of_stock_message"));
-    } else if (
-      Number(productQty || 0) < Number(product.total_allowed_quantity)
-    ) {
-      AddToGuestCart(product, product.id, selectedVariant?.id, 1, 0, "add");
+    if (Number(product.is_unlimited_stock !== 0)) {
+      if (Number(productQty || 0) < Number(product.total_allowed_quantity)) {
+        AddToGuestCart(product, product.id, selectedVariant?.id, 1, 0, "add");
+      } else {
+        toast.error(t("max_cart_limit_error"));
+      }
     } else {
-      toast.error(t("out_of_stock_message"));
+      if (Number(productQty || 0) >= Number(selectedVariant?.stock)) {
+        toast.error(t("out_of_stock_message"));
+      } else if (
+        Number(productQty || 0) >= Number(product.total_allowed_quantity)
+      ) {
+        toast.error(t("max_cart_limit_error"));
+      } else {
+        AddToGuestCart(product, product.id, selectedVariant?.id, 1, 0, "add");
+      }
     }
   };
   const handleValidateAddNewProduct = (productQuantity, product) => {
