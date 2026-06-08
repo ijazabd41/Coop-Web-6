@@ -18,6 +18,8 @@ import animationOne from "@/assets/order_place_animation/order_placed_back_anima
 import animationTwo from "@/assets/order_place_animation/order_success_tick_animation.json";
 import animationFailed from "@/assets/order_place_animation/order_failed_animation.json";
 
+import OrderDetail from "../orderdetail/OrderDetail";
+
 const PaymentStatus = () => {
   const dispatch = useDispatch();
   const phonePeData = useSelector(
@@ -28,6 +30,7 @@ const PaymentStatus = () => {
 
   const [status, setStatus] = useState("");
   const [type, setType] = useState("");
+  const [cartCleared, setCartCleared] = useState(false);
 
   const checkPaymentStatus = ({ status, status_code, transaction_status }) => {
     if (status === "pending" || transaction_status === "pending")
@@ -46,15 +49,27 @@ const PaymentStatus = () => {
   const isSubscriptionTransaction = ({ type, order_id }) =>
     type === "subscription" || order_id?.startsWith("subscription-");
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (type == "wallet" || type == "subscription") {
-        handleWalletClose();
-      } else {
-        handlePaymentClose();
+  const handleClearCartOnly = async () => {
+    try {
+      const response = await api.deleteCart();
+      if (response.status === 1) {
+        dispatch(setCart({ data: [] }));
+        dispatch(clearCartPromo());
+        dispatch(setCartSubTotal({ data: 0 }));
+        dispatch(setCartProducts({ data: [] }));
+        dispatch(clearCheckout());
       }
-    }, 3000);
-  }, []);
+    } catch (error) {
+      console.error("Error clearing cart", error);
+    }
+  };
+
+  useEffect(() => {
+    if (status === "success" && type === "order" && !cartCleared) {
+      handleClearCartOnly();
+      setCartCleared(true);
+    }
+  }, [status, type, cartCleared]);
 
   useEffect(() => {
     if (!query || Object.keys(query).length === 0) return;
@@ -94,24 +109,6 @@ const PaymentStatus = () => {
     }
   };
 
-  const handlePaymentClose = async () => {
-    try {
-      const response = await api.deleteCart();
-      if (response.status === 1) {
-        dispatch(setCart({ data: [] }));
-        dispatch(clearCartPromo());
-        dispatch(setCartSubTotal({ data: 0 }));
-        dispatch(setCartProducts({ data: [] }));
-        dispatch(clearCheckout());
-        router.replace("/");
-      } else {
-        console.error("Error clearing cart", response);
-      }
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
   const extractOrderNumber = (orderId) => {
     if (!orderId) return null;
     const regex = /^order-(\d+)-\d+$/;
@@ -136,11 +133,11 @@ const PaymentStatus = () => {
     }
   };
 
-
   const renderContent = () => {
     if (status == "success") {
+      const extractedOrderId = extractOrderNumber(query?.order_id);
       return (
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-8 w-full">
           <div className="relative h-44">
             <Lottie
               className="h-44"
@@ -169,16 +166,18 @@ const PaymentStatus = () => {
             <div className="flex flex-col md:flex-row justify-center gap-4 mx-4 mt-8">
               <button
                 className="primaryBackColor text-white px-2 md:px-8 py-2 rounded-sm font-bold text-xl"
-                onClick={
-                  type == "wallet" || type == "subscription"
-                    ? handleWalletClose
-                    : handlePaymentClose
-                }
+                onClick={() => router.replace("/")}
               >
                 {t("home")}
               </button>
             </div>
           </div>
+          
+          {type === "order" && extractedOrderId && (
+            <div className="w-full mt-8 text-left border-t pt-8">
+              <OrderDetail orderIdProp={extractedOrderId} hideBreadcrumb={true} />
+            </div>
+          )}
         </div>
       );
     }

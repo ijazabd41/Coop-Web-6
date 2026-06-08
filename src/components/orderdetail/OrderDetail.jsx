@@ -15,9 +15,10 @@ import { FiPhoneCall } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-const OrderDetail = () => {
+const OrderDetail = ({ orderIdProp, hideBreadcrumb = false }) => {
   const router = useRouter();
-  const { orderid } = router.query;
+  const { orderid: queryOrderId } = router.query;
+  const orderid = orderIdProp || queryOrderId;
   const address = useSelector((state) => state.Addresses);
   const [orderDetail, setOrderDetail] = useState([]);
   const [deliveryAddress, setDeliveryAddress] = useState([]);
@@ -113,7 +114,7 @@ const OrderDetail = () => {
 
   return (
     <section>
-      <BreadCrumb />
+      {!hideBreadcrumb && <BreadCrumb />}
       <div className="container my-12 px-2">
         {loading ? (
           <>
