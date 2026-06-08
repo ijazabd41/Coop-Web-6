@@ -161,7 +161,7 @@ const WishlistCard = ({
       if (response.status === 1) {
         dispatch(setCart({ data: response }));
         dispatch(setCartSubTotal({ data: response?.sub_total }));
-      } else if (response?.data?.one_seller_error_code == 1) {
+            toast.success(t("items_added_to_cart") || "Item added to cart");} else if (response?.data?.one_seller_error_code == 1) {
         setSingleSellerModal(true);
       } else {
         toast.error(response.message);
