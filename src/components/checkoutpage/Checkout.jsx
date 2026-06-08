@@ -1218,13 +1218,15 @@ const Checkout = () => {
                     checkOutError={checkOutError}
                     checkoutLoading={checkoutLoading}
                   />
-                  <LoyaltySelector
-                    orderId={draftOrderId || cart?.checkout?.order_id}
-                    onApplied={async () => {
-                      await refreshOdooCart();
-                      handleFetchCheckout();
-                    }}
-                  />
+                  {checkout?.currentStep === 3 && (
+                    <LoyaltySelector
+                      orderId={draftOrderId || cart?.checkout?.order_id}
+                      onApplied={async () => {
+                        await refreshOdooCart();
+                        handleFetchCheckout();
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>

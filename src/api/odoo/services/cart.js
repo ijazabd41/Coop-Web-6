@@ -383,38 +383,42 @@ export async function getGuestCart({ variant_ids, quantities }) {
         domain: `[('id','=',${variantId})]`,
       });
       let product = odooDataList(payload)[0];
-      
-      let templatePayload;
-      if (product && product.product_tmpl_id) {
-        const tmplId = Array.isArray(product.product_tmpl_id) ? product.product_tmpl_id[0] : product.product_tmpl_id;
-        templatePayload = await odooGet(`/api/bcp-product-template/${tmplId}`);
-      } else {
-        templatePayload = await odooGet(`/api/bcp-product-template/${variantId}`);
+      if (!product) {
+        const tpl = await odooGet(`/api/bcp-product-template/${variantId}`);
+        product = odooDataList(tpl)[0];
+        if (product) {
+          const mapped = mapProductTemplate(product);
+          cart.push({
+            ...mapOrderLine({
+              id: i,
+              product_id: [variantId, mapped.name],
+              product_uom_qty: Number(qtys[i]) || 1,
+              price_unit: mapped.variants?.[0]?.price || 0,
+              price_subtotal:
+                (mapped.variants?.[0]?.price || 0) * (Number(qtys[i]) || 1),
+              name: mapped.name,
+            }),
+            product_id: mapped.id,
+            product_variant_id: variantId,
+          });
+          continue;
+        }
       }
-      
-      const tplRecord = templatePayload ? odooDataList(templatePayload)[0] : null;
-      if (tplRecord) {
-        const mapped = mapProductTemplate(tplRecord);
-        const variantData = mapped.variants?.find((v) => v.id == variantId) || mapped.variants?.[0] || mapped;
-        const qty = Number(qtys[i]) || 1;
-        const finalPrice = variantData.discounted_price !== undefined ? variantData.discounted_price : (variantData.price || 0);
-        
-        cart.push({
-          ...mapOrderLine({
-            id: i,
-            product_id: [variantId, mapped.name],
-            product_uom_qty: qty,
-            price_unit: finalPrice,
-            price_subtotal: finalPrice * qty,
-            name: mapped.name,
-          }),
-          product_id: mapped.id,
-          product_variant_id: variantId,
-          price: variantData.price || 0,
-          discounted_price: finalPrice,
-          sub_total: finalPrice * qty,
-        });
-      }
+      const qty = Number(qtys[i]) || 1;
+      const price = Number(product?.lst_price || product?.list_price || 0);
+      const image_url =
+        imageFromOdooRecord(product, "product.product", variantId) ||
+        odooWebImageUrl("product.product", variantId, "image_1920");
+      cart.push({
+        product_id: variantId,
+        product_variant_id: variantId,
+        name: product?.display_name || product?.name,
+        qty,
+        price,
+        discounted_price: price,
+        sub_total: price * qty,
+        image_url,
+      });
     }
 
     const sub_total = cart.reduce((s, c) => s + Number(c.sub_total || 0), 0);

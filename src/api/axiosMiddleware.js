@@ -4,9 +4,7 @@
  */
 import odooClient, { withApiParams } from "./odoo/client";
 import { store } from "@/redux/store";
-import { logoutAuth, setJWTToken, setCurrentUser } from "@/redux/slices/userSlice";
-import { setCart, setCartProducts, setCartSubTotal, clearCartPromo, setIsGuest } from "@/redux/slices/cartSlice";
-import { clearAllFilter } from "@/redux/slices/productFilterSlice";
+import { logoutAuth } from "@/redux/slices/userSlice";
 import { getOdooSession } from "./odoo/session";
 
 const api = odooClient;
@@ -33,23 +31,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error?.response?.status === 401) {
-      store.dispatch(clearAllFilter());
       store.dispatch(logoutAuth());
-      store.dispatch(setJWTToken({ data: "" }));
-      store.dispatch(setCurrentUser({ data: null }));
-      store.dispatch(setCart({ data: [] }));
-      store.dispatch(setCartProducts({ data: [] }));
-      store.dispatch(setCartSubTotal({ data: 0 }));
-      store.dispatch(clearCartPromo());
-      store.dispatch(setIsGuest({ data: true }));
-      
-      try {
-        localStorage.removeItem("role_code");
-        localStorage.removeItem("cd_role_code");
-        localStorage.removeItem("cd_session_id");
-        localStorage.removeItem("cd_user_id");
-        localStorage.removeItem("cd_user_name");
-      } catch (e) {}
     }
     console.error("[API]", error?.message || error);
     return Promise.reject(error);

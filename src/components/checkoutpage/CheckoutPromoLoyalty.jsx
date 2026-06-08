@@ -204,7 +204,7 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
       {cards.length > 0 && (
         (() => {
           const bestCard = cards.reduce((prev, current) => (prev.points > current.points ? prev : current), cards[0]);
-          if (!bestCard || bestCard.points <= 0) return null;
+          if (!bestCard) return null;
 
           return (
             <div className="border border-gray-400 rounded-md overflow-hidden shadow-sm">
@@ -222,7 +222,7 @@ const CheckoutPromoLoyalty = ({ orderId, onApplied }) => {
                 <button
                   type="button"
                   onClick={isLoyaltyApplied ? handleClear : () => handleApplyCard(bestCard.id)}
-                  disabled={loading}
+                  disabled={loading || (!isLoyaltyApplied && bestCard.points <= 0)}
                   className={isLoyaltyApplied
                     ? "px-6 py-2.5 bg-red-500 text-white font-medium text-[15px] rounded-md hover:bg-red-600 transition-colors disabled:opacity-50 shadow-sm"
                     : "px-6 py-2.5 bg-[#22c55e] text-white font-medium text-[15px] rounded-md hover:bg-[#16a34a] transition-colors disabled:opacity-50 shadow-sm"}
