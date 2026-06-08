@@ -35,7 +35,7 @@ const MobileAppBanner = () => {
                             <img
                                 src={imageUrl(banner.banner_image)}
                                 alt={banner.name || "Mobile App"}
-                                className="w-full h-auto object-cover rounded-lg"
+                                className="w-full h-[200px] md:h-[300px] lg:h-[350px] object-cover object-center rounded-lg"
                                 loading="lazy"
                             />
                         </div>
