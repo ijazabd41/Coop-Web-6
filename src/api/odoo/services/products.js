@@ -1,4 +1,5 @@
 import { odooGet } from "../client";
+import { getOdooSession } from "../session";
 import { mapCategory, mapProductTemplate, mapProductsResponse } from "../mappers";
 import { encodeDomain, fail, imageUrl, isOdooSuccess, odooDataList, ok } from "../utils";
 
@@ -23,7 +24,7 @@ export async function getProductByFilter({ filters = {}, slug, tag_names } = {})
   try {
     const limit = filters.limit || 12;
     const offset = filters.offset || 0;
-    const params = { limit, Offset: offset };
+    const params = { limit, Offset: offset, user_id: getOdooSession()?.uid || 2 };
 
     const domainParts = [];
     if (filters.search) {
@@ -65,7 +66,7 @@ export async function getProductByFilter({ filters = {}, slug, tag_names } = {})
 export async function getProductById({ id, slug }) {
   try {
     const productId = id > 0 ? id : slug;
-    const payload = await odooGet(`/api/bcp-product-template/${productId}`);
+    const payload = await odooGet(`/api/bcp-product-template/${productId}`, { user_id: getOdooSession()?.uid || 2 });
     if (!isOdooSuccess(payload)) {
       return fail(payload?.message || "product_not_found");
     }
@@ -114,6 +115,7 @@ export async function getSliders() {
 export async function searchProductsByBarcode(barcode) {
   const payload = await odooGet("/api/bcp-product-template", {
     domain: `[('barcode','=','${barcode}')]`,
+    user_id: getOdooSession()?.uid || 2,
   });
   return mapProductsResponse(payload);
 }
