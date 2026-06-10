@@ -239,7 +239,7 @@ const CheckoutPayment = ({ checkoutData }) => {
                         <CiWallet className="h-8 w-8 text-gray-500" />
                       )}
                       <div className="flex flex-col">
-                        <p className="font-medium text-base">{method.isTest ? method.label : t(method.label)}</p>
+                        <p className="font-medium text-base capitalize">{method.isTest ? method.label : (t(method.label) || method.label)}</p>
                         {method.isTest && <span className="text-xs text-red-500 font-semibold mt-[-2px]">{t("For Testing Only")}</span>}
                       </div>
                     </div>
