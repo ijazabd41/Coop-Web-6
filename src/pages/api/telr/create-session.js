@@ -35,7 +35,8 @@ export default async function handler(req, res) {
       return: {
         authorised: `${baseUrl}/web-payment-status?status=success&payment_method=telr&order_id=${orderId}&transaction_id=${transactionId}`,
         declined: `${baseUrl}/web-payment-status?status=failed&payment_method=telr&order_id=${orderId}`,
-        cancelled: `${baseUrl}/checkout?status=cancelled`
+        cancelled: `${baseUrl}/checkout?status=cancelled`,
+        notification: "http://cooperp.freeddns.org:8076/payment/telr/webhook"
       }
     };
 
