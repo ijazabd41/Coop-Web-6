@@ -66,6 +66,7 @@ import { useTheme } from "next-themes";
 // import LogoutModal from "../logoutmodal/LogoutModal";
 // import ProfileDrawer from "../profiledashboard/ProfileDrawer";
 import { clearCheckout } from "@/redux/slices/checkoutSlice";
+import { setCartOpen } from "@/redux/slices/cartSlice";
 import {
   setFilterSearch,
   setProductBySearch,
@@ -99,7 +100,10 @@ const Header = () => {
   // Device Width Checking
   const isMobile = useMediaQuery({ query: "(max-width: 765px)" });
 
-  const [showCart, setShowCart] = useState(false);
+  const showCart = useSelector((state) => state.Cart.isCartOpen);
+  const setShowCart = (val) => {
+    dispatch(setCartOpen({ data: val }));
+  };
   const [showLogin, setShowLogin] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [mobileActiveKey, setMobileActiveKey] = useState(1);

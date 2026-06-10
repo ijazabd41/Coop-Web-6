@@ -26,6 +26,7 @@ const initialState = {
   guestCartTotal: 0,
   self_pickup_mode: 0,
   doorstep_delivery_mode: 0,
+  isCartOpen: false,
 };
 
 export const cartReducer = createSlice({
@@ -84,6 +85,9 @@ export const cartReducer = createSlice({
     setDoorStepDeliveryMode: (state, action) => {
       state.doorstep_delivery_mode = action.payload.data;
     },
+    setCartOpen: (state, action) => {
+      state.isCartOpen = action.payload.data;
+    },
   },
 });
 
@@ -104,5 +108,6 @@ export const {
   subGuestCartTotal,
   setSelfPickupMode,
   setDoorStepDeliveryMode,
+  setCartOpen,
 } = cartReducer.actions;
 export default cartReducer.reducer;

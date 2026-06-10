@@ -9,6 +9,7 @@ import {
   setCartSubTotal,
   setDoorStepDeliveryMode,
   setSelfPickupMode,
+  setCartOpen,
 } from "@/redux/slices/cartSlice";
 
 const ReoderConfirmModal = ({
@@ -35,7 +36,7 @@ const ReoderConfirmModal = ({
         quantities: quantity,
       });
       if (response.status == 1) {
-        toast.success(t("items_added_to_cart"));
+        dispatch(setCartOpen({ data: true }));
         setShowReorderModal(false);
         await fetchCart();
       } else {

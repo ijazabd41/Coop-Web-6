@@ -42,6 +42,7 @@ import {
   setCartProducts,
   setCartSubTotal,
   setGuestCartTotal,
+  setCartOpen,
 } from "@/redux/slices/cartSlice";
 import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
@@ -324,7 +325,7 @@ const ProductDetail = () => {
           dispatch(addtoGuestCart({ data: updatedProduct }));
           handleCalculateTotal(updatedProduct);
           setQuantity(1);
-          toast.success(t("product_added_successfully"));
+          dispatch(setCartOpen({ data: true }));
         } else {
           const productPrice =
             selectVariant.discounted_price !== 0
@@ -340,7 +341,7 @@ const ProductDetail = () => {
           let products = [...cart.guestCart, productData];
           handleCalculateTotal(products);
           setQuantity(1);
-          toast.success(t("product_added_successfully"));
+          dispatch(setCartOpen({ data: true }));
         }
       }
     } else {
@@ -393,7 +394,7 @@ const ProductDetail = () => {
             }
             dispatch(setCart({ data: response }));
             dispatch(setCartSubTotal({ data: response.sub_total }));
-            toast.success(t("product_added_successfully"));
+            dispatch(setCartOpen({ data: true }));
           } else if (response?.message == "opps_stock_is_not_available") {
             toast.error(t("out_of_stock_message"));
           } else {

@@ -31,6 +31,7 @@ import {
   setCartProducts,
   setCartSubTotal,
   setGuestCartTotal,
+  setCartOpen,
 } from "@/redux/slices/cartSlice";
 import { toast } from "react-toastify";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
@@ -192,7 +193,7 @@ const ProductDetailModal = ({
           dispatch(addtoGuestCart({ data: updatedProduct }));
           handleCalculateTotal(updatedProduct);
           setQuantity(1);
-          toast.success(t("product_added_successfully"));
+          dispatch(setCartOpen({ data: true }));
         } else {
           const productPrice =
             selectVariant.discounted_price !== 0
@@ -208,7 +209,7 @@ const ProductDetailModal = ({
           let products = [...cart.guestCart, productData];
           handleCalculateTotal(products);
           setQuantity(1);
-          toast.success(t("product_added_successfully"));
+          dispatch(setCartOpen({ data: true }));
         }
       }
     } else {
@@ -264,7 +265,7 @@ const ProductDetailModal = ({
             }
             dispatch(setCart({ data: response }));
             dispatch(setCartSubTotal({ data: response.sub_total }));
-            toast.success(t("product_added_successfully"));
+            dispatch(setCartOpen({ data: true }));
           } else if (response?.data?.one_seller_error_code == 1) {
             setSingleSellerModal(true);
           } else {

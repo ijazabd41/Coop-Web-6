@@ -14,6 +14,7 @@ import {
   setCart,
   setCartProducts,
   setCartSubTotal,
+  setCartOpen,
 } from "@/redux/slices/cartSlice";
 import { toast } from "react-toastify";
 import { t } from "@/utils/translation";
@@ -161,7 +162,8 @@ const WishlistCard = ({
       if (response.status === 1) {
         dispatch(setCart({ data: response }));
         dispatch(setCartSubTotal({ data: response?.sub_total }));
-            toast.success(t("items_added_to_cart") || "Item added to cart");} else if (response?.data?.one_seller_error_code == 1) {
+        dispatch(setCartOpen({ data: true }));
+      } else if (response?.data?.one_seller_error_code == 1) {
         setSingleSellerModal(true);
       } else {
         toast.error(response.message);
