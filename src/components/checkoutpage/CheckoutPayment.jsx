@@ -66,6 +66,14 @@ const CheckoutPayment = ({ checkoutData }) => {
     isTest: true,
   });
 
+  // Append Telr Payment Method
+  enabledPaymentMethods.push({
+    key: "telr_payment_method",
+    label: "telr",
+    image: null,
+    isTest: false,
+  });
+
 
   // Function to find the selected method element
   const scrollToSelectedMethod = () => {

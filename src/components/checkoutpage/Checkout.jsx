@@ -686,6 +686,30 @@ const Checkout = () => {
               setStripeClientSecret(txResponseData?.client_secret);
               setStripeTransactionId(txResponseData?.transaction_id || txResponseData?.id);
               setShowStripe(true);
+            } else if (checkout?.selectedPaymentMethod == "telr") {
+              try {
+                const sessionRes = await api.createTelrSession(
+                  response?.data?.order_id,
+                  checkout?.checkoutTotal,
+                  setting?.setting?.currency || 'AED',
+                  'Order ' + response?.data?.order_id
+                );
+                if (sessionRes && sessionRes.url) {
+                  sessionStorage.setItem('telr_checkout', JSON.stringify({
+                    oid: response?.data?.order_id,
+                    txId: txResponseData?.transaction_id || txResponseData?.id || '',
+                    telrRef: sessionRes.ref,
+                    orderName: 'Order ' + response?.data?.order_id
+                  }));
+                  window.location.href = sessionRes.url;
+                } else {
+                  setCheckoutLoading(false);
+                  toast.error("Telr session creation failed.");
+                }
+              } catch (e) {
+                setCheckoutLoading(false);
+                toast.error("Failed to connect to Telr.");
+              }
             } else {
               dispatch(clearCartPromo());
               const redirectUrl = txResponseData?.redirectUrl;
