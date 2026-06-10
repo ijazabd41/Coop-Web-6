@@ -1,95 +1,44 @@
 import MetaData from "@/components/metadata-component/MetaData";
-const PrivacyPolicyPage = dynamic(
-  import("@/components/pagecomponents/PrivacyPolicyPage"),
-  { ssr: false },
-);
-import { extractJSONFromMarkup } from "@/utils/helperFunction";
-import axios from "axios";
-import dynamic from "next/dynamic";
 import React from "react";
+import Layout from "@/components/layout/Layout";
+import BreadCrumb from "@/components/breadcrumb/BreadCrumb";
 
-let serverSidePropsFunction = null;
-if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async (context) => {
-    const lang = context.query.lang;
-    const defaultProps = {
-      title: process.env.NEXT_PUBLIC_META_TITLE,
-      description: process.env.NEXT_PUBLIC_META_DESCRIPTION,
-      keywords: process.env.NEXT_PUBLIC_META_KEYWORDS,
-      schemaMarkup: null,
-      ogImage: "",
-      favicon: null,
-    };
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
-        {
-          params: {
-            page_type: "Privacy policy",
-          },
-          headers: {
-            "Content-Language": lang,
-          }
-        },
-      );
-      let metatitle = defaultProps.title;
-      let metaDescription = defaultProps.description;
-      let metaKeywords = defaultProps.keywords;
-      let ogImage = defaultProps.ogImage;
-      let favicon = defaultProps.favicon;
-      let schemaMarkup = null;
-      if (
-        process.env.NEXT_PUBLIC_SEO == "true" &&
-        response.data.data?.length > 0
-      ) {
-        const seoData = response.data.data;
-        metatitle = seoData[0].translations.meta_title || defaultProps.title;
-        metaDescription = seoData[0].translations.meta_description || defaultProps.description;
-        metaKeywords = seoData[0].translations.meta_keyword || defaultProps.keywords;
-        ogImage = seoData[0].og_image_url || defaultProps.ogImage;
-        favicon = seoData[0].favicon || defaultProps.favicon;
-        if (seoData[0].translations.schema_markup) {
-          schemaMarkup = extractJSONFromMarkup(seoData[0]?.translations?.schema_markup) || defaultProps.schemaMarkup;
-        }
-      }
-      return {
-        props: {
-          title: metatitle,
-          description: metaDescription,
-          keywords: metaKeywords,
-          schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
-          ogImage: ogImage,
-          favicon: favicon ? favicon : null,
-        },
-      };
-    } catch (error) {
-      console.log("error", error);
-      return { props: defaultProps };
-    }
-  }
-}
-
-export const getServerSideProps = serverSidePropsFunction
-
-
-
-const index = ({ title, description, keywords, ogImage, schemaMarkup, favicon }) => {
-  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/privacy-policy`;
+const PrivacyPolicy = () => {
   return (
-    <div>
+    <Layout>
       <MetaData
         pageName="/privacy-policy"
-        title={title}
-        description={description}
-        keywords={keywords}
-        ogImage={ogImage}
-        ogUrl={pageUrl}
-        structuredData={schemaMarkup}
-        favicon={favicon}
+        title="Privacy Policy - Best Coop Discounts LLC"
+        description="Privacy Policy for Best Coop Discounts LLC"
       />
-      <PrivacyPolicyPage />
-    </div>
+      <section>
+        <BreadCrumb />
+        <div className="container my-5 bodyBackgroundColor px-4 md:px-7 rounded pb-10 pt-5">
+          <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
+          <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800">
+            <p>
+              Best Coop Discounts LLC respects customer privacy and is committed to protecting personal information.
+            </p>
+
+            <h2 className="text-xl font-bold mt-4">Information collected may include:</h2>
+            <ul className="list-disc pl-5">
+              <li>Name</li>
+              <li>Contact details</li>
+              <li>Delivery information</li>
+              <li>Payment-related information</li>
+            </ul>
+
+            <p>
+              Personal information is used solely for order processing, customer support, service improvement, and legal compliance.
+            </p>
+            <p>
+              Customer information will not be sold, rented, or shared with third parties except where required for order fulfillment or legal obligations.
+            </p>
+          </div>
+        </div>
+      </section>
+    </Layout>
   );
 };
 
-export default index;
+export default PrivacyPolicy;

@@ -125,6 +125,17 @@ const NewAddressModal = ({
 
   const handleConfirmAddress = async (e) => {
     e.preventDefault();
+
+    const restrictedCountries = [
+      "iran", "cuba", "north korea", "sudan", "south sudan", 
+      "ukraine", "syria", "russian federation", "russia", "myanmar", "yemen"
+    ];
+    const countryName = (addressDetails?.country || "").toLowerCase();
+    if (restrictedCountries.some(restricted => countryName.includes(restricted))) {
+      toast.error(t("restricted_country_error") || "Service is not available in your selected country due to compliance restrictions.");
+      return;
+    }
+
     let lat = center.lat;
     let lng = center.lng;
     if (!isAddressSelected) {

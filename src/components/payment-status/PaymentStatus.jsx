@@ -256,7 +256,15 @@ const PaymentStatus = () => {
       );
     }
 
-    return null;
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 w-full py-20">
+         <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-coop-red"></div>
+         <div className="text-center">
+            <h2 className="text-2xl font-semibold textColor mb-2">{t("verifying_payment") || "Verifying Payment..."}</h2>
+            <p className="subTextColor text-sm">{t("please_wait_processing") || "Please wait while we confirm your transaction. Do not refresh this page."}</p>
+         </div>
+      </div>
+    );
   };
 
   return (

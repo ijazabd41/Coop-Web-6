@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { CgInfo } from "react-icons/cg";
 import ChargesInfoPopup from "./ChargesInfoPopup";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
+import { FaCcVisa, FaCcMastercard } from "react-icons/fa";
 
 const OrderSummaryCard = ({
   step,
@@ -273,6 +274,21 @@ const OrderSummaryCard = ({
             : formatAmount(summaryTotals.total)}
         </span>
       </div>
+
+      <div className="mb-4 text-xs subTextColor text-center">
+        By placing an order, you agree to our{" "}
+        <Link href="/terms-and-conditions" className="underline hover:primaryColor">Terms & Conditions</Link>,{" "}
+        <Link href="/privacy-policy" className="underline hover:primaryColor">Privacy Policy</Link>,{" "}
+        <Link href="/refund-policy" className="underline hover:primaryColor">Return & Refund Policy</Link>, and{" "}
+        <Link href="/cancellation-policy" className="underline hover:primaryColor">Cancellation Policy</Link>.
+      </div>
+
+      <div className="flex justify-center items-center gap-3 mb-4">
+        <span className="text-sm font-semibold">{t("we_accept") || "We accept"}:</span>
+        <FaCcVisa className="text-3xl text-blue-800" />
+        <FaCcMastercard className="text-3xl text-red-600" />
+      </div>
+
       <button
         className="w-full primaryBackColor text-white font-semibold py-2 rounded-md  disabled:iconBackgroundColor disabled:cursor-not-allowed disabled:fontColor"
         disabled={step !== 3 || checkoutLoading}

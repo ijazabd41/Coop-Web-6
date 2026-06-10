@@ -1,87 +1,41 @@
 import MetaData from "@/components/metadata-component/MetaData";
-const TermsAndCondititionsPage = dynamic(
-  () => import("@/components/pagecomponents/TermsAndCondititionsPage"),
-  { ssr: false },
-);
-import { extractJSONFromMarkup } from "@/utils/helperFunction";
-import axios from "axios";
-import dynamic from "next/dynamic";
 import React from "react";
+import Layout from "@/components/layout/Layout";
+import BreadCrumb from "@/components/breadcrumb/BreadCrumb";
 
-let serverSidePropsFunction = null;
-
-if (process.env.NEXT_PUBLIC_SEO == "true") {
-  serverSidePropsFunction = async (context) => {
-    const lang = context.query.lang;
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_SUBURL}/settings/get_seo_settings`,
-        {
-          params: {
-            page_type: "Term condition",
-          },
-          headers: {
-            "Content-Language": lang,
-          },
-        },
-      );
-      let metatitle = process.env.NEXT_PUBLIC_META_TITLE;
-      let metaDescription = process.env.NEXT_PUBLIC_META_DESCRIPTION;
-      let metaKeywords = process.env.NEXT_PUBLIC_META_KEYWORDS;
-      let ogImage = "";
-      let favicon = null;
-      let schemaMarkup = null;
-      if (
-        process.env.NEXT_PUBLIC_SEO == "true" &&
-        response.data.data?.length > 0
-      ) {
-        const seoData = response.data.data;
-        metatitle = seoData[0].translations.meta_title;
-        metaDescription = seoData[0].translations.meta_description;
-        metaKeywords = seoData[0].translations.meta_keyword;
-        ogImage = seoData[0].og_image_url;
-        favicon = seoData[0].favicon;
-        if (seoData[0].translations.schema_markup) {
-          schemaMarkup = extractJSONFromMarkup(seoData[0]?.translations?.schema_markup);
-        }
-      }
-      return {
-        props: {
-          title: metatitle,
-          description: metaDescription,
-          keywords: metaKeywords,
-          schemaMarkup: schemaMarkup ? JSON.stringify(schemaMarkup) : null,
-          ogImage: ogImage,
-          favicon: favicon ? favicon : null,
-        },
-      };
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-}
-
-export const getServerSideProps = serverSidePropsFunction
-
-
-
-const index = ({ title, description, keywords, schemaMarkup, ogImage, favicon }) => {
-  const pageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/terms-and-conditions`;
+const TermsAndConditions = () => {
   return (
-    <div>
+    <Layout>
       <MetaData
         pageName="/terms-and-conditions"
-        title={title}
-        description={description}
-        keywords={keywords}
-        structuredData={schemaMarkup}
-        ogImage={ogImage}
-        ogUrl={pageUrl}
-        favicon={favicon}
+        title="Terms & Conditions - Best Coop Discounts LLC"
+        description="Terms & Conditions for Best Coop Discounts LLC"
       />
-      <TermsAndCondititionsPage />
-    </div>
+      <section>
+        <BreadCrumb />
+        <div className="container my-5 bodyBackgroundColor px-4 md:px-7 rounded pb-10 pt-5">
+          <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
+          <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-800">
+            <p>
+              By accessing and using this website, you agree to comply with and be bound by these Terms and Conditions.
+            </p>
+            <p>
+              Best Coop Discounts LLC reserves the right to update these terms at any time without prior notice.
+            </p>
+            <p>
+              Users are responsible for maintaining the confidentiality of their account information and for all activities conducted under their account.
+            </p>
+            <p>
+              The company reserves the right to refuse service, terminate accounts, or cancel orders when necessary.
+            </p>
+            <p>
+              Any disputes arising from the use of this website shall be governed by the laws of the United Arab Emirates.
+            </p>
+          </div>
+        </div>
+      </section>
+    </Layout>
   );
 };
 
-export default index;
+export default TermsAndConditions;

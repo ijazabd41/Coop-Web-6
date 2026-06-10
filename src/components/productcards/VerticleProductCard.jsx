@@ -243,7 +243,8 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       Number(productQty || 0) < Number(product.total_allowed_quantity)
     ) {
       AddToGuestCart(product, product?.id, selectedVariant?.id, 1, 0, "add");
-        toast.success(t("items_added_to_cart") || "Item added to cart");} else {
+      toast.success(t("items_added_to_cart") || "Item added to cart");
+    } else {
       toast.error(t("out_of_stock_message"));
     }
   };
@@ -264,10 +265,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
       toast.error(t("maximum_cart_quantity_reach"));
     } else if (Number(product.is_unlimited_stock)) {
       addToCart(product?.id, selectedVariant.id, 1);
-        toast.success(t("items_added_to_cart") || "Item added to cart");} else {
+    } else {
       if (selectedVariant?.status) {
         addToCart(product?.id, selectedVariant?.id, 1);
-        toast.success(t("items_added_to_cart") || "Item added to cart");} else {
+      } else {
         toast.error(t("out_of_stock_message"));
       }
     }

@@ -226,80 +226,63 @@ const Footer = () => {
 
           <div className="col-span-4 flex gap-8 flex-col  mt-12 md:mt-0">
             {/* Check all information is available and render this part */}
-            {setting?.terms_conditions !== "" &&
-              setting?.privacy_policy !== "" &&
-              setting?.returns_and_exchanges_policy !== "" &&
-              setting?.shipping_policy !== "" &&
-              setting?.cancellation_policy !== "" && (
-                <>
-                  <h3 className="font-bold text-xl">{t("company_policy")}</h3>
+                  <h3 className="font-bold text-xl">{t("company_policy") || "Company Policy"}</h3>
                   <ul className="flex flex-col gap-4">
-                    {setting?.terms_conditions !== "" && (
-                      <li>
-                        <Link
-                          href="/terms-and-conditions"
-                          className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
-                        >
-                          {t("terms_and_conditions")}
-                        </Link>
-                      </li>
-                    )}
-                    {setting?.privacy_policy !== "" && (
-                      <li>
-                        <Link
-                          href="/privacy-policy"
-                          className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
-                        >
-                          {t("privacy_policy")}
-                        </Link>
-                      </li>
-                    )}
-                    {setting?.returns_and_exchanges_policy !== "" && (
-                      <li>
-                        <Link
-                          href="/return-and-exchange-policy"
-                          className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
-                        >
-                          {t("return_and_exchange_policy")}
-                        </Link>
-                      </li>
-                    )}
-                    {setting?.shipping_policy !== "" && (
-                      <li>
-                        <Link
-                          href="/shipping-policy"
-                          className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
-                        >
-                          {t("shipping_policy")}
-                        </Link>
-                      </li>
-                    )}
-                    {setting?.cancellation_policy !== "" && (
-                      <li>
-                        <Link
-                          href="/cancellation-policy"
-                          className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
-                        >
-                          {t("cancellation_policy")}
-                        </Link>
-                      </li>
-                    )}
+                    <li>
+                      <Link
+                        href="/terms-and-conditions"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        {t("terms_and_conditions") || "Terms & Conditions"}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/privacy-policy"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        {t("privacy_policy") || "Privacy Policy"}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/refund-policy"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        {t("return_and_exchange_policy") || "Return & Refund Policy"}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/cancellation-policy"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        {t("cancellation_policy") || "Cancellation Policy"}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/pricing-and-description"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        Pricing & Product Information
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/payment-policy"
+                        className="hover:primaryColor hover:border-b border-b-[var(--primary-color)]"
+                      >
+                        Payment Policy
+                      </Link>
+                    </li>
                   </ul>
-                </>
-              )}
           </div>
           <div className="col-span-4 flex gap-8 flex-col mt-12 md:mt-0">
             {/* Check Store Info is available and render this part */}
-            {setting?.store_address !== "" &&
-              setting?.support_email !== "" &&
-              setting?.support_number !== "" && (
-                <>
                   <h3 className="font-bold text-xl">{t("store_info")}</h3>
                   <div className="flex flex-col gap-6 ">
-                    {/* Store Address */}
                     <div className="flex gap-4 items-center">
-                      {setting?.store_address !== "" && (
-                        <>
                           <span className="p-3 iconBackgroundColor  rounded-[8px]">
                             <IoLocationOutline
                               size={24}
@@ -307,21 +290,12 @@ const Footer = () => {
                             />
                           </span>
                           <p>
-                            <Link
-                              href={`https://maps.google.com/?q=${setting?.store_address}`}
-                              target="_blank"
-                            >
-                              {setting?.store_address}
-                            </Link>
+                              Best Coop Discounts LLC<br/>United Arab Emirates
                           </p>
-                        </>
-                      )}
                     </div>
 
                     {/* Support Email */}
                     <div className="flex gap-4 items-center">
-                      {setting?.support_email !== "" && (
-                        <>
                           <span className="p-3 iconBackgroundColor  rounded-[8px]">
                             <BiMessageAltDots
                               size={24}
@@ -330,37 +304,29 @@ const Footer = () => {
                           </span>
                           <p>
                             <Link
-                              href={`mailto:${setting?.support_email}`}
+                              href={`mailto:support@yourdomain.com`}
                               target="_blank"
                             >
-                              {setting?.support_email}
+                              support@yourdomain.com
                             </Link>
                           </p>
-                        </>
-                      )}
                     </div>
 
                     {/* Support Number */}
                     <div className="flex gap-4 items-center">
-                      {setting?.support_number !== "" && (
-                        <>
                           <span className="p-3 iconBackgroundColor  rounded-[8px]">
                             <MdPhoneInTalk size={24} className="iconsColor" />
                           </span>
                           <p>
                             <Link
-                              href={`tel:${setting?.support_number}`}
+                              href={`tel:+971 XX XXX XXXX`}
                               target="_blank"
                             >
-                              {setting?.support_number}
+                              +971 XX XXX XXXX
                             </Link>
                           </p>
-                        </>
-                      )}
                     </div>
                   </div>
-                </>
-              )}
           </div>
         </div>
       </div>
