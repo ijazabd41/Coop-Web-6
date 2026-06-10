@@ -133,7 +133,24 @@ const PaymentStatus = () => {
       });
       const data = await response.json();
       if (data.status === 1) {
-        setStatus("success");
+        try {
+           // Use demo gateway ID 6 to mark done as requested
+           const txResult = await api.markTestTransactionDone({
+              orderId: checkoutState.order_id,
+              transactionId: checkoutState.transaction_id,
+              providerId: 6
+           });
+           if (txResult.status === 1 || txResult.ok) {
+              setStatus("success");
+           } else {
+              await handleFailedOrder(checkoutState.order_id);
+              setStatus("failed");
+           }
+        } catch (err) {
+           console.log("Error confirming transaction with ERP", err);
+           await handleFailedOrder(checkoutState.order_id);
+           setStatus("failed");
+        }
       } else {
         await handleFailedOrder(checkoutState.order_id);
         setStatus("failed");
