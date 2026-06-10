@@ -24,9 +24,6 @@ const FeatureSections = () => {
                 {/* 1. Main Home Slider */}
                 {shop?.sliders?.length > 0 && <HomePageSlider slider={shop} />}
                 
-                {/* Membership Benefits immediately after hero slider */}
-                <CoopMembershipBenefits />
-                
                 {/* 2. Promo Strip */}
                 <PromoStrip />
 
@@ -35,16 +32,25 @@ const FeatureSections = () => {
 
                 {/* 4 to 8. Deal of the Day, Best Sellers, Recommended, Featured, Fresh Pick */}
                 {shop?.sections && shop?.sections?.map((section, index) => {
+                    let Element = null;
                     if (section?.style_web == "style_1") {
-                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
+                        Element = <HorizontalProductSwiper section={section} index={index} key={`swiper-${section?.id}`} />
                     } else if (section?.style_web == "style_2") {
-                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
+                        Element = <VerticleCardContainer section={section} index={index} key={`swiper-${section?.id}`} />
                     } else if (section?.style_web == "style_3") {
-                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
+                        Element = <HorizontalCardContainer section={section} index={index} key={`swiper-${section?.id}`} />
                     } else if (section?.style_web == "style_4") {
-                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
+                        Element = <ProductSwiperWithImage section={section} index={index} key={`swiper-${section?.id}`} />
                     }
-                    return null;
+                    
+                    if (!Element) return null;
+
+                    return (
+                        <React.Fragment key={section?.id}>
+                            {Element}
+                            {index === 0 && <CoopMembershipBenefits />}
+                        </React.Fragment>
+                    );
                 })}
 
                 {/* 9. Shop By Brand */}
