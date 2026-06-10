@@ -77,6 +77,11 @@ const PaymentStatus = () => {
       handleGetOrderStatusPhonepe();
       return;
     }
+    if (query?.payment_method == "telr" && query?.status == "success") {
+      setType("order");
+      handleGetOrderStatusTelr();
+      return;
+    }
     const paymentStatus = checkPaymentStatus(query);
     const isWallet = isWalletTransaction(query);
     const isSubscription = isSubscriptionTransaction(query);
@@ -106,6 +111,37 @@ const PaymentStatus = () => {
       }
     } catch (error) {
       console.log("error", error);
+    }
+  };
+
+  const handleGetOrderStatusTelr = async () => {
+    try {
+      const raw = sessionStorage.getItem('telr_checkout');
+      if (!raw) {
+         setStatus("failed");
+         return;
+      }
+      const checkoutState = JSON.parse(raw);
+      const response = await fetch('/api/telr/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderRef: checkoutState.order_ref,
+          transactionId: checkoutState.transaction_id,
+          orderId: checkoutState.order_id
+        })
+      });
+      const data = await response.json();
+      if (data.status === 1) {
+        setStatus("success");
+      } else {
+        await handleFailedOrder(checkoutState.order_id);
+        setStatus("failed");
+      }
+      sessionStorage.removeItem('telr_checkout');
+    } catch (error) {
+      console.log("error", error);
+      setStatus("failed");
     }
   };
 

@@ -10,10 +10,6 @@ import BrandSlider from '../shop-by-brands/BrandSlider';
 import CountrySlider from '../shop-by-country/CountrySlider';
 import SellerSlider from '../shop-by-seller/SellerSlider';
 import PromoStrip from './PromoStrip';
-import CoopMembershipBenefits from './CoopMembershipBenefits';
-import TrustedPartner from './TrustedPartner';
-
-import HomeOfferSection from './HomeOfferSection';
 
 import HomeOfferSection from './HomeOfferSection';
 
@@ -35,34 +31,20 @@ const FeatureSections = () => {
 
                 {/* 4 to 8. Deal of the Day, Best Sellers, Recommended, Featured, Fresh Pick */}
                 {shop?.sections && shop?.sections?.map((section, index) => {
-                    const titleStr = String(section?.translations?.title || "").toLowerCase();
-                    const isRecommended = titleStr.includes("recommended");
-                    const isFeatured = titleStr.includes("featured");
-
-                    let UIComponent = null;
                     if (section?.style_web == "style_1") {
-                        UIComponent = <HorizontalProductSwiper section={section} index={index} key={section?.id} />;
+                        return (<HorizontalProductSwiper section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_2") {
-                        UIComponent = <VerticleCardContainer section={section} index={index} key={section?.id} />;
+                        return (<VerticleCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_3") {
-                        UIComponent = <HorizontalCardContainer section={section} index={index} key={section?.id} />;
+                        return (<HorizontalCardContainer section={section} index={index} key={section?.id} />)
                     } else if (section?.style_web == "style_4") {
-                        UIComponent = <ProductSwiperWithImage section={section} index={index} key={section?.id} />;
+                        return (<ProductSwiperWithImage section={section} index={index} key={section?.id} />)
                     }
-
-                    return (
-                        <React.Fragment key={section?.id}>
-                            {isFeatured && <CoopMembershipBenefits />}
-                            {UIComponent}
-                        </React.Fragment>
-                    );
+                    return null;
                 })}
 
                 {/* 9. Shop By Brand */}
                 {shop?.brands?.length > 0 && <BrandSlider brands={shop} />}
-
-                {/* 10. Trusted Partner Checkout Section */}
-                <TrustedPartner />
 
                 {/* Note: All Products Grid is handled separately in HomeAllProducts */}
             </div>

@@ -29,6 +29,7 @@ const paymentMethodsConfig = [
   { key: "midtrans_payment_method", label: "midtrans", image: MidtransImage },
   { key: "phonepay_payment_method", label: "phonepe", image: PhonePeImage },
   { key: "paytabs_payment_method", label: "paytabs", image: PaytabsImage },
+  { key: "telr_payment_method", label: "telr", image: null },
 ];
 
 const CheckoutPayment = ({ checkoutData }) => {
@@ -66,13 +67,16 @@ const CheckoutPayment = ({ checkoutData }) => {
     isTest: true,
   });
 
-  // Append Telr Payment Method
-  enabledPaymentMethods.push({
-    key: "telr_payment_method",
-    label: "telr",
-    image: null,
-    isTest: false,
-  });
+  // Force append Telr if we want to ensure it shows up regardless of backend setting for now, 
+  // or let's assume the backend will return `telr_payment_method: "1"` if enabled. 
+  // Since we are adding it directly per requirements:
+  if (!enabledPaymentMethods.find(m => m.key === "telr_payment_method")) {
+    enabledPaymentMethods.push({
+      key: "telr_payment_method",
+      label: "telr",
+      image: null,
+    });
+  }
 
 
   // Function to find the selected method element

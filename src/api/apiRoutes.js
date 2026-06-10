@@ -193,36 +193,6 @@ export const addTransaction = (p) =>
 export const initiateTestTransaction = (p) => odooCheckout.initiateTestTransaction(p);
 export const markTestTransactionDone = (p) => odooCheckout.markTestTransactionDone(p);
 export const deleteOrder = (p) => odooOrders.deleteOrder(p);
-export const createTelrSession = async (orderId, amount, currency, description) => {
-  // Replace with actual Telr endpoint or backend proxy
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/telr/create_session`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ orderId, amount, currency, description })
-  });
-  return await response.json();
-};
-export const verifyTelrPayment = async (telrRef) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/telr/verify`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ telrRef })
-  });
-  return await response.json();
-};
-export const isOrderConfirmed = async (orderId) => {
-  return false; // stub
-};
-export const confirmOrderPayment = async (orderId, gatewayId) => {
-  return true; // stub
-};
-export const markDone = async (orderId, txId, gatewayId) => {
-  return odooCheckout.addTransaction({
-    orderId,
-    transactionId: txId,
-    paymentMethod: 'telr'
-  });
-};
 export const getNotifications = (p) => odooSettings.getNotifications(p);
 export const getFAQs = (p) => odooSettings.getFAQs(p);
 export const getOrders = (p) => odooOrders.getOrders(p);

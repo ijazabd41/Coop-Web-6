@@ -687,28 +687,39 @@ const Checkout = () => {
               setStripeTransactionId(txResponseData?.transaction_id || txResponseData?.id);
               setShowStripe(true);
             } else if (checkout?.selectedPaymentMethod == "telr") {
-              try {
-                const sessionRes = await api.createTelrSession(
-                  response?.data?.order_id,
-                  checkout?.checkoutTotal,
-                  setting?.setting?.currency || 'AED',
-                  'Order ' + response?.data?.order_id
-                );
-                if (sessionRes && sessionRes.url) {
-                  sessionStorage.setItem('telr_checkout', JSON.stringify({
-                    oid: response?.data?.order_id,
-                    txId: txResponseData?.transaction_id || txResponseData?.id || '',
-                    telrRef: sessionRes.ref,
-                    orderName: 'Order ' + response?.data?.order_id
-                  }));
-                  window.location.href = sessionRes.url;
-                } else {
-                  setCheckoutLoading(false);
-                  toast.error("Telr session creation failed.");
-                }
-              } catch (e) {
-                setCheckoutLoading(false);
-                toast.error("Failed to connect to Telr.");
+              const txResponse = await api.initiateTrasaction({
+                orderId: response?.data?.order_id,
+                paymentMethod: 'telr'
+              });
+              
+              if (txResponse.status !== 1) {
+                 setCheckoutLoading(false);
+                 toast.error(txResponse.message || "Failed to initialize transaction.");
+                 return;
+              }
+              
+              const transactionId = txResponse.data.transaction_id;
+
+              const telrRes = await fetch('/api/telr/create-session', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({
+                    orderId: response?.data?.order_id,
+                    transactionId: transactionId,
+                    amount: checkout?.checkoutTotal
+                 })
+              });
+              const telrData = await telrRes.json();
+              if (telrData.status === 1) {
+                 sessionStorage.setItem('telr_checkout', JSON.stringify({
+                    order_ref: telrData.order_ref,
+                    order_id: response?.data?.order_id,
+                    transaction_id: transactionId
+                 }));
+                 window.location.href = telrData.url;
+              } else {
+                 setCheckoutLoading(false);
+                 toast.error(telrData.message || "Failed to initialize Telr payment.");
               }
             } else {
               dispatch(clearCartPromo());
