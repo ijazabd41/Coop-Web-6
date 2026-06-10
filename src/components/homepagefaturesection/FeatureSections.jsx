@@ -12,6 +12,7 @@ import SellerSlider from '../shop-by-seller/SellerSlider';
 import PromoStrip from './PromoStrip';
 
 import HomeOfferSection from './HomeOfferSection';
+import CoopMembershipBenefits from './CoopMembershipBenefits';
 
 const FeatureSections = () => {
 
@@ -22,6 +23,9 @@ const FeatureSections = () => {
             <div className='md:mx-0'>
                 {/* 1. Main Home Slider */}
                 {shop?.sliders?.length > 0 && <HomePageSlider slider={shop} />}
+                
+                {/* Membership Benefits immediately after hero slider */}
+                <CoopMembershipBenefits />
                 
                 {/* 2. Promo Strip */}
                 <PromoStrip />
