@@ -20,6 +20,7 @@ import {
   setDoorStepDeliveryMode,
   setGuestCartTotal,
   setSelfPickupMode,
+  setCartOpen,
 } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import Login from "../login/Login";
@@ -148,8 +149,8 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
   };
 
   const handleCheckoutbtnClick = () => {
+    dispatch(setCartOpen({ data: false }));
     if (cart.isGuest) {
-      setShowCart(false);
       setShowLogin(true);
     } else {
       router.push("/checkout");
@@ -180,7 +181,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                 <RiCloseFill
                   className="hover:cursor-pointer"
                   size={22}
-                  onClick={() => setShowCart(false)}
+                  onClick={() => dispatch(setCartOpen({ data: false }))}
                 />
               </div>
             </SheetTitle>
@@ -291,7 +292,10 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
                   </button>
                   <button
                     className="w-full py-2 border rounded-md font-medium cardBorder"
-                    onClick={() => router.push("/cart")}
+                    onClick={() => {
+                      dispatch(setCartOpen({ data: false }));
+                      router.push("/cart");
+                    }}
                   >
                     {t("view_cart")}
                   </button>

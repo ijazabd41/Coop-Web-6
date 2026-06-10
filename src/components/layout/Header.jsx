@@ -100,7 +100,8 @@ const Header = () => {
   // Device Width Checking
   const isMobile = useMediaQuery({ query: "(max-width: 765px)" });
 
-  const showCart = useSelector((state) => state.Cart.isCartOpen);
+  const isCartOpenRedux = useSelector((state) => state.Cart.isCartOpen);
+  const showCart = isCartOpenRedux && router.pathname !== "/checkout" && router.pathname !== "/cart";
   const setShowCart = (val) => {
     dispatch(setCartOpen({ data: val }));
   };
