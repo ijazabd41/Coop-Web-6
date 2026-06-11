@@ -150,7 +150,7 @@ const CartDrawer = ({ showCart, setShowCart, setMobileActiveKey }) => {
 
   const handleCheckoutbtnClick = () => {
     dispatch(setCartOpen({ data: false }));
-    if (cart.isGuest) {
+    if (!user?.jwtToken) {
       setShowLogin(true);
     } else {
       router.push("/checkout");
