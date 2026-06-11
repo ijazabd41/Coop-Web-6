@@ -6,6 +6,7 @@ import * as api from "@/api/apiRoutes";
 import { loginSuccess } from "@/redux/slices/userSlice";
 import { redirectToRoleDashboard } from "@/lib/dashboardRedirect";
 import { pushErrorLog } from "@/utils/errorLogger";
+import Cookies from "js-cookie";
 
 /**
  * Premium login/signup modal that appears when guests try to:
@@ -83,9 +84,13 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
         if (res.data?.cd_mobile_role?.role_code) {
           localStorage.setItem("role_code", res.data.cd_mobile_role.role_code);
           localStorage.setItem("cd_role_code", res.data.cd_mobile_role.role_code);
+          Cookies.set("role_code", res.data.cd_mobile_role.role_code, { expires: 30, path: '/' });
+          Cookies.set("cd_role_code", res.data.cd_mobile_role.role_code, { expires: 30, path: '/' });
         } else {
           localStorage.removeItem("role_code");
           localStorage.removeItem("cd_role_code");
+          Cookies.remove("role_code", { path: '/' });
+          Cookies.remove("cd_role_code", { path: '/' });
         }
         if (redirectToRoleDashboard(res.data)) {
           onClose();

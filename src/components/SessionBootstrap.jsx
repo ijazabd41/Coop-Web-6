@@ -7,25 +7,25 @@ import * as api from "@/api/apiRoutes";
 /**
  * SessionBootstrap — restores Odoo session on app mount.
  *
- * On first render, checks localStorage for a saved Odoo session.
+ * On first render, checks cookies for a saved Odoo session.
  * If found and Redux has no user, attempts to fetch user profile
  * from the API and populates Redux state.
  *
- * Also syncs Redux jwtToken changes back to localStorage.
+ * Also syncs Redux jwtToken changes back to cookies.
  */
 const SessionBootstrap = () => {
   const dispatch = useDispatch();
   const jwtToken = useSelector((state) => state.User?.jwtToken);
   const user = useSelector((state) => state.User?.user);
 
-  // On mount: restore session from localStorage -> Redux
+  // On mount: restore session from cookies -> Redux
   useEffect(() => {
     const session = getOdooSession();
     if (!session?.sessionId) return;
 
     // If Redux already has user data, just sync the session ID
     if (jwtToken && user) {
-      // Ensure localStorage is in sync with Redux
+      // Ensure cookies are in sync with Redux
       setOdooSession({
         sessionId: jwtToken,
         partnerId: user.partner_id || user.id,
@@ -34,7 +34,7 @@ const SessionBootstrap = () => {
       return;
     }
 
-    // Redux lost user data (page refresh) but localStorage has session
+    // Redux lost user data (page refresh) but cookies have session
     if (!user && session.sessionId) {
       // Attempt to restore user from API
       api
@@ -61,7 +61,7 @@ const SessionBootstrap = () => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sync Redux jwtToken changes -> localStorage
+  // Sync Redux jwtToken changes -> cookies
   useEffect(() => {
     if (jwtToken) {
       setOdooSession({

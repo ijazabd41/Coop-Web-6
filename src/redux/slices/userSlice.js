@@ -1,5 +1,5 @@
-
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 
 const initialState = {
@@ -34,11 +34,14 @@ export const userReducer = createSlice({
             state.fcm_token = null;
             state.authId = "";
             state.jwtToken = "";
-            // Clear Odoo session from localStorage
+            // Clear Odoo session from localStorage and cookies
             if (typeof window !== "undefined") {
                 try {
                     const keys = ["odoo_session_id", "odoo_partner_id", "odoo_uid", "odoo_draft_order_id", "odoo_db", "cd_session_id", "cd_user_id", "cd_user_name", "role_code", "cd_role_code"];
-                    keys.forEach((k) => window.localStorage.removeItem(k));
+                    keys.forEach((k) => {
+                        window.localStorage.removeItem(k);
+                        Cookies.remove(k, { path: '/' });
+                    });
                 } catch { /* ignore */ }
             }
         },

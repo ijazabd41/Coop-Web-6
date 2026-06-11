@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import Loader from "@/components/loader/Loader";
 import { getDashboardPathFromRoleCode } from "@/lib/dashboardRedirect";
+import Cookies from "js-cookie";
 
 const withDashboardAuth = (WrappedComponent) => {
     const Wrapper = (props) => {
@@ -23,7 +24,7 @@ const withDashboardAuth = (WrappedComponent) => {
             const userRole = user?.user?.cd_mobile_role?.role_code;
             const flatRole = user?.role_code;
             const userFlatRole = user?.user?.role_code;
-            const localRole = typeof window !== "undefined" ? window.localStorage.getItem("role_code") : null;
+            const localRole = Cookies.get("role_code") || (typeof window !== "undefined" ? window.localStorage.getItem("role_code") : null);
 
             const roleCode = directRole || userRole || flatRole || userFlatRole || localRole;
             const allowedDashboardPath = getDashboardPathFromRoleCode(roleCode);

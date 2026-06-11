@@ -1,49 +1,41 @@
+import Cookies from "js-cookie";
 import { STORAGE_KEYS } from "./config";
 
-function safeStorage() {
-  if (typeof window === "undefined") return null;
-  return window.localStorage;
-}
+const COOKIE_OPTIONS = { expires: 30, path: '/' };
 
 export function getOdooSession() {
-  const ls = safeStorage();
-  if (!ls) return null;
-  const sessionId = ls.getItem(STORAGE_KEYS.sessionId);
+  const sessionId = Cookies.get(STORAGE_KEYS.sessionId);
   if (!sessionId) return null;
   return {
     sessionId,
-    partnerId: Number(ls.getItem(STORAGE_KEYS.partnerId)) || null,
-    uid: Number(ls.getItem(STORAGE_KEYS.uid)) || null,
-    draftOrderId: Number(ls.getItem(STORAGE_KEYS.draftOrderId)) || null,
-    db: ls.getItem(STORAGE_KEYS.db) || null,
+    partnerId: Number(Cookies.get(STORAGE_KEYS.partnerId)) || null,
+    uid: Number(Cookies.get(STORAGE_KEYS.uid)) || null,
+    draftOrderId: Number(Cookies.get(STORAGE_KEYS.draftOrderId)) || null,
+    db: Cookies.get(STORAGE_KEYS.db) || null,
   };
 }
 
 export function setOdooSession(partial) {
-  const ls = safeStorage();
-  if (!ls) return;
   if (partial.sessionId != null) {
-    ls.setItem(STORAGE_KEYS.sessionId, partial.sessionId);
+    Cookies.set(STORAGE_KEYS.sessionId, partial.sessionId, COOKIE_OPTIONS);
   }
   if (partial.partnerId != null) {
-    ls.setItem(STORAGE_KEYS.partnerId, String(partial.partnerId));
+    Cookies.set(STORAGE_KEYS.partnerId, String(partial.partnerId), COOKIE_OPTIONS);
   }
   if (partial.uid != null) {
-    ls.setItem(STORAGE_KEYS.uid, String(partial.uid));
+    Cookies.set(STORAGE_KEYS.uid, String(partial.uid), COOKIE_OPTIONS);
   }
   if (partial.draftOrderId != null) {
-    ls.setItem(STORAGE_KEYS.draftOrderId, String(partial.draftOrderId));
+    Cookies.set(STORAGE_KEYS.draftOrderId, String(partial.draftOrderId), COOKIE_OPTIONS);
   }
   if (partial.db != null) {
-    ls.setItem(STORAGE_KEYS.db, partial.db);
+    Cookies.set(STORAGE_KEYS.db, partial.db, COOKIE_OPTIONS);
   }
 }
 
 export function clearOdooSession() {
-  const ls = safeStorage();
-  if (!ls) return;
-  Object.values(STORAGE_KEYS).forEach((k) => ls.removeItem(k));
-  ["cd_session_id", "cd_user_id", "cd_user_name", "role_code", "cd_role_code"].forEach((k) => ls.removeItem(k));
+  Object.values(STORAGE_KEYS).forEach((k) => Cookies.remove(k, { path: '/' }));
+  ["cd_session_id", "cd_user_id", "cd_user_name", "role_code", "cd_role_code"].forEach((k) => Cookies.remove(k, { path: '/' }));
 }
 
 export function setDraftOrderId(orderId) {
