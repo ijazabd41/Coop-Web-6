@@ -176,17 +176,17 @@ const ActiveOrdersCard = ({ order }) => {
                       <div className="flex md:flex-col gap-1">
                         <p className="text-base font-bold">
                           {setting?.setting?.currency}
-                          {orderFirstItem?.discounted_price}
+                          {Number(orderFirstItem?.discounted_price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                         </p>
                         <p className="text-base font-normal line-through SecondaryTextColor">
                           {setting?.setting?.currency}
-                          {orderFirstItem?.price}
+                          {Number(orderFirstItem?.price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                         </p>
                       </div>
                     ) : (
                       <p className="text-base font-bold">
                         {setting?.setting?.currency}
-                        {orderFirstItem?.price}
+                        {Number(orderFirstItem?.price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                       </p>
                     )}
                   </div>
@@ -210,7 +210,7 @@ const ActiveOrdersCard = ({ order }) => {
                 <span className="font-bold text-lg">
                   {" "}
                   {setting?.setting?.currency}
-                  {order?.final_total}
+                  {Number(order?.final_total).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                 </span>
               </div>
               <div className="grid grid-cols-12 lg:flex col-span-8 items-center gap-2 flex-wrap">

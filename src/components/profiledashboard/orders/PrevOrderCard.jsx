@@ -76,17 +76,17 @@ const PrevOrderCard = ({ order }) => {
                       <div className="flex gap-1">
                         <p className="text-base font-bold">
                           {setting?.setting?.currency}
-                          {orderFirstItem?.discounted_price}
+                          {Number(orderFirstItem?.discounted_price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                         </p>
                         <p className="text-base font-normal line-through">
                           {setting?.setting?.currency}
-                          {orderFirstItem?.price}
+                          {Number(orderFirstItem?.price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                         </p>
                       </div>
                     ) : (
                       <p className="text-base font-bold">
                         {setting?.setting?.currency}
-                        {orderFirstItem?.price}
+                        {Number(orderFirstItem?.price).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                       </p>
                     )}
                   </div>
@@ -105,7 +105,7 @@ const PrevOrderCard = ({ order }) => {
                 <span>{`${t("total")} ${t("Credit")}`} </span>
                 <span className="font-bold text-lg">
                   {setting?.setting?.currency}
-                  {order?.final_total}
+                  {Number(order?.final_total).toFixed(setting?.setting?.decimal_point ? setting?.setting?.decimal_point : 2)}
                 </span>
               </div>
               <div className="flex gap-2 items-center justify-start md:justify-center">

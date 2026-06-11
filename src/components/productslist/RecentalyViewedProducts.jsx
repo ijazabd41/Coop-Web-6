@@ -52,24 +52,28 @@ const RecentalyViewedProducts = ({ recentalyViewedProducts }) => {
               }}
               //   onReachEnd={handleLoadMore}
               breakpoints={{
-                1200: {
-                  slidesPerView: 5.5,
+                1536: {
+                  slidesPerView: 9,
+                  spaceBetween: 10,
+                },
+                1280: {
+                  slidesPerView: 8,
                   spaceBetween: 10,
                 },
                 1024: {
-                  slidesPerView: 4.5,
+                  slidesPerView: 6,
                   spaceBetween: 10,
                 },
                 768: {
-                  slidesPerView: 3.3,
+                  slidesPerView: 5,
                   spaceBetween: 10,
                 },
-                500: {
+                640: {
+                  slidesPerView: 3,
+                  spaceBetween: 10,
+                },
+                0: {
                   slidesPerView: 2,
-                  spaceBetween: 10,
-                },
-                300: {
-                  slidesPerView: 1.5,
                   spaceBetween: 10,
                 },
               }}

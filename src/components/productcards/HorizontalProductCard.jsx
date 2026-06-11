@@ -505,17 +505,17 @@ const HorizontalProductCard = ({ product }) => {
                     {" "}
                     <p className=" text-base font-bold">
                       {setting?.currency}
-                      {product?.variants?.[0]?.discounted_price}
+                      {Number(product?.variants?.[0]?.discounted_price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                     </p>
                     <p className="text-[#868c93] text-[14px] font-normal leading-[17px] m-1 line-through">
                       {setting?.currency}
-                      {selectedVariant?.price}
+                      {Number(selectedVariant?.price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                     </p>
                   </>
                 ) : (
                   <p className="text-base font-bold ">
                     {setting?.currency}
-                    {selectedVariant?.price}
+                    {Number(selectedVariant?.price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                   </p>
                 )}
               </div>

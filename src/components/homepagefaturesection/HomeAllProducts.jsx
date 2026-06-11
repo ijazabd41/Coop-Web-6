@@ -52,16 +52,16 @@ const HomeAllProducts = () => {
   if (isLoading && !data) {
     return (
       <section>
-        <div className="py-3 md:py-6 container px-2">
+        <div className="py-6 md:py-10 container px-4 md:px-6">
           <div className="flex flex-col gap-3">
             <h2 className="textColor text-xl sm:text-3xl font-extrabold leading-[29px] m-0">
               {t("allProducts")}
             </h2>
-            <div className="grid grid-cols-12 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2">
               {placeholderItems.map((index) => (
                 <div
                   key={index}
-                  className="col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2"
+                  className="col-span-1"
                 >
                   <CardSkeleton height={300} />
                 </div>
@@ -75,17 +75,17 @@ const HomeAllProducts = () => {
 
   return allProducts.length > 0 ? (
     <section>
-      <div className="py-3 md:py-6 container px-2">
+      <div className="py-6 md:py-10 container px-4 md:px-6">
         <div className="flex flex-col gap-3">
           <h2 className="textColor text-xl sm:text-3xl font-extrabold leading-[29px] m-0">
             {t("allProducts")}
           </h2>
 
-          <div className="grid grid-cols-12 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2">
             {allProducts.map((product) => (
               <div
                 key={product?.id}
-                className="col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2"
+                className="col-span-1"
               >
                 <VerticleProductCard product={product} />
               </div>
@@ -93,11 +93,11 @@ const HomeAllProducts = () => {
           </div>
 
           {isFetchingNextPage && (
-            <div className="grid grid-cols-12 gap-2 mt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2 mt-2">
               {placeholderItems.map((index) => (
                 <div
                   key={index}
-                  className="col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2"
+                  className="col-span-1"
                 >
                   <CardSkeleton height={300} />
                 </div>

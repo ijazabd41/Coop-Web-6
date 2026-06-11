@@ -518,18 +518,18 @@ const Products = () => {
                   />
                 )}
 
-                <div className="grid grid-cols-12 gap-2 h-full">
+                <div className={`grid gap-2 h-full ${filter?.grid_view ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8" : "grid-cols-1"}`}>
                   {loading ? (
                     placeholderItems.map((index) => {
                       return filter?.grid_view ? (
                         <div
-                          className="col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3"
+                          className="col-span-1"
                           key={index}
                         >
                           <CardSkeleton height={300} />
                         </div>
                       ) : (
-                        <div className="col-span-12">
+                        <div className="col-span-1">
                           <CardSkeleton height={200} />
                         </div>
                       );
@@ -553,13 +553,13 @@ const Products = () => {
                     productResult?.map((product) => {
                       return filter?.grid_view ? (
                         <div
-                          className=" col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-3 "
+                          className="col-span-1"
                           key={product?.id}
                         >
                           <VerticleProductCard product={product} />
                         </div>
                       ) : (
-                        <div className="col-span-12" key={product?.id}>
+                        <div className="col-span-1" key={product?.id}>
                           <ListViewProductCard product={product} />
                         </div>
                       );
@@ -570,13 +570,13 @@ const Products = () => {
                     placeholderItems.map((index) => {
                       return filter?.grid_view ? (
                         <div
-                          className="col-span-6 sm:col-span-6 md:col-span-4 lg:col-span-3"
+                          className="col-span-1"
                           key={index}
                         >
                           <CardSkeleton height={300} />
                         </div>
                       ) : (
-                        <div className="col-span-12">
+                        <div className="col-span-1">
                           <CardSkeleton height={200} />
                         </div>
                       );
@@ -584,7 +584,7 @@ const Products = () => {
                   ) : (
                     <></>
                   )}
-                  <div className="col-span-12 mt-6 w-full flex justify-center mx-auto">
+                  <div className={`mt-6 w-full flex justify-center mx-auto ${filter?.grid_view ? "col-span-2 sm:col-span-3 md:col-span-5 lg:col-span-6 xl:col-span-7 2xl:col-span-8" : "col-span-1"}`}>
                     {totalProducts > productResult?.length ? (
                       <button
                         className="accentButtonBg rounded-md text-white text-base font-medium gap-1 p-1.5 px-3"

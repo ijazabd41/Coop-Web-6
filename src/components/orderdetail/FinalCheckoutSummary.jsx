@@ -31,7 +31,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
             <span className="">{t("sub_total")}</span>
             <span className="font-semibold">
               {setting?.currency}
-              {Number(orderDetail?.remaining_total)}
+              {Number(orderDetail?.remaining_total).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
             </span>
           </div>
 
@@ -55,7 +55,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
                     </span>
                     <span className="font-semibold">
                       {setting?.currency}
-                      {charge?.amount}
+                      {Number(charge?.amount).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                     </span>
                   </div>
                 );
@@ -66,7 +66,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="">{t("delivery_charge")}</span>
               <span className="font-semibold">
                 {setting?.currency}
-                {orderDetail?.delivery_charge}
+                {Number(orderDetail?.delivery_charge).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
               </span>
             </div>
           )}
@@ -76,8 +76,8 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="">{t("promoDiscount")}</span>
               <span className="font-semibold">
                 - {setting?.currency}
-                {orderDetail?.promo_discount?.toFixed(
-                  setting?.decimal_point ? setting?.decimal_point : 0
+                {Number(orderDetail?.promo_discount).toFixed(
+                  setting?.decimal_point ? setting?.decimal_point : 2
                 )}
               </span>
             </div>
@@ -88,8 +88,8 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="">{t("walletBalance")}</span>
               <span className="font-semibold">
                 - {setting?.currency}
-                {orderDetail?.wallet_balance?.toFixed(
-                  setting?.decimal_point ? setting?.decimal_point : 0
+                {Number(orderDetail?.wallet_balance).toFixed(
+                  setting?.decimal_point ? setting?.decimal_point : 2
                 )}
               </span>
             </div>
@@ -102,7 +102,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               </span>
               <span className="successColor font-bold">
                 {setting?.currency}
-                {Number(orderDetail?.remaining_final)}
+                {Number(orderDetail?.remaining_final).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
               </span>
             </div>
           </div>

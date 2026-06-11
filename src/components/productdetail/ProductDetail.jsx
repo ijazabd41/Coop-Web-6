@@ -672,11 +672,11 @@ const ProductDetail = () => {
                         <>
                           <h2 className="font-bold text-3xl ">
                             {currency}
-                            {selectVariant?.discounted_price}
+                            {Number(selectVariant?.discounted_price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                           </h2>
                           <h3 className="line-through font-bold text-base text-gray-500">
                             {currency}
-                            {selectVariant?.price}
+                            {Number(selectVariant?.price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                           </h3>
                         </>
                       ) : (
@@ -684,7 +684,7 @@ const ProductDetail = () => {
                           {" "}
                           <h2 className="font-bold text-3xl ">
                             {currency}
-                            {selectVariant?.price}
+                            {Number(selectVariant?.price).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)}
                           </h2>
                         </>
                       )}

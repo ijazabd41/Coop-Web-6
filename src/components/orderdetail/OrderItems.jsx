@@ -147,7 +147,7 @@ const OrderItems = ({
                       )}
                       {Number(product?.active_status) === 8 && (
                         <span className="primaryColor">{`${t("total")} ${setting?.currency
-                          }${product?.refund_amount} ${t("refunded")}`}</span>
+                          }${Number(product?.refund_amount).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)} ${t("refunded")}`}</span>
                       )}
                       {Number(product?.return_requested) === 3 && (
                         <>
@@ -163,11 +163,11 @@ const OrderItems = ({
                   <td className="p-4">
                     <p className="font-bold">
                       {setting?.currency}
-                      {(product?.discounted_price !== 0
+                      {Number(product?.discounted_price !== 0
                         ? product?.discounted_price
                         : product?.price
-                      )?.toFixed(
-                        setting?.decimal_point ? setting?.decimal_point : 0,
+                      ).toFixed(
+                        setting?.decimal_point ? setting?.decimal_point : 2,
                       )}
                     </p>
                   </td>
@@ -311,7 +311,7 @@ const OrderItems = ({
                   )}
                   {Number(product?.active_status) === 8 && (
                     <span className="primaryColor">{`${t("total")} ${setting?.currency
-                      }${product?.refund_amount} ${t("refunded")}`}</span>
+                      }${Number(product?.refund_amount).toFixed(setting?.decimal_point ? setting?.decimal_point : 2)} ${t("refunded")}`}</span>
                   )}
                   {Number(product?.return_requested) === 3 && (
                     <>
@@ -329,11 +329,11 @@ const OrderItems = ({
                 <p className="font-bold">{t("price")}:</p>
                 <p className="font-bold">
                   {setting?.currency}
-                  {(product?.discounted_price !== 0
+                  {Number(product?.discounted_price !== 0
                     ? product?.discounted_price
                     : product?.price
-                  )?.toFixed(
-                    setting?.decimal_point ? setting?.decimal_point : 0,
+                  ).toFixed(
+                    setting?.decimal_point ? setting?.decimal_point : 2,
                   )}
                 </p>
               </div>
