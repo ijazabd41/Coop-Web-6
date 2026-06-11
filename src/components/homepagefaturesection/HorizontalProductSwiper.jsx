@@ -43,7 +43,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
                 section?.products?.length > 0 ?
                     <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
 
-                        <div className='container feature-section'>
+                        <div className='container px-4 md:px-8 feature-section'>
                             <div dir={language?.type}>
                                 <div className='flex justify-between items-center mb-3 '>
                                     <div className='w-1/2'>
@@ -114,7 +114,7 @@ const HorizontalProductSwiper = ({ section, index }) => {
             }
             {promotionImage && promotionImage?.map((offer) => {
                 return (
-                    <div className='container mb-6' key={offer?.id}>
+                    <div className='container px-4 md:px-8 mb-6' key={offer?.id}>
                         <div className='relative' >
                             <HomeOfferSection offer={offer} />
                         </div>

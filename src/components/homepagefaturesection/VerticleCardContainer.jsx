@@ -33,7 +33,7 @@ const VerticleCardContainer = ({ section }) => {
     return (
         <div>
             {section?.products?.length > 0 ? <section className='' style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-                <div className='container feature-section'>
+                <div className='container px-4 md:px-8 feature-section'>
                     <div className='flex justify-between items-center mb-3'>
                         <div>
                             <h2 className='text-2xl font-bold'>{section?.translations?.title}</h2>
@@ -60,7 +60,7 @@ const VerticleCardContainer = ({ section }) => {
             }
             {promotionImage && promotionImage?.map((offer, index) => {
                 return (
-                    <div className='container mb-6' key={index}>
+                    <div className='container px-4 md:px-8 mb-6' key={index}>
                         <div className='relative' key={offer?.id}>
                             <HomeOfferSection offer={offer} />
                         </div>

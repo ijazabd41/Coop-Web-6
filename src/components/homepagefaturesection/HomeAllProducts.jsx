@@ -52,7 +52,7 @@ const HomeAllProducts = () => {
   if (isLoading && !data) {
     return (
       <section>
-        <div className="py-6 md:py-10 container px-4 md:px-6">
+        <div className="py-3 md:py-6 container px-4 md:px-8">
           <div className="flex flex-col gap-3">
             <h2 className="textColor text-xl sm:text-3xl font-extrabold leading-[29px] m-0">
               {t("allProducts")}
@@ -75,7 +75,7 @@ const HomeAllProducts = () => {
 
   return allProducts.length > 0 ? (
     <section>
-      <div className="py-6 md:py-10 container px-4 md:px-6">
+      <div className="py-3 md:py-6 container px-4 md:px-8">
         <div className="flex flex-col gap-3">
           <h2 className="textColor text-xl sm:text-3xl font-extrabold leading-[29px] m-0">
             {t("allProducts")}

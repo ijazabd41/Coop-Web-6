@@ -444,10 +444,10 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
   return (
     <div>
       <div
-        className="flex flex-col p-2 w-[96%] mx-auto cardBorder group headerBackgroundColor textColor hover:shadow-lg [.image-card_&]:rounded-none [.cardBorder_&]:rounded-none rounded-md"
+        className="flex flex-col p-2 cardBorder group  headerBackgroundColor textColor cardBorder hover:shadow-lg [.image-card_&]:rounded-none [.cardBorder_&]:rounded-none rounded-md"
       >
         <Link href={`/product/${product?.slug}`} className="flex relative textColor">
-          <div className="relative aspect-square w-full h-40 [.verticle-card_&]:h-36 [.image-card_&]:h-56 [.verticle-card_&]:md:h-60">
+          <div className="relative aspect-square w-full h-48 [.verticle-card_&]:h-44 [.image-card_&]:h-64 [.verticle-card_&]:md:h-72">
             <ImageWithPlaceholder
               className="rounded-lg object-cover h-full w-full " 
               alt={product?.translations?.name ?? product?.name}
@@ -488,7 +488,7 @@ const VerticleProductCard = ({ product, largeImage = false }) => {
             </ul>
           </div>
         </Link>
-        <Link href={`/product/${product?.slug}`} className="h-[85px] flex flex-col justify-between ">
+        <Link href={`/product/${product?.slug}`} className="h-[100px] flex flex-col justify-between ">
           <h3 className="flex textColor text-[16px] font-bold leading-[1.2] mt-3 max-h-[2.4em] overflow-hidden text-ellipsis capitalize w-full group-hover:primaryColor py-[2px]">
             {product?.translations?.name ?? product?.name}
           </h3>

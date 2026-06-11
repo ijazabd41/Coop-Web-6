@@ -32,7 +32,7 @@ const HorizontalCardContainer = ({ section }) => {
 
     return (
         <section style={theme == "light" ? { backgroundColor: section?.background_color_for_light_theme } : { backgroundColor: section?.background_color_for_dark_theme }}>
-            {section?.products?.length > 0 ? <div className='container feature-section'>
+            {section?.products?.length > 0 ? <div className='container px-4 md:px-8 feature-section'>
                 <div className='flex justify-between items-center mb-3'>
                     <div>
                         <h2 className='text-2xl font-bold'>{section?.translations?.title}</h2>
@@ -53,7 +53,7 @@ const HorizontalCardContainer = ({ section }) => {
                     })}
                 </div>
             </div> : null}
-            <div className='container'>
+            <div className='container px-4 md:px-8'>
                 {promotionImage && promotionImage?.map((offer) => {
                     return (
                         <div className='relative w-full' key={offer?.id}>
