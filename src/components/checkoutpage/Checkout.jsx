@@ -1252,16 +1252,17 @@ const Checkout = () => {
                     handlePlaceOrder={handlePlaceOrder}
                     checkOutError={checkOutError}
                     checkoutLoading={checkoutLoading}
-                  />
-                  {checkout?.currentStep === 3 && (
-                    <LoyaltySelector
-                      orderId={draftOrderId || cart?.checkout?.order_id}
-                      onApplied={async () => {
-                        await refreshOdooCart();
-                        handleFetchCheckout();
-                      }}
-                    />
-                  )}
+                  >
+                    {checkout?.currentStep === 3 && (
+                      <LoyaltySelector
+                        orderId={draftOrderId || cart?.checkout?.order_id}
+                        onApplied={async () => {
+                          await refreshOdooCart();
+                          handleFetchCheckout();
+                        }}
+                      />
+                    )}
+                  </OrderSummaryCard>
                 </div>
               </div>
             </div>

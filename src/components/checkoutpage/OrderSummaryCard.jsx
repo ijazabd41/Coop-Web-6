@@ -15,6 +15,7 @@ const OrderSummaryCard = ({
   handlePlaceOrder,
   checkOutError,
   checkoutLoading,
+  children
 }) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.Setting.setting);
@@ -282,6 +283,8 @@ const OrderSummaryCard = ({
         <Link href="/refund-policy" className="underline hover:primaryColor">Return & Refund Policy</Link>, and{" "}
         <Link href="/cancellation-policy" className="underline hover:primaryColor">Cancellation Policy</Link>.
       </div>
+
+      {children}
 
       <div className="flex justify-center items-center gap-3 mb-4">
         <span className="text-sm font-semibold">{t("we_accept") || "We accept"}:</span>
